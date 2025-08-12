@@ -1,0 +1,19 @@
+research_task:
+  description: >
+    Conduct thorough research on the cybersecurity threat: {threat}. Make sure the information is relevant 
+    to the year 2025. Use the Google Search tool to gather the necessary information from reliable sources.
+  expected_output: >
+    Any example implementations found for detecting the specified threat:
+    {threat}
+  agent: cthAnalyst
+
+splunk_query_task:
+  description: >
+    Using the research report generated for the cybersecurity threat {threat}, create a Splunk query to detect 
+    indicators of this threat in logs from on-premises Microsoft Exchange servers. Ensure the query is optimized 
+    for accuracy and includes relevant fields or patterns identified in the research.
+  expected_output: >
+    A valid Splunk query string that can be used to search for indicators of the threat {threat} in logs from 
+    on-premises Microsoft Exchange servers.
+  agent: cthAnalyst
+
