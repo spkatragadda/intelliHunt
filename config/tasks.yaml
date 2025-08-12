@@ -1,19 +1,31 @@
 research_task:
   description: >
-    Conduct thorough research on the cybersecurity threat: {threat}. Make sure the information is relevant 
-    to the year 2025. Use the Google Search tool to gather the necessary information from reliable sources.
+    Conduct thorough research on the cybersecurity threats relevant to the organizations software stack:
+    {software_stack}
+    Make sure the information is relevant to the year 2025. 
+    Use the Google Search tool to gather the necessary information from reliable sources.
   expected_output: >
-    Any example implementations found for detecting the specified threat:
-    {threat}
-  agent: cthAnalyst
+    A report on threats prevalent to an organizations software stack in a well formatted and concise report.
+    The report should include indicators of compromise for each threat and information associated with detecting
+    that threat. The organization of interests software stack is the following: {software_stack}
+  agent: ctiAnalyst
+
+ranking_task:
+  description: >
+    Utilize the provided information on threats relevant to an organization and determine which threat is the most
+    significant for ensuring security of an organizations network and data.
+  expected_output: >
+    A report containing the threat name and indicators of compromise associated with that threat. Any other relevant
+    information which may be helpful in detecting that threat should also be included. 
+  agent: ctiAnalyst
 
 splunk_query_task:
   description: >
-    Using the research report generated for the cybersecurity threat {threat}, create a Splunk query to detect 
-    indicators of this threat in logs from on-premises Microsoft Exchange servers. Ensure the query is optimized 
-    for accuracy and includes relevant fields or patterns identified in the research.
+    Use the provided information on a threat relevant to our organization to construct a splunk spl
+    query for detecting the threat. Available sourcetypes for the splunk query include wineventlog,
+    corelight logs, crowdstrike logs, and tanium logs.
   expected_output: >
-    A valid Splunk query string that can be used to search for indicators of the threat {threat} in logs from 
-    on-premises Microsoft Exchange servers.
+    A valid Splunk query and a description of the query. Do not return anything but the splunk spl query 
+    and a description of its function. 
   agent: cthAnalyst
 

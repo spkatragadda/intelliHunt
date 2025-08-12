@@ -36,38 +36,49 @@ class cyberCrew:
     def google_search(query: str) -> str:
         """Search Google for recent results relevant to cybersecurity threats."""
         results = []
-        # Append "2025" to ensure relevance to the year 2025 as per task requirements
-        for result in search(query + " 2025", num_results=10):
-            results.append(result)
-        return "\n".join(results)
+        try:
+            for result in search(query + "2025", num_results=10):
+                results.append(str(result))  # Ensure result is a string
+            return "\n".join(results) if results else "No results found."
+        except Exception as e:
+            return f"Error during Google Search: {str(e)}"
 
     @agent
     def cthAnalyst(self) -> Agent:
         return Agent(
             config=self.agents_config['cthAnalyst'], # type: ignore[index]
-            llm=Ollama(model="ollama/deepseek-r1:8b", base_url="http://localhost:11434"),
+            llm=Ollama(model="ollama/CognitiveComputations/dolphin-llama3.1:latest", base_url="http://localhost:11434"),
             tools=[self.google_search],
             verbose=True
         )
 
-    # @agent
-    # def agent_two(self) -> Agent:
-    #     return Agent(
-    #         config=self.agents_config['agent_two'], # type: ignore[index]
-    #         verbose=True
-    #     )
+    @agent
+    def ctiAnalyst(self) -> Agent:
+        return Agent(
+            config=self.agents_config['ctiAnalyst'], # type: ignore[index]
+            llm=Ollama(model="ollama/CognitiveComputations/dolphin-llama3.1:latest", base_url="http://localhost:11434"),
+            tools=[self.google_search],
+            verbose=True
+        )
 
     @task
-    def task_one(self) -> Task:
+    def research_task(self) -> Task:
         return Task(
             config=self.tasks_config['research_task'] # type: ignore[index]
+        )
+    
+    @task
+    def ranking_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['ranking_task'], # type: ignore[index]
+            context=[self.research_task()] # Use the output of research_task as context
         )
     
     @task
     def splunk_query_task(self) -> Task:
         return Task(
             config=self.tasks_config['splunk_query_task'], # type: ignore[index]
-            context=[self.task_one()] # Use the output of research_task as context
+            context=[self.ranking_task()] # Use the output of research_task as context
         )
 
 
