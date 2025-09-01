@@ -26,6 +26,16 @@ splunk_query_task:
     corelight logs, crowdstrike logs, and tanium logs.
   expected_output: >
     A valid Splunk query and a description of the query. Do not return anything but the splunk spl query 
-    and a description of its function. 
+    and a description of its function. The description should include which threat is being detected.
+  agent: cthAnalyst
+
+python_query_task:
+  description: >
+    Use the provided information on a threat relevant to our organization to construct a python script
+    for detecting the threat. Available databases include wineventlog,
+    corelight logs, crowdstrike logs, and tanium logs.
+  expected_output: >
+    A valid python script. Do not return anything but the splunk spl query 
+    and a description of its function. The description should include which threat is being detected.
   agent: cthAnalyst
 
