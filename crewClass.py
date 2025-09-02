@@ -1,15 +1,35 @@
-from crewai import Agent, Crew, Task, Process
+from crewai import Agent, Crew, Task, Process, LLM
 from crewai.project import CrewBase, agent, task, crew, before_kickoff, after_kickoff
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
 from langchain_community.llms import Ollama
 from crewai.tools import tool
 from googlesearch import search
-from crewai_tools import RagTool
+from crewai_tools import RagTool, ScrapeWebsiteTool
 from langchain_groq import ChatGroq
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
-# Initialize the RAG Tool
-rag_tool = RagTool()
+os.environ["GROQ_API_KEY"] = os.getenv("GROQ_KEY")
+
+
+# Configure the embedder (replacing OpenAI)
+embedder_config = {
+    "provider": "huggingface",
+    "config": {
+        "model": "sentence-transformers/all-MiniLM-L6-v2"
+    }
+}
+
+# Initialize the RAG tool with the custom configurations
+rag_tool = RagTool(
+    config=dict(
+        embedder=embedder_config
+    ),
+    source="splunk_sourcetypes"
+)
 
 # Define a list of raw strings
 raw_strings_list = [
@@ -29,14 +49,11 @@ raw_strings_list = [
 
 # Add each raw string from the list to the RAG tool
 for text_item in raw_strings_list:
-    rag_tool.add(data_type="text", content=text_item)
+    rag_tool.add(text_item, data_type="text")
 
 
 # Initialize the Groq LLM
-llm = ChatGroq(
-    temperature=0,
-    model_name="qwen/qwen3-32b" # Or another Groq model like llama3-8b-8192
-)
+llm = LLM(model="groq/qwen/qwen3-32b", max_tokens=5000)
 
 
 @CrewBase
@@ -75,13 +92,25 @@ class cyberCrew:
             return "\n".join(results) if results else "No results found."
         except Exception as e:
             return f"Error during Google Search: {str(e)}"
+        
+    @tool("Web Scraper")
+    def scrape_web(url: str) -> str:
+        """
+        Scrapes a given URL and returns the text content.
+        This tool can open a URL, scrape its web data, and extract useful text.
+        """
+        try:
+            scraper = ScrapeWebsiteTool(website_url=url)
+            return scraper.run()
+        except Exception as e:
+            return f"Error scraping URL {url}: {str(e)}"
 
     @agent
     def cthAnalyst(self) -> Agent:
         return Agent(
             config=self.agents_config['cthAnalyst'], # type: ignore[index]
             llm=llm, #Ollama(model="ollama/qwen3:8b", base_url="http://localhost:11434")
-            tools=[self.google_search],
+            tools=[self.google_search, self.scrape_web],
             verbose=True
         )
 
@@ -90,7 +119,7 @@ class cyberCrew:
         return Agent(
             config=self.agents_config['ctiAnalyst'], # type: ignore[index]
             llm=llm,
-            tools=[self.google_search],
+            tools=[self.google_search, self.scrape_web],
             verbose=True
         )
 
@@ -128,4 +157,5 @@ class cyberCrew:
             tasks=self.tasks,    # Automatically collected by the @task decorator.
             process=Process.sequential,
             verbose=True,
+            max_rpm=1
         )
