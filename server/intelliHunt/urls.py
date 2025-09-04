@@ -16,20 +16,32 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
+from .reportApp import views
+from .views import ReactAppView
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('api/markdown/', views.get_markdown_content, name='markdown_content'),
+    # The "catch-all" pattern that serves the React app
+    #re_path(r'^.*', TemplateView.as_view(template_name='index.html')),
+    re_path(r'^.*', ReactAppView.as_view(), name='react_app'), # Catch-all for React
 ]
 
 
 # Serve the React App's index.html for all other routes
-if not settings.DEBUG:
-    urlpatterns += [re_path(r'^.*', TemplateView.as_view(template_name='index.html'))]
+# if not settings.DEBUG:
+#     urlpatterns += [re_path(r'^.*', TemplateView.as_view(template_name='index.html'))]
+
+# if not settings.DEBUG:
+#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+#     urlpatterns += [
+#         re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name='index.html')),
+#     ]
 
 # Add this to serve static files in development
 if settings.DEBUG:

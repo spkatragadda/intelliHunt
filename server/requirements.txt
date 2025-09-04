@@ -6,3 +6,4 @@ langchain_community==0.3.29
 langchain_groq==0.3.7
 python-dotenv==1.1.1
 gunicorn==23.0.0
+whitenoise==6.9.0
