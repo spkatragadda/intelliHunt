@@ -9,6 +9,7 @@ from crewai_tools import RagTool, ScrapeWebsiteTool
 from langchain_groq import ChatGroq
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from dotenv import load_dotenv
+
 load_dotenv()
 import os
 
@@ -18,18 +19,11 @@ os.environ["GROQ_API_KEY"] = os.getenv("GROQ_KEY")
 # Configure the embedder (replacing OpenAI)
 embedder_config = {
     "provider": "huggingface",
-    "config": {
-        "model": "sentence-transformers/all-MiniLM-L6-v2"
-    }
+    "config": {"model": "sentence-transformers/all-MiniLM-L6-v2"},
 }
 
 # Initialize the RAG tool with the custom configurations
-rag_tool = RagTool(
-    config=dict(
-        embedder=embedder_config
-    ),
-    source="splunk_sourcetypes"
-)
+rag_tool = RagTool(config=dict(embedder=embedder_config), source="splunk_sourcetypes")
 
 # Define a list of raw strings
 raw_strings_list = [
@@ -67,13 +61,13 @@ class cyberCrew:
     # To see an example agent and task defined in YAML, checkout the following:
     # - Task: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
     # - Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-    agents_config = 'config/agents.yaml'
-    tasks_config = 'config/tasks.yaml'
+    agents_config = "config/agents.yaml"
+    tasks_config = "config/tasks.yaml"
 
     @before_kickoff
     def prepare_inputs(self, inputs):
         # Modify inputs before the crew starts
-        inputs['additional_data'] = "Some extra information"
+        inputs["additional_data"] = "Some extra information"
         return inputs
 
     @after_kickoff
@@ -92,7 +86,7 @@ class cyberCrew:
             return "\n".join(results) if results else "No results found."
         except Exception as e:
             return f"Error during Google Search: {str(e)}"
-        
+
     @tool("Web Scraper")
     def scrape_web(url: str) -> str:
         """
@@ -108,41 +102,40 @@ class cyberCrew:
     @agent
     def cthAnalyst(self) -> Agent:
         return Agent(
-            config=self.agents_config['cthAnalyst'], # type: ignore[index]
-            llm=llm, #Ollama(model="ollama/qwen3:8b", base_url="http://localhost:11434")
+            config=self.agents_config["cthAnalyst"],  # type: ignore[index]
+            llm=llm,  # Ollama(model="ollama/qwen3:8b", base_url="http://localhost:11434")
             tools=[self.google_search, self.scrape_web],
-            verbose=True
+            verbose=True,
         )
 
     @agent
     def ctiAnalyst(self) -> Agent:
         return Agent(
-            config=self.agents_config['ctiAnalyst'], # type: ignore[index]
+            config=self.agents_config["ctiAnalyst"],  # type: ignore[index]
             llm=llm,
             tools=[self.google_search, self.scrape_web],
-            verbose=True
+            verbose=True,
         )
 
     @task
     def research_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['research_task'] # type: ignore[index]
-        )
-    
+        return Task(config=self.tasks_config["research_task"])  # type: ignore[index]
+
     @task
     def ranking_task(self) -> Task:
         return Task(
-            config=self.tasks_config['ranking_task'], # type: ignore[index]
-            context=[self.research_task()] # Use the output of research_task as context
+            config=self.tasks_config["ranking_task"],  # type: ignore[index]
+            context=[
+                self.research_task()
+            ],  # Use the output of research_task as context
         )
-    
+
     @task
     def splunk_query_task(self) -> Task:
         return Task(
-            config=self.tasks_config['splunk_query_task'], # type: ignore[index]
-            context=[self.ranking_task()] # Use the output of research_task as context
+            config=self.tasks_config["splunk_query_task"],  # type: ignore[index]
+            context=[self.ranking_task()],  # Use the output of research_task as context
         )
-
 
     # @task
     # def task_two(self) -> Task:
@@ -154,8 +147,8 @@ class cyberCrew:
     def crew(self) -> Crew:
         return Crew(
             agents=self.agents,  # Automatically collected by the @agent decorator
-            tasks=self.tasks,    # Automatically collected by the @task decorator.
+            tasks=self.tasks,  # Automatically collected by the @task decorator.
             process=Process.sequential,
             verbose=True,
-            max_rpm=1
+            max_rpm=1,
         )
