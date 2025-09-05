@@ -22,8 +22,9 @@ ranking_task:
 splunk_query_task:
   description: >
     Use the provided information on a threat relevant to our organization to construct a splunk spl
-    query for detecting the threat. Available sourcetypes for the splunk query include wineventlog,
-    corelight logs, crowdstrike logs, and tanium logs.
+    query for detecting the threat. Step to follow:
+    1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED.
+    2. Generate query using relevant sourcetype(s) 
   expected_output: >
     A valid Splunk query and a description of the query. Do not return anything but the splunk spl query 
     and a description of its function. The description should include which threat is being detected.
