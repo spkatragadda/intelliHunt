@@ -1,4 +1,4 @@
-from crewClass import cyberCrew
+from server.intelliHunt.crew.crewClass import cyberCrew
 import json
 
 crew = cyberCrew().crew()
@@ -40,5 +40,5 @@ Output Tokens: {token_usage.completion_tokens}
 Total Tokens: {token_usage.total_tokens}
 """
 
-with open("crew_report.md", "w") as f:
+with open("server/intelliHunt/crew/crew_report.md", "w") as f:
     f.write(document_content)

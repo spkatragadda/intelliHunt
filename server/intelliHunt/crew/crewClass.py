@@ -104,7 +104,7 @@ class cyberCrew:
         return Agent(
             config=self.agents_config["cthAnalyst"],  # type: ignore[index]
             llm=llm,  # Ollama(model="ollama/qwen3:8b", base_url="http://localhost:11434")
-            tools=[self.google_search, self.scrape_web],
+            tools=[self.google_search, self.scrape_web, rag_tool],
             verbose=True,
         )
 
