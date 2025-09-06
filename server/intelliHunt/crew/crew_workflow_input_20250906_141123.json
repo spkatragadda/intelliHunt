@@ -1,0 +1,68 @@
+{
+  "crew_input": {
+    "software_stack": "",
+    "url_list": [
+      "https://nvd.nist.gov/vuln/search",
+      "https://cve.mitre.org/cve/search_cve_list.html"
+    ],
+    "cpe_data": {
+      "total_records": 2939,
+      "vendors_covered": [],
+      "products_covered": [],
+      "operating_systems": [],
+      "applications": [],
+      "cloud_platforms": []
+    },
+    "collection_metadata": {
+      "timestamp": "2025-09-06T19:09:34.198811",
+      "organization": "Your Organization"
+    }
+  },
+  "vulnerability_focus_areas": [
+    {
+      "category": "Operating Systems",
+      "description": "Vulnerabilities in operating systems used by the organization",
+      "cpe_count": 481,
+      "priority": "High",
+      "search_terms": [
+        "OS vulnerability",
+        "operating system exploit",
+        "kernel vulnerability"
+      ]
+    },
+    {
+      "category": "Applications",
+      "description": "Vulnerabilities in applications and software used by the organization",
+      "cpe_count": 1957,
+      "priority": "High",
+      "search_terms": [
+        "application vulnerability",
+        "software exploit",
+        "zero-day"
+      ]
+    },
+    {
+      "category": "Cloud Platforms",
+      "description": "Vulnerabilities in cloud platforms and services",
+      "cpe_count": 1,
+      "priority": "Medium",
+      "search_terms": [
+        "cloud vulnerability",
+        "cloud exploit",
+        "misconfiguration"
+      ]
+    },
+    {
+      "category": "Recent Updates",
+      "description": "Recently discovered or updated vulnerabilities",
+      "cpe_count": 500,
+      "priority": "Critical",
+      "search_terms": [
+        "recent vulnerability",
+        "new exploit",
+        "emerging threat"
+      ]
+    }
+  ],
+  "processing_timestamp": "2025-09-06T19:11:23.644796"
+}

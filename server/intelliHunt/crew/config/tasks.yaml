@@ -2,8 +2,10 @@ research_task:
   description: >
     Conduct thorough research on the cybersecurity threats relevant to the organizations software stack:
     {software_stack}
-    Make sure the information is relevant to the year 2025. 
+    Make sure the information is relevant to the last few days.
     Use the Google Search tool to gather the necessary information from reliable sources.
+    Only bring back text data, do not bring back any images, videos, pdfs or other media.
+    Prefer these urls: {url_list}.
   expected_output: >
     A report on threats prevalent to an organizations software stack in a well formatted and concise report.
     The report should include indicators of compromise for each threat and information associated with detecting

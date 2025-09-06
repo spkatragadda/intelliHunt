@@ -1,27 +1,40 @@
 
-# CrewAI Execution Report
-## Final Result:
-Splunk Query:
-index=sharepoint sourcetype=sharepoint_admin_logs (cmd IN ("*PowerShell*", "*powershell*") OR CommandLine LIKE "%PowerShell%") AND (user NOT IN (["admin1", "admin2"])) 
-| join event_id [search index=sharepoint sourcetype=file_activity_logs (file_ext="DLL" OR file_ext="EXE") | fields event_id] 
-| transaction maxspan=1m event_id
-| where time >= relative_time(now(), "-30d@d") AND time <= relative_time(now(), "+1d@d")
-| sort - _time
-| rename user as SharePointUser, CommandLine as CommandExecuted, user as FileUser, file_name as MaliciousFile
-| fields SharePointUser CommandExecuted FileUser MaliciousFile _time
-| tag CVE-2025-XXXXX SharePoint-ZeroDay
+# CrewAI Execution Report - Configuration Management Database Integration
 
-Description: 
-This query detects SharePoint Zero-Day Exploitation (CVE-2025-XXXXX) by identifying unusual PowerShell script executions in SharePoint administrative logs and correlating them with unauthorized .DLL/.EXE file uploads in SharePoint libraries. It filters out known admin accounts, checks for anomalous file types, and spans a 30-day window to align with attack timelines. The transaction correlates events within 1 minute to identify multi-stage attacks. It leverages sourcetypes "sharepoint_admin_logs" and "file_activity_logs" from the organization's database.
-Processed after kickoff.
+## CPE Data Context
+- **Organization**: Your Organization
+- **Collection Timestamp**: 2025-09-06T19:09:34.198811
+- **Software Stack**: 
+- **Total CPE Records**: 2939
+
+## Final Result:
+{
+  "detection_method": "index=firewall OR index=network OR index=endpoint sourcetype=\"*\"  | eval is_ransomware=if(like(user_agent, \"%ransomware%\") OR like(email_subject, \"%ransomware%\"), 1, 0) | eval is_phishing=if(like(email_body, \"%phishing%\") OR like(email_subject, \"%urgent%\"), 1, 0) | eval is_cve=if(like(http_uri, \"%CVE-2025-31324%\") OR like(source_ip, \"%suspicious_ip%\"), 1, 0) | stats sum(is_ransomware) AS ransomware_attacks, sum(is_phishing) AS phishing_attacks, sum(is_cve) AS vuln_exploits",
+  "description": "This query is constructed to detect Ransomware-as-a-Service (RaaS) by looking for indicators associated with ransomware in user agents and email subjects. It also identifies phishing attacks through keywords in the email body and subject. Lastly, it checks for exploitation of known CVEs, specifically targeting activity related to CVE-2025-31324. If any of these conditions are met, the query will aggregate the counts of detected attacks.",
+  "urlList": [
+    "https://www.darktrace.com/blog/2025-cyber-threat-landscape-darktraces-mid-year-review"
+  ]
+}
+
 ## Task Outputs:
 
-## Token Usage:
-Input Tokens: 4275
-Output Tokens: 6475
-Total Tokens: 10750
+### Task 1:
+threatList=[TrendingThreat(threat_name='UNFI Cyberattack', indicators_of_compromise=['Unauthorized access attempts detected', 'Disruption in electronic ordering systems'], description='Mid-June 2025, UNFI, a major US grocery wholesaler, suffered a cyberattack that crippled its electronic ordering systems, leading to significant grocery shortages across North America.', urlList=['https://cybersecuritydive.com/news/unfi-cyberattack-supply-chain/613460/'], media_coverage=[TrendingNews(title='UNFI Suffers Severe Cyberattack', url='https://cybersecuritydive.com/news/unfi-cyberattack-supply-chain/613460/', source='Cybersecurity Dive')]), TrendingThreat(threat_name='Sepah Bank Cyberattack', indicators_of_compromise=['Large data volume exfiltration', 'Ransom demands via cryptocurrency'], description="In March 2025, a hacker collective breached Iran's Bank Sepah, compromising 42 million customer records and demanding a $42 million Bitcoin ransom.", urlList=['https://techcrunch.com/2025/03/10/sepad-bank-cyberattack/'], media_coverage=[TrendingNews(title='42 Million Records Compromised in Sepah Bank Attack', url='https://techcrunch.com/2025/03/10/sepad-bank-cyberattack/', source='TechCrunch')]), TrendingThreat(threat_name='Telemessage Breach', indicators_of_compromise=['Metadata leakage', 'Suspension of app usage by officials'], description='In May 2025, a breach of TeleMessage exposed personal information of US government officials, emphasizing the risks of compliance messaging apps.', urlList=['https://cisa.gov/telemessage-breach-us-officials'], media_coverage=[TrendingNews(title='US Government Messaging App Breached', url='https://cisa.gov/telemessage-breach-us-officials', source='CISA')]), TrendingThreat(threat_name='SAP Netweaver Vulnerability', indicators_of_compromise=['Detection of web shells in SAP systems', 'Exploitation of zero-day vulnerabilities'], description='In April 2025, a critical flaw (CVE-2025-31324) was disclosed in SAP NetWeaver that allowed for remote code execution and active exploitation by hackers.', urlList=['https://www.splunk.com/blog/2025/04/30/sap-zero-day-vulnerability.html'], media_coverage=[TrendingNews(title='SAP Netweaver Hacked: Zero-Day Vulnerability', url='https://www.splunk.com/blog/2025/04/30/sap-zero-day-vulnerability.html', source='Splunk')]), TrendingThreat(threat_name='Marks & Spencer Cyberattack', indicators_of_compromise=['Social engineering tactics detected', 'Service outages across online platforms'], description='During the Easter weekend in April 2025, Marks & Spencer faced a cyberattack that severely impacted its online shopping capabilities, leading to significant financial losses.', urlList=['https://www.reuters.com/business/retail/severe-cyber-attack-marks-spencer-impacts-retail-2025-04-15'], media_coverage=[TrendingNews(title='Cyberattack on Marks & Spencer: Retail Impact', url='https://www.reuters.com/business/retail/severe-cyber-attack-marks-spencer-impacts-retail-2025-04-15', source='Reuters')])]
+
+### Task 2:
+rankedThreatList=[TrendingThreat(threat_name='Ransomware-asa-Service (RaaS)', indicators_of_compromise=['Unauthorized access to SaaS accounts', 'Phishing emails with multi-stage payloads', 'Exploitation of known vulnerabilities in SaaS platforms'], description='Ransomware-as-a-Service has proliferated, as ransomware actors increasingly exploit Software-as-a-Service (SaaS) vulnerabilities, particularly those involving compromised credentials and phishing tactics involving increasingly sophisticated attack methods like LLM-generated phishing emails.', urlList=['https://www.darktrace.com/blog/2025-cyber-threat-landscape-darktraces-mid-year-review'], media_coverage=[TrendingNews(title='Cyber Threats 2025 Overview: Ransomware Trends', url='https://www.darktrace.com/blog/2025-cyber-threat-landscape-darktraces-mid-year-review', source='Darktrace')]), TrendingThreat(threat_name='Phishing Campaigns', indicators_of_compromise=['High volume of phishing emails', 'Increased text volume or multi-stage payloads in emails', 'QR code-based phishing attempts'], description='Phishing campaigns have seen a significant surge, often employing LLMs to automate and enhance the effectiveness and believability of phishing emails. Significant numbers of phishing attacks target VIP users, increasing the risk of successful breaches.', urlList=['https://www.darktrace.com/blog/2025-cyber-threat-landscape-darktraces-mid-year-review'], media_coverage=[TrendingNews(title='2025 Threat Landscape: Phishing Trends', url='https://www.darktrace.com/blog/2025-cyber-threat-landscape-darktraces-mid-year-review', source='Darktrace')]), TrendingThreat(threat_name='Exploitation of Known Vulnerabilities', indicators_of_compromise=['Detection of known CVEs exploitation', 'Malicious file downloads from suspicious IPs', 'Abuse of legitimate services to deliver malware'], description='Threat actors have been observed exploiting known vulnerabilities actively, including CVE-2025-31324 which affects SAP systems, and are leveraging legitimate services for malicious activities, thus highlighting the risks posed by weak patch management.', urlList=['https://www.darktrace.com/blog/2025-cyber-threat-landscape-darktraces-mid-year-review'], media_coverage=[TrendingNews(title='Known Vulnerabilities Targeted by Cybercriminals', url='https://www.darktrace.com/blog/2025-cyber-threat-landscape-darktraces-mid-year-review', source='Darktrace')])]
+
+### Task 3:
+detection_method='index=firewall OR index=network OR index=endpoint sourcetype="*"  | eval is_ransomware=if(like(user_agent, "%ransomware%") OR like(email_subject, "%ransomware%"), 1, 0) | eval is_phishing=if(like(email_body, "%phishing%") OR like(email_subject, "%urgent%"), 1, 0) | eval is_cve=if(like(http_uri, "%CVE-2025-31324%") OR like(source_ip, "%suspicious_ip%"), 1, 0) | stats sum(is_ransomware) AS ransomware_attacks, sum(is_phishing) AS phishing_attacks, sum(is_cve) AS vuln_exploits' description='This query is constructed to detect Ransomware-as-a-Service (RaaS) by looking for indicators associated with ransomware in user agents and email subjects. It also identifies phishing attacks through keywords in the email body and subject. Lastly, it checks for exploitation of known CVEs, specifically targeting activity related to CVE-2025-31324. If any of these conditions are met, the query will aggregate the counts of detected attacks.' urlList=['https://www.darktrace.com/blog/2025-cyber-threat-landscape-darktraces-mid-year-review']
 
 ## Token Usage:
-Input Tokens: 4275
-Output Tokens: 6475
-Total Tokens: 10750
+- Input Tokens: 32114
+- Output Tokens: 2362
+- Total Tokens: 34476
+
+## CPE Data Summary:
+- **Operating Systems**: 0 records
+- **Applications**: 0 records
+- **Cloud Platforms**: 0 records
+- **Vendors Covered**: 
+- **Products Covered**: 
