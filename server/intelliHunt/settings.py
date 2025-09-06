@@ -44,6 +44,8 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    'corsheaders.middleware.CorsMiddleware', 
+    'django.middleware.common.CommonMiddleware',
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -53,11 +55,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "intelliHunt.urls"
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Next.js default dev server
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'client/build')],
-        'APP_DIRS': True,
+        'DIRS': [],  # No custom template directories needed for API-only
+        'APP_DIRS': True,  # Automatically look for templates in app directories
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',

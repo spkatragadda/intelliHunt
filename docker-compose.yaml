@@ -1,9 +1,29 @@
 version: '3.8'
-
 services:
-  web:
+  django:
     build:
       context: .
       dockerfile: Dockerfile
+      target: django
     ports:
-      - "80:8000"
+      - "8000:8000"
+    volumes:
+      - ./server:/app/server
+    environment:
+      - PYTHONPATH=/app/server
+
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: nextjs
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client/intellihunt:/app/client/intellihunt
+    environment:
+      - NODE_ENV=production
+
+networks:
+  default:
+    driver: bridge

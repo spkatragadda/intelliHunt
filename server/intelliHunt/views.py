@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView
+from django.http import HttpResponse
 
-class ReactAppView(TemplateView):
-    template_name = 'index.html'
+def ReactAppView(request):
+    return HttpResponse("Django API is running. Use the Next.js frontend at http://localhost:3000.", status=200)

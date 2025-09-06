@@ -22,14 +22,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .reportApp import views
 from .views import ReactAppView
+from django.http import HttpResponse
+
+def health_check(request):
+    return HttpResponse("Django API is running. Access the frontend at http://localhost:3000.", status=200)
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/markdown/', views.get_markdown_content, name='markdown_content'),
+    path('', health_check, name='health_check'),
     # The "catch-all" pattern that serves the React app
     #re_path(r'^.*', TemplateView.as_view(template_name='index.html')),
-    re_path(r'^.*', ReactAppView.as_view(), name='react_app'), # Catch-all for React
+    #re_path(r'^.*', ReactAppView.as_view(), name='react_app'), # Catch-all for React
 ]
 
 
