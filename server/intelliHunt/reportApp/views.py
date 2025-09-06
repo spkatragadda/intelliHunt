@@ -6,7 +6,7 @@ def get_markdown_content(request):
     """Serves the raw Markdown file as a text/markdown HTTP response."""
 
     # Path to your Markdown file
-    markdown_file_path = os.path.join(settings.BASE_DIR, 'crew/crew_report.md')
+    markdown_file_path = os.path.join(settings.BASE_DIR, 'intelliHunt/crew/crew_report.md')
 
     try:
         # Open and read the file in binary mode for streaming
