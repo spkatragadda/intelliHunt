@@ -70,10 +70,13 @@ class CPEDataProcessor:
         }
         
         # Process operating systems
+        # print("operating systems: ", self.cpe_data.get('operating_systems'))
         for os_record in self.cpe_data.get('operating_systems', []):
-            cpe_name = os_record.get('cpeName', '')
+            # print("OS record: ",os_record)
+            cpe_name = os_record.get('cpe').get('cpeName', '')
+            # print("CPE Name: ",cpe_name)
             if cpe_name:
-                software_stack['operating_systems'].append(cpe_name)
+                #software_stack['operating_systems'].append(cpe_name)
                 # Extract vendor and product info
                 parts = cpe_name.split(':')
                 if len(parts) >= 5:
@@ -83,12 +86,14 @@ class CPEDataProcessor:
                         software_stack['vendors'].append(vendor)
                     if product not in software_stack['products']:
                         software_stack['products'].append(product)
-        
+                    if product not in software_stack['operating_systems']:
+                        software_stack['operating_systems'].append(product)
+
         # Process applications
         for app_record in self.cpe_data.get('applications', []):
-            cpe_name = app_record.get('cpeName', '')
+            cpe_name = app_record.get('cpe').get('cpeName', '')
             if cpe_name:
-                software_stack['applications'].append(cpe_name)
+                # software_stack['applications'].append(cpe_name)
                 # Extract vendor and product info
                 parts = cpe_name.split(':')
                 if len(parts) >= 5:
@@ -98,12 +103,14 @@ class CPEDataProcessor:
                         software_stack['vendors'].append(vendor)
                     if product not in software_stack['products']:
                         software_stack['products'].append(product)
+                    if product not in software_stack['applications']:
+                        software_stack['applications'].append(product)
         
         # Process cloud platforms
         for cloud_record in self.cpe_data.get('cloud_platforms', []):
-            cpe_name = cloud_record.get('cpeName', '')
+            cpe_name = cloud_record.get('cpe').get('cpeName', '')
             if cpe_name:
-                software_stack['cloud_platforms'].append(cpe_name)
+                # software_stack['cloud_platforms'].append(cpe_name)
                 # Extract vendor and product info
                 parts = cpe_name.split(':')
                 if len(parts) >= 5:
@@ -113,6 +120,8 @@ class CPEDataProcessor:
                         software_stack['vendors'].append(vendor)
                     if product not in software_stack['products']:
                         software_stack['products'].append(product)
+                    if product not in software_stack['cloud_platforms']:
+                        software_stack['cloud_platforms'].append(product)
         
         return software_stack
     
@@ -336,6 +345,8 @@ def main():
         summary = processor.get_summary_report()
         print(summary)
         
+        # check summary 
+
         print(f"\nCrew workflow input saved to: {output_path}")
         
     except Exception as e:

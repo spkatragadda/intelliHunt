@@ -7,7 +7,7 @@ research_task:
     Only bring back text data, do not bring back any images, videos, pdfs or other media.
     Prefer these urls: {url_list}.
   expected_output: >
-    A report on threats prevalent to an organizations software stack in a well formatted and concise report.
+    A report on threats relevant to an organizations software stack in a well formatted and concise report.
     The report should include indicators of compromise for each threat and information associated with detecting
     that threat. The organization of interests software stack is the following: {software_stack}
   agent: ctiAnalyst

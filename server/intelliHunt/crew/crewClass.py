@@ -11,7 +11,6 @@ from openai import OpenAI
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
-
 load_dotenv()
 import os
 
@@ -19,6 +18,7 @@ os.environ["MODEL"] = os.getenv("MODEL")
 os.environ["GROQ_API_KEY"] = os.getenv("GROQ_KEY")
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 os.environ["MAX_TOKENS"] = os.getenv("MAX_TOKENS")
+os.environ["MAX_RPM"] = os.getenv("MAX_RPM")
 
 
 # Configure the embedder (replacing OpenAI)
@@ -172,5 +172,6 @@ class cyberCrew:
             tasks=self.tasks,  # Automatically collected by the @task decorator.
             process=Process.sequential,
             verbose=True,
-            max_rpm=20,
+            max_rpm=os.environ["MAX_RPM"],
+            output_log_file = True
         )

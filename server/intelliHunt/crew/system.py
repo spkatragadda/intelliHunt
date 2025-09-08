@@ -5,6 +5,7 @@ from pathlib import Path
 from nvd_cpe_client import NVDCPEClient
 from cpe_data_processor import CPEDataProcessor
 
+
 def load_cpe_data_for_crew():
     """
     Load CPE data and generate crew workflow input.
@@ -91,6 +92,7 @@ def main():
         print(f"  - Total Records: {cpe_summary.get('total_records', 0)}")
         print(f"  - Vendors: {', '.join(cpe_summary.get('vendors_covered', [])[:5])}")
         print(f"  - Products: {', '.join(cpe_summary.get('products_covered', [])[:5])}")
+
     
     # Initialize crew
     crew = cyberCrew().crew()
@@ -117,19 +119,19 @@ def generate_crew_report(result, inputs):
         
         # Formatting for a document
         document_content = f"""
-# CrewAI Execution Report - Configuration Management Database Integration
+        # CrewAI Execution Report - Configuration Management Database Integration
 
-## CPE Data Context
-- **Organization**: {inputs.get('collection_metadata', {}).get('organization', 'Unknown')}
-- **Collection Timestamp**: {inputs.get('collection_metadata', {}).get('timestamp', 'Unknown')}
-- **Software Stack**: {inputs['software_stack']}
-- **Total CPE Records**: {inputs.get('cpe_data', {}).get('total_records', 'N/A')}
+        ## CPE Data Context
+        - **Organization**: {inputs.get('collection_metadata', {}).get('organization', 'Unknown')}
+        - **Collection Timestamp**: {inputs.get('collection_metadata', {}).get('timestamp', 'Unknown')}
+        - **Software Stack**: {inputs['software_stack']}
+        - **Total CPE Records**: {inputs.get('cpe_data', {}).get('total_records', 'N/A')}
 
-## Final Result:
-{final_result}
+        ## Final Result:
+        {final_result}
 
-## Task Outputs:
-"""
+        ## Task Outputs:
+        """
         
         # Add task outputs
         if tasks_output:
@@ -146,23 +148,23 @@ def generate_crew_report(result, inputs):
         # Add token usage if available
         if token_usage:
             document_content += f"""
-## Token Usage:
-- Input Tokens: {token_usage.prompt_tokens}
-- Output Tokens: {token_usage.completion_tokens}
-- Total Tokens: {token_usage.total_tokens}
-"""
+        ## Token Usage:
+        - Input Tokens: {token_usage.prompt_tokens}
+        - Output Tokens: {token_usage.completion_tokens}
+        - Total Tokens: {token_usage.total_tokens}
+        """
         
         # Add CPE data summary
         if 'cpe_data' in inputs:
             cpe_data = inputs['cpe_data']
             document_content += f"""
-## CPE Data Summary:
-- **Operating Systems**: {len(cpe_data.get('operating_systems', []))} records
-- **Applications**: {len(cpe_data.get('applications', []))} records
-- **Cloud Platforms**: {len(cpe_data.get('cloud_platforms', []))} records
-- **Vendors Covered**: {', '.join(cpe_data.get('vendors_covered', [])[:10])}
-- **Products Covered**: {', '.join(cpe_data.get('products_covered', [])[:10])}
-"""
+            ## CPE Data Summary:
+            - **Operating Systems**: {len(cpe_data.get('operating_systems', []))} records
+            - **Applications**: {len(cpe_data.get('applications', []))} records
+            - **Cloud Platforms**: {len(cpe_data.get('cloud_platforms', []))} records
+            - **Vendors Covered**: {', '.join(cpe_data.get('vendors_covered', [])[:10])}
+            - **Products Covered**: {', '.join(cpe_data.get('products_covered', [])[:10])}
+            """
         
         # Save report
         report_path = Path(__file__).parent / "crew_report.md"

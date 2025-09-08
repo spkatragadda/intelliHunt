@@ -1,0 +1,130 @@
+{
+  "crew_input": {
+    "software_stack": "windows_server_2019,onedrive,exchange_server,active_directory,oracle,teams,http_server,nodejs,crowdstrike,windows_10,kafka,iis,office,apple,powerpoint,microsoft,sql_server,windows_server_2022,tomcat,visual_studio,python,mysql,apache,macos,node.js,windows_11,falcon,excel,azure",
+    "url_list": [
+      "https://nvd.nist.gov/vuln/search",
+      "https://cve.mitre.org/cve/search_cve_list.html",
+      "https://msrc.microsoft.com/update-guide/vulnerabilities",
+      "https://www.oracle.com/security-alerts/",
+      "https://apache.org/security/",
+      "https://python.org/security/"
+    ],
+    "cpe_data": {
+      "total_records": 10522,
+      "vendors_covered": [
+        "microsoft",
+        "apple",
+        "oracle",
+        "apache",
+        "python",
+        "nodejs",
+        "crowdstrike"
+      ],
+      "products_covered": [
+        "windows_10",
+        "windows_11",
+        "windows_server_2019",
+        "windows_server_2022",
+        "macos",
+        "office",
+        "teams",
+        "powerpoint",
+        "excel",
+        "onedrive",
+        "active_directory",
+        "visual_studio",
+        "sql_server",
+        "iis",
+        "exchange_server",
+        "mysql",
+        "http_server",
+        "tomcat",
+        "kafka",
+        "python",
+        "node.js",
+        "falcon",
+        "azure"
+      ],
+      "operating_systems": [
+        "windows_10",
+        "windows_11",
+        "windows_server_2019",
+        "windows_server_2022",
+        "macos"
+      ],
+      "applications": [
+        "office",
+        "teams",
+        "powerpoint",
+        "excel",
+        "onedrive",
+        "active_directory",
+        "visual_studio",
+        "sql_server",
+        "iis",
+        "exchange_server",
+        "mysql",
+        "http_server",
+        "tomcat",
+        "kafka",
+        "python",
+        "node.js",
+        "falcon"
+      ],
+      "cloud_platforms": [
+        "azure"
+      ]
+    },
+    "collection_metadata": {
+      "timestamp": "2025-09-08T18:12:50.601122",
+      "organization": "Your Organization"
+    }
+  },
+  "vulnerability_focus_areas": [
+    {
+      "category": "Operating Systems",
+      "description": "Vulnerabilities in operating systems used by the organization",
+      "cpe_count": 481,
+      "priority": "High",
+      "search_terms": [
+        "OS vulnerability",
+        "operating system exploit",
+        "kernel vulnerability"
+      ]
+    },
+    {
+      "category": "Applications",
+      "description": "Vulnerabilities in applications and software used by the organization",
+      "cpe_count": 4891,
+      "priority": "High",
+      "search_terms": [
+        "application vulnerability",
+        "software exploit",
+        "zero-day"
+      ]
+    },
+    {
+      "category": "Cloud Platforms",
+      "description": "Vulnerabilities in cloud platforms and services",
+      "cpe_count": 1,
+      "priority": "Medium",
+      "search_terms": [
+        "cloud vulnerability",
+        "cloud exploit",
+        "misconfiguration"
+      ]
+    },
+    {
+      "category": "Recent Updates",
+      "description": "Recently discovered or updated vulnerabilities",
+      "cpe_count": 5149,
+      "priority": "Critical",
+      "search_terms": [
+        "recent vulnerability",
+        "new exploit",
+        "emerging threat"
+      ]
+    }
+  ],
+  "processing_timestamp": "2025-09-08T19:41:46.196931"
+}

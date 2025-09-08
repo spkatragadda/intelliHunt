@@ -74,7 +74,7 @@ class NVDCPEClient:
                 response.raise_for_status()
                 
                 # Rate limiting - NVD recommends 0.6 seconds between requests
-                time.sleep(0.6)
+                time.sleep(5)
                 
                 return response.json()
                 
@@ -149,6 +149,7 @@ class NVDCPEClient:
         cpe_records = []
         start_index = 0
         
+        # here might needs to pass a string
         keyword_string = " ".join(keywords)
         logger.info(f"Searching for CPE records with keywords: {keyword_string}")
         
