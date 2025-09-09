@@ -1,0 +1,297 @@
+{
+  "software_stack": "microsoft,excel,windows_11,windows_server_2019,onedrive,python,nodejs,iis,node.js,falcon,azure,oracle,office,teams,apple,mysql,exchange_server,http_server,sql_server,powerpoint,kafka,windows_10,visual_studio,active_directory,apache,tomcat,windows_server_2022,crowdstrike,macos",
+  "url_list": [
+    "https://nvd.nist.gov/vuln/search",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://msrc.microsoft.com/update-guide/vulnerabilities",
+    "https://www.oracle.com/security-alerts/",
+    "https://apache.org/security/",
+    "https://python.org/security/",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://www.cvedetails.com/",
+    "https://nvd.nist.gov/vuln/search"
+  ],
+  "cpe_data": {
+    "total_records": 10522,
+    "vendors_covered": [
+      "microsoft",
+      "apple",
+      "oracle",
+      "apache",
+      "python",
+      "nodejs",
+      "crowdstrike"
+    ],
+    "products_covered": [
+      "windows_10",
+      "windows_11",
+      "windows_server_2019",
+      "windows_server_2022",
+      "macos",
+      "office",
+      "teams",
+      "powerpoint",
+      "excel",
+      "onedrive",
+      "active_directory",
+      "visual_studio",
+      "sql_server",
+      "iis",
+      "exchange_server",
+      "mysql",
+      "http_server",
+      "tomcat",
+      "kafka",
+      "python",
+      "node.js",
+      "falcon",
+      "azure"
+    ],
+    "operating_systems": [
+      "windows_10",
+      "windows_11",
+      "windows_server_2019",
+      "windows_server_2022",
+      "macos"
+    ],
+    "applications": [
+      "office",
+      "teams",
+      "powerpoint",
+      "excel",
+      "onedrive",
+      "active_directory",
+      "visual_studio",
+      "sql_server",
+      "iis",
+      "exchange_server",
+      "mysql",
+      "http_server",
+      "tomcat",
+      "kafka",
+      "python",
+      "node.js",
+      "falcon"
+    ],
+    "cloud_platforms": [
+      "azure"
+    ]
+  },
+  "collection_metadata": {
+    "timestamp": "2025-09-08T18:12:50.601122",
+    "organization": "Your Organization"
+  },
+  "vulnerability_data": {
+    "recent_cves": [
+      "CVE-2025-55162",
+      "CVE-2025-10011",
+      "CVE-2025-10012",
+      "CVE-2025-10013"
+    ],
+    "high_priority_cves": [],
+    "total_cves_found": 4,
+    "time_period": "Last 7 days",
+    "cve_details": [
+      {
+        "cve_id": "CVE-2025-10013",
+        "description": "A vulnerability was detected in Portabilis i-Educar up to 2.10. This affects an unknown function of the file /exportacao-para-o-seb. Performing manipulation results in improper access controls. The attack is possible to be carried out remotely. The exploit is now public and may be used.",
+        "cvss_score": 6.3,
+        "severity": "MEDIUM",
+        "published": "2025-09-05T16:15:36.360",
+        "cpe_name": "cpe:2.3:a:portabilis:i-educar:2.9.0:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/marcelomulder/CVE/blob/main/i-educar/Broken%20Access%20Control%20Vulnerability%20%20in%20%60exportacao-para-o-seb%60%20Endpoint.md",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Broken Link"
+            ]
+          },
+          {
+            "url": "https://github.com/marcelomulder/CVE/blob/main/i-educar/CVE-2025-10013.md",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Exploit",
+              "Third Party Advisory"
+            ]
+          },
+          {
+            "url": "https://vuldb.com/?ctiid.322738",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Permissions Required",
+              "VDB Entry"
+            ]
+          },
+          {
+            "url": "https://vuldb.com/?id.322738",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Third Party Advisory",
+              "VDB Entry"
+            ]
+          },
+          {
+            "url": "https://vuldb.com/?submit.643567",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Third Party Advisory",
+              "VDB Entry"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-10012",
+        "description": "A security vulnerability has been detected in Portabilis i-Educar up to 2.10. The impacted element is an unknown function of the file educar_historico_escolar_lst.php. Such manipulation of the argument ref_cod_aluno leads to sql injection. The attack can be executed remotely. The exploit has been disclosed publicly and may be used.",
+        "cvss_score": 6.3,
+        "severity": "MEDIUM",
+        "published": "2025-09-05T15:15:32.603",
+        "cpe_name": "cpe:2.3:a:portabilis:i-educar:2.9.0:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/marcelomulder/CVE/blob/main/i-educar/CVE-2025-10012.md",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Exploit",
+              "Third Party Advisory"
+            ]
+          },
+          {
+            "url": "https://github.com/marcelomulder/CVE/blob/main/i-educar/SQL%20Injection%20(Blind%20Time-Based)%20Vulnerability%20in%20ref_cod_aluno%20Parameter%20on%20educar_historico_escolar_lst.php%20Endpoint.md",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Broken Link"
+            ]
+          },
+          {
+            "url": "https://vuldb.com/?ctiid.322737",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Permissions Required",
+              "VDB Entry"
+            ]
+          },
+          {
+            "url": "https://vuldb.com/?id.322737",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Third Party Advisory",
+              "VDB Entry"
+            ]
+          },
+          {
+            "url": "https://vuldb.com/?submit.643549",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Third Party Advisory",
+              "VDB Entry"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-10011",
+        "description": "A weakness has been identified in Portabilis i-Educar up to 2.10. The affected element is an unknown function of the file /module/TabelaArredondamento/edit. This manipulation of the argument ID causes sql injection. Remote exploitation of the attack is possible. The exploit has been made available to the public and could be exploited.",
+        "cvss_score": 6.3,
+        "severity": "MEDIUM",
+        "published": "2025-09-05T14:15:41.973",
+        "cpe_name": "cpe:2.3:a:portabilis:i-educar:2.9.0:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/marcelomulder/CVE/blob/main/i-educar/CVE-2025-10011.md",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Exploit",
+              "Third Party Advisory"
+            ]
+          },
+          {
+            "url": "https://github.com/marcelomulder/CVE/blob/main/i-educar/SQL%20Injection%20(Blind%20Time-Based)%20Vulnerability%20in%20%60id%60%20Parameter%20on%20%60.module.TabelaArredondamento.edit%60%20Endpoint.md",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Broken Link"
+            ]
+          },
+          {
+            "url": "https://vuldb.com/?ctiid.322736",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Permissions Required",
+              "VDB Entry"
+            ]
+          },
+          {
+            "url": "https://vuldb.com/?id.322736",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Third Party Advisory",
+              "VDB Entry"
+            ]
+          },
+          {
+            "url": "https://vuldb.com/?submit.643544",
+            "source": "cna@vuldb.com",
+            "tags": [
+              "Third Party Advisory",
+              "VDB Entry"
+            ]
+          },
+          {
+            "url": "https://github.com/marcelomulder/CVE/blob/main/i-educar/SQL%20Injection%20(Blind%20Time-Based)%20Vulnerability%20in%20%60id%60%20Parameter%20on%20%60.module.TabelaArredondamento.edit%60%20Endpoint.md",
+            "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0",
+            "tags": [
+              "Broken Link"
+            ]
+          },
+          {
+            "url": "https://vuldb.com/?submit.643544",
+            "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0",
+            "tags": [
+              "Third Party Advisory",
+              "VDB Entry"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-55162",
+        "description": "Envoy is an open source L7 proxy and communication bus designed for large modern service oriented architectures. In versions below 1.32.10 and 1.33.0 through 1.33.6, 1.34.0 through 1.34.4 and 1.35.0, insufficient Session Expiration in the Envoy OAuth2 filter leads to failed logout operations. When configured with __Secure- or __Host- prefixed cookie names, the filter fails to append the required Secure attribute to the Set-Cookie header during deletion. Modern browsers ignore this invalid request, causing the session cookie to persist. This allows a user to remain logged in after they believe they have logged out, creating a session hijacking risk on shared computers. The current implementation iterates through the configured cookie names to generate deletion headers but does not check for these prefixes. This failure to properly construct the deletion header means the user's session cookies are never removed by the browser, leaving the session active and allowing the next user of the same browser to gain unauthorized access to the original user's account and data. This is fixed in versions 1.32.10, 1.33.7, 1.34.5 and 1.35.1.",
+        "cvss_score": 6.3,
+        "severity": "MEDIUM",
+        "published": "2025-09-03T20:15:33.697",
+        "cpe_name": "cpe:2.3:a:envoyproxy:envoy:1.24.12:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/envoyproxy/envoy/releases/tag/v1.35.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-95j4-hw7f-v2rh",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Third Party Advisory",
+              "Mitigation"
+            ]
+          },
+          {
+            "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-95j4-hw7f-v2rh",
+            "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0",
+            "tags": [
+              "Exploit",
+              "Third Party Advisory",
+              "Mitigation"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "research_focus": "Recent Vulnerability Analysis",
+  "threat_intelligence_priority": "High",
+  "analysis_timeframe": "Last 7 days"
+}
