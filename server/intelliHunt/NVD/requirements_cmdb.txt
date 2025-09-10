@@ -1,0 +1,4 @@
+# Additional requirements for Configuration Management Database integration
+requests>=2.31.0
+PyYAML>=6.0
+pathlib2>=2.3.7; python_version < "3.4"

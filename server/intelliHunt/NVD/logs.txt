@@ -1,0 +1,593 @@
+2025-09-09 20:36:13: Loaded CPE data from: C:\Users\saipk\agentAttempts\server\intelliHunt\NVD\cpe_data_20250909_182122.json
+2025-09-09 20:36:13: Fetching vulnerabilities from the past 7 days
+2025-09-09 20:36:13: Loading CPE data from: C:\Users\saipk\agentAttempts\server\intelliHunt\NVD\cpe_data_20250909_182122.json
+2025-09-09 20:36:13: Found 13549 unique CPE names
+2025-09-09 20:36:13: Limiting CPE processing to 50 out of 13549 total CPEs to avoid API rate limits
+2025-09-09 20:36:13: Fetching CVEs for CPE 1/50: cpe:2.3:a:apache:tomcat:10.0.18:*:*:*:*:*:*:*
+2025-09-09 20:36:13: Searching for CVEs for CPE cpe:2.3:a:apache:tomcat:10.0.18:*:*:*:*:*:*:* between 2025-09-03T00:36:13.000Z and 2025-09-10T00:36:13.000Z
+2025-09-09 20:36:13: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:36:19: Fetching CVEs for CPE 2/50: cpe:2.3:a:python:python:3.7.0:rc1:*:*:*:*:*:*
+2025-09-09 20:36:19: Searching for CVEs for CPE cpe:2.3:a:python:python:3.7.0:rc1:*:*:*:*:*:* between 2025-09-03T00:36:19.000Z and 2025-09-10T00:36:19.000Z
+2025-09-09 20:36:19: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:36:25: Fetching CVEs for CPE 3/50: cpe:2.3:a:9001:copyparty:0.9.6:*:*:*:*:*:*:*
+2025-09-09 20:36:25: Searching for CVEs for CPE cpe:2.3:a:9001:copyparty:0.9.6:*:*:*:*:*:*:* between 2025-09-03T00:36:25.000Z and 2025-09-10T00:36:25.000Z
+2025-09-09 20:36:25: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:36:30: Fetching CVEs for CPE 4/50: cpe:2.3:a:solspace:freeform:2.0.0:beta12:*:*:*:craft_cms:*:*
+2025-09-09 20:36:30: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:2.0.0:beta12:*:*:*:craft_cms:*:* between 2025-09-03T00:36:30.000Z and 2025-09-10T00:36:30.000Z
+2025-09-09 20:36:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:36:35: Fetching CVEs for CPE 5/50: cpe:2.3:a:solspace:freeform:3.0.6:*:*:*:*:craft_cms:*:*
+2025-09-09 20:36:35: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:3.0.6:*:*:*:*:craft_cms:*:* between 2025-09-03T00:36:35.000Z and 2025-09-10T00:36:35.000Z
+2025-09-09 20:36:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:36:41: Fetching CVEs for CPE 6/50: cpe:2.3:a:nextcloud:group_folders:16.0.7:*:*:*:*:*:*:*
+2025-09-09 20:36:41: Searching for CVEs for CPE cpe:2.3:a:nextcloud:group_folders:16.0.7:*:*:*:*:*:*:* between 2025-09-03T00:36:41.000Z and 2025-09-10T00:36:41.000Z
+2025-09-09 20:36:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:36:46: Fetching CVEs for CPE 7/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.707:*:*:*:azure:*:x64:*
+2025-09-09 20:36:46: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.707:*:*:*:azure:*:x64:* between 2025-09-03T00:36:46.000Z and 2025-09-10T00:36:46.000Z
+2025-09-09 20:36:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:36:52: Fetching CVEs for CPE 8/50: cpe:2.3:a:ethyca:fides:2.26.0:rc3:*:*:*:*:*:*
+2025-09-09 20:36:52: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.26.0:rc3:*:*:*:*:*:* between 2025-09-03T00:36:52.000Z and 2025-09-10T00:36:52.000Z
+2025-09-09 20:36:52: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:36:57: Fetching CVEs for CPE 9/50: cpe:2.3:a:apache:tomcat:8.5.37:*:*:*:*:*:*:*
+2025-09-09 20:36:57: Searching for CVEs for CPE cpe:2.3:a:apache:tomcat:8.5.37:*:*:*:*:*:*:* between 2025-09-03T00:36:57.000Z and 2025-09-10T00:36:57.000Z
+2025-09-09 20:36:57: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:02: Fetching CVEs for CPE 10/50: cpe:2.3:a:nodejs:node.js:7.0.0:*:*:*:-:*:*:*
+2025-09-09 20:37:02: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:7.0.0:*:*:*:-:*:*:* between 2025-09-03T00:37:02.000Z and 2025-09-10T00:37:02.000Z
+2025-09-09 20:37:02: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:08: Fetching CVEs for CPE 11/50: cpe:2.3:a:python:python:3.6.3:rc1:*:*:*:*:*:*
+2025-09-09 20:37:08: Searching for CVEs for CPE cpe:2.3:a:python:python:3.6.3:rc1:*:*:*:*:*:* between 2025-09-03T00:37:08.000Z and 2025-09-10T00:37:08.000Z
+2025-09-09 20:37:08: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:13: Fetching CVEs for CPE 12/50: cpe:2.3:a:ethyca:fides:2.55.1:alpha2:*:*:*:*:*:*
+2025-09-09 20:37:13: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.55.1:alpha2:*:*:*:*:*:* between 2025-09-03T00:37:13.000Z and 2025-09-10T00:37:13.000Z
+2025-09-09 20:37:13: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:19: Fetching CVEs for CPE 13/50: cpe:2.3:a:oracle:mysql:5.1.26:*:*:*:*:*:*:*
+2025-09-09 20:37:19: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.1.26:*:*:*:*:*:*:* between 2025-09-03T00:37:19.000Z and 2025-09-10T00:37:19.000Z
+2025-09-09 20:37:19: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:24: Fetching CVEs for CPE 14/50: cpe:2.3:a:checkpoint:smartconsole:r81.20:build660:*:*:*:*:*:*
+2025-09-09 20:37:24: Searching for CVEs for CPE cpe:2.3:a:checkpoint:smartconsole:r81.20:build660:*:*:*:*:*:* between 2025-09-03T00:37:24.000Z and 2025-09-10T00:37:24.000Z
+2025-09-09 20:37:24: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:30: Fetching CVEs for CPE 15/50: cpe:2.3:a:nextcloud:nextcloud_server:29.0.7:rc1:*:*:-:*:*:*
+2025-09-09 20:37:30: Searching for CVEs for CPE cpe:2.3:a:nextcloud:nextcloud_server:29.0.7:rc1:*:*:-:*:*:* between 2025-09-03T00:37:30.000Z and 2025-09-10T00:37:30.000Z
+2025-09-09 20:37:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:35: Fetching CVEs for CPE 16/50: cpe:2.3:a:oracle:mysql:5.5.17:*:*:*:*:*:*:*
+2025-09-09 20:37:35: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.5.17:*:*:*:*:*:*:* between 2025-09-03T00:37:35.000Z and 2025-09-10T00:37:35.000Z
+2025-09-09 20:37:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:41: Fetching CVEs for CPE 17/50: cpe:2.3:a:microsoft:sql_server:2016:*:*:*:*:*:*:*
+2025-09-09 20:37:41: Searching for CVEs for CPE cpe:2.3:a:microsoft:sql_server:2016:*:*:*:*:*:*:* between 2025-09-03T00:37:41.000Z and 2025-09-10T00:37:41.000Z
+2025-09-09 20:37:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:46: Fetching CVEs for CPE 18/50: cpe:2.3:a:apache:http_server:2.4.11:*:*:*:*:*:*:*
+2025-09-09 20:37:46: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.4.11:*:*:*:*:*:*:* between 2025-09-03T00:37:46.000Z and 2025-09-10T00:37:46.000Z
+2025-09-09 20:37:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:52: Fetching CVEs for CPE 19/50: cpe:2.3:a:katex:katex:0.2.0:*:*:*:*:*:*:*
+2025-09-09 20:37:52: Searching for CVEs for CPE cpe:2.3:a:katex:katex:0.2.0:*:*:*:*:*:*:* between 2025-09-03T00:37:52.000Z and 2025-09-10T00:37:52.000Z
+2025-09-09 20:37:52: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:57: Fetching CVEs for CPE 20/50: cpe:2.3:a:9001:copyparty:1.4.2:*:*:*:*:*:*:*
+2025-09-09 20:37:57: Searching for CVEs for CPE cpe:2.3:a:9001:copyparty:1.4.2:*:*:*:*:*:*:* between 2025-09-03T00:37:57.000Z and 2025-09-10T00:37:57.000Z
+2025-09-09 20:37:57: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:57: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3A9001%3Acopyparty%3A1.4.2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A37%3A57.000Z&pubEndDate=2025-09-10T00%3A37%3A57.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:37:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:37:58: Request attempt 2 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3A9001%3Acopyparty%3A1.4.2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A37%3A57.000Z&pubEndDate=2025-09-10T00%3A37%3A57.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:38:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:06: Fetching CVEs for CPE 21/50: cpe:2.3:a:workos:authkit:0.11.0:*:*:*:*:node.js:*:*
+2025-09-09 20:38:06: Searching for CVEs for CPE cpe:2.3:a:workos:authkit:0.11.0:*:*:*:*:node.js:*:* between 2025-09-03T00:38:06.000Z and 2025-09-10T00:38:06.000Z
+2025-09-09 20:38:06: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:11: Fetching CVEs for CPE 22/50: cpe:2.3:a:vercel:next.js:14.1.1:canary35:*:*:*:node.js:*:*
+2025-09-09 20:38:11: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:14.1.1:canary35:*:*:*:node.js:*:* between 2025-09-03T00:38:11.000Z and 2025-09-10T00:38:11.000Z
+2025-09-09 20:38:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:17: Fetching CVEs for CPE 23/50: cpe:2.3:o:microsoft:windows_server_2022:-:*:*:*:datacenter:*:x64:*
+2025-09-09 20:38:17: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:-:*:*:*:datacenter:*:x64:* between 2025-09-03T00:38:17.000Z and 2025-09-10T00:38:17.000Z
+2025-09-09 20:38:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:22: Fetching CVEs for CPE 24/50: cpe:2.3:a:whatsapp:whatsapp:2.21.8.13:*:*:*:business:android:*:*
+2025-09-09 20:38:22: Searching for CVEs for CPE cpe:2.3:a:whatsapp:whatsapp:2.21.8.13:*:*:*:business:android:*:* between 2025-09-03T00:38:22.000Z and 2025-09-10T00:38:22.000Z
+2025-09-09 20:38:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:22: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Awhatsapp%3Awhatsapp%3A2.21.8.13%3A%2A%3A%2A%3A%2A%3Abusiness%3Aandroid%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A38%3A22.000Z&pubEndDate=2025-09-10T00%3A38%3A22.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:38:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:29: Fetching CVEs for CPE 25/50: cpe:2.3:a:nodejs:node.js:10.15.2:*:*:*:-:*:*:*
+2025-09-09 20:38:29: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:10.15.2:*:*:*:-:*:*:* between 2025-09-03T00:38:29.000Z and 2025-09-10T00:38:29.000Z
+2025-09-09 20:38:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:34: Fetching CVEs for CPE 26/50: cpe:2.3:a:gardener:gardener:1.2.2:*:*:*:*:*:*:*
+2025-09-09 20:38:34: Searching for CVEs for CPE cpe:2.3:a:gardener:gardener:1.2.2:*:*:*:*:*:*:* between 2025-09-03T00:38:34.000Z and 2025-09-10T00:38:34.000Z
+2025-09-09 20:38:34: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:34: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Agardener%3Agardener%3A1.2.2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A38%3A34.000Z&pubEndDate=2025-09-10T00%3A38%3A34.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:38:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:41: Fetching CVEs for CPE 27/50: cpe:2.3:a:nextcloud:group_folders:16.0.9:*:*:*:*:*:*:*
+2025-09-09 20:38:41: Searching for CVEs for CPE cpe:2.3:a:nextcloud:group_folders:16.0.9:*:*:*:*:*:*:* between 2025-09-03T00:38:41.000Z and 2025-09-10T00:38:41.000Z
+2025-09-09 20:38:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:46: Fetching CVEs for CPE 28/50: cpe:2.3:a:solspace:freeform:5.9.2:*:*:*:*:craft_cms:*:*
+2025-09-09 20:38:46: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:5.9.2:*:*:*:*:craft_cms:*:* between 2025-09-03T00:38:46.000Z and 2025-09-10T00:38:46.000Z
+2025-09-09 20:38:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:46: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Asolspace%3Afreeform%3A5.9.2%3A%2A%3A%2A%3A%2A%3A%2A%3Acraft_cms%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A38%3A46.000Z&pubEndDate=2025-09-10T00%3A38%3A46.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:38:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:53: Fetching CVEs for CPE 29/50: cpe:2.3:a:solspace:freeform:5.8.1:*:*:*:*:craft_cms:*:*
+2025-09-09 20:38:53: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:5.8.1:*:*:*:*:craft_cms:*:* between 2025-09-03T00:38:53.000Z and 2025-09-10T00:38:53.000Z
+2025-09-09 20:38:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:58: Fetching CVEs for CPE 30/50: cpe:2.3:a:ethyca:fides:2.63.5:rc1:*:*:*:*:*:*
+2025-09-09 20:38:58: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.63.5:rc1:*:*:*:*:*:* between 2025-09-03T00:38:58.000Z and 2025-09-10T00:38:58.000Z
+2025-09-09 20:38:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:38:58: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.63.5%3Arc1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A38%3A58.000Z&pubEndDate=2025-09-10T00%3A38%3A58.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:38:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:05: Fetching CVEs for CPE 31/50: cpe:2.3:a:ryansu:simple_admin:1.3.12:*:*:*:*:*:*:*
+2025-09-09 20:39:05: Searching for CVEs for CPE cpe:2.3:a:ryansu:simple_admin:1.3.12:*:*:*:*:*:*:* between 2025-09-03T00:39:05.000Z and 2025-09-10T00:39:05.000Z
+2025-09-09 20:39:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:10: Fetching CVEs for CPE 32/50: cpe:2.3:a:nodejs:node.js:7.4.0:*:*:*:-:*:*:*
+2025-09-09 20:39:10: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:7.4.0:*:*:*:-:*:*:* between 2025-09-03T00:39:10.000Z and 2025-09-10T00:39:10.000Z
+2025-09-09 20:39:10: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:10: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anodejs%3Anode.js%3A7.4.0%3A%2A%3A%2A%3A%2A%3A-%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A39%3A10.000Z&pubEndDate=2025-09-10T00%3A39%3A10.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:39:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:17: Fetching CVEs for CPE 33/50: cpe:2.3:a:vercel:next.js:15.0.4:canary44:*:*:*:node.js:*:*
+2025-09-09 20:39:17: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:15.0.4:canary44:*:*:*:node.js:*:* between 2025-09-03T00:39:17.000Z and 2025-09-10T00:39:17.000Z
+2025-09-09 20:39:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:22: Fetching CVEs for CPE 34/50: cpe:2.3:a:ethyca:fides:2.42.1:alpha1:*:*:*:*:*:*
+2025-09-09 20:39:22: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.42.1:alpha1:*:*:*:*:*:* between 2025-09-03T00:39:22.000Z and 2025-09-10T00:39:22.000Z
+2025-09-09 20:39:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:22: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.42.1%3Aalpha1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A39%3A22.000Z&pubEndDate=2025-09-10T00%3A39%3A22.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:39:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:29: Fetching CVEs for CPE 35/50: cpe:2.3:a:gardener:gardener:1.113.0:*:*:*:*:*:*:*
+2025-09-09 20:39:29: Searching for CVEs for CPE cpe:2.3:a:gardener:gardener:1.113.0:*:*:*:*:*:*:* between 2025-09-03T00:39:29.000Z and 2025-09-10T00:39:29.000Z
+2025-09-09 20:39:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:34: Fetching CVEs for CPE 36/50: cpe:2.3:a:binary-husky:gpt_academic:3.48-1:*:*:*:*:*:*:*
+2025-09-09 20:39:34: Searching for CVEs for CPE cpe:2.3:a:binary-husky:gpt_academic:3.48-1:*:*:*:*:*:*:* between 2025-09-03T00:39:34.000Z and 2025-09-10T00:39:34.000Z
+2025-09-09 20:39:34: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:34: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Abinary-husky%3Agpt_academic%3A3.48-1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A39%3A34.000Z&pubEndDate=2025-09-10T00%3A39%3A34.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:39:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:41: Fetching CVEs for CPE 37/50: cpe:2.3:a:vercel:next.js:15.0.0:canary88:*:*:*:node.js:*:*
+2025-09-09 20:39:41: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:15.0.0:canary88:*:*:*:node.js:*:* between 2025-09-03T00:39:41.000Z and 2025-09-10T00:39:41.000Z
+2025-09-09 20:39:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:46: Fetching CVEs for CPE 38/50: cpe:2.3:a:silverstripe:reports:3.4.3:rc1:*:*:*:silverstripe:*:*
+2025-09-09 20:39:46: Searching for CVEs for CPE cpe:2.3:a:silverstripe:reports:3.4.3:rc1:*:*:*:silverstripe:*:* between 2025-09-03T00:39:46.000Z and 2025-09-10T00:39:46.000Z
+2025-09-09 20:39:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:46: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Asilverstripe%3Areports%3A3.4.3%3Arc1%3A%2A%3A%2A%3A%2A%3Asilverstripe%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A39%3A46.000Z&pubEndDate=2025-09-10T00%3A39%3A46.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:39:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:53: Fetching CVEs for CPE 39/50: cpe:2.3:a:bmaltais:kohya_ss:21.4.0:*:*:*:*:*:*:*
+2025-09-09 20:39:53: Searching for CVEs for CPE cpe:2.3:a:bmaltais:kohya_ss:21.4.0:*:*:*:*:*:*:* between 2025-09-03T00:39:53.000Z and 2025-09-10T00:39:53.000Z
+2025-09-09 20:39:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:58: Fetching CVEs for CPE 40/50: cpe:2.3:a:ethyca:fides:2.37.1:alpha2:*:*:*:*:*:*
+2025-09-09 20:39:58: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.37.1:alpha2:*:*:*:*:*:* between 2025-09-03T00:39:58.000Z and 2025-09-10T00:39:58.000Z
+2025-09-09 20:39:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:39:58: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.37.1%3Aalpha2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A39%3A58.000Z&pubEndDate=2025-09-10T00%3A39%3A58.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:39:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:05: Fetching CVEs for CPE 41/50: cpe:2.3:a:vercel:next.js:14.2.0:canary34:*:*:*:node.js:*:*
+2025-09-09 20:40:05: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:14.2.0:canary34:*:*:*:node.js:*:* between 2025-09-03T00:40:05.000Z and 2025-09-10T00:40:05.000Z
+2025-09-09 20:40:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:11: Fetching CVEs for CPE 42/50: cpe:2.3:a:nodejs:node.js:0.4.12:*:*:*:*:*:*:*
+2025-09-09 20:40:11: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:0.4.12:*:*:*:*:*:*:* between 2025-09-03T00:40:11.000Z and 2025-09-10T00:40:11.000Z
+2025-09-09 20:40:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:16: Fetching CVEs for CPE 43/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1006:*:*:*:datacenter:*:x64:*
+2025-09-09 20:40:16: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1006:*:*:*:datacenter:*:x64:* between 2025-09-03T00:40:16.000Z and 2025-09-10T00:40:16.000Z
+2025-09-09 20:40:16: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:16: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Ao%3Amicrosoft%3Awindows_server_2022%3A10.0.20348.1006%3A%2A%3A%2A%3A%2A%3Adatacenter%3A%2A%3Ax64%3A%2A&pubStartDate=2025-09-03T00%3A40%3A16.000Z&pubEndDate=2025-09-10T00%3A40%3A16.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:40:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:23: Fetching CVEs for CPE 44/50: cpe:2.3:a:katex:katex:0.13.20:*:*:*:*:*:*:*
+2025-09-09 20:40:23: Searching for CVEs for CPE cpe:2.3:a:katex:katex:0.13.20:*:*:*:*:*:*:* between 2025-09-03T00:40:23.000Z and 2025-09-10T00:40:23.000Z
+2025-09-09 20:40:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:28: Fetching CVEs for CPE 45/50: cpe:2.3:a:python:python:3.3.0:*:*:*:*:*:*:*
+2025-09-09 20:40:28: Searching for CVEs for CPE cpe:2.3:a:python:python:3.3.0:*:*:*:*:*:*:* between 2025-09-03T00:40:28.000Z and 2025-09-10T00:40:28.000Z
+2025-09-09 20:40:28: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:28: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Apython%3Apython%3A3.3.0%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A40%3A28.000Z&pubEndDate=2025-09-10T00%3A40%3A28.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:40:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:35: Fetching CVEs for CPE 46/50: cpe:2.3:a:nodejs:node.js:9.0.0:*:*:*:*:*:*:*
+2025-09-09 20:40:35: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:9.0.0:*:*:*:*:*:*:* between 2025-09-03T00:40:35.000Z and 2025-09-10T00:40:35.000Z
+2025-09-09 20:40:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:40: Fetching CVEs for CPE 47/50: cpe:2.3:a:ethyca:fides:2.59.2:beta3:*:*:*:*:*:*
+2025-09-09 20:40:40: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.59.2:beta3:*:*:*:*:*:* between 2025-09-03T00:40:40.000Z and 2025-09-10T00:40:40.000Z
+2025-09-09 20:40:40: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:40: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.59.2%3Abeta3%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A40%3A40.000Z&pubEndDate=2025-09-10T00%3A40%3A40.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:40:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:47: Fetching CVEs for CPE 48/50: cpe:2.3:a:microsoft:sql_server:2014:sp1:*:*:*:*:*:*
+2025-09-09 20:40:47: Searching for CVEs for CPE cpe:2.3:a:microsoft:sql_server:2014:sp1:*:*:*:*:*:* between 2025-09-03T00:40:47.000Z and 2025-09-10T00:40:47.000Z
+2025-09-09 20:40:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:52: Fetching CVEs for CPE 49/50: cpe:2.3:a:solspace:freeform:5.11.4:*:*:*:*:craft_cms:*:*
+2025-09-09 20:40:52: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:5.11.4:*:*:*:*:craft_cms:*:* between 2025-09-03T00:40:52.000Z and 2025-09-10T00:40:52.000Z
+2025-09-09 20:40:52: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:52: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Asolspace%3Afreeform%3A5.11.4%3A%2A%3A%2A%3A%2A%3A%2A%3Acraft_cms%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A40%3A52.000Z&pubEndDate=2025-09-10T00%3A40%3A52.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:40:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:40:59: Fetching CVEs for CPE 50/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.2700:*:*:*:datacenter:*:x64:*
+2025-09-09 20:40:59: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.2700:*:*:*:datacenter:*:x64:* between 2025-09-03T00:40:59.000Z and 2025-09-10T00:40:59.000Z
+2025-09-09 20:40:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:04: Fetching vulnerabilities from the past 7 days
+2025-09-09 20:41:04: Loading CPE data from: C:\Users\saipk\agentAttempts\server\intelliHunt\NVD\cpe_data_20250909_182122.json
+2025-09-09 20:41:04: Found 13549 unique CPE names
+2025-09-09 20:41:04: Limiting CPE processing to 50 out of 13549 total CPEs to avoid API rate limits
+2025-09-09 20:41:04: Fetching CVEs for CPE 1/50: cpe:2.3:a:apache:tomcat:10.0.18:*:*:*:*:*:*:*
+2025-09-09 20:41:04: Searching for CVEs for CPE cpe:2.3:a:apache:tomcat:10.0.18:*:*:*:*:*:*:* between 2025-09-03T00:41:04.000Z and 2025-09-10T00:41:04.000Z
+2025-09-09 20:41:04: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:04: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aapache%3Atomcat%3A10.0.18%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A41%3A04.000Z&pubEndDate=2025-09-10T00%3A41%3A04.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:41:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:11: Fetching CVEs for CPE 2/50: cpe:2.3:a:python:python:3.7.0:rc1:*:*:*:*:*:*
+2025-09-09 20:41:11: Searching for CVEs for CPE cpe:2.3:a:python:python:3.7.0:rc1:*:*:*:*:*:* between 2025-09-03T00:41:11.000Z and 2025-09-10T00:41:11.000Z
+2025-09-09 20:41:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:16: Fetching CVEs for CPE 3/50: cpe:2.3:a:9001:copyparty:0.9.6:*:*:*:*:*:*:*
+2025-09-09 20:41:16: Searching for CVEs for CPE cpe:2.3:a:9001:copyparty:0.9.6:*:*:*:*:*:*:* between 2025-09-03T00:41:16.000Z and 2025-09-10T00:41:16.000Z
+2025-09-09 20:41:16: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:16: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3A9001%3Acopyparty%3A0.9.6%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A41%3A16.000Z&pubEndDate=2025-09-10T00%3A41%3A16.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:41:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:23: Fetching CVEs for CPE 4/50: cpe:2.3:a:solspace:freeform:2.0.0:beta12:*:*:*:craft_cms:*:*
+2025-09-09 20:41:23: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:2.0.0:beta12:*:*:*:craft_cms:*:* between 2025-09-03T00:41:23.000Z and 2025-09-10T00:41:23.000Z
+2025-09-09 20:41:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:28: Fetching CVEs for CPE 5/50: cpe:2.3:a:solspace:freeform:3.0.6:*:*:*:*:craft_cms:*:*
+2025-09-09 20:41:28: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:3.0.6:*:*:*:*:craft_cms:*:* between 2025-09-03T00:41:28.000Z and 2025-09-10T00:41:28.000Z
+2025-09-09 20:41:28: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:28: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Asolspace%3Afreeform%3A3.0.6%3A%2A%3A%2A%3A%2A%3A%2A%3Acraft_cms%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A41%3A28.000Z&pubEndDate=2025-09-10T00%3A41%3A28.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:41:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:34: Fetching CVEs for CPE 6/50: cpe:2.3:a:nextcloud:group_folders:16.0.7:*:*:*:*:*:*:*
+2025-09-09 20:41:34: Searching for CVEs for CPE cpe:2.3:a:nextcloud:group_folders:16.0.7:*:*:*:*:*:*:* between 2025-09-03T00:41:34.000Z and 2025-09-10T00:41:34.000Z
+2025-09-09 20:41:34: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:34: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anextcloud%3Agroup_folders%3A16.0.7%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A41%3A34.000Z&pubEndDate=2025-09-10T00%3A41%3A34.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:41:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:41: Fetching CVEs for CPE 7/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.707:*:*:*:azure:*:x64:*
+2025-09-09 20:41:41: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.707:*:*:*:azure:*:x64:* between 2025-09-03T00:41:41.000Z and 2025-09-10T00:41:41.000Z
+2025-09-09 20:41:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:46: Fetching CVEs for CPE 8/50: cpe:2.3:a:ethyca:fides:2.26.0:rc3:*:*:*:*:*:*
+2025-09-09 20:41:46: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.26.0:rc3:*:*:*:*:*:* between 2025-09-03T00:41:46.000Z and 2025-09-10T00:41:46.000Z
+2025-09-09 20:41:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:46: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.26.0%3Arc3%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A41%3A46.000Z&pubEndDate=2025-09-10T00%3A41%3A46.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:41:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:53: Fetching CVEs for CPE 9/50: cpe:2.3:a:apache:tomcat:8.5.37:*:*:*:*:*:*:*
+2025-09-09 20:41:53: Searching for CVEs for CPE cpe:2.3:a:apache:tomcat:8.5.37:*:*:*:*:*:*:* between 2025-09-03T00:41:53.000Z and 2025-09-10T00:41:53.000Z
+2025-09-09 20:41:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:58: Fetching CVEs for CPE 10/50: cpe:2.3:a:nodejs:node.js:7.0.0:*:*:*:-:*:*:*
+2025-09-09 20:41:58: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:7.0.0:*:*:*:-:*:*:* between 2025-09-03T00:41:58.000Z and 2025-09-10T00:41:58.000Z
+2025-09-09 20:41:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:41:58: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anodejs%3Anode.js%3A7.0.0%3A%2A%3A%2A%3A%2A%3A-%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A41%3A58.000Z&pubEndDate=2025-09-10T00%3A41%3A58.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:41:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:05: Fetching CVEs for CPE 11/50: cpe:2.3:a:python:python:3.6.3:rc1:*:*:*:*:*:*
+2025-09-09 20:42:05: Searching for CVEs for CPE cpe:2.3:a:python:python:3.6.3:rc1:*:*:*:*:*:* between 2025-09-03T00:42:05.000Z and 2025-09-10T00:42:05.000Z
+2025-09-09 20:42:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:10: Fetching CVEs for CPE 12/50: cpe:2.3:a:ethyca:fides:2.55.1:alpha2:*:*:*:*:*:*
+2025-09-09 20:42:10: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.55.1:alpha2:*:*:*:*:*:* between 2025-09-03T00:42:10.000Z and 2025-09-10T00:42:10.000Z
+2025-09-09 20:42:10: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:10: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.55.1%3Aalpha2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A42%3A10.000Z&pubEndDate=2025-09-10T00%3A42%3A10.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:42:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:17: Fetching CVEs for CPE 13/50: cpe:2.3:a:oracle:mysql:5.1.26:*:*:*:*:*:*:*
+2025-09-09 20:42:17: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.1.26:*:*:*:*:*:*:* between 2025-09-03T00:42:17.000Z and 2025-09-10T00:42:17.000Z
+2025-09-09 20:42:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:22: Fetching CVEs for CPE 14/50: cpe:2.3:a:checkpoint:smartconsole:r81.20:build660:*:*:*:*:*:*
+2025-09-09 20:42:22: Searching for CVEs for CPE cpe:2.3:a:checkpoint:smartconsole:r81.20:build660:*:*:*:*:*:* between 2025-09-03T00:42:22.000Z and 2025-09-10T00:42:22.000Z
+2025-09-09 20:42:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:22: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Acheckpoint%3Asmartconsole%3Ar81.20%3Abuild660%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A42%3A22.000Z&pubEndDate=2025-09-10T00%3A42%3A22.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:42:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:29: Fetching CVEs for CPE 15/50: cpe:2.3:a:nextcloud:nextcloud_server:29.0.7:rc1:*:*:-:*:*:*
+2025-09-09 20:42:29: Searching for CVEs for CPE cpe:2.3:a:nextcloud:nextcloud_server:29.0.7:rc1:*:*:-:*:*:* between 2025-09-03T00:42:29.000Z and 2025-09-10T00:42:29.000Z
+2025-09-09 20:42:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:34: Fetching CVEs for CPE 16/50: cpe:2.3:a:oracle:mysql:5.5.17:*:*:*:*:*:*:*
+2025-09-09 20:42:34: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.5.17:*:*:*:*:*:*:* between 2025-09-03T00:42:34.000Z and 2025-09-10T00:42:34.000Z
+2025-09-09 20:42:34: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:34: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aoracle%3Amysql%3A5.5.17%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A42%3A34.000Z&pubEndDate=2025-09-10T00%3A42%3A34.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:42:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:41: Fetching CVEs for CPE 17/50: cpe:2.3:a:microsoft:sql_server:2016:*:*:*:*:*:*:*
+2025-09-09 20:42:41: Searching for CVEs for CPE cpe:2.3:a:microsoft:sql_server:2016:*:*:*:*:*:*:* between 2025-09-03T00:42:41.000Z and 2025-09-10T00:42:41.000Z
+2025-09-09 20:42:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:46: Fetching CVEs for CPE 18/50: cpe:2.3:a:apache:http_server:2.4.11:*:*:*:*:*:*:*
+2025-09-09 20:42:46: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.4.11:*:*:*:*:*:*:* between 2025-09-03T00:42:46.000Z and 2025-09-10T00:42:46.000Z
+2025-09-09 20:42:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:46: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aapache%3Ahttp_server%3A2.4.11%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A42%3A46.000Z&pubEndDate=2025-09-10T00%3A42%3A46.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:42:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:53: Fetching CVEs for CPE 19/50: cpe:2.3:a:katex:katex:0.2.0:*:*:*:*:*:*:*
+2025-09-09 20:42:53: Searching for CVEs for CPE cpe:2.3:a:katex:katex:0.2.0:*:*:*:*:*:*:* between 2025-09-03T00:42:53.000Z and 2025-09-10T00:42:53.000Z
+2025-09-09 20:42:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:58: Fetching CVEs for CPE 20/50: cpe:2.3:a:9001:copyparty:1.4.2:*:*:*:*:*:*:*
+2025-09-09 20:42:58: Searching for CVEs for CPE cpe:2.3:a:9001:copyparty:1.4.2:*:*:*:*:*:*:* between 2025-09-03T00:42:58.000Z and 2025-09-10T00:42:58.000Z
+2025-09-09 20:42:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:42:58: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3A9001%3Acopyparty%3A1.4.2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A42%3A58.000Z&pubEndDate=2025-09-10T00%3A42%3A58.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:42:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:05: Fetching CVEs for CPE 21/50: cpe:2.3:a:workos:authkit:0.11.0:*:*:*:*:node.js:*:*
+2025-09-09 20:43:05: Searching for CVEs for CPE cpe:2.3:a:workos:authkit:0.11.0:*:*:*:*:node.js:*:* between 2025-09-03T00:43:05.000Z and 2025-09-10T00:43:05.000Z
+2025-09-09 20:43:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:10: Fetching CVEs for CPE 22/50: cpe:2.3:a:vercel:next.js:14.1.1:canary35:*:*:*:node.js:*:*
+2025-09-09 20:43:10: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:14.1.1:canary35:*:*:*:node.js:*:* between 2025-09-03T00:43:10.000Z and 2025-09-10T00:43:10.000Z
+2025-09-09 20:43:10: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:10: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Anext.js%3A14.1.1%3Acanary35%3A%2A%3A%2A%3A%2A%3Anode.js%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A43%3A10.000Z&pubEndDate=2025-09-10T00%3A43%3A10.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:43:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:17: Fetching CVEs for CPE 23/50: cpe:2.3:o:microsoft:windows_server_2022:-:*:*:*:datacenter:*:x64:*
+2025-09-09 20:43:17: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:-:*:*:*:datacenter:*:x64:* between 2025-09-03T00:43:17.000Z and 2025-09-10T00:43:17.000Z
+2025-09-09 20:43:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:22: Fetching CVEs for CPE 24/50: cpe:2.3:a:whatsapp:whatsapp:2.21.8.13:*:*:*:business:android:*:*
+2025-09-09 20:43:22: Searching for CVEs for CPE cpe:2.3:a:whatsapp:whatsapp:2.21.8.13:*:*:*:business:android:*:* between 2025-09-03T00:43:22.000Z and 2025-09-10T00:43:22.000Z
+2025-09-09 20:43:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:22: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Awhatsapp%3Awhatsapp%3A2.21.8.13%3A%2A%3A%2A%3A%2A%3Abusiness%3Aandroid%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A43%3A22.000Z&pubEndDate=2025-09-10T00%3A43%3A22.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:43:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:29: Fetching CVEs for CPE 25/50: cpe:2.3:a:nodejs:node.js:10.15.2:*:*:*:-:*:*:*
+2025-09-09 20:43:29: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:10.15.2:*:*:*:-:*:*:* between 2025-09-03T00:43:29.000Z and 2025-09-10T00:43:29.000Z
+2025-09-09 20:43:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:34: Fetching CVEs for CPE 26/50: cpe:2.3:a:gardener:gardener:1.2.2:*:*:*:*:*:*:*
+2025-09-09 20:43:34: Searching for CVEs for CPE cpe:2.3:a:gardener:gardener:1.2.2:*:*:*:*:*:*:* between 2025-09-03T00:43:34.000Z and 2025-09-10T00:43:34.000Z
+2025-09-09 20:43:34: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:34: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Agardener%3Agardener%3A1.2.2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A43%3A34.000Z&pubEndDate=2025-09-10T00%3A43%3A34.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:43:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:41: Fetching CVEs for CPE 27/50: cpe:2.3:a:nextcloud:group_folders:16.0.9:*:*:*:*:*:*:*
+2025-09-09 20:43:41: Searching for CVEs for CPE cpe:2.3:a:nextcloud:group_folders:16.0.9:*:*:*:*:*:*:* between 2025-09-03T00:43:41.000Z and 2025-09-10T00:43:41.000Z
+2025-09-09 20:43:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:46: Fetching CVEs for CPE 28/50: cpe:2.3:a:solspace:freeform:5.9.2:*:*:*:*:craft_cms:*:*
+2025-09-09 20:43:46: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:5.9.2:*:*:*:*:craft_cms:*:* between 2025-09-03T00:43:46.000Z and 2025-09-10T00:43:46.000Z
+2025-09-09 20:43:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:52: Fetching CVEs for CPE 29/50: cpe:2.3:a:solspace:freeform:5.8.1:*:*:*:*:craft_cms:*:*
+2025-09-09 20:43:52: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:5.8.1:*:*:*:*:craft_cms:*:* between 2025-09-03T00:43:52.000Z and 2025-09-10T00:43:52.000Z
+2025-09-09 20:43:52: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:52: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Asolspace%3Afreeform%3A5.8.1%3A%2A%3A%2A%3A%2A%3A%2A%3Acraft_cms%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A43%3A52.000Z&pubEndDate=2025-09-10T00%3A43%3A52.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:43:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:59: Fetching CVEs for CPE 30/50: cpe:2.3:a:ethyca:fides:2.63.5:rc1:*:*:*:*:*:*
+2025-09-09 20:43:59: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.63.5:rc1:*:*:*:*:*:* between 2025-09-03T00:43:59.000Z and 2025-09-10T00:43:59.000Z
+2025-09-09 20:43:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:43:59: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.63.5%3Arc1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A43%3A59.000Z&pubEndDate=2025-09-10T00%3A43%3A59.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:44:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:05: Fetching CVEs for CPE 31/50: cpe:2.3:a:ryansu:simple_admin:1.3.12:*:*:*:*:*:*:*
+2025-09-09 20:44:05: Searching for CVEs for CPE cpe:2.3:a:ryansu:simple_admin:1.3.12:*:*:*:*:*:*:* between 2025-09-03T00:44:05.000Z and 2025-09-10T00:44:05.000Z
+2025-09-09 20:44:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:11: Fetching CVEs for CPE 32/50: cpe:2.3:a:nodejs:node.js:7.4.0:*:*:*:-:*:*:*
+2025-09-09 20:44:11: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:7.4.0:*:*:*:-:*:*:* between 2025-09-03T00:44:11.000Z and 2025-09-10T00:44:11.000Z
+2025-09-09 20:44:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:16: Fetching CVEs for CPE 33/50: cpe:2.3:a:vercel:next.js:15.0.4:canary44:*:*:*:node.js:*:*
+2025-09-09 20:44:16: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:15.0.4:canary44:*:*:*:node.js:*:* between 2025-09-03T00:44:16.000Z and 2025-09-10T00:44:16.000Z
+2025-09-09 20:44:16: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:16: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Anext.js%3A15.0.4%3Acanary44%3A%2A%3A%2A%3A%2A%3Anode.js%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A44%3A16.000Z&pubEndDate=2025-09-10T00%3A44%3A16.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:44:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:23: Fetching CVEs for CPE 34/50: cpe:2.3:a:ethyca:fides:2.42.1:alpha1:*:*:*:*:*:*
+2025-09-09 20:44:23: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.42.1:alpha1:*:*:*:*:*:* between 2025-09-03T00:44:23.000Z and 2025-09-10T00:44:23.000Z
+2025-09-09 20:44:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:28: Fetching CVEs for CPE 35/50: cpe:2.3:a:gardener:gardener:1.113.0:*:*:*:*:*:*:*
+2025-09-09 20:44:28: Searching for CVEs for CPE cpe:2.3:a:gardener:gardener:1.113.0:*:*:*:*:*:*:* between 2025-09-03T00:44:28.000Z and 2025-09-10T00:44:28.000Z
+2025-09-09 20:44:28: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:28: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Agardener%3Agardener%3A1.113.0%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A44%3A28.000Z&pubEndDate=2025-09-10T00%3A44%3A28.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:44:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:35: Fetching CVEs for CPE 36/50: cpe:2.3:a:binary-husky:gpt_academic:3.48-1:*:*:*:*:*:*:*
+2025-09-09 20:44:35: Searching for CVEs for CPE cpe:2.3:a:binary-husky:gpt_academic:3.48-1:*:*:*:*:*:*:* between 2025-09-03T00:44:35.000Z and 2025-09-10T00:44:35.000Z
+2025-09-09 20:44:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:40: Fetching CVEs for CPE 37/50: cpe:2.3:a:vercel:next.js:15.0.0:canary88:*:*:*:node.js:*:*
+2025-09-09 20:44:40: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:15.0.0:canary88:*:*:*:node.js:*:* between 2025-09-03T00:44:40.000Z and 2025-09-10T00:44:40.000Z
+2025-09-09 20:44:40: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:40: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Anext.js%3A15.0.0%3Acanary88%3A%2A%3A%2A%3A%2A%3Anode.js%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A44%3A40.000Z&pubEndDate=2025-09-10T00%3A44%3A40.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:44:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:47: Fetching CVEs for CPE 38/50: cpe:2.3:a:silverstripe:reports:3.4.3:rc1:*:*:*:silverstripe:*:*
+2025-09-09 20:44:47: Searching for CVEs for CPE cpe:2.3:a:silverstripe:reports:3.4.3:rc1:*:*:*:silverstripe:*:* between 2025-09-03T00:44:47.000Z and 2025-09-10T00:44:47.000Z
+2025-09-09 20:44:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:52: Fetching CVEs for CPE 39/50: cpe:2.3:a:bmaltais:kohya_ss:21.4.0:*:*:*:*:*:*:*
+2025-09-09 20:44:52: Searching for CVEs for CPE cpe:2.3:a:bmaltais:kohya_ss:21.4.0:*:*:*:*:*:*:* between 2025-09-03T00:44:52.000Z and 2025-09-10T00:44:52.000Z
+2025-09-09 20:44:52: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:52: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Abmaltais%3Akohya_ss%3A21.4.0%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A44%3A52.000Z&pubEndDate=2025-09-10T00%3A44%3A52.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:44:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:44:59: Fetching CVEs for CPE 40/50: cpe:2.3:a:ethyca:fides:2.37.1:alpha2:*:*:*:*:*:*
+2025-09-09 20:44:59: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.37.1:alpha2:*:*:*:*:*:* between 2025-09-03T00:44:59.000Z and 2025-09-10T00:44:59.000Z
+2025-09-09 20:44:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:05: Fetching CVEs for CPE 41/50: cpe:2.3:a:vercel:next.js:14.2.0:canary34:*:*:*:node.js:*:*
+2025-09-09 20:45:05: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:14.2.0:canary34:*:*:*:node.js:*:* between 2025-09-03T00:45:05.000Z and 2025-09-10T00:45:05.000Z
+2025-09-09 20:45:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:10: Fetching CVEs for CPE 42/50: cpe:2.3:a:nodejs:node.js:0.4.12:*:*:*:*:*:*:*
+2025-09-09 20:45:10: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:0.4.12:*:*:*:*:*:*:* between 2025-09-03T00:45:10.000Z and 2025-09-10T00:45:10.000Z
+2025-09-09 20:45:10: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:10: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anodejs%3Anode.js%3A0.4.12%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A45%3A10.000Z&pubEndDate=2025-09-10T00%3A45%3A10.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:45:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:17: Fetching CVEs for CPE 43/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1006:*:*:*:datacenter:*:x64:*
+2025-09-09 20:45:17: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1006:*:*:*:datacenter:*:x64:* between 2025-09-03T00:45:17.000Z and 2025-09-10T00:45:17.000Z
+2025-09-09 20:45:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:22: Fetching CVEs for CPE 44/50: cpe:2.3:a:katex:katex:0.13.20:*:*:*:*:*:*:*
+2025-09-09 20:45:22: Searching for CVEs for CPE cpe:2.3:a:katex:katex:0.13.20:*:*:*:*:*:*:* between 2025-09-03T00:45:22.000Z and 2025-09-10T00:45:22.000Z
+2025-09-09 20:45:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:23: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Akatex%3Akatex%3A0.13.20%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A45%3A22.000Z&pubEndDate=2025-09-10T00%3A45%3A22.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:45:24: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:29: Fetching CVEs for CPE 45/50: cpe:2.3:a:python:python:3.3.0:*:*:*:*:*:*:*
+2025-09-09 20:45:29: Searching for CVEs for CPE cpe:2.3:a:python:python:3.3.0:*:*:*:*:*:*:* between 2025-09-03T00:45:29.000Z and 2025-09-10T00:45:29.000Z
+2025-09-09 20:45:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:34: Fetching CVEs for CPE 46/50: cpe:2.3:a:nodejs:node.js:9.0.0:*:*:*:*:*:*:*
+2025-09-09 20:45:34: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:9.0.0:*:*:*:*:*:*:* between 2025-09-03T00:45:34.000Z and 2025-09-10T00:45:34.000Z
+2025-09-09 20:45:34: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:34: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anodejs%3Anode.js%3A9.0.0%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A45%3A34.000Z&pubEndDate=2025-09-10T00%3A45%3A34.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:45:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:41: Fetching CVEs for CPE 47/50: cpe:2.3:a:ethyca:fides:2.59.2:beta3:*:*:*:*:*:*
+2025-09-09 20:45:41: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.59.2:beta3:*:*:*:*:*:* between 2025-09-03T00:45:41.000Z and 2025-09-10T00:45:41.000Z
+2025-09-09 20:45:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:46: Fetching CVEs for CPE 48/50: cpe:2.3:a:microsoft:sql_server:2014:sp1:*:*:*:*:*:*
+2025-09-09 20:45:46: Searching for CVEs for CPE cpe:2.3:a:microsoft:sql_server:2014:sp1:*:*:*:*:*:* between 2025-09-03T00:45:46.000Z and 2025-09-10T00:45:46.000Z
+2025-09-09 20:45:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:46: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amicrosoft%3Asql_server%3A2014%3Asp1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A45%3A46.000Z&pubEndDate=2025-09-10T00%3A45%3A46.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:45:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:53: Fetching CVEs for CPE 49/50: cpe:2.3:a:solspace:freeform:5.11.4:*:*:*:*:craft_cms:*:*
+2025-09-09 20:45:53: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:5.11.4:*:*:*:*:craft_cms:*:* between 2025-09-03T00:45:53.000Z and 2025-09-10T00:45:53.000Z
+2025-09-09 20:45:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:58: Fetching CVEs for CPE 50/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.2700:*:*:*:datacenter:*:x64:*
+2025-09-09 20:45:58: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.2700:*:*:*:datacenter:*:x64:* between 2025-09-03T00:45:58.000Z and 2025-09-10T00:45:58.000Z
+2025-09-09 20:45:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:45:58: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Ao%3Amicrosoft%3Awindows_server_2022%3A10.0.20348.2700%3A%2A%3A%2A%3A%2A%3Adatacenter%3A%2A%3Ax64%3A%2A&pubStartDate=2025-09-03T00%3A45%3A58.000Z&pubEndDate=2025-09-10T00%3A45%3A58.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:45:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:05: Enhanced crew input saved to: C:\Users\saipk\agentAttempts\server\intelliHunt\NVD\enhanced_crew_input_20250909_204605.json
+2025-09-09 20:46:05: Fetching vulnerabilities from the past 7 days
+2025-09-09 20:46:05: Loading CPE data from: C:\Users\saipk\agentAttempts\server\intelliHunt\NVD\cpe_data_20250909_182122.json
+2025-09-09 20:46:05: Found 13549 unique CPE names
+2025-09-09 20:46:05: Limiting CPE processing to 50 out of 13549 total CPEs to avoid API rate limits
+2025-09-09 20:46:05: Fetching CVEs for CPE 1/50: cpe:2.3:a:apache:tomcat:10.0.18:*:*:*:*:*:*:*
+2025-09-09 20:46:05: Searching for CVEs for CPE cpe:2.3:a:apache:tomcat:10.0.18:*:*:*:*:*:*:* between 2025-09-03T00:46:05.000Z and 2025-09-10T00:46:05.000Z
+2025-09-09 20:46:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:10: Fetching CVEs for CPE 2/50: cpe:2.3:a:python:python:3.7.0:rc1:*:*:*:*:*:*
+2025-09-09 20:46:10: Searching for CVEs for CPE cpe:2.3:a:python:python:3.7.0:rc1:*:*:*:*:*:* between 2025-09-03T00:46:10.000Z and 2025-09-10T00:46:10.000Z
+2025-09-09 20:46:10: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:10: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Apython%3Apython%3A3.7.0%3Arc1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A46%3A10.000Z&pubEndDate=2025-09-10T00%3A46%3A10.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:46:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:17: Fetching CVEs for CPE 3/50: cpe:2.3:a:9001:copyparty:0.9.6:*:*:*:*:*:*:*
+2025-09-09 20:46:17: Searching for CVEs for CPE cpe:2.3:a:9001:copyparty:0.9.6:*:*:*:*:*:*:* between 2025-09-03T00:46:17.000Z and 2025-09-10T00:46:17.000Z
+2025-09-09 20:46:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:22: Fetching CVEs for CPE 4/50: cpe:2.3:a:solspace:freeform:2.0.0:beta12:*:*:*:craft_cms:*:*
+2025-09-09 20:46:22: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:2.0.0:beta12:*:*:*:craft_cms:*:* between 2025-09-03T00:46:22.000Z and 2025-09-10T00:46:22.000Z
+2025-09-09 20:46:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:22: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Asolspace%3Afreeform%3A2.0.0%3Abeta12%3A%2A%3A%2A%3A%2A%3Acraft_cms%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A46%3A22.000Z&pubEndDate=2025-09-10T00%3A46%3A22.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:46:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:29: Fetching CVEs for CPE 5/50: cpe:2.3:a:solspace:freeform:3.0.6:*:*:*:*:craft_cms:*:*
+2025-09-09 20:46:29: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:3.0.6:*:*:*:*:craft_cms:*:* between 2025-09-03T00:46:29.000Z and 2025-09-10T00:46:29.000Z
+2025-09-09 20:46:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:34: Fetching CVEs for CPE 6/50: cpe:2.3:a:nextcloud:group_folders:16.0.7:*:*:*:*:*:*:*
+2025-09-09 20:46:34: Searching for CVEs for CPE cpe:2.3:a:nextcloud:group_folders:16.0.7:*:*:*:*:*:*:* between 2025-09-03T00:46:34.000Z and 2025-09-10T00:46:34.000Z
+2025-09-09 20:46:34: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:34: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anextcloud%3Agroup_folders%3A16.0.7%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A46%3A34.000Z&pubEndDate=2025-09-10T00%3A46%3A34.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:46:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:40: Fetching CVEs for CPE 7/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.707:*:*:*:azure:*:x64:*
+2025-09-09 20:46:40: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.707:*:*:*:azure:*:x64:* between 2025-09-03T00:46:40.000Z and 2025-09-10T00:46:40.000Z
+2025-09-09 20:46:40: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:40: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Ao%3Amicrosoft%3Awindows_server_2022%3A10.0.20348.707%3A%2A%3A%2A%3A%2A%3Aazure%3A%2A%3Ax64%3A%2A&pubStartDate=2025-09-03T00%3A46%3A40.000Z&pubEndDate=2025-09-10T00%3A46%3A40.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:46:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:47: Fetching CVEs for CPE 8/50: cpe:2.3:a:ethyca:fides:2.26.0:rc3:*:*:*:*:*:*
+2025-09-09 20:46:47: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.26.0:rc3:*:*:*:*:*:* between 2025-09-03T00:46:47.000Z and 2025-09-10T00:46:47.000Z
+2025-09-09 20:46:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:52: Fetching CVEs for CPE 9/50: cpe:2.3:a:apache:tomcat:8.5.37:*:*:*:*:*:*:*
+2025-09-09 20:46:52: Searching for CVEs for CPE cpe:2.3:a:apache:tomcat:8.5.37:*:*:*:*:*:*:* between 2025-09-03T00:46:52.000Z and 2025-09-10T00:46:52.000Z
+2025-09-09 20:46:52: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:52: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aapache%3Atomcat%3A8.5.37%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A46%3A52.000Z&pubEndDate=2025-09-10T00%3A46%3A52.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:46:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:46:59: Fetching CVEs for CPE 10/50: cpe:2.3:a:nodejs:node.js:7.0.0:*:*:*:-:*:*:*
+2025-09-09 20:46:59: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:7.0.0:*:*:*:-:*:*:* between 2025-09-03T00:46:59.000Z and 2025-09-10T00:46:59.000Z
+2025-09-09 20:46:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:04: Fetching CVEs for CPE 11/50: cpe:2.3:a:python:python:3.6.3:rc1:*:*:*:*:*:*
+2025-09-09 20:47:04: Searching for CVEs for CPE cpe:2.3:a:python:python:3.6.3:rc1:*:*:*:*:*:* between 2025-09-03T00:47:04.000Z and 2025-09-10T00:47:04.000Z
+2025-09-09 20:47:04: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:04: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Apython%3Apython%3A3.6.3%3Arc1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A47%3A04.000Z&pubEndDate=2025-09-10T00%3A47%3A04.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:47:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:11: Fetching CVEs for CPE 12/50: cpe:2.3:a:ethyca:fides:2.55.1:alpha2:*:*:*:*:*:*
+2025-09-09 20:47:11: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.55.1:alpha2:*:*:*:*:*:* between 2025-09-03T00:47:11.000Z and 2025-09-10T00:47:11.000Z
+2025-09-09 20:47:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:16: Fetching CVEs for CPE 13/50: cpe:2.3:a:oracle:mysql:5.1.26:*:*:*:*:*:*:*
+2025-09-09 20:47:16: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.1.26:*:*:*:*:*:*:* between 2025-09-03T00:47:16.000Z and 2025-09-10T00:47:16.000Z
+2025-09-09 20:47:16: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:16: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aoracle%3Amysql%3A5.1.26%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A47%3A16.000Z&pubEndDate=2025-09-10T00%3A47%3A16.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:47:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:23: Fetching CVEs for CPE 14/50: cpe:2.3:a:checkpoint:smartconsole:r81.20:build660:*:*:*:*:*:*
+2025-09-09 20:47:23: Searching for CVEs for CPE cpe:2.3:a:checkpoint:smartconsole:r81.20:build660:*:*:*:*:*:* between 2025-09-03T00:47:23.000Z and 2025-09-10T00:47:23.000Z
+2025-09-09 20:47:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:28: Fetching CVEs for CPE 15/50: cpe:2.3:a:nextcloud:nextcloud_server:29.0.7:rc1:*:*:-:*:*:*
+2025-09-09 20:47:28: Searching for CVEs for CPE cpe:2.3:a:nextcloud:nextcloud_server:29.0.7:rc1:*:*:-:*:*:* between 2025-09-03T00:47:28.000Z and 2025-09-10T00:47:28.000Z
+2025-09-09 20:47:28: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:28: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anextcloud%3Anextcloud_server%3A29.0.7%3Arc1%3A%2A%3A%2A%3A-%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A47%3A28.000Z&pubEndDate=2025-09-10T00%3A47%3A28.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:47:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:35: Fetching CVEs for CPE 16/50: cpe:2.3:a:oracle:mysql:5.5.17:*:*:*:*:*:*:*
+2025-09-09 20:47:35: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.5.17:*:*:*:*:*:*:* between 2025-09-03T00:47:35.000Z and 2025-09-10T00:47:35.000Z
+2025-09-09 20:47:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:40: Fetching CVEs for CPE 17/50: cpe:2.3:a:microsoft:sql_server:2016:*:*:*:*:*:*:*
+2025-09-09 20:47:40: Searching for CVEs for CPE cpe:2.3:a:microsoft:sql_server:2016:*:*:*:*:*:*:* between 2025-09-03T00:47:40.000Z and 2025-09-10T00:47:40.000Z
+2025-09-09 20:47:40: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:40: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amicrosoft%3Asql_server%3A2016%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A47%3A40.000Z&pubEndDate=2025-09-10T00%3A47%3A40.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:47:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:47: Fetching CVEs for CPE 18/50: cpe:2.3:a:apache:http_server:2.4.11:*:*:*:*:*:*:*
+2025-09-09 20:47:47: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.4.11:*:*:*:*:*:*:* between 2025-09-03T00:47:47.000Z and 2025-09-10T00:47:47.000Z
+2025-09-09 20:47:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:52: Fetching CVEs for CPE 19/50: cpe:2.3:a:katex:katex:0.2.0:*:*:*:*:*:*:*
+2025-09-09 20:47:52: Searching for CVEs for CPE cpe:2.3:a:katex:katex:0.2.0:*:*:*:*:*:*:* between 2025-09-03T00:47:52.000Z and 2025-09-10T00:47:52.000Z
+2025-09-09 20:47:52: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:52: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Akatex%3Akatex%3A0.2.0%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A47%3A52.000Z&pubEndDate=2025-09-10T00%3A47%3A52.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:47:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:47:59: Fetching CVEs for CPE 20/50: cpe:2.3:a:9001:copyparty:1.4.2:*:*:*:*:*:*:*
+2025-09-09 20:47:59: Searching for CVEs for CPE cpe:2.3:a:9001:copyparty:1.4.2:*:*:*:*:*:*:* between 2025-09-03T00:47:59.000Z and 2025-09-10T00:47:59.000Z
+2025-09-09 20:47:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:04: Fetching CVEs for CPE 21/50: cpe:2.3:a:workos:authkit:0.11.0:*:*:*:*:node.js:*:*
+2025-09-09 20:48:04: Searching for CVEs for CPE cpe:2.3:a:workos:authkit:0.11.0:*:*:*:*:node.js:*:* between 2025-09-03T00:48:04.000Z and 2025-09-10T00:48:04.000Z
+2025-09-09 20:48:04: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:04: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aworkos%3Aauthkit%3A0.11.0%3A%2A%3A%2A%3A%2A%3A%2A%3Anode.js%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A48%3A04.000Z&pubEndDate=2025-09-10T00%3A48%3A04.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:48:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:10: Fetching CVEs for CPE 22/50: cpe:2.3:a:vercel:next.js:14.1.1:canary35:*:*:*:node.js:*:*
+2025-09-09 20:48:10: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:14.1.1:canary35:*:*:*:node.js:*:* between 2025-09-03T00:48:10.000Z and 2025-09-10T00:48:10.000Z
+2025-09-09 20:48:10: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:10: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Anext.js%3A14.1.1%3Acanary35%3A%2A%3A%2A%3A%2A%3Anode.js%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A48%3A10.000Z&pubEndDate=2025-09-10T00%3A48%3A10.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:48:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:17: Fetching CVEs for CPE 23/50: cpe:2.3:o:microsoft:windows_server_2022:-:*:*:*:datacenter:*:x64:*
+2025-09-09 20:48:17: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:-:*:*:*:datacenter:*:x64:* between 2025-09-03T00:48:17.000Z and 2025-09-10T00:48:17.000Z
+2025-09-09 20:48:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:22: Fetching CVEs for CPE 24/50: cpe:2.3:a:whatsapp:whatsapp:2.21.8.13:*:*:*:business:android:*:*
+2025-09-09 20:48:22: Searching for CVEs for CPE cpe:2.3:a:whatsapp:whatsapp:2.21.8.13:*:*:*:business:android:*:* between 2025-09-03T00:48:22.000Z and 2025-09-10T00:48:22.000Z
+2025-09-09 20:48:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:22: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Awhatsapp%3Awhatsapp%3A2.21.8.13%3A%2A%3A%2A%3A%2A%3Abusiness%3Aandroid%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A48%3A22.000Z&pubEndDate=2025-09-10T00%3A48%3A22.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:48:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:29: Fetching CVEs for CPE 25/50: cpe:2.3:a:nodejs:node.js:10.15.2:*:*:*:-:*:*:*
+2025-09-09 20:48:29: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:10.15.2:*:*:*:-:*:*:* between 2025-09-03T00:48:29.000Z and 2025-09-10T00:48:29.000Z
+2025-09-09 20:48:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:34: Fetching CVEs for CPE 26/50: cpe:2.3:a:gardener:gardener:1.2.2:*:*:*:*:*:*:*
+2025-09-09 20:48:34: Searching for CVEs for CPE cpe:2.3:a:gardener:gardener:1.2.2:*:*:*:*:*:*:* between 2025-09-03T00:48:34.000Z and 2025-09-10T00:48:34.000Z
+2025-09-09 20:48:34: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:34: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Agardener%3Agardener%3A1.2.2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A48%3A34.000Z&pubEndDate=2025-09-10T00%3A48%3A34.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:48:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:41: Fetching CVEs for CPE 27/50: cpe:2.3:a:nextcloud:group_folders:16.0.9:*:*:*:*:*:*:*
+2025-09-09 20:48:41: Searching for CVEs for CPE cpe:2.3:a:nextcloud:group_folders:16.0.9:*:*:*:*:*:*:* between 2025-09-03T00:48:41.000Z and 2025-09-10T00:48:41.000Z
+2025-09-09 20:48:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:46: Fetching CVEs for CPE 28/50: cpe:2.3:a:solspace:freeform:5.9.2:*:*:*:*:craft_cms:*:*
+2025-09-09 20:48:46: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:5.9.2:*:*:*:*:craft_cms:*:* between 2025-09-03T00:48:46.000Z and 2025-09-10T00:48:46.000Z
+2025-09-09 20:48:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:46: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Asolspace%3Afreeform%3A5.9.2%3A%2A%3A%2A%3A%2A%3A%2A%3Acraft_cms%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A48%3A46.000Z&pubEndDate=2025-09-10T00%3A48%3A46.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:48:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:53: Fetching CVEs for CPE 29/50: cpe:2.3:a:solspace:freeform:5.8.1:*:*:*:*:craft_cms:*:*
+2025-09-09 20:48:53: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:5.8.1:*:*:*:*:craft_cms:*:* between 2025-09-03T00:48:53.000Z and 2025-09-10T00:48:53.000Z
+2025-09-09 20:48:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:58: Fetching CVEs for CPE 30/50: cpe:2.3:a:ethyca:fides:2.63.5:rc1:*:*:*:*:*:*
+2025-09-09 20:48:58: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.63.5:rc1:*:*:*:*:*:* between 2025-09-03T00:48:58.000Z and 2025-09-10T00:48:58.000Z
+2025-09-09 20:48:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:48:58: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.63.5%3Arc1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A48%3A58.000Z&pubEndDate=2025-09-10T00%3A48%3A58.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:48:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:06: Fetching CVEs for CPE 31/50: cpe:2.3:a:ryansu:simple_admin:1.3.12:*:*:*:*:*:*:*
+2025-09-09 20:49:06: Searching for CVEs for CPE cpe:2.3:a:ryansu:simple_admin:1.3.12:*:*:*:*:*:*:* between 2025-09-03T00:49:06.000Z and 2025-09-10T00:49:06.000Z
+2025-09-09 20:49:06: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:11: Fetching CVEs for CPE 32/50: cpe:2.3:a:nodejs:node.js:7.4.0:*:*:*:-:*:*:*
+2025-09-09 20:49:11: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:7.4.0:*:*:*:-:*:*:* between 2025-09-03T00:49:11.000Z and 2025-09-10T00:49:11.000Z
+2025-09-09 20:49:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:17: Fetching CVEs for CPE 33/50: cpe:2.3:a:vercel:next.js:15.0.4:canary44:*:*:*:node.js:*:*
+2025-09-09 20:49:17: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:15.0.4:canary44:*:*:*:node.js:*:* between 2025-09-03T00:49:17.000Z and 2025-09-10T00:49:17.000Z
+2025-09-09 20:49:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:22: Fetching CVEs for CPE 34/50: cpe:2.3:a:ethyca:fides:2.42.1:alpha1:*:*:*:*:*:*
+2025-09-09 20:49:22: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.42.1:alpha1:*:*:*:*:*:* between 2025-09-03T00:49:22.000Z and 2025-09-10T00:49:22.000Z
+2025-09-09 20:49:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:22: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.42.1%3Aalpha1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A49%3A22.000Z&pubEndDate=2025-09-10T00%3A49%3A22.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:49:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:29: Fetching CVEs for CPE 35/50: cpe:2.3:a:gardener:gardener:1.113.0:*:*:*:*:*:*:*
+2025-09-09 20:49:29: Searching for CVEs for CPE cpe:2.3:a:gardener:gardener:1.113.0:*:*:*:*:*:*:* between 2025-09-03T00:49:29.000Z and 2025-09-10T00:49:29.000Z
+2025-09-09 20:49:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:34: Fetching CVEs for CPE 36/50: cpe:2.3:a:binary-husky:gpt_academic:3.48-1:*:*:*:*:*:*:*
+2025-09-09 20:49:34: Searching for CVEs for CPE cpe:2.3:a:binary-husky:gpt_academic:3.48-1:*:*:*:*:*:*:* between 2025-09-03T00:49:34.000Z and 2025-09-10T00:49:34.000Z
+2025-09-09 20:49:34: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:34: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Abinary-husky%3Agpt_academic%3A3.48-1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A49%3A34.000Z&pubEndDate=2025-09-10T00%3A49%3A34.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:49:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:41: Fetching CVEs for CPE 37/50: cpe:2.3:a:vercel:next.js:15.0.0:canary88:*:*:*:node.js:*:*
+2025-09-09 20:49:41: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:15.0.0:canary88:*:*:*:node.js:*:* between 2025-09-03T00:49:41.000Z and 2025-09-10T00:49:41.000Z
+2025-09-09 20:49:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:46: Fetching CVEs for CPE 38/50: cpe:2.3:a:silverstripe:reports:3.4.3:rc1:*:*:*:silverstripe:*:*
+2025-09-09 20:49:46: Searching for CVEs for CPE cpe:2.3:a:silverstripe:reports:3.4.3:rc1:*:*:*:silverstripe:*:* between 2025-09-03T00:49:46.000Z and 2025-09-10T00:49:46.000Z
+2025-09-09 20:49:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:46: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Asilverstripe%3Areports%3A3.4.3%3Arc1%3A%2A%3A%2A%3A%2A%3Asilverstripe%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A49%3A46.000Z&pubEndDate=2025-09-10T00%3A49%3A46.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:49:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:53: Fetching CVEs for CPE 39/50: cpe:2.3:a:bmaltais:kohya_ss:21.4.0:*:*:*:*:*:*:*
+2025-09-09 20:49:53: Searching for CVEs for CPE cpe:2.3:a:bmaltais:kohya_ss:21.4.0:*:*:*:*:*:*:* between 2025-09-03T00:49:53.000Z and 2025-09-10T00:49:53.000Z
+2025-09-09 20:49:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:58: Fetching CVEs for CPE 40/50: cpe:2.3:a:ethyca:fides:2.37.1:alpha2:*:*:*:*:*:*
+2025-09-09 20:49:58: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.37.1:alpha2:*:*:*:*:*:* between 2025-09-03T00:49:58.000Z and 2025-09-10T00:49:58.000Z
+2025-09-09 20:49:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:49:58: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.37.1%3Aalpha2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A49%3A58.000Z&pubEndDate=2025-09-10T00%3A49%3A58.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:49:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:05: Fetching CVEs for CPE 41/50: cpe:2.3:a:vercel:next.js:14.2.0:canary34:*:*:*:node.js:*:*
+2025-09-09 20:50:05: Searching for CVEs for CPE cpe:2.3:a:vercel:next.js:14.2.0:canary34:*:*:*:node.js:*:* between 2025-09-03T00:50:05.000Z and 2025-09-10T00:50:05.000Z
+2025-09-09 20:50:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:11: Fetching CVEs for CPE 42/50: cpe:2.3:a:nodejs:node.js:0.4.12:*:*:*:*:*:*:*
+2025-09-09 20:50:11: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:0.4.12:*:*:*:*:*:*:* between 2025-09-03T00:50:11.000Z and 2025-09-10T00:50:11.000Z
+2025-09-09 20:50:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:16: Fetching CVEs for CPE 43/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1006:*:*:*:datacenter:*:x64:*
+2025-09-09 20:50:16: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1006:*:*:*:datacenter:*:x64:* between 2025-09-03T00:50:16.000Z and 2025-09-10T00:50:16.000Z
+2025-09-09 20:50:16: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:16: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Ao%3Amicrosoft%3Awindows_server_2022%3A10.0.20348.1006%3A%2A%3A%2A%3A%2A%3Adatacenter%3A%2A%3Ax64%3A%2A&pubStartDate=2025-09-03T00%3A50%3A16.000Z&pubEndDate=2025-09-10T00%3A50%3A16.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:50:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:23: Fetching CVEs for CPE 44/50: cpe:2.3:a:katex:katex:0.13.20:*:*:*:*:*:*:*
+2025-09-09 20:50:23: Searching for CVEs for CPE cpe:2.3:a:katex:katex:0.13.20:*:*:*:*:*:*:* between 2025-09-03T00:50:23.000Z and 2025-09-10T00:50:23.000Z
+2025-09-09 20:50:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:28: Fetching CVEs for CPE 45/50: cpe:2.3:a:python:python:3.3.0:*:*:*:*:*:*:*
+2025-09-09 20:50:28: Searching for CVEs for CPE cpe:2.3:a:python:python:3.3.0:*:*:*:*:*:*:* between 2025-09-03T00:50:28.000Z and 2025-09-10T00:50:28.000Z
+2025-09-09 20:50:28: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:28: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Apython%3Apython%3A3.3.0%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A50%3A28.000Z&pubEndDate=2025-09-10T00%3A50%3A28.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:50:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:35: Fetching CVEs for CPE 46/50: cpe:2.3:a:nodejs:node.js:9.0.0:*:*:*:*:*:*:*
+2025-09-09 20:50:35: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:9.0.0:*:*:*:*:*:*:* between 2025-09-03T00:50:35.000Z and 2025-09-10T00:50:35.000Z
+2025-09-09 20:50:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:40: Fetching CVEs for CPE 47/50: cpe:2.3:a:ethyca:fides:2.59.2:beta3:*:*:*:*:*:*
+2025-09-09 20:50:40: Searching for CVEs for CPE cpe:2.3:a:ethyca:fides:2.59.2:beta3:*:*:*:*:*:* between 2025-09-03T00:50:40.000Z and 2025-09-10T00:50:40.000Z
+2025-09-09 20:50:40: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:40: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aethyca%3Afides%3A2.59.2%3Abeta3%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-03T00%3A50%3A40.000Z&pubEndDate=2025-09-10T00%3A50%3A40.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:50:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:47: Fetching CVEs for CPE 48/50: cpe:2.3:a:microsoft:sql_server:2014:sp1:*:*:*:*:*:*
+2025-09-09 20:50:47: Searching for CVEs for CPE cpe:2.3:a:microsoft:sql_server:2014:sp1:*:*:*:*:*:* between 2025-09-03T00:50:47.000Z and 2025-09-10T00:50:47.000Z
+2025-09-09 20:50:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:53: Fetching CVEs for CPE 49/50: cpe:2.3:a:solspace:freeform:5.11.4:*:*:*:*:craft_cms:*:*
+2025-09-09 20:50:53: Searching for CVEs for CPE cpe:2.3:a:solspace:freeform:5.11.4:*:*:*:*:craft_cms:*:* between 2025-09-03T00:50:53.000Z and 2025-09-10T00:50:53.000Z
+2025-09-09 20:50:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:58: Fetching CVEs for CPE 50/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.2700:*:*:*:datacenter:*:x64:*
+2025-09-09 20:50:58: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.2700:*:*:*:datacenter:*:x64:* between 2025-09-03T00:50:58.000Z and 2025-09-10T00:50:58.000Z
+2025-09-09 20:50:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:50:58: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Ao%3Amicrosoft%3Awindows_server_2022%3A10.0.20348.2700%3A%2A%3A%2A%3A%2A%3Adatacenter%3A%2A%3Ax64%3A%2A&pubStartDate=2025-09-03T00%3A50%3A58.000Z&pubEndDate=2025-09-10T00%3A50%3A58.000Z&resultsPerPage=500&startIndex=0
+2025-09-09 20:50:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-09 20:51:05: Vulnerability summary saved to: C:\Users\saipk\agentAttempts\server\intelliHunt\NVD\vulnerability_summary_20250909_205105.md
