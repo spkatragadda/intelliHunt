@@ -1,10 +1,11 @@
+import os
+from NVD.nvd_cpe_client import NVDCPEClient
+from NVD.cpe_data_processor import CPEDataProcessor
+from NVD.vulnerability_processor import VulnerabilityProcessor
 from crewClass import cyberCrew
 import json
-import os
 from pathlib import Path
-from nvd_cpe_client import NVDCPEClient
-from cpe_data_processor import CPEDataProcessor
-from vulnerability_processor import VulnerabilityProcessor
+
 
 
 def load_cpe_data_for_crew():
@@ -131,13 +132,19 @@ def main():
         print(f"  - High Priority CVEs: {len(vuln_data.get('high_priority_cves', []))}")
         print(f"  - Time Period: {vuln_data.get('time_period', 'Unknown')}")
         print(f"  - Research Focus: {inputs.get('research_focus', 'Unknown')}")
+
+    # We only want vulnerability info passed to crew
+    try:
+        inputs = inputs['vulnerability_data']['high_priority_cves']
+    except:
+        pass
     
     # Initialize crew
     crew = cyberCrew().crew()
     
     # Execute crew workflow with CPE and vulnerability-enhanced inputs
     print("\nExecuting crew workflow with recent vulnerability data...")
-    result = crew.kickoff(inputs=inputs)
+    result = crew.kickoff_for_each(inputs=inputs)
     
     # Generate report
     print("\nGenerating execution report...")
