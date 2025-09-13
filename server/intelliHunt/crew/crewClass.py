@@ -75,8 +75,10 @@ for text_item in raw_strings_list:
 
 
 # Initialize the LLM
-llm = LLM(model=os.environ["MODEL"], max_tokens=int(os.environ["MAX_TOKENS"]))
-
+# if 'openai' in os.environ["MODEL"]:
+llm = LLM(model=os.environ["MODEL"])
+# else:
+#     llm = LLM(model=os.environ["MODEL"], max_tokens=int(os.environ["MAX_TOKENS"]))
 
 @CrewBase
 class cyberCrew:
@@ -140,22 +142,22 @@ class cyberCrew:
         return Task(config=self.tasks_config["research_task"],
         output_pydantic=TrendingThreatList)  # type: ignore[index]
 
-    @task
-    def ranking_task(self) -> Task:
-        return Task(
-            config=self.tasks_config["ranking_task"],  # type: ignore[index]
-            context=[
-                self.research_task()
-            ],
-            output_pydantic=RankedTrendingThreatList,
-            # Use the output of research_task as context
-        )
+    # @task
+    # def ranking_task(self) -> Task:
+    #     return Task(
+    #         config=self.tasks_config["ranking_task"],  # type: ignore[index]
+    #         context=[
+    #             self.research_task()
+    #         ],
+    #         output_pydantic=RankedTrendingThreatList,
+    #         # Use the output of research_task as context
+    #     )
 
     @task
     def splunk_query_task(self) -> Task:
         return Task(
             config=self.tasks_config["splunk_query_task"],  # type: ignore[index]
-            context=[self.ranking_task()],  # Use the output of research_task as context
+            context=[self.research_task()],  # Use the output of research_task as context
             output_pydantic=DetectionMethod,
         )
 

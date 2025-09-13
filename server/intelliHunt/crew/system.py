@@ -5,6 +5,7 @@ from NVD.vulnerability_processor import VulnerabilityProcessor
 from crewClass import cyberCrew
 import json
 from pathlib import Path
+from collections import Counter
 
 
 
@@ -16,8 +17,8 @@ def load_cpe_data_for_crew():
     try:
         # Check if we have recent CPE data
         crew_dir = Path(__file__).parent
-        cpe_files = list(crew_dir.glob("cpe_data_*.json"))
-        enhanced_crew_input_files = list(crew_dir.glob("enhanced_crew_input_*.json"))
+        cpe_files = list(crew_dir.glob("NVD/cpe_data_*.json"))
+        enhanced_crew_input_files = list(crew_dir.glob("NVD/enhanced_crew_input_*.json"))
         
         # If no CPE data exists or it's older than 24 hours, fetch new data
         should_fetch_new = True
@@ -136,6 +137,17 @@ def main():
     # We only want vulnerability info passed to crew
     try:
         inputs = inputs['vulnerability_data']['high_priority_cves']
+        ids = [d['cve_id'] for d in inputs]
+        id_counts = Counter(ids)
+        inputs = [d for d in inputs if id_counts[d['id']] == 1]
+        # inputs=[{"cve_id": "None",
+        #     "description": "thing",
+        #     "cvss_score": 7,
+        #     "severity": 5,
+        #     "published": "yesterday",
+        #     "cpe_name": "threat",
+        #     "references": "Here"
+        # }]
     except:
         pass
     
@@ -162,15 +174,16 @@ def generate_crew_report(result, inputs):
         tasks_output = result.tasks_output if hasattr(result, 'tasks_output') else {}
         token_usage = result.token_usage if hasattr(result, 'token_usage') else None
         
+        # removed for now
+        # ## CPE Data Context
+        # - **Organization**: {inputs.get('collection_metadata', {}).get('organization', 'Unknown')}
+        # - **Collection Timestamp**: {inputs.get('collection_metadata', {}).get('timestamp', 'Unknown')}
+        # - **Software Stack**: {inputs['software_stack']}
+        # - **Total CPE Records**: {inputs.get('cpe_data', {}).get('total_records', 'N/A')}
+
         # Formatting for a document
         document_content = f"""
         # CrewAI Execution Report - Configuration Management Database Integration
-
-        ## CPE Data Context
-        - **Organization**: {inputs.get('collection_metadata', {}).get('organization', 'Unknown')}
-        - **Collection Timestamp**: {inputs.get('collection_metadata', {}).get('timestamp', 'Unknown')}
-        - **Software Stack**: {inputs['software_stack']}
-        - **Total CPE Records**: {inputs.get('cpe_data', {}).get('total_records', 'N/A')}
 
         ## Final Result:
         {final_result}
