@@ -1,0 +1,306 @@
+{
+  "software_stack": "python,azure,apple,apache,windows_11,http_server,microsoft,windows_server_2022,windows_server_2019,active_directory,windows_10,powerpoint,mysql,office,tomcat,teams,exchange_server,crowdstrike,falcon,onedrive,sql_server,macos,iis,node.js,oracle,nodejs,excel,kafka",
+  "url_list": [
+    "https://nvd.nist.gov/vuln/search",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://msrc.microsoft.com/update-guide/vulnerabilities",
+    "https://www.oracle.com/security-alerts/",
+    "https://apache.org/security/",
+    "https://python.org/security/",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://www.cvedetails.com/",
+    "https://nvd.nist.gov/vuln/search"
+  ],
+  "cpe_data": {
+    "total_records": 12665,
+    "vendors_covered": [
+      "microsoft",
+      "apple",
+      "oracle",
+      "apache",
+      "python",
+      "nodejs",
+      "crowdstrike"
+    ],
+    "products_covered": [
+      "windows_10",
+      "windows_11",
+      "windows_server_2019",
+      "windows_server_2022",
+      "macos",
+      "office",
+      "teams",
+      "powerpoint",
+      "excel",
+      "onedrive",
+      "active_directory",
+      "sql_server",
+      "iis",
+      "exchange_server",
+      "mysql",
+      "http_server",
+      "tomcat",
+      "kafka",
+      "python",
+      "node.js",
+      "falcon",
+      "azure"
+    ],
+    "operating_systems": [
+      "windows_10",
+      "windows_11",
+      "windows_server_2019",
+      "windows_server_2022",
+      "macos"
+    ],
+    "applications": [
+      "office",
+      "teams",
+      "powerpoint",
+      "excel",
+      "onedrive",
+      "active_directory",
+      "sql_server",
+      "iis",
+      "exchange_server",
+      "mysql",
+      "http_server",
+      "tomcat",
+      "kafka",
+      "python",
+      "node.js",
+      "falcon"
+    ],
+    "cloud_platforms": [
+      "azure"
+    ]
+  },
+  "collection_metadata": {
+    "timestamp": "2025-09-15T12:43:23.914228",
+    "organization": "Your Organization"
+  },
+  "vulnerability_data": {
+    "recent_cves": [
+      "CVE-2025-54919",
+      "CVE-2025-55223",
+      "CVE-2025-55224",
+      "CVE-2025-55225",
+      "CVE-2025-55226",
+      "CVE-2025-55234",
+      "CVE-2025-55236"
+    ],
+    "high_priority_cves": [
+      {
+        "cve_id": "CVE-2025-55234",
+        "description": "SMB Server might be susceptible to relay attacks depending on the configuration. An attacker who successfully exploited these vulnerabilities could perform relay attacks and make the users subject to elevation of privilege attacks.\nThe SMB Server already supports mechanisms for hardening against relay attacks:\n\nSMB Server signing\nSMB Server Extended Protection for Authentication (EPA)\n\nMicrosoft is releasing this CVE to provide customers with audit capabilities to help them to assess their environment and to identify any potential device or software incompatibility issues before deploying SMB Server hardening measures that protect against relay attacks.\nIf you have not already enabled SMB Server hardening measures, we advise customers to take the following actions to be protected from these relay attacks:\n\nAssess your environment by utilizing the audit capabilities that we are exposing in the September 2025 security updates.  See Support for Audit Events to deploy SMB Server Hardening\u2014SMB Server Signing &amp; SMB Server EPA.\nAdopt appropriate SMB Server hardening measures.",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2025-09-09T17:16:06.503",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-55224",
+        "description": "Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally.",
+        "cvss_score": 7.8,
+        "severity": "HIGH",
+        "published": "2025-09-09T17:16:05.203",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-54919",
+        "description": "Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally.",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "published": "2025-09-09T17:16:04.713",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-55236",
+        "description": "Time-of-check time-of-use (toctou) race condition in Graphics Kernel allows an authorized attacker to execute code locally.",
+        "cvss_score": 7.3,
+        "severity": "HIGH",
+        "published": "2025-09-09T17:16:06.717",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-55223",
+        "description": "Concurrent execution using shared resource with improper synchronization ('race condition') in Graphics Kernel allows an authorized attacker to elevate privileges locally.",
+        "cvss_score": 7.0,
+        "severity": "HIGH",
+        "published": "2025-09-09T17:16:04.990",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55223",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      }
+    ],
+    "total_cves_found": 7,
+    "time_period": "Last 7 days",
+    "cve_details": [
+      {
+        "cve_id": "CVE-2025-55234",
+        "description": "SMB Server might be susceptible to relay attacks depending on the configuration. An attacker who successfully exploited these vulnerabilities could perform relay attacks and make the users subject to elevation of privilege attacks.\nThe SMB Server already supports mechanisms for hardening against relay attacks:\n\nSMB Server signing\nSMB Server Extended Protection for Authentication (EPA)\n\nMicrosoft is releasing this CVE to provide customers with audit capabilities to help them to assess their environment and to identify any potential device or software incompatibility issues before deploying SMB Server hardening measures that protect against relay attacks.\nIf you have not already enabled SMB Server hardening measures, we advise customers to take the following actions to be protected from these relay attacks:\n\nAssess your environment by utilizing the audit capabilities that we are exposing in the September 2025 security updates.  See Support for Audit Events to deploy SMB Server Hardening\u2014SMB Server Signing &amp; SMB Server EPA.\nAdopt appropriate SMB Server hardening measures.",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2025-09-09T17:16:06.503",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-55224",
+        "description": "Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally.",
+        "cvss_score": 7.8,
+        "severity": "HIGH",
+        "published": "2025-09-09T17:16:05.203",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-54919",
+        "description": "Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally.",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "published": "2025-09-09T17:16:04.713",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-55236",
+        "description": "Time-of-check time-of-use (toctou) race condition in Graphics Kernel allows an authorized attacker to execute code locally.",
+        "cvss_score": 7.3,
+        "severity": "HIGH",
+        "published": "2025-09-09T17:16:06.717",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-55223",
+        "description": "Concurrent execution using shared resource with improper synchronization ('race condition') in Graphics Kernel allows an authorized attacker to elevate privileges locally.",
+        "cvss_score": 7.0,
+        "severity": "HIGH",
+        "published": "2025-09-09T17:16:04.990",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55223",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-55226",
+        "description": "Concurrent execution using shared resource with improper synchronization ('race condition') in Graphics Kernel allows an authorized attacker to execute code locally.",
+        "cvss_score": 6.7,
+        "severity": "MEDIUM",
+        "published": "2025-09-09T17:16:05.687",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55226",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-55225",
+        "description": "Out-of-bounds read in Windows Routing and Remote Access Service (RRAS) allows an unauthorized attacker to disclose information over a network.",
+        "cvss_score": 6.5,
+        "severity": "MEDIUM",
+        "published": "2025-09-09T17:16:05.483",
+        "cpe_name": "cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*",
+        "references": [
+          {
+            "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55225",
+            "source": "secure@microsoft.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "research_focus": "Recent Vulnerability Analysis",
+  "threat_intelligence_priority": "High",
+  "analysis_timeframe": "Last 7 days"
+}

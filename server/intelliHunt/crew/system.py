@@ -160,9 +160,64 @@ def main():
     
     # Generate report
     print("\nGenerating execution report...")
-    generate_crew_report(result, inputs)
-    
+    # generate_crew_report(result, inputs)
+    create_threat_report(result)    
     return result
+
+def create_threat_report(crew_output_list):
+    """
+    Generates a Markdown-formatted cyber threat report from a list of CrewOutput objects.
+
+    Args:
+        crew_output_list: A list of CrewOutput objects from a 'for each agent' task run.
+
+    Returns:
+        A Markdown string containing the organized report.
+    """
+    report_parts = ["### Cyber Threat Report 🕵️‍♂️\n---"]
+    
+    for i, output in enumerate(crew_output_list, 1):
+        # Extract data from the pydantic output
+        if output.pydantic:
+            detection_data = output.pydantic
+            
+            # Find the research task output within the tasks_output list
+            research_data = None
+            for task_output in output.tasks_output:
+                if task_output.name == 'research_task' and task_output.pydantic:
+                    research_data = task_output.pydantic.threatList[0]
+                    break
+            
+            # Start a new section for each iteration
+            report_parts.append(f"### **Iteration {i}**\n")
+            
+            if research_data:
+                report_parts.append(f"#### **Threat: {research_data.threat_name}**\n")
+                report_parts.append(f"* **Description**: {research_data.description}\n")
+                report_parts.append("* **Indicators of Compromise (IoCs)**:")
+                for ioc in research_data.indicators_of_compromise:
+                    report_parts.append(f"    * {ioc}")
+                report_parts.append("\n")
+
+            if detection_data:
+                report_parts.append("#### **Detection Method**\n")
+                report_parts.append(f"* **Query**: `{detection_data.detection_method}`")
+                report_parts.append(f"* **Description**: {detection_data.description}\n")
+                
+                if research_data:
+                    report_parts.append("#### **References**")
+                    for url in research_data.urlList:
+                        report_parts.append(f"* [{url}]({url})")
+                    report_parts.append("\n")
+
+            report_parts.append("---\n")
+
+    report_path = Path(__file__).parent / "crew_report.md"
+    with open(report_path, "w", encoding='utf-8') as f:
+        f.write("\n".join(report_parts))
+            
+    return "Report Generated"
+
 
 def generate_crew_report(result, inputs):
     """
