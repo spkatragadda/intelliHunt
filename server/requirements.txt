@@ -8,3 +8,4 @@ python-dotenv==1.1.1
 gunicorn==23.0.0
 whitenoise==6.9.0
 django-cors-headers==4.7.0
+openai==1.61.1
