@@ -144,9 +144,15 @@ class cyberCrew:
         output_pydantic=TrendingThreatList)  # type: ignore[index] TrendingThreatList
     
     @task
+    def additional_research_task(self) -> Task:
+        return Task(config=self.tasks_config["additional_research_task"],
+        context=[self.research_task()],
+        output_pydantic=TrendingThreatList)  # type: ignore[index]
+    
+    @task
     def review_task(self) -> Task:
         return Task(config=self.tasks_config["review_task"],
-        context=[self.research_task()],
+        context=[self.additional_research_task()],
         output_pydantic=TrendingThreatList)  # type: ignore[index]
 
     # @task
