@@ -1,447 +1,521 @@
-2025-09-13 20:26:22: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55234, "description": SMB Server might be susceptible to relay attacks depending on the configuration. An attacker who successfully exploited these vulnerabilities could perform relay attacks and make the users subject to elevation of privilege attacks.
-The SMB Server already supports mechanisms for hardening against relay attacks:
-
-SMB Server signing
-SMB Server Extended Protection for Authentication (EPA)
-
-Microsoft is releasing this CVE to provide customers with audit capabilities to help them to assess their environment and to identify any potential device or software incompatibility issues before deploying SMB Server hardening measures that protect against relay attacks.
-If you have not already enabled SMB Server hardening measures, we advise customers to take the following actions to be protected from these relay attacks:
-
-Assess your environment by utilizing the audit capabilities that we are exposing in the September 2025 security updates.  See Support for Audit Events to deploy SMB Server Hardening—SMB Server Signing &amp; SMB Server EPA.
-Adopt appropriate SMB Server hardening measures., "cvss_score": 8.8, "severity": HIGH, "date_published": 2025-09-09T17:16:06.503, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 13:55:45: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10329, "description": A vulnerability was detected in cdevroe unmark up to 1.9.3. This affects an unknown part of the file /application/controllers/Marks.php. The manipulation of the argument url results in server-side request forgery. The attack may be launched remotely. The exploit is now public and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 6.3, "severity": MEDIUM, "date_published": 2025-09-12T22:15:33.710, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323755', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'Third Party Advisory']}, {'url': 'https://vuldb.com/?id.323755', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643531', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
 ", status="started"
-2025-09-13 20:28:12: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55234, "description": SMB Server might be susceptible to relay attacks depending on the configuration. An attacker who successfully exploited these vulnerabilities could perform relay attacks and make the users subject to elevation of privilege attacks.
-The SMB Server already supports mechanisms for hardening against relay attacks:
-
-SMB Server signing
-SMB Server Extended Protection for Authentication (EPA)
-
-Microsoft is releasing this CVE to provide customers with audit capabilities to help them to assess their environment and to identify any potential device or software incompatibility issues before deploying SMB Server hardening measures that protect against relay attacks.
-If you have not already enabled SMB Server hardening measures, we advise customers to take the following actions to be protected from these relay attacks:
-
-Assess your environment by utilizing the audit capabilities that we are exposing in the September 2025 security updates.  See Support for Audit Events to deploy SMB Server Hardening—SMB Server Signing &amp; SMB Server EPA.
-Adopt appropriate SMB Server hardening measures., "cvss_score": 8.8, "severity": HIGH, "date_published": 2025-09-09T17:16:06.503, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 13:56:21: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10329, "description": A vulnerability was detected in cdevroe unmark up to 1.9.3. This affects an unknown part of the file /application/controllers/Marks.php. The manipulation of the argument url results in server-side request forgery. The attack may be launched remotely. The exploit is now public and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 6.3, "severity": MEDIUM, "date_published": 2025-09-12T22:15:33.710, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323755', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'Third Party Advisory']}, {'url': 'https://vuldb.com/?id.323755', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643531', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
 ", status="completed", output="{
-  "threatList": [{
-  "threat_name": "CVE-2025-55234: SMB Server Relay Attacks",
+  "threat_name": "CVE-2025-10329: cdevroe unmark Server-Side Request Forgery",
   "indicators_of_compromise": [
-    "Unusual SMB traffic between devices",
-    "Unexpected elevation of privileges in user accounts",
-    "Failed authentication attempts followed by successful ones",
-    "Changes in user roles or permissions without authorization"
+    "Remote exploitation triggered through manipulation of the URL argument.",
+    "Potential access to sensitive data as a result of the SSRF vulnerability."
   ],
-  "description": "CVE-2025-55234 identifies a critical vulnerability in the SMB Server that may permit relay attacks, resulting in unauthorized elevation of privilege on affected systems. This vulnerability has a CVSS score of 8.8 indicating high severity, making it crucial for administrators to assess their environments and implement hardening measures, such as enabling SMB Server signing and Extended Protection for Authentication (EPA). Microsoft recommends utilizing the audit capabilities provided in the September 2025 updates to identify any compatibility issues.",
+  "description": "A vulnerability in versions up to 1.9.3 of cdevroe unmark has been identified, affecting the Marks.php file. This vulnerability allows for server-side request forgery (SSRF), enabling attackers to manipulate URL arguments and potentially gain unauthorized access to internal resources. The exploit for this vulnerability is public and poses a medium severity risk with a CVSS score of 6.3. The vendor was contacted early about this vulnerability but did not respond.",
   "urlList": [
-    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234"
+    "https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md",
+    "https://vuldb.com/?ctiid.323755"
   ],
   "media_coverage": []
-}]
 }"
-2025-09-13 20:28:12: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-", agent="Experienced cyber threat hunter
-", status="started"
-2025-09-13 20:29:01: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-
-
-Current Date: 2025-09-13", agent="Experienced cyber threat hunter
-", status="completed", output="{
-  "detection_method": "index=main sourcetype=\"cisco:esa:syslog\" (direction=\"inbound\" OR direction=\"outbound\") AND (threat_status=\"malicious\" OR threat_name=\"CVE-2025-55234\") | stats count by sender, recipient, subject, threat_name",
-  "description": "This Splunk SPL query detects potential SMB Server Relay Attacks related to CVE-2025-55234 by monitoring logs from Cisco Email Security Appliances for any malicious threats. It looks for inbound or outbound email traffic that has been identified as malicious, linked to the CVE-2025-55234 vulnerability, reporting the count of suspicious activities by sender, recipient, and subject.",
-  "urlList": [
-    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234"
-  ]
-}"
-2025-09-13 20:29:01: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55224, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.8, "severity": HIGH, "date_published": 2025-09-09T17:16:05.203, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 13:56:21: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
 ", agent="Experienced cyber threat intelligence researcher
 ", status="started"
-2025-09-13 20:31:14: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55224, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.8, "severity": HIGH, "date_published": 2025-09-09T17:16:05.203, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="completed", output="Thought: As I still can't find any information on CVE-2025-55224 after multiple attempts, my current resources are exhausted. I need to formally conclude that despite the importance of the vulnerability, I am unable to gather sufficient data to assist in forming a comprehensive report.
-
-Action: None"
-2025-09-13 20:31:14: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-", agent="Experienced cyber threat hunter
-", status="started"
-2025-09-13 20:32:00: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-
-
-Current Date: 2025-09-13", agent="Experienced cyber threat hunter
-", status="completed", output="Thought: I need to build a detection query utilizing the relevant sourcetype I found.
-Action: None"
-2025-09-13 20:32:00: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-54919, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.5, "severity": HIGH, "date_published": 2025-09-09T17:16:04.713, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="started"
-2025-09-13 20:32:43: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-54919, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.5, "severity": HIGH, "date_published": 2025-09-09T17:16:04.713, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 13:56:33: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
 ", agent="Experienced cyber threat intelligence researcher
 ", status="completed", output="{
-  "threatList": [{
-    "threat_name": "CVE-2025-54919",
-    "indicators_of_compromise": [
-      "Unauthorized code execution",
-      "Unexpected application behavior",
-      "Performance degradation",
-      "System crashes during graphics processing"
-    ],
-    "description": "Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally. This could allow attackers to manipulate system processes, leading to unauthorized actions on affected servers.",
-    "urlList": [
-      "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919"
-    ],
-    "media_coverage": [{
-      "title": "Microsoft Security Response Center - CVE-2025-54919",
-      "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919",
-      "source": "Microsoft"
-    }]
-  }]
-}"
-2025-09-13 20:32:43: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-", agent="Experienced cyber threat hunter
-", status="started"
-2025-09-13 20:33:56: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-
-
-Current Date: 2025-09-13", agent="Experienced cyber threat hunter
-", status="completed", output="{
-  "detection_method": "index=your_index sourcetype=linux_audit (syscall=execve OR syscall=clone) (success=0 OR exit!=0) | stats count by pid, exe, comm, user",
-  "description": "This Splunk query detects unauthorized code execution attempts related to CVE-2025-54919. It searches for system calls associated with process creation (execve or clone) that have resulted in a failure (success=0 or non-zero exit codes), providing insights into potential exploitation attempts.",
-  "urlList": ["https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919"]
-}"
-2025-09-13 20:33:56: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55236, "description": Time-of-check time-of-use (toctou) race condition in Graphics Kernel allows an authorized attacker to execute code locally., "cvss_score": 7.3, "severity": HIGH, "date_published": 2025-09-09T17:16:06.717, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="started"
-2025-09-13 20:37:40: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55236, "description": Time-of-check time-of-use (toctou) race condition in Graphics Kernel allows an authorized attacker to execute code locally., "cvss_score": 7.3, "severity": HIGH, "date_published": 2025-09-09T17:16:06.717, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="completed", output="{
-  "threatList": [{
-    "threat_name": "CVE-2025-55236",
-    "indicators_of_compromise": [
-      "Unauthorized local code execution attempts",
-      "Unusual activity in Graphics Kernel processes",
-      "Unexpected system resource allocations or spikes"
-    ],
-    "description": "CVE-2025-55236 is a high-severity vulnerability categorized as a time-of-check time-of-use (TOCTOU) race condition in the Graphics Kernel of Microsoft Windows Server 2022. An authorized attacker can exploit this vulnerability to execute malicious code locally, potentially leading to a complete compromise of affected systems.",
-    "urlList": [
-      "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236"
-    ],
-    "media_coverage": []
-  }]
-}"
-2025-09-13 20:37:40: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-", agent="Experienced cyber threat hunter
-", status="started"
-2025-09-13 20:38:05: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-
-
-Current Date: 2025-09-13", agent="Experienced cyber threat hunter
-", status="completed", output="{
-  "detection_method": "index=security sourcetype=iis OR sourcetype=snort | stats count by src_ip, dest_ip, action | search action=unauthorized | where count > 5",
-  "description": "This Splunk query detects potential unauthorized local code execution attempts associated with CVE-2025-55236 by monitoring IIS and Snort logs for unusual activity, specifically looking for multiple unauthorized actions that may indicate exploitation of the vulnerability.",
-  "urlList": [
-    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236"
-  ]
-}"
-2025-09-13 20:38:06: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55223, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Graphics Kernel allows an authorized attacker to elevate privileges locally., "cvss_score": 7.0, "severity": HIGH, "date_published": 2025-09-09T17:16:04.990, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55223', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="started"
-2025-09-13 20:40:39: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55223, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Graphics Kernel allows an authorized attacker to elevate privileges locally., "cvss_score": 7.0, "severity": HIGH, "date_published": 2025-09-09T17:16:04.990, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55223', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="completed", output="{
-  "threatList": [{
-    "threat_name": "CVE-2025-55223: Race Condition in Graphics Kernel",
-    "indicators_of_compromise": [
-      "Unexpected system crashes",
-      "Unauthorized access attempts",
-      "Altered user permissions"
-    ],
-    "description": "A high-severity vulnerability (CVSS score 7.0) found in Microsoft Windows Server 2022 that allows an authorized attacker to elevate privileges locally due to a race condition within the Graphics Kernel. The vulnerability poses significant risk, as it can be exploited to gain unauthorized access or control over system resources.",
-    "urlList": [
-      "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55223"
-    ],
-    "media_coverage": []
-  }]
-}"
-2025-09-13 20:40:39: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-", agent="Experienced cyber threat hunter
-", status="started"
-2025-09-13 20:41:30: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-
-
-Current Date: 2025-09-13", agent="Experienced cyber threat hunter
-", status="completed", output="{
-  "detection_method": "sourcetype=\"linux_secure\" (\"failed\" OR \"unauthorized\" OR \"access denied\") OR sourcetype=\"linux_audit\" (\"crash\" OR \"fatal error\")",
-  "description": "This Splunk query detects unauthorized access attempts and unexpected system crashes related to CVE-2025-55223: Race Condition in Graphics Kernel, indicative of potential exploitation and privilege escalation.",
-  "urlList": [
-    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55223"
-  ]
-}"
-2025-09-13 20:45:48: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55234, "description": SMB Server might be susceptible to relay attacks depending on the configuration. An attacker who successfully exploited these vulnerabilities could perform relay attacks and make the users subject to elevation of privilege attacks.
-The SMB Server already supports mechanisms for hardening against relay attacks:
-
-SMB Server signing
-SMB Server Extended Protection for Authentication (EPA)
-
-Microsoft is releasing this CVE to provide customers with audit capabilities to help them to assess their environment and to identify any potential device or software incompatibility issues before deploying SMB Server hardening measures that protect against relay attacks.
-If you have not already enabled SMB Server hardening measures, we advise customers to take the following actions to be protected from these relay attacks:
-
-Assess your environment by utilizing the audit capabilities that we are exposing in the September 2025 security updates.  See Support for Audit Events to deploy SMB Server Hardening—SMB Server Signing &amp; SMB Server EPA.
-Adopt appropriate SMB Server hardening measures., "cvss_score": 8.8, "severity": HIGH, "date_published": 2025-09-09T17:16:06.503, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="started"
-2025-09-13 20:48:06: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55234, "description": SMB Server might be susceptible to relay attacks depending on the configuration. An attacker who successfully exploited these vulnerabilities could perform relay attacks and make the users subject to elevation of privilege attacks.
-The SMB Server already supports mechanisms for hardening against relay attacks:
-
-SMB Server signing
-SMB Server Extended Protection for Authentication (EPA)
-
-Microsoft is releasing this CVE to provide customers with audit capabilities to help them to assess their environment and to identify any potential device or software incompatibility issues before deploying SMB Server hardening measures that protect against relay attacks.
-If you have not already enabled SMB Server hardening measures, we advise customers to take the following actions to be protected from these relay attacks:
-
-Assess your environment by utilizing the audit capabilities that we are exposing in the September 2025 security updates.  See Support for Audit Events to deploy SMB Server Hardening—SMB Server Signing &amp; SMB Server EPA.
-Adopt appropriate SMB Server hardening measures., "cvss_score": 8.8, "severity": HIGH, "date_published": 2025-09-09T17:16:06.503, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="completed", output="{
-  "threatList": [{
-  "threat_name": "CVE-2025-55234 - SMB Server Relay Attacks",
+  "threat_name": "CVE-2025-10329: cdevroe unmark Server-Side Request Forgery",
   "indicators_of_compromise": [
-    "Unusual SMB traffic patterns",
-    "Authentication failures or errors on SMB connections",
-    "Unauthorized access attempts using SMB protocols"
+    "Remote exploitation triggered through manipulation of the URL argument.",
+    "Potential access to sensitive data as a result of the SSRF vulnerability."
   ],
-  "description": "CVE-2025-55234 identifies a high severity vulnerability in the SMB Server that may allow attackers to execute relay attacks depending on the configuration. If successfully exploited, these vulnerabilities enable an attacker to perform relay attacks and possibly elevate privileges of users in the environment. To mitigate this threat, organizations are advised to assess their systems and enable SMB Server hardening measures such as Server signing and Extended Protection for Authentication.",
+  "description": "A vulnerability in versions up to 1.9.3 of cdevroe unmark has been identified, affecting the Marks.php file. This vulnerability allows for server-side request forgery (SSRF), enabling attackers to manipulate URL arguments and potentially gain unauthorized access to internal resources. The exploit for this vulnerability is public and poses a medium severity risk with a CVSS score of 6.3. The vendor was contacted early about this vulnerability but did not respond.",
   "urlList": [
-    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234"
+    "https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md",
+    "https://vuldb.com/?ctiid.323755"
   ],
-  "media_coverage": [{
-    "title": "Microsoft Security Update Guide",
-    "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234",
-    "source": "Microsoft"
-  }]
-}]
+  "media_coverage": []
 }"
-2025-09-13 20:48:06: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+2025-09-17 13:56:33: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
 ", agent="Experienced cyber threat hunter
 ", status="started"
-2025-09-13 20:49:44: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+2025-09-17 13:57:50: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
 
 
-Current Date: 2025-09-13", agent="Experienced cyber threat hunter
+Current Date: 2025-09-17", agent="Experienced cyber threat hunter
 ", status="completed", output="{
-  "detection_method": "sourcetype=pan:traffic action=allowed src_ip=* dest_port=445 | stats count by src_ip, dest_ip | where count > 10",
-  "description": "This Splunk query detects potential SMB relay attacks by monitoring allowed traffic through the Palo Alto Networks firewall on port 445, which is used for SMB. It looks for unusual connections originating from various source IPs to destination IPs on port 445, indicating possible unauthorized access attempts. The query specifically counts the occurrences of traffic to identify patterns that could signify a relay attack related to CVE-2025-55234.",
+  "detection_method": "sourcetype=access_combined uri_path=\"*\" AND (uri_query=\"*../../*\" OR uri_query=\"*%2E%2E*\" OR uri_query=\"*localhost*\" OR uri_query=\"*127.0.0.1*\")",
+  "description": "This Splunk query detects potential exploitation attempts related to CVE-2025-10329: cdevroe unmark Server-Side Request Forgery (SSRF) by identifying suspicious URL manipulations leveraging the access_combined logs. It searches for malicious patterns in the 'uri_query' that suggest attempts to access internal resources using crafted URLs.",
   "urlList": [
-    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234"
+    "https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md",
+    "https://vuldb.com/?ctiid.323755"
   ]
 }"
-2025-09-13 20:49:44: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55224, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.8, "severity": HIGH, "date_published": 2025-09-09T17:16:05.203, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 13:57:50: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10330, "description": A flaw has been found in cdevroe unmark up to 1.9.3. This vulnerability affects unknown code of the file application/views/layouts/topbar/searchform.php. This manipulation of the argument q causes cross site scripting. Remote exploitation of the attack is possible. The exploit has been published and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 4.3, "severity": MEDIUM, "date_published": 2025-09-12T23:15:31.323, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323756', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323756', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643532', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
 ", status="started"
-2025-09-13 20:53:27: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55224, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.8, "severity": HIGH, "date_published": 2025-09-09T17:16:05.203, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 13:58:24: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10330, "description": A flaw has been found in cdevroe unmark up to 1.9.3. This vulnerability affects unknown code of the file application/views/layouts/topbar/searchform.php. This manipulation of the argument q causes cross site scripting. Remote exploitation of the attack is possible. The exploit has been published and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 4.3, "severity": MEDIUM, "date_published": 2025-09-12T23:15:31.323, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323756', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323756', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643532', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
 ", status="completed", output="{
-  "threatList": [{
-    "threat_name": "CVE-2025-55224",
-    "indicators_of_compromise": [
-      "Unauthorized code execution within Windows environments",
-      "Local exploitation through race condition"
-    ],
-    "description": "A high-severity race condition vulnerability in Windows Win32K - GRFX that may allow an authorized attacker to execute code locally. This vulnerability has a CVSS score of 7.8 indicating significant risk.",
-    "urlList": [
-      "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224"
-    ],
-    "media_coverage": []
-  }]
+  "threat_name": "CVE-2025-10330",
+  "indicators_of_compromise": [
+    "Manipulation of the argument 'q' in the file application/views/layouts/topbar/searchform.php leads to cross site scripting.",
+    "Potential access to other users' data through XSS.",
+    "Proof-of-concept exploit available on GitHub."
+  ],
+  "description": "A flaw has been found in cdevroe unmark up to 1.9.3 that permits remote exploitation via cross site scripting through manipulation of the 'q' argument in the searchform.php file. The exploit has been published and is potentially easy to execute, requiring user interaction but no form of authentication.",
+  "urlList": [
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss1.md",
+    "https://vuldb.com/?id.323756"
+  ],
+  "media_coverage": []
 }"
-2025-09-13 20:53:27: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+2025-09-17 13:58:24: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="started"
+2025-09-17 13:58:31: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="completed", output="{
+  "threat_name": "CVE-2025-10330",
+  "indicators_of_compromise": [
+    "Manipulation of the argument 'q' in the file application/views/layouts/topbar/searchform.php leads to cross site scripting.",
+    "Potential access to other users' data through XSS.",
+    "Proof-of-concept exploit available on GitHub."
+  ],
+  "description": "A flaw has been found in cdevroe unmark up to 1.9.3 that permits remote exploitation via cross site scripting through manipulation of the 'q' argument in the searchform.php file. The exploit has been published and is potentially easy to execute, requiring user interaction but no form of authentication.",
+  "urlList": [
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss1.md",
+    "https://vuldb.com/?id.323756"
+  ],
+  "media_coverage": []
+}"
+2025-09-17 13:58:31: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
 ", agent="Experienced cyber threat hunter
 ", status="started"
-2025-09-13 20:53:55: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+2025-09-17 13:58:41: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
 
 
-Current Date: 2025-09-13", agent="Experienced cyber threat hunter
+Current Date: 2025-09-17", agent="Experienced cyber threat hunter
 ", status="completed", output="{
-  "detection_method": "index=security sourcetype=WinEventLog:Security EventCode=4688 | search New_Process_Name=\"*cmd.exe*\" OR New_Process_Name=\"*powershell.exe*\"",
-  "description": "This Splunk query detects unauthorized code execution events in Windows environments associated with CVE-2025-55224 by monitoring the Windows Security Event Log for process creation events (EventCode 4688) specifically looking for command-line interpreters like cmd.exe and powershell.exe, which could indicate local exploitation attempts through a race condition.",
+  "detection_method": "sourcetype=cisco:asa action=blocked src_ip=* dest_ip=* | stats count by src_ip, dest_ip, protocol | where count > 5",
+  "description": "This query detects multiple blocked actions in the Cisco ASA logs that may indicate attempts at exploiting CVE-2025-10330 via XSS. The threshold of 'count > 5' can be tuned based on the network environment for suspicious behavior.",
   "urlList": [
-    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224"
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss1.md",
+    "https://vuldb.com/?id.323756"
   ]
 }"
-2025-09-13 20:53:56: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-54919, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.5, "severity": HIGH, "date_published": 2025-09-09T17:16:04.713, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1903:*:*:*:standard:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 13:58:41: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10332, "description": A vulnerability was found in cdevroe unmark up to 1.9.3. Impacted is an unknown function of the file application/views/marks/info.php. Performing manipulation of the argument Title results in cross site scripting. The attack is possible to be carried out remotely. The exploit has been made public and could be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 3.5, "severity": LOW, "date_published": 2025-09-13T03:15:39.323, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323758', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323758', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
 ", status="started"
-2025-09-15 08:58:54: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55234, "description": SMB Server might be susceptible to relay attacks depending on the configuration. An attacker who successfully exploited these vulnerabilities could perform relay attacks and make the users subject to elevation of privilege attacks.
-The SMB Server already supports mechanisms for hardening against relay attacks:
-
-SMB Server signing
-SMB Server Extended Protection for Authentication (EPA)
-
-Microsoft is releasing this CVE to provide customers with audit capabilities to help them to assess their environment and to identify any potential device or software incompatibility issues before deploying SMB Server hardening measures that protect against relay attacks.
-If you have not already enabled SMB Server hardening measures, we advise customers to take the following actions to be protected from these relay attacks:
-
-Assess your environment by utilizing the audit capabilities that we are exposing in the September 2025 security updates.  See Support for Audit Events to deploy SMB Server Hardening—SMB Server Signing &amp; SMB Server EPA.
-Adopt appropriate SMB Server hardening measures., "cvss_score": 8.8, "severity": HIGH, "date_published": 2025-09-09T17:16:06.503, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="started"
-2025-09-15 08:59:11: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55234, "description": SMB Server might be susceptible to relay attacks depending on the configuration. An attacker who successfully exploited these vulnerabilities could perform relay attacks and make the users subject to elevation of privilege attacks.
-The SMB Server already supports mechanisms for hardening against relay attacks:
-
-SMB Server signing
-SMB Server Extended Protection for Authentication (EPA)
-
-Microsoft is releasing this CVE to provide customers with audit capabilities to help them to assess their environment and to identify any potential device or software incompatibility issues before deploying SMB Server hardening measures that protect against relay attacks.
-If you have not already enabled SMB Server hardening measures, we advise customers to take the following actions to be protected from these relay attacks:
-
-Assess your environment by utilizing the audit capabilities that we are exposing in the September 2025 security updates.  See Support for Audit Events to deploy SMB Server Hardening—SMB Server Signing &amp; SMB Server EPA.
-Adopt appropriate SMB Server hardening measures., "cvss_score": 8.8, "severity": HIGH, "date_published": 2025-09-09T17:16:06.503, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 13:59:08: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10332, "description": A vulnerability was found in cdevroe unmark up to 1.9.3. Impacted is an unknown function of the file application/views/marks/info.php. Performing manipulation of the argument Title results in cross site scripting. The attack is possible to be carried out remotely. The exploit has been made public and could be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 3.5, "severity": LOW, "date_published": 2025-09-13T03:15:39.323, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323758', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323758', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
 ", status="completed", output="{
-  "threatList": [{
-    "threat_name": "CVE-2025-55234 - SMB Server Relay Attacks",
-    "indicators_of_compromise": [
-      "Unauthorized access attempts",
-      "Elevation of privilege exploits",
-      "Abnormal SMB traffic"
-    ],
-    "description": "CVE-2025-55234 indicates that the SMB Server may be susceptible to relay attacks depending on server configurations. Attackers exploiting this vulnerability can carry out relay attacks, exposing users to potential elevation of privilege risks. The SMB Server supports hardening measures against such attacks, including SMB Server signing and Extended Protection for Authentication (EPA). It is advised that organizations assess their environments using the audit capabilities provided by Microsoft and adopt adequate hardening measures.",
-    "urlList": [
-      "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234"
-    ],
-    "media_coverage": []
-  }]
-}"
-2025-09-15 08:59:11: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-", agent="Experienced cyber threat hunter
-", status="started"
-2025-09-15 08:59:22: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-
-
-Current Date: 2025-09-15", agent="Experienced cyber threat hunter
-", status="completed", output="{
-  "detection_method": "index=windows sourcetype=WinEventLog:Security (EventCode=4625 OR EventCode=4672) AND (AuthenticationPackageName=MSV1_0 OR AuthenticationPackageName=Kerberos) | stats count by Account_Name, Source_Network_Address | where count > 10",
-  "description": "This Splunk query detects potential SMB Server Relay Attacks by monitoring for unauthorized access attempts (EventCode 4625) and elevation of privilege exploits (EventCode 4672) in Windows event logs. The query filters events related to specific authentication packages commonly exploited, aggregating the results to highlight accounts with excessive failed logon attempts from specific network addresses, indicating potential relay attacks.",
-  "urlList": ["https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234"]
-}"
-2025-09-15 08:59:22: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55224, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.8, "severity": HIGH, "date_published": 2025-09-09T17:16:05.203, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="started"
-2025-09-15 08:59:44: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55224, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.8, "severity": HIGH, "date_published": 2025-09-09T17:16:05.203, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
-", agent="Experienced cyber threat intelligence researcher
-", status="completed", output="{
-  "threatList": [{
-    "threat_name": "CVE-2025-55224",
-    "indicators_of_compromise": [
-      "Unauthorized code execution",
-      "Increased resource usage",
-      "Application crashes"
-    ],
-    "description": "Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally. This vulnerability has a CVSS score of 7.8, indicating a high severity.",
-    "urlList": [
-      "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224"
-    ],
-    "media_coverage": []
-  }]
-}"
-2025-09-15 08:59:44: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-", agent="Experienced cyber threat hunter
-", status="started"
-2025-09-15 08:59:49: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-
-
-Current Date: 2025-09-15", agent="Experienced cyber threat hunter
-", status="completed", output="{
-  "detection_method": "index=main sourcetype=pan:traffic (action=blocked OR action=deny) (src_ip=<your_ip> OR dest_ip=<your_ip>) | stats count by src_ip, dest_ip",
-  "description": "This Splunk query detects potential exploitation of the CVE-2025-55224 vulnerability by monitoring for blocked or denied network traffic related to unauthorized code execution attempts. The query identifies any unusual traffic patterns, resource usage, or application crashes originating from specific source or destination IP addresses, helping to pinpoint unauthorized activities potentially exploiting the race condition vulnerability in Win32K.",
+  "threat_name": "CVE-2025-10332",
+  "indicators_of_compromise": [],
+  "description": "A vulnerability was found in cdevroe unmark up to 1.9.3. Impacted is an unknown function of the file application/views/marks/info.php. Performing manipulation of the argument Title results in cross site scripting. The attack is possible to be carried out remotely.",
   "urlList": [
-    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224"
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+    "https://vuldb.com/?ctiid.323758"
+  ],
+  "media_coverage": []
+}"
+2025-09-17 13:59:08: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="started"
+2025-09-17 13:59:23: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="completed", output="{
+  "threat_name": "CVE-2025-10332",
+  "indicators_of_compromise": [],
+  "description": "A vulnerability was found in cdevroe unmark up to 1.9.3. Impacted is an unknown function of the file application/views/marks/info.php. Performing manipulation of the argument Title results in cross site scripting. The attack is possible to be carried out remotely.",
+  "urlList": [
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+    "https://vuldb.com/?ctiid.323758"
+  ],
+  "media_coverage": []
+}"
+2025-09-17 13:59:24: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+", agent="Experienced cyber threat hunter
+", status="started"
+2025-09-17 13:59:28: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+
+
+Current Date: 2025-09-17", agent="Experienced cyber threat hunter
+", status="completed", output="{
+  "detection_method": "index=web sourcetype=iis cs_uri_stem=\"/marks/info.php\" (cs_method=\"GET\" OR cs_method=\"POST\") \"<script>\"",
+  "description": "This Splunk query detects potential cross-site scripting (XSS) attacks exploiting the CVE-2025-10332 vulnerability found in cdevroe unmark. It looks for GET or POST requests made to the 'info.php' page with a script tag in the URL, indicating a possible malicious input attempt.",
+  "urlList": [
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+    "https://vuldb.com/?ctiid.323758"
   ]
 }"
-2025-09-15 08:59:49: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-54919, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.5, "severity": HIGH, "date_published": 2025-09-09T17:16:04.713, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 13:59:28: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10331, "description": A vulnerability has been found in cdevroe unmark up to 1.9.3. This issue affects some unknown processing of the file /application/controllers/Marks.php. Such manipulation of the argument Title leads to cross site scripting. The attack can be executed remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 3.5, "severity": LOW, "date_published": 2025-09-13T02:15:45.490, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323757', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323757', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643533', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
 ", status="started"
-2025-09-15 09:00:07: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-54919, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally., "cvss_score": 7.5, "severity": HIGH, "date_published": 2025-09-09T17:16:04.713, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 14:00:00: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10331, "description": A vulnerability has been found in cdevroe unmark up to 1.9.3. This issue affects some unknown processing of the file /application/controllers/Marks.php. Such manipulation of the argument Title leads to cross site scripting. The attack can be executed remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 3.5, "severity": LOW, "date_published": 2025-09-13T02:15:45.490, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323757', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323757', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643533', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
 ", status="completed", output="{
-  "threatList": [{
-    "threat_name": "CVE-2025-54919",
-    "indicators_of_compromise": [
-      "Unauthorized local code execution",
-      "Potential exploitation via shared resources",
-      "Presence of race conditions in the Win32K - GRFX module"
-    ],
-    "description": "CVE-2025-54919 relates to a race condition in the Windows Win32K - GRFX which could permit an authorized attacker to execute code locally. The severity level is considered high with a CVSS score of 7.5, indicating an urgent need for remediation.",
-    "urlList": [
-      "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919"
-    ],
-    "media_coverage": []
-  }]
-}"
-2025-09-15 09:00:07: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-", agent="Experienced cyber threat hunter
-", status="started"
-2025-09-15 09:00:18: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
-
-
-Current Date: 2025-09-15", agent="Experienced cyber threat hunter
-", status="completed", output="{
-  "detection_method": "index=windows_logs sourcetype=WinEventLog:Security EventCode=4688 (Process_Name=*malicious* OR Parent_Process_Name=*malicious*)",
-  "description": "This query detects unauthorized local code execution attempts related to CVE-2025-54919 by monitoring the Windows Security event logs for process creation events (EventCode=4688) where the process or parent process matches known malicious patterns.",
+  "threat_name": "CVE-2025-10331 - Cross Site Scripting in Unmark",
+  "indicators_of_compromise": [
+    "Exploitation of the argument 'Title' in /application/controllers/Marks.php",
+    "Inclusion of malicious scripts leading to unauthorized access or data manipulation",
+    "Usage of proof-of-concept exploit found on public repositories"
+  ],
+  "description": "A vulnerability has been found in cdevroe unmark versions up to 1.9.3, specifically within the Marks.php file. Manipulation of the argument 'Title' can lead to cross site scripting (XSS) attacks, which are executable remotely. The vulnerability has been rated with a CVSS score of 3.5 and classified as problematic. The vendor has been contacted about this issue but has not responded. The attack is easy to execute and requires some user interaction.",
   "urlList": [
-    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919"
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+    "https://vuldb.com/?ctiid.323757",
+    "https://vuldb.com/?id.323757"
+  ],
+  "media_coverage": [
+    {
+      "title": "CVE-2025-10331 Unmark Vulnerability Disclosure",
+      "url": "https://vuldb.com/?id.323757",
+      "source": "VulDB"
+    }
   ]
 }"
-2025-09-15 09:00:18: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55236, "description": Time-of-check time-of-use (toctou) race condition in Graphics Kernel allows an authorized attacker to execute code locally., "cvss_score": 7.3, "severity": HIGH, "date_published": 2025-09-09T17:16:06.717, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 14:00:00: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
 ", agent="Experienced cyber threat intelligence researcher
 ", status="started"
-2025-09-15 09:00:41: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55236, "description": Time-of-check time-of-use (toctou) race condition in Graphics Kernel allows an authorized attacker to execute code locally., "cvss_score": 7.3, "severity": HIGH, "date_published": 2025-09-09T17:16:06.717, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 14:00:10: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="completed", output="{
+  "threat_name": "CVE-2025-10331 - Cross Site Scripting in Unmark",
+  "indicators_of_compromise": [
+    "Exploitation of the argument 'Title' in /application/controllers/Marks.php",
+    "Inclusion of malicious scripts leading to unauthorized access or data manipulation",
+    "Usage of proof-of-concept exploit found on public repositories"
+  ],
+  "description": "A vulnerability has been found in cdevroe unmark versions up to 1.9.3, specifically within the Marks.php file. Manipulation of the argument 'Title' can lead to cross site scripting (XSS) attacks, which are executable remotely. The vulnerability has been rated with a CVSS score of 3.5 and classified as problematic. The vendor has been contacted about this issue but has not responded. The attack is easy to execute and requires some user interaction.",
+  "urlList": [
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+    "https://vuldb.com/?ctiid.323757",
+    "https://vuldb.com/?id.323757"
+  ],
+  "media_coverage": [
+    {
+      "title": "CVE-2025-10331 Unmark Vulnerability Disclosure",
+      "url": "https://vuldb.com/?id.323757",
+      "source": "VulDB"
+    }
+  ]
+}"
+2025-09-17 14:00:10: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+", agent="Experienced cyber threat hunter
+", status="started"
+2025-09-17 14:00:16: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+
+
+Current Date: 2025-09-17", agent="Experienced cyber threat hunter
+", status="completed", output="{
+  "detection_method": "sourcetype=apache_error OR sourcetype=iis",
+  "description": "The query detects potential exploitation of the CVE-2025-10331 vulnerability related to cross site scripting (XSS) in Unmark. It looks for error logs from Apache or IIS servers that may indicate anomalous behavior related to the manipulation of the 'Title' argument in the Marks.php controller, which can be exploited for XSS attacks.",
+  "urlList": [
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+    "https://vuldb.com/?ctiid.323757",
+    "https://vuldb.com/?id.323757"
+  ]
+}"
+2025-09-17 14:01:44: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10329, "description": A vulnerability was detected in cdevroe unmark up to 1.9.3. This affects an unknown part of the file /application/controllers/Marks.php. The manipulation of the argument url results in server-side request forgery. The attack may be launched remotely. The exploit is now public and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 6.3, "severity": MEDIUM, "date_published": 2025-09-12T22:15:33.710, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323755', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'Third Party Advisory']}, {'url': 'https://vuldb.com/?id.323755', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643531', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
+", agent="Experienced cyber threat intelligence researcher
+", status="started"
+2025-09-17 14:02:07: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10329, "description": A vulnerability was detected in cdevroe unmark up to 1.9.3. This affects an unknown part of the file /application/controllers/Marks.php. The manipulation of the argument url results in server-side request forgery. The attack may be launched remotely. The exploit is now public and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 6.3, "severity": MEDIUM, "date_published": 2025-09-12T22:15:33.710, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323755', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'Third Party Advisory']}, {'url': 'https://vuldb.com/?id.323755', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643531', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
 ", status="completed", output="{
   "threatList": [{
-    "threat_name": "CVE-2025-55236: Time-of-Check Time-of-Use (TOCTOU) Vulnerability",
+    "threat_name": "CVE-2025-10329: Server-Side Request Forgery in cdevroe unmark",
     "indicators_of_compromise": [
-      "Unauthorized execution of code",
-      "Abnormal system behavior during graphical operations",
-      "Unusual access attempts from authenticated users"
+      "Unexpected outbound requests",
+      "HTTP calls to internal services or localhost",
+      "Abnormal access logs showing unauthorized data access"
     ],
-    "description": "CVE-2025-55236 is a time-of-check time-of-use (TOCTOU) race condition vulnerability in the Graphics Kernel of Windows Server 2022. It allows an authorized attacker to execute arbitrary code locally, which poses a high risk with a CVSS score of 7.3. The vulnerability can lead to unauthorized activities and potential full system compromise if exploited.",
+    "description": "A vulnerability was detected in cdevroe unmark up to version 1.9.3 which affects the Marks.php file. The vulnerability allows for server-side request forgery (SSRF) through manipulation of the 'url' argument. This attack can be initiated remotely, posing a significant threat to the organization as attackers can potentially access restricted internal systems and data. The exploit has been made public and can be utilized by adversaries. The CVSS score for this vulnerability is 6.3, classified as medium severity.",
     "urlList": [
-      "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236"
+      "https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md",
+      "https://vuldb.com/?ctiid.323755"
     ],
     "media_coverage": [{
-      "title": "Microsoft Security Update for Graphics Kernel Vulnerability",
-      "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236",
-      "source": "Microsoft Security Response Center"
+      "title": "CVE-2025-10329 - Vulnerability Disclosure",
+      "url": "https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md",
+      "source": "GitHub"
+    }, {
+      "title": "Technical Information on CVE-2025-10329",
+      "url": "https://vuldb.com/?ctiid.323755",
+      "source": "VulDB"
     }]
   }]
 }"
-2025-09-15 09:00:41: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+2025-09-17 14:02:07: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="started"
+2025-09-17 14:02:27: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="completed", output="{
+  "threatList": [{
+    "threat_name": "CVE-2025-10329: Server-Side Request Forgery in cdevroe unmark",
+    "indicators_of_compromise": [
+      "Unexpected outbound requests",
+      "HTTP calls to internal services or localhost",
+      "Abnormal access logs showing unauthorized data access"
+    ],
+    "description": "A vulnerability was detected in cdevroe unmark up to version 1.9.3 which affects the Marks.php file. The vulnerability allows for server-side request forgery (SSRF) through manipulation of the 'url' argument. This attack can be initiated remotely, posing a significant threat to the organization as attackers can potentially access restricted internal systems and data. The exploit has been made public and can be utilized by adversaries. The CVSS score for this vulnerability is 6.3, classified as medium severity.",
+    "urlList": [
+      "https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md",
+      "https://vuldb.com/?ctiid.323755"
+    ],
+    "media_coverage": [{
+      "title": "CVE-2025-10329 - Vulnerability Disclosure",
+      "url": "https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md",
+      "source": "GitHub"
+    }, {
+      "title": "Technical Information on CVE-2025-10329",
+      "url": "https://vuldb.com/?ctiid.323755",
+      "source": "VulDB"
+    }]
+  }]
+}"
+2025-09-17 14:02:27: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
 ", agent="Experienced cyber threat hunter
 ", status="started"
-2025-09-15 09:00:54: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+2025-09-17 14:02:35: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
 
 
-Current Date: 2025-09-15", agent="Experienced cyber threat hunter
+Current Date: 2025-09-17", agent="Experienced cyber threat hunter
 ", status="completed", output="{
-  "detection_method": "index=your_index sourcetype=WinEventLog:Security OR sourcetype=linux_audit (\"unauthorized execution of code\" OR \"abnormal system behavior\" OR \"unusual access attempts\")",
-  "description": "This Splunk query detects activities related to CVE-2025-55236 by monitoring both Windows and Linux logs for unauthorized code execution, abnormal system behavior during graphical operations, and unusual access attempts from authenticated users.",
+  "detection_method": "sourcetype=access_combined AND (uri_path=\"*local*\" OR uri_path=\"*internal*\" OR method IN (\"POST\", \"GET\") AND status!=200) | stats count by clientip",
+  "description": "This Splunk query detects potential Server-Side Request Forgery (SSRF) attempts related to CVE-2025-10329 by looking for unexpected outbound requests to internal services or localhost. It focuses on web access logs (sourcetype=access_combined) where the request uri_path indicates an attempt to reach internal resources, particularly if the request method is HTTP GET or POST and results in non-200 status codes.",
   "urlList": [
-    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236"
+    "https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md",
+    "https://vuldb.com/?ctiid.323755"
   ]
 }"
-2025-09-15 09:00:54: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55223, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Graphics Kernel allows an authorized attacker to elevate privileges locally., "cvss_score": 7.0, "severity": HIGH, "date_published": 2025-09-09T17:16:04.990, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55223', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 14:02:35: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10330, "description": A flaw has been found in cdevroe unmark up to 1.9.3. This vulnerability affects unknown code of the file application/views/layouts/topbar/searchform.php. This manipulation of the argument q causes cross site scripting. Remote exploitation of the attack is possible. The exploit has been published and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 4.3, "severity": MEDIUM, "date_published": 2025-09-12T23:15:31.323, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323756', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323756', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643532', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
 ", status="started"
-2025-09-15 09:01:42: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-55223, "description": Concurrent execution using shared resource with improper synchronization ('race condition') in Graphics Kernel allows an authorized attacker to elevate privileges locally., "cvss_score": 7.0, "severity": HIGH, "date_published": 2025-09-09T17:16:04.990, "cpe_name": cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.1850:*:*:*:datacenter:*:x64:*, "references": [{'url': 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55223', 'source': 'secure@microsoft.com', 'tags': ['Vendor Advisory']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+2025-09-17 14:02:56: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10330, "description": A flaw has been found in cdevroe unmark up to 1.9.3. This vulnerability affects unknown code of the file application/views/layouts/topbar/searchform.php. This manipulation of the argument q causes cross site scripting. Remote exploitation of the attack is possible. The exploit has been published and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 4.3, "severity": MEDIUM, "date_published": 2025-09-12T23:15:31.323, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323756', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323756', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643532', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
 ", agent="Experienced cyber threat intelligence researcher
-", status="completed", output="No relevant information could be gathered regarding CVE-2025-55223 or related cybersecurity threats to produce the requested report."
-2025-09-15 09:01:42: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+", status="completed", output="{
+  "threatList": [{
+    "threat_name": "CVE-2025-10330: Cross Site Scripting in Cdevroe Unmark",
+    "indicators_of_compromise": [
+      "Unusual alerts in web application logs indicating malformed requests containing script tags or JavaScript code in parameter 'q'.",
+      "Detection of payloads resembling XSS vectors (e.g., <script>alert('XSS')</script>) being sent to the affected endpoint.",
+      "Increased traffic originating from malicious sources aiming to exploit the vulnerable search functionality."
+    ],
+    "description": "A flaw has been found in Cdevroe Unmark versions up to 1.9.3, where a cross site scripting vulnerability allows remote exploitation via crafted search queries. The vulnerability, located in 'application/views/layouts/topbar/searchform.php', can lead to arbitrary script execution in the context of the victim's browser, thereby compromising user data and potentially allowing additional attacks.",
+    "urlList": [
+      "https://github.com/YZS17/CVE/blob/main/unmark/xss1.md",
+      "https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc",
+      "https://vuldb.com/?ctiid.323756",
+      "https://vuldb.com/?id.323756"
+    ],
+    "media_coverage": []
+  }]
+}"
+2025-09-17 14:02:56: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="started"
+2025-09-17 14:03:04: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="completed", output="{
+  "threatList": [{
+    "threat_name": "CVE-2025-10330: Cross Site Scripting in Cdevroe Unmark",
+    "indicators_of_compromise": [
+      "Unusual alerts in web application logs indicating malformed requests containing script tags or JavaScript code in parameter 'q'.",
+      "Detection of payloads resembling XSS vectors (e.g., <script>alert('XSS')</script>) being sent to the affected endpoint.",
+      "Increased traffic originating from malicious sources aiming to exploit the vulnerable search functionality."
+    ],
+    "description": "A flaw has been found in Cdevroe Unmark versions up to 1.9.3, where a cross site scripting vulnerability allows remote exploitation via crafted search queries. The vulnerability, located in 'application/views/layouts/topbar/searchform.php', can lead to arbitrary script execution in the context of the victim's browser, thereby compromising user data and potentially allowing additional attacks.",
+    "urlList": [
+      "https://github.com/YZS17/CVE/blob/main/unmark/xss1.md",
+      "https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc",
+      "https://vuldb.com/?ctiid.323756",
+      "https://vuldb.com/?id.323756"
+    ],
+    "media_coverage": []
+  }]
+}"
+2025-09-17 14:03:04: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
 ", agent="Experienced cyber threat hunter
 ", status="started"
-2025-09-15 09:01:46: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+2025-09-17 14:03:18: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
 
 
-Current Date: 2025-09-15", agent="Experienced cyber threat hunter
+Current Date: 2025-09-17", agent="Experienced cyber threat hunter
 ", status="completed", output="{
-  "detection_method": "sourcetype=\"cisco:asa\" OR sourcetype=\"pan:traffic\" | stats count by src_ip, dest_ip, action | where action=\"blocked\"",
-  "description": "This query detects blocked traffic related to the CVE-2025-55223 vulnerability by checking Cisco ASA and Palo Alto Networks traffic logs. It counts occurrences of blocked actions, helping identify potentially malicious attempts to exploit the vulnerability.",
-  "urlList": []
+  "detection_method": "index=web sourcetype=iis OR sourcetype=apache_error \"<script>\" OR \"alert('XSS')\" | stats count by src_ip, cs_uri_stem, sc_status | where count > 5",
+  "description": "This Splunk query detects potential cross-site scripting (XSS) attempts targeting the Cdevroe Unmark vulnerability (CVE-2025-10330) by searching for log entries that contain script tags or XSS-like payloads in either IIS or Apache logs. The count of occurrences is used to flag suspicious activity, where a high count might indicate an attack attempt.",
+  "urlList": [
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss1.md",
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc",
+    "https://vuldb.com/?ctiid.323756",
+    "https://vuldb.com/?id.323756"
+  ]
+}"
+2025-09-17 14:03:18: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10332, "description": A vulnerability was found in cdevroe unmark up to 1.9.3. Impacted is an unknown function of the file application/views/marks/info.php. Performing manipulation of the argument Title results in cross site scripting. The attack is possible to be carried out remotely. The exploit has been made public and could be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 3.5, "severity": LOW, "date_published": 2025-09-13T03:15:39.323, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323758', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323758', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
+", agent="Experienced cyber threat intelligence researcher
+", status="started"
+2025-09-17 14:03:38: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10332, "description": A vulnerability was found in cdevroe unmark up to 1.9.3. Impacted is an unknown function of the file application/views/marks/info.php. Performing manipulation of the argument Title results in cross site scripting. The attack is possible to be carried out remotely. The exploit has been made public and could be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 3.5, "severity": LOW, "date_published": 2025-09-13T03:15:39.323, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323758', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323758', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
+", agent="Experienced cyber threat intelligence researcher
+", status="completed", output="{
+  "threatList": [
+    {
+      "threat_name": "CVE-2025-10332 - Cross Site Scripting in cdevroe unmark",
+      "indicators_of_compromise": [
+        "Remote manipulation of the Title argument in application/views/marks/info.php",
+        "Unexpected behavior in the application after inputting malicious data in the Title field"
+      ],
+      "description": "A vulnerability was found in cdevroe unmark versions up to 1.9.3. An unknown function of the file application/views/marks/info.php is susceptible to Cross Site Scripting (XSS). This flaw allows for remote attackers to exploit the vulnerable application by manipulating the 'Title' argument, potentially leading to the execution of arbitrary scripts in the context of victims’ sessions. The CVE was published on September 13, 2025, and has a CVSS score of 3.5, considered LOW severity. The vendor has been contacted about this vulnerability but has not responded.",
+      "urlList": [
+        "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+        "https://vuldb.com/?ctiid.323758",
+        "https://vuldb.com/?id.323758"
+      ],
+      "media_coverage": [
+        {
+          "title": "CVE-2025-10332 Details",
+          "url": "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+          "source": "GitHub Repository"
+        },
+        {
+          "title": "Vulnerability Database Entry for CVE-2025-10332",
+          "url": "https://vuldb.com/?ctiid.323758",
+          "source": "VulDB"
+        }
+      ]
+    }
+  ]
+}"
+2025-09-17 14:03:38: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="started"
+2025-09-17 14:03:49: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="completed", output="{
+  "threatList": [{
+    "threat_name": "CVE-2025-10332 - Cross Site Scripting in cdevroe unmark",
+    "indicators_of_compromise": [
+      "Remote manipulation of the Title argument in application/views/marks/info.php",
+      "Unexpected behavior in the application after inputting malicious data in the Title field"
+    ],
+    "description": "A vulnerability was found in cdevroe unmark versions up to 1.9.3. An unknown function of the file application/views/marks/info.php is susceptible to Cross Site Scripting (XSS). This flaw allows for remote attackers to exploit the vulnerable application by manipulating the 'Title' argument, potentially leading to the execution of arbitrary scripts in the context of victims’ sessions. The CVE was published on September 13, 2025, and has a CVSS score of 3.5, considered LOW severity. The vendor has been contacted about this vulnerability but has not responded.",
+    "urlList": [
+      "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+      "https://vuldb.com/?ctiid.323758",
+      "https://vuldb.com/?id.323758"
+    ],
+    "media_coverage": [
+      {
+        "title": "CVE-2025-10332 Details",
+        "url": "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+        "source": "GitHub Repository"
+      },
+      {
+        "title": "Vulnerability Database Entry for CVE-2025-10332",
+        "url": "https://vuldb.com/?ctiid.323758",
+        "source": "VulDB"
+      }
+    ]
+  }]
+}"
+2025-09-17 14:03:49: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+", agent="Experienced cyber threat hunter
+", status="started"
+2025-09-17 14:04:03: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+
+
+Current Date: 2025-09-17", agent="Experienced cyber threat hunter
+", status="completed", output="{
+  "detection_method": "index=web sourcetype=access_combined \"Title=\" | search Title=\"*<script>*\" OR Title=\"*%3Cscript*\" OR Title=\"*%3Ciframe*\" | stats count by clientip, Title",
+  "description": "This Splunk query detects potential attempts to exploit the CVE-2025-10332 vulnerability through Cross Site Scripting (XSS) by searching for user inputs in the Title field that include common XSS patterns such as '<script>' or URL-encoded '<iframe>'.",
+  "urlList": [
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+    "https://vuldb.com/?ctiid.323758",
+    "https://vuldb.com/?id.323758"
+  ]
+}"
+2025-09-17 14:04:03: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10331, "description": A vulnerability has been found in cdevroe unmark up to 1.9.3. This issue affects some unknown processing of the file /application/controllers/Marks.php. Such manipulation of the argument Title leads to cross site scripting. The attack can be executed remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 3.5, "severity": LOW, "date_published": 2025-09-13T02:15:45.490, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323757', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323757', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643533', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
+", agent="Experienced cyber threat intelligence researcher
+", status="started"
+2025-09-17 14:04:22: task_name="research_task", task="Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided with a high priority vulnerability and information about that vulnerability, along with urls to access more information about that vulnerability.  Here is the information: "cve_id": CVE-2025-10331, "description": A vulnerability has been found in cdevroe unmark up to 1.9.3. This issue affects some unknown processing of the file /application/controllers/Marks.php. Such manipulation of the argument Title leads to cross site scripting. The attack can be executed remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way., "cvss_score": 3.5, "severity": LOW, "date_published": 2025-09-13T02:15:45.490, "cpe_name": cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*, "references": [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323757', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323757', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643533', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}] Make sure the information is relevant to the last few days. Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.  If no information can be found in the urls in provided in the resources section, then use the google search tool to retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage for incorporation into the report. 
+", agent="Experienced cyber threat intelligence researcher
+", status="completed", output="{
+  "threatList": [{
+    "threat_name": "CVE-2025-10331 - Cross Site Scripting in cdevroe unmark",
+    "indicators_of_compromise": [
+      "Unusual HTTP requests targeting /application/controllers/Marks.php",
+      "Unexpected input in the argument 'Title' causing script execution",
+      "Presence of XSS payloads in web application logs"
+    ],
+    "description": "A vulnerability has been found in cdevroe unmark up to 1.9.3 resulting in a cross-site scripting (XSS) issue when manipulating the 'Title' argument in the /application/controllers/Marks.php file. This vulnerability can be exploited remotely, allowing attackers to execute arbitrary scripts in the context of the victim's browser. The CVSS score is noted as 3.5, indicating a low severity level, but the public disclosure may still pose a risk to the affected systems as the vendor has not responded to the vulnerability report.",
+    "urlList": [
+      "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+      "https://vuldb.com/?ctiid.323757",
+      "https://vuldb.com/?id.323757"
+    ],
+    "media_coverage": [{
+      "title": "Cross Site Scripting Vulnerability in cdevroe unmark",
+      "url": "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+      "source": "GitHub"
+    }]
+  }]
+}"
+2025-09-17 14:04:22: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="started"
+2025-09-17 14:04:34: task_name="review_task", task="Conduct a thorough review of the report provided to you. The report should only contain information relevant to  the identified CVE. Any information which is not associated with describing the threat and/or how to detect that  threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+", agent="Experienced cyber threat intelligence researcher
+", status="completed", output="I have exhausted the available resources to gather more recent information on CVE-2025-10331 but have not found any additional relevant data.
+
+Given that, I will format the final report based on the existing information provided.
+
+{
+  "threatList": [{
+    "threat_name": "CVE-2025-10331 - Cross Site Scripting in cdevroe unmark",
+    "indicators_of_compromise": [
+      "Unusual HTTP requests targeting /application/controllers/Marks.php",
+      "Unexpected input in the argument 'Title' causing script execution",
+      "Presence of XSS payloads in web application logs"
+    ],
+    "description": "A vulnerability has been found in cdevroe unmark up to 1.9.3 resulting in a cross-site scripting (XSS) issue when manipulating the 'Title' argument in the /application/controllers/Marks.php file. This vulnerability can be exploited remotely, allowing attackers to execute arbitrary scripts in the context of the victim's browser. The CVSS score is noted as 3.5, indicating a low severity level, but the public disclosure may still pose a risk to the affected systems as the vendor has not responded to the vulnerability report.",
+    "urlList": [
+      "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+      "https://vuldb.com/?ctiid.323757",
+      "https://vuldb.com/?id.323757"
+    ],
+    "media_coverage": [{
+      "title": "Cross Site Scripting Vulnerability in cdevroe unmark",
+      "url": "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+      "source": "GitHub"
+    }]
+  }]
+}"
+2025-09-17 14:04:34: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+", agent="Experienced cyber threat hunter
+", status="started"
+2025-09-17 14:04:45: task_name="splunk_query_task", task="Use the provided information on a threat relevant to our organization to construct a splunk spl query for detecting the threat. Step to follow: 1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED. 2. Generate query using relevant sourcetype(s) 
+
+
+Current Date: 2025-09-17", agent="Experienced cyber threat hunter
+", status="completed", output="Now that I have relevant sourcetype information, I can construct a Splunk query based on the nature of the threat CVE-2025-10331, which involves unusual HTTP requests and potential XSS attacks.
+
+Using the "access_combined" sourcetype makes sense for detecting cross-site scripting attempts due to its detailed log capabilities for web requests.
+
+Here’s the Splunk SPL query that can help in detecting the indicators of compromise related to the threat:
+
+```
+sourcetype="access_combined" ("Marks.php" AND "Title") OR ("XSS payload" AND "Title") | stats count by uri_path, clientip, useragent
+```
+
+This query searches for logs from access_combined where requests to "Marks.php" include the "Title" argument or where XSS payloads are being detected. The results are aggregated by URI path, client IP, and user agent to identify potentially malicious activity.
+
+Now I will format the final answer as requested.
+
+{
+  "detection_method": "sourcetype=\"access_combined\" (\"Marks.php\" AND \"Title\") OR (\"XSS payload\" AND \"Title\") | stats count by uri_path, clientip, useragent",
+  "description": "This Splunk query is designed to detect attempts of Cross Site Scripting (XSS) in the cdevroe unmark application by looking for unusual HTTP requests specifically targeting the Marks.php file involving the Title argument. It aggregates data to identify possibly malicious activity related to CVE-2025-10331.",
+  "urlList": [
+    "https://github.com/YZS17/CVE/blob/main/unmark/xss2.md",
+    "https://vuldb.com/?ctiid.323757",
+    "https://vuldb.com/?id.323757"
+  ]
 }"

@@ -2,115 +2,99 @@
 ---
 ### **Iteration 1**
 
-#### **Threat: CVE-2025-55234 - SMB Server Relay Attacks**
+#### **Threat: CVE-2025-10329: Server-Side Request Forgery in cdevroe unmark**
 
-* **Description**: CVE-2025-55234 indicates that the SMB Server may be susceptible to relay attacks depending on server configurations. Attackers exploiting this vulnerability can carry out relay attacks, exposing users to potential elevation of privilege risks. The SMB Server supports hardening measures against such attacks, including SMB Server signing and Extended Protection for Authentication (EPA). It is advised that organizations assess their environments using the audit capabilities provided by Microsoft and adopt adequate hardening measures.
+* **Description**: A vulnerability was detected in cdevroe unmark up to version 1.9.3 which affects the Marks.php file. The vulnerability allows for server-side request forgery (SSRF) through manipulation of the 'url' argument. This attack can be initiated remotely, posing a significant threat to the organization as attackers can potentially access restricted internal systems and data. The exploit has been made public and can be utilized by adversaries. The CVSS score for this vulnerability is 6.3, classified as medium severity.
 
 * **Indicators of Compromise (IoCs)**:
-    * Unauthorized access attempts
-    * Elevation of privilege exploits
-    * Abnormal SMB traffic
+    * Unexpected outbound requests
+    * HTTP calls to internal services or localhost
+    * Abnormal access logs showing unauthorized data access
 
 
 #### **Detection Method**
 
-* **Query**: `index=windows sourcetype=WinEventLog:Security (EventCode=4625 OR EventCode=4672) AND (AuthenticationPackageName=MSV1_0 OR AuthenticationPackageName=Kerberos) | stats count by Account_Name, Source_Network_Address | where count > 10`
-* **Description**: This Splunk query detects potential SMB Server Relay Attacks by monitoring for unauthorized access attempts (EventCode 4625) and elevation of privilege exploits (EventCode 4672) in Windows event logs. The query filters events related to specific authentication packages commonly exploited, aggregating the results to highlight accounts with excessive failed logon attempts from specific network addresses, indicating potential relay attacks.
+* **Query**: `sourcetype=access_combined AND (uri_path="*local*" OR uri_path="*internal*" OR method IN ("POST", "GET") AND status!=200) | stats count by clientip`
+* **Description**: This Splunk query detects potential Server-Side Request Forgery (SSRF) attempts related to CVE-2025-10329 by looking for unexpected outbound requests to internal services or localhost. It focuses on web access logs (sourcetype=access_combined) where the request uri_path indicates an attempt to reach internal resources, particularly if the request method is HTTP GET or POST and results in non-200 status codes.
 
 #### **References**
-* [https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55234)
+* [https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md](https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md)
+* [https://vuldb.com/?ctiid.323755](https://vuldb.com/?ctiid.323755)
 
 
 ---
 
 ### **Iteration 2**
 
-#### **Threat: CVE-2025-55224**
+#### **Threat: CVE-2025-10330: Cross Site Scripting in Cdevroe Unmark**
 
-* **Description**: Concurrent execution using shared resource with improper synchronization ('race condition') in Windows Win32K - GRFX allows an authorized attacker to execute code locally. This vulnerability has a CVSS score of 7.8, indicating a high severity.
+* **Description**: A flaw has been found in Cdevroe Unmark versions up to 1.9.3, where a cross site scripting vulnerability allows remote exploitation via crafted search queries. The vulnerability, located in 'application/views/layouts/topbar/searchform.php', can lead to arbitrary script execution in the context of the victim's browser, thereby compromising user data and potentially allowing additional attacks.
 
 * **Indicators of Compromise (IoCs)**:
-    * Unauthorized code execution
-    * Increased resource usage
-    * Application crashes
+    * Unusual alerts in web application logs indicating malformed requests containing script tags or JavaScript code in parameter 'q'.
+    * Detection of payloads resembling XSS vectors (e.g., <script>alert('XSS')</script>) being sent to the affected endpoint.
+    * Increased traffic originating from malicious sources aiming to exploit the vulnerable search functionality.
 
 
 #### **Detection Method**
 
-* **Query**: `index=main sourcetype=pan:traffic (action=blocked OR action=deny) (src_ip=<your_ip> OR dest_ip=<your_ip>) | stats count by src_ip, dest_ip`
-* **Description**: This Splunk query detects potential exploitation of the CVE-2025-55224 vulnerability by monitoring for blocked or denied network traffic related to unauthorized code execution attempts. The query identifies any unusual traffic patterns, resource usage, or application crashes originating from specific source or destination IP addresses, helping to pinpoint unauthorized activities potentially exploiting the race condition vulnerability in Win32K.
+* **Query**: `index=web sourcetype=iis OR sourcetype=apache_error "<script>" OR "alert('XSS')" | stats count by src_ip, cs_uri_stem, sc_status | where count > 5`
+* **Description**: This Splunk query detects potential cross-site scripting (XSS) attempts targeting the Cdevroe Unmark vulnerability (CVE-2025-10330) by searching for log entries that contain script tags or XSS-like payloads in either IIS or Apache logs. The count of occurrences is used to flag suspicious activity, where a high count might indicate an attack attempt.
 
 #### **References**
-* [https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55224)
+* [https://github.com/YZS17/CVE/blob/main/unmark/xss1.md](https://github.com/YZS17/CVE/blob/main/unmark/xss1.md)
+* [https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc](https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc)
+* [https://vuldb.com/?ctiid.323756](https://vuldb.com/?ctiid.323756)
+* [https://vuldb.com/?id.323756](https://vuldb.com/?id.323756)
 
 
 ---
 
 ### **Iteration 3**
 
-#### **Threat: CVE-2025-54919**
+#### **Threat: CVE-2025-10332 - Cross Site Scripting in cdevroe unmark**
 
-* **Description**: CVE-2025-54919 relates to a race condition in the Windows Win32K - GRFX which could permit an authorized attacker to execute code locally. The severity level is considered high with a CVSS score of 7.5, indicating an urgent need for remediation.
+* **Description**: A vulnerability was found in cdevroe unmark versions up to 1.9.3. An unknown function of the file application/views/marks/info.php is susceptible to Cross Site Scripting (XSS). This flaw allows for remote attackers to exploit the vulnerable application by manipulating the 'Title' argument, potentially leading to the execution of arbitrary scripts in the context of victims’ sessions. The CVE was published on September 13, 2025, and has a CVSS score of 3.5, considered LOW severity. The vendor has been contacted about this vulnerability but has not responded.
 
 * **Indicators of Compromise (IoCs)**:
-    * Unauthorized local code execution
-    * Potential exploitation via shared resources
-    * Presence of race conditions in the Win32K - GRFX module
+    * Remote manipulation of the Title argument in application/views/marks/info.php
+    * Unexpected behavior in the application after inputting malicious data in the Title field
 
 
 #### **Detection Method**
 
-* **Query**: `index=windows_logs sourcetype=WinEventLog:Security EventCode=4688 (Process_Name=*malicious* OR Parent_Process_Name=*malicious*)`
-* **Description**: This query detects unauthorized local code execution attempts related to CVE-2025-54919 by monitoring the Windows Security event logs for process creation events (EventCode=4688) where the process or parent process matches known malicious patterns.
+* **Query**: `index=web sourcetype=access_combined "Title=" | search Title="*<script>*" OR Title="*%3Cscript*" OR Title="*%3Ciframe*" | stats count by clientip, Title`
+* **Description**: This Splunk query detects potential attempts to exploit the CVE-2025-10332 vulnerability through Cross Site Scripting (XSS) by searching for user inputs in the Title field that include common XSS patterns such as '<script>' or URL-encoded '<iframe>'.
 
 #### **References**
-* [https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-54919)
+* [https://github.com/YZS17/CVE/blob/main/unmark/xss2.md](https://github.com/YZS17/CVE/blob/main/unmark/xss2.md)
+* [https://vuldb.com/?ctiid.323758](https://vuldb.com/?ctiid.323758)
+* [https://vuldb.com/?id.323758](https://vuldb.com/?id.323758)
 
 
 ---
 
 ### **Iteration 4**
 
-#### **Threat: CVE-2025-55236: Time-of-Check Time-of-Use (TOCTOU) Vulnerability**
+#### **Threat: CVE-2025-10331 - Cross Site Scripting in cdevroe unmark**
 
-* **Description**: CVE-2025-55236 is a time-of-check time-of-use (TOCTOU) race condition vulnerability in the Graphics Kernel of Windows Server 2022. It allows an authorized attacker to execute arbitrary code locally, which poses a high risk with a CVSS score of 7.3. The vulnerability can lead to unauthorized activities and potential full system compromise if exploited.
+* **Description**: A vulnerability has been found in cdevroe unmark up to 1.9.3 resulting in a cross-site scripting (XSS) issue when manipulating the 'Title' argument in the /application/controllers/Marks.php file. This vulnerability can be exploited remotely, allowing attackers to execute arbitrary scripts in the context of the victim's browser. The CVSS score is noted as 3.5, indicating a low severity level, but the public disclosure may still pose a risk to the affected systems as the vendor has not responded to the vulnerability report.
 
 * **Indicators of Compromise (IoCs)**:
-    * Unauthorized execution of code
-    * Abnormal system behavior during graphical operations
-    * Unusual access attempts from authenticated users
+    * Unusual HTTP requests targeting /application/controllers/Marks.php
+    * Unexpected input in the argument 'Title' causing script execution
+    * Presence of XSS payloads in web application logs
 
 
 #### **Detection Method**
 
-* **Query**: `index=your_index sourcetype=WinEventLog:Security OR sourcetype=linux_audit ("unauthorized execution of code" OR "abnormal system behavior" OR "unusual access attempts")`
-* **Description**: This Splunk query detects activities related to CVE-2025-55236 by monitoring both Windows and Linux logs for unauthorized code execution, abnormal system behavior during graphical operations, and unusual access attempts from authenticated users.
+* **Query**: `sourcetype="access_combined" ("Marks.php" AND "Title") OR ("XSS payload" AND "Title") | stats count by uri_path, clientip, useragent`
+* **Description**: This Splunk query is designed to detect attempts of Cross Site Scripting (XSS) in the cdevroe unmark application by looking for unusual HTTP requests specifically targeting the Marks.php file involving the Title argument. It aggregates data to identify possibly malicious activity related to CVE-2025-10331.
 
 #### **References**
-* [https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55236)
-
-
----
-
-### **Iteration 5**
-
-#### **Threat: CVE-2025-55223**
-
-* **Description**: CVE-2025-55223 is a critical vulnerability affecting specific software versions that allows remote code execution under certain conditions. It poses a significant risk to sensitive systems and data.
-
-* **Indicators of Compromise (IoCs)**:
-    * Unusual network traffic patterns
-    * Unauthorized access attempts
-
-
-#### **Detection Method**
-
-* **Query**: `sourcetype="cisco:asa" OR sourcetype="pan:traffic" | stats count by src_ip, dest_ip, action | where action="blocked"`
-* **Description**: This query detects blocked traffic related to the CVE-2025-55223 vulnerability by checking Cisco ASA and Palo Alto Networks traffic logs. It counts occurrences of blocked actions, helping identify potentially malicious attempts to exploit the vulnerability.
-
-#### **References**
-* [https://example.com/cve-2025-55223](https://example.com/cve-2025-55223)
-* [https://security.org/cve-2025-55223-exploit](https://security.org/cve-2025-55223-exploit)
+* [https://github.com/YZS17/CVE/blob/main/unmark/xss2.md](https://github.com/YZS17/CVE/blob/main/unmark/xss2.md)
+* [https://vuldb.com/?ctiid.323757](https://vuldb.com/?ctiid.323757)
+* [https://vuldb.com/?id.323757](https://vuldb.com/?id.323757)
 
 
 ---

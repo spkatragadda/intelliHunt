@@ -136,7 +136,7 @@ def main():
 
     # We only want vulnerability info passed to crew
     try:
-        inputs = inputs['vulnerability_data']['high_priority_cves']
+        inputs = inputs['vulnerability_data']['cve_details']
         ids = [d['cve_id'] for d in inputs]
         id_counts = Counter(ids)
         inputs = [d for d in inputs if id_counts[d['id']] == 1]
@@ -157,7 +157,6 @@ def main():
     # Execute crew workflow with CPE and vulnerability-enhanced inputs
     print("\nExecuting crew workflow with recent vulnerability data...")
     result = crew.kickoff_for_each(inputs=inputs)
-    
     # Generate report
     print("\nGenerating execution report...")
     # generate_crew_report(result, inputs)
@@ -175,6 +174,14 @@ def create_threat_report(crew_output_list):
         A Markdown string containing the organized report.
     """
     report_parts = ["### Cyber Threat Report 🕵️‍♂️\n---"]
+
+    if len(crew_output_list)==0:
+        report_parts.append("No Relevant Vulnerabilities in the Past Week!")
+        report_path = Path(__file__).parent / "crew_report.md"
+        with open(report_path, "w", encoding='utf-8') as f:
+            f.write("\n".join(report_parts))
+
+        return "Report Generated"
     
     for i, output in enumerate(crew_output_list, 1):
         # Extract data from the pydantic output

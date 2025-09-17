@@ -12,11 +12,25 @@ research_task:
     "cpe_name": {cpe_name},
     "references": {references}
     Make sure the information is relevant to the last few days.
-    Use the Web Scraper tool to gather the necessary information from the urls provided in the references section.
+    Use the Web Scraper tool to gather the necessary information from the urls provided in the references section. 
+    If no information can be found in the urls in provided in the resources section, then use the google search tool to
+    retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage
+    for incorporation into the report. 
   expected_output: >
     A report on the provided threat, which is relevant to an organizations software stack in a well formatted and concise report.
     The report should include indicators of compromise for the threat and information associated with detecting
     that threat. 
+  agent: ctiAnalyst
+
+review_task:
+  description: >
+    Conduct a thorough review of the report provided to you. The report should only contain information relevant to 
+    the identified CVE. Any information which is not associated with describing the threat and/or how to detect that 
+    threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+  expected_output: >
+    A report on the provided threat, which is relevant to an organizations software stack in a well formatted and concise report.
+    The report should include indicators of compromise for the threat and information associated with detecting
+    that threat.
   agent: ctiAnalyst
 
 ranking_task:

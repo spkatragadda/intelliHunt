@@ -4906,3 +4906,909 @@
 2025-09-15 08:58:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
 2025-09-15 08:58:50: Found CVE's: []
 2025-09-15 08:58:53: Vulnerability summary saved to: C:\Users\saipk\agentAttempts\server\intelliHunt\crew\NVD\vulnerability_summary_20250915_085853.md
+2025-09-17 12:58:43: Fetching vulnerabilities from the past 7 days
+2025-09-17 12:58:43: Loading CPE data from: C:\Users\saipk\agentAttempts\server\intelliHunt\crew\NVD\cpe_data_20250917_125841.json
+2025-09-17 12:58:43: Found 11238 unique CPE names
+2025-09-17 12:58:43: Limiting CPE processing to 50 out of 11238 total CPEs to avoid API rate limits
+2025-09-17 12:58:43: Fetching CVEs for CPE 1/50: cpe:2.3:a:microsoft:onedrive:-:*:*:*:*:android:*:*
+2025-09-17 12:58:43: Searching for CVEs for CPE cpe:2.3:a:microsoft:onedrive:-:*:*:*:*:android:*:* between 2025-09-10T16:58:43.000Z and 2025-09-17T16:58:43.000Z
+2025-09-17 12:58:43: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:58:45: Found CVE's: []
+2025-09-17 12:58:48: Fetching CVEs for CPE 2/50: cpe:2.3:a:quantumcloud:wpbot:6.9.9:*:*:*:free:wordpress:*:*
+2025-09-17 12:58:48: Searching for CVEs for CPE cpe:2.3:a:quantumcloud:wpbot:6.9.9:*:*:*:free:wordpress:*:* between 2025-09-10T16:58:48.000Z and 2025-09-17T16:58:48.000Z
+2025-09-17 12:58:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:58:51: Found CVE's: []
+2025-09-17 12:58:54: Fetching CVEs for CPE 3/50: cpe:2.3:a:vercel:vercel:22.0.2:canary4:*:*:*:*:*:*
+2025-09-17 12:58:54: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:22.0.2:canary4:*:*:*:*:*:* between 2025-09-10T16:58:54.000Z and 2025-09-17T16:58:54.000Z
+2025-09-17 12:58:54: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:58:56: Found CVE's: []
+2025-09-17 12:58:59: Fetching CVEs for CPE 4/50: cpe:2.3:a:vercel:vercel:13.0.0:canary37:*:*:*:*:*:*
+2025-09-17 12:58:59: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:13.0.0:canary37:*:*:*:*:*:* between 2025-09-10T16:58:59.000Z and 2025-09-17T16:58:59.000Z
+2025-09-17 12:58:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:01: Found CVE's: []
+2025-09-17 12:59:04: Fetching CVEs for CPE 5/50: cpe:2.3:a:tolgee:tolgee:3.80.4:*:*:*:*:*:*:*
+2025-09-17 12:59:04: Searching for CVEs for CPE cpe:2.3:a:tolgee:tolgee:3.80.4:*:*:*:*:*:*:* between 2025-09-10T16:59:04.000Z and 2025-09-17T16:59:04.000Z
+2025-09-17 12:59:04: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:07: Found CVE's: []
+2025-09-17 12:59:10: Fetching CVEs for CPE 6/50: cpe:2.3:a:jasper_project:jasper:4.2.0:rc1:*:*:*:*:*:*
+2025-09-17 12:59:10: Searching for CVEs for CPE cpe:2.3:a:jasper_project:jasper:4.2.0:rc1:*:*:*:*:*:* between 2025-09-10T16:59:10.000Z and 2025-09-17T16:59:10.000Z
+2025-09-17 12:59:10: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:12: Found CVE's: []
+2025-09-17 12:59:15: Fetching CVEs for CPE 7/50: cpe:2.3:a:vercel:vercel:33.7.0:*:*:*:*:*:*:*
+2025-09-17 12:59:15: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:33.7.0:*:*:*:*:*:*:* between 2025-09-10T16:59:15.000Z and 2025-09-17T16:59:15.000Z
+2025-09-17 12:59:15: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:17: Found CVE's: []
+2025-09-17 12:59:21: Fetching CVEs for CPE 8/50: cpe:2.3:a:tibco:spotfire_enterprise_runtime_for_r:1.19.0:*:*:*:server:*:*:*
+2025-09-17 12:59:21: Searching for CVEs for CPE cpe:2.3:a:tibco:spotfire_enterprise_runtime_for_r:1.19.0:*:*:*:server:*:*:* between 2025-09-10T16:59:21.000Z and 2025-09-17T16:59:21.000Z
+2025-09-17 12:59:21: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:23: Found CVE's: []
+2025-09-17 12:59:26: Fetching CVEs for CPE 9/50: cpe:2.3:a:python:python:2.4.6:*:*:*:*:*:*:*
+2025-09-17 12:59:26: Searching for CVEs for CPE cpe:2.3:a:python:python:2.4.6:*:*:*:*:*:*:* between 2025-09-10T16:59:26.000Z and 2025-09-17T16:59:26.000Z
+2025-09-17 12:59:26: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:29: Found CVE's: []
+2025-09-17 12:59:32: Fetching CVEs for CPE 10/50: cpe:2.3:a:microsoft:exchange_server:4.0:sp3:*:*:*:*:*:*
+2025-09-17 12:59:32: Searching for CVEs for CPE cpe:2.3:a:microsoft:exchange_server:4.0:sp3:*:*:*:*:*:* between 2025-09-10T16:59:32.000Z and 2025-09-17T16:59:32.000Z
+2025-09-17 12:59:32: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:34: Found CVE's: []
+2025-09-17 12:59:37: Fetching CVEs for CPE 11/50: cpe:2.3:a:vercel:vercel:16.1.4:canary41:*:*:*:*:*:*
+2025-09-17 12:59:37: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:16.1.4:canary41:*:*:*:*:*:* between 2025-09-10T16:59:37.000Z and 2025-09-17T16:59:37.000Z
+2025-09-17 12:59:37: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:40: Found CVE's: []
+2025-09-17 12:59:43: Fetching CVEs for CPE 12/50: cpe:2.3:a:openagentplatform:dive:0.7.4:*:*:*:*:*:*:*
+2025-09-17 12:59:43: Searching for CVEs for CPE cpe:2.3:a:openagentplatform:dive:0.7.4:*:*:*:*:*:*:* between 2025-09-10T16:59:43.000Z and 2025-09-17T16:59:43.000Z
+2025-09-17 12:59:43: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:45: Found CVE's: []
+2025-09-17 12:59:48: Fetching CVEs for CPE 13/50: cpe:2.3:a:apache:http_server:2.2.15-60:*:*:*:*:*:*:*
+2025-09-17 12:59:48: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.2.15-60:*:*:*:*:*:*:* between 2025-09-10T16:59:48.000Z and 2025-09-17T16:59:48.000Z
+2025-09-17 12:59:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:50: Found CVE's: []
+2025-09-17 12:59:53: Fetching CVEs for CPE 14/50: cpe:2.3:a:ckolivas:lrzip:0.620:*:*:*:*:*:*:*
+2025-09-17 12:59:53: Searching for CVEs for CPE cpe:2.3:a:ckolivas:lrzip:0.620:*:*:*:*:*:*:* between 2025-09-10T16:59:53.000Z and 2025-09-17T16:59:53.000Z
+2025-09-17 12:59:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:56: Found CVE's: []
+2025-09-17 12:59:59: Fetching CVEs for CPE 15/50: cpe:2.3:a:mongodb:mongosh:2.5.7:draft1:*:*:*:*:*:*
+2025-09-17 12:59:59: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:2.5.7:draft1:*:*:*:*:*:* between 2025-09-10T16:59:59.000Z and 2025-09-17T16:59:59.000Z
+2025-09-17 12:59:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 12:59:59: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amongodb%3Amongosh%3A2.5.7%3Adraft1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T16%3A59%3A59.000Z&pubEndDate=2025-09-17T16%3A59%3A59.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:00:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:02: Found CVE's: []
+2025-09-17 13:00:05: Fetching CVEs for CPE 16/50: cpe:2.3:a:mongodb:mongosh:0.0.2:alpha0:*:*:*:*:*:*
+2025-09-17 13:00:05: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:0.0.2:alpha0:*:*:*:*:*:* between 2025-09-10T17:00:05.000Z and 2025-09-17T17:00:05.000Z
+2025-09-17 13:00:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:10: Found CVE's: []
+2025-09-17 13:00:13: Fetching CVEs for CPE 17/50: cpe:2.3:a:oracle:mysql:5.0.1:*:*:*:*:*:*:*
+2025-09-17 13:00:13: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.0.1:*:*:*:*:*:*:* between 2025-09-10T17:00:13.000Z and 2025-09-17T17:00:13.000Z
+2025-09-17 13:00:13: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:16: Found CVE's: []
+2025-09-17 13:00:19: Fetching CVEs for CPE 18/50: cpe:2.3:a:vercel:vercel:27.1.0:*:*:*:*:*:*:*
+2025-09-17 13:00:19: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:27.1.0:*:*:*:*:*:*:* between 2025-09-10T17:00:19.000Z and 2025-09-17T17:00:19.000Z
+2025-09-17 13:00:19: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:22: Found CVE's: []
+2025-09-17 13:00:25: Fetching CVEs for CPE 19/50: cpe:2.3:a:mongodb:libbson:1.27.4:*:*:*:*:*:*:*
+2025-09-17 13:00:25: Searching for CVEs for CPE cpe:2.3:a:mongodb:libbson:1.27.4:*:*:*:*:*:*:* between 2025-09-10T17:00:25.000Z and 2025-09-17T17:00:25.000Z
+2025-09-17 13:00:25: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:27: Found CVE's: []
+2025-09-17 13:00:30: Fetching CVEs for CPE 20/50: cpe:2.3:a:oracle:mysql:7.3.16:*:*:*:*:*:*:*
+2025-09-17 13:00:30: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:7.3.16:*:*:*:*:*:*:* between 2025-09-10T17:00:30.000Z and 2025-09-17T17:00:30.000Z
+2025-09-17 13:00:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:33: Found CVE's: []
+2025-09-17 13:00:36: Fetching CVEs for CPE 21/50: cpe:2.3:a:apache:http_server:2.0.23:*:*:*:*:*:*:*
+2025-09-17 13:00:36: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.0.23:*:*:*:*:*:*:* between 2025-09-10T17:00:36.000Z and 2025-09-17T17:00:36.000Z
+2025-09-17 13:00:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:38: Found CVE's: []
+2025-09-17 13:00:42: Fetching CVEs for CPE 22/50: cpe:2.3:a:vercel:vercel:15.6.0:canary3:*:*:*:*:*:*
+2025-09-17 13:00:42: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:15.6.0:canary3:*:*:*:*:*:* between 2025-09-10T17:00:42.000Z and 2025-09-17T17:00:42.000Z
+2025-09-17 13:00:42: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:44: Found CVE's: []
+2025-09-17 13:00:47: Fetching CVEs for CPE 23/50: cpe:2.3:a:mailcow:mailcow\:_dockerized:2024-07:*:*:*:*:*:*:*
+2025-09-17 13:00:47: Searching for CVEs for CPE cpe:2.3:a:mailcow:mailcow\:_dockerized:2024-07:*:*:*:*:*:*:* between 2025-09-10T17:00:47.000Z and 2025-09-17T17:00:47.000Z
+2025-09-17 13:00:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:47: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amailcow%3Amailcow%5C%3A_dockerized%3A2024-07%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A00%3A47.000Z&pubEndDate=2025-09-17T17%3A00%3A47.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:00:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:50: Found CVE's: []
+2025-09-17 13:00:53: Fetching CVEs for CPE 24/50: cpe:2.3:a:apache:http_server:2.2.26:*:*:*:*:*:*:*
+2025-09-17 13:00:53: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.2.26:*:*:*:*:*:*:* between 2025-09-10T17:00:53.000Z and 2025-09-17T17:00:53.000Z
+2025-09-17 13:00:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:56: Found CVE's: []
+2025-09-17 13:00:59: Fetching CVEs for CPE 25/50: cpe:2.3:a:microsoft:office:2013:sp1:*:*:rt:*:*:*
+2025-09-17 13:00:59: Searching for CVEs for CPE cpe:2.3:a:microsoft:office:2013:sp1:*:*:rt:*:*:* between 2025-09-10T17:00:59.000Z and 2025-09-17T17:00:59.000Z
+2025-09-17 13:00:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:00:59: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amicrosoft%3Aoffice%3A2013%3Asp1%3A%2A%3A%2A%3Art%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A00%3A59.000Z&pubEndDate=2025-09-17T17%3A00%3A59.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:01:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:03: Found CVE's: []
+2025-09-17 13:01:06: Fetching CVEs for CPE 26/50: cpe:2.3:a:oracle:mysql:8.0.0:*:*:*:*:*:*:*
+2025-09-17 13:01:06: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:8.0.0:*:*:*:*:*:*:* between 2025-09-10T17:01:06.000Z and 2025-09-17T17:01:06.000Z
+2025-09-17 13:01:06: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:09: Found CVE's: []
+2025-09-17 13:01:12: Fetching CVEs for CPE 27/50: cpe:2.3:a:vercel:vercel:13.0.3:-:*:*:*:node.js:*:*
+2025-09-17 13:01:12: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:13.0.3:-:*:*:*:node.js:*:* between 2025-09-10T17:01:12.000Z and 2025-09-17T17:01:12.000Z
+2025-09-17 13:01:12: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:14: Found CVE's: []
+2025-09-17 13:01:17: Fetching CVEs for CPE 28/50: cpe:2.3:a:vitest.dev:vitest:3.0.6:*:*:*:*:node.js:*:*
+2025-09-17 13:01:17: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:3.0.6:*:*:*:*:node.js:*:* between 2025-09-10T17:01:17.000Z and 2025-09-17T17:01:17.000Z
+2025-09-17 13:01:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:20: Found CVE's: []
+2025-09-17 13:01:23: Fetching CVEs for CPE 29/50: cpe:2.3:o:microsoft:windows_11_22h2:10.0.22621.5909:*:*:*:*:*:x64:*
+2025-09-17 13:01:23: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_11_22h2:10.0.22621.5909:*:*:*:*:*:x64:* between 2025-09-10T17:01:23.000Z and 2025-09-17T17:01:23.000Z
+2025-09-17 13:01:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:23: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Ao%3Amicrosoft%3Awindows_11_22h2%3A10.0.22621.5909%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3Ax64%3A%2A&pubStartDate=2025-09-10T17%3A01%3A23.000Z&pubEndDate=2025-09-17T17%3A01%3A23.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:01:24: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:27: Found CVE's: []
+2025-09-17 13:01:30: Fetching CVEs for CPE 30/50: cpe:2.3:a:nodejs:node.js:0.6.14:*:*:*:-:*:*:*
+2025-09-17 13:01:30: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:0.6.14:*:*:*:-:*:*:* between 2025-09-10T17:01:30.000Z and 2025-09-17T17:01:30.000Z
+2025-09-17 13:01:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:32: Found CVE's: []
+2025-09-17 13:01:35: Fetching CVEs for CPE 31/50: cpe:2.3:a:microsoft:office:2004:*:*:*:*:*:*:*
+2025-09-17 13:01:35: Searching for CVEs for CPE cpe:2.3:a:microsoft:office:2004:*:*:*:*:*:*:* between 2025-09-10T17:01:35.000Z and 2025-09-17T17:01:35.000Z
+2025-09-17 13:01:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:35: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amicrosoft%3Aoffice%3A2004%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A01%3A35.000Z&pubEndDate=2025-09-17T17%3A01%3A35.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:01:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:39: Found CVE's: []
+2025-09-17 13:01:42: Fetching CVEs for CPE 32/50: cpe:2.3:a:nodejs:node.js:6.12.1:*:*:*:*:*:*:*
+2025-09-17 13:01:42: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:6.12.1:*:*:*:*:*:*:* between 2025-09-10T17:01:42.000Z and 2025-09-17T17:01:42.000Z
+2025-09-17 13:01:42: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:44: Found CVE's: []
+2025-09-17 13:01:47: Fetching CVEs for CPE 33/50: cpe:2.3:a:zlt2000:microservices-platform:2.7.2:*:*:*:*:*:*:*
+2025-09-17 13:01:47: Searching for CVEs for CPE cpe:2.3:a:zlt2000:microservices-platform:2.7.2:*:*:*:*:*:*:* between 2025-09-10T17:01:47.000Z and 2025-09-17T17:01:47.000Z
+2025-09-17 13:01:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:50: Found CVE's: []
+2025-09-17 13:01:53: Fetching CVEs for CPE 34/50: cpe:2.3:a:vercel:vercel:12.0.0:canary27:*:*:*:*:*:*
+2025-09-17 13:01:53: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:12.0.0:canary27:*:*:*:*:*:* between 2025-09-10T17:01:53.000Z and 2025-09-17T17:01:53.000Z
+2025-09-17 13:01:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:53: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Avercel%3A12.0.0%3Acanary27%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A01%3A53.000Z&pubEndDate=2025-09-17T17%3A01%3A53.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:01:54: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:01:56: Found CVE's: []
+2025-09-17 13:01:59: Fetching CVEs for CPE 35/50: cpe:2.3:a:microsoft:sql_server:2005:sp4:x64:*:*:*:*:*
+2025-09-17 13:01:59: Searching for CVEs for CPE cpe:2.3:a:microsoft:sql_server:2005:sp4:x64:*:*:*:*:* between 2025-09-10T17:01:59.000Z and 2025-09-17T17:01:59.000Z
+2025-09-17 13:01:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:02: Found CVE's: []
+2025-09-17 13:02:05: Fetching CVEs for CPE 36/50: cpe:2.3:a:nodejs:node.js:24.2.0:*:*:*:-:*:*:*
+2025-09-17 13:02:05: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:24.2.0:*:*:*:-:*:*:* between 2025-09-10T17:02:05.000Z and 2025-09-17T17:02:05.000Z
+2025-09-17 13:02:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:05: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anodejs%3Anode.js%3A24.2.0%3A%2A%3A%2A%3A%2A%3A-%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A02%3A05.000Z&pubEndDate=2025-09-17T17%3A02%3A05.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:02:06: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:09: Found CVE's: []
+2025-09-17 13:02:12: Fetching CVEs for CPE 37/50: cpe:2.3:a:mongodb:libbson:1.17.5:*:*:*:*:*:*:*
+2025-09-17 13:02:12: Searching for CVEs for CPE cpe:2.3:a:mongodb:libbson:1.17.5:*:*:*:*:*:*:* between 2025-09-10T17:02:12.000Z and 2025-09-17T17:02:12.000Z
+2025-09-17 13:02:12: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:14: Found CVE's: []
+2025-09-17 13:02:17: Fetching CVEs for CPE 38/50: cpe:2.3:a:vercel:vercel:23.1.3:canary62:*:*:*:*:*:*
+2025-09-17 13:02:17: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:23.1.3:canary62:*:*:*:*:*:* between 2025-09-10T17:02:17.000Z and 2025-09-17T17:02:17.000Z
+2025-09-17 13:02:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:17: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Avercel%3A23.1.3%3Acanary62%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A02%3A17.000Z&pubEndDate=2025-09-17T17%3A02%3A17.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:02:18: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:21: Found CVE's: []
+2025-09-17 13:02:24: Fetching CVEs for CPE 39/50: cpe:2.3:a:vitest.dev:vitest:1.0.0:beta5:*:*:*:node.js:*:*
+2025-09-17 13:02:24: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:1.0.0:beta5:*:*:*:node.js:*:* between 2025-09-10T17:02:24.000Z and 2025-09-17T17:02:24.000Z
+2025-09-17 13:02:24: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:26: Found CVE's: []
+2025-09-17 13:02:29: Fetching CVEs for CPE 40/50: cpe:2.3:a:nodejs:node.js:16.13.1:*:*:*:lts:*:*:*
+2025-09-17 13:02:29: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:16.13.1:*:*:*:lts:*:*:* between 2025-09-10T17:02:29.000Z and 2025-09-17T17:02:29.000Z
+2025-09-17 13:02:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:29: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anodejs%3Anode.js%3A16.13.1%3A%2A%3A%2A%3A%2A%3Alts%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A02%3A29.000Z&pubEndDate=2025-09-17T17%3A02%3A29.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:02:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:32: Found CVE's: []
+2025-09-17 13:02:35: Fetching CVEs for CPE 41/50: cpe:2.3:a:nodejs:node.js:6.14.1:*:*:*:*:*:*:*
+2025-09-17 13:02:35: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:6.14.1:*:*:*:*:*:*:* between 2025-09-10T17:02:35.000Z and 2025-09-17T17:02:35.000Z
+2025-09-17 13:02:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:35: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anodejs%3Anode.js%3A6.14.1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A02%3A35.000Z&pubEndDate=2025-09-17T17%3A02%3A35.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:02:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:39: Found CVE's: []
+2025-09-17 13:02:42: Fetching CVEs for CPE 42/50: cpe:2.3:a:mongodb:mongosh:2.3.9:draft3:*:*:*:*:*:*
+2025-09-17 13:02:42: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:2.3.9:draft3:*:*:*:*:*:* between 2025-09-10T17:02:42.000Z and 2025-09-17T17:02:42.000Z
+2025-09-17 13:02:42: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:44: Found CVE's: []
+2025-09-17 13:02:47: Fetching CVEs for CPE 43/50: cpe:2.3:a:oracle:mysql:7.4.14:*:*:*:*:*:*:*
+2025-09-17 13:02:47: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:7.4.14:*:*:*:*:*:*:* between 2025-09-10T17:02:47.000Z and 2025-09-17T17:02:47.000Z
+2025-09-17 13:02:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:47: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aoracle%3Amysql%3A7.4.14%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A02%3A47.000Z&pubEndDate=2025-09-17T17%3A02%3A47.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:02:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:51: Found CVE's: []
+2025-09-17 13:02:54: Fetching CVEs for CPE 44/50: cpe:2.3:a:vitest.dev:vitest:0.4.2:*:*:*:*:node.js:*:*
+2025-09-17 13:02:54: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:0.4.2:*:*:*:*:node.js:*:* between 2025-09-10T17:02:54.000Z and 2025-09-17T17:02:54.000Z
+2025-09-17 13:02:54: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:56: Found CVE's: []
+2025-09-17 13:02:59: Fetching CVEs for CPE 45/50: cpe:2.3:a:vercel:vercel:9.0.0:canary6:*:*:*:node.js:*:*
+2025-09-17 13:02:59: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:9.0.0:canary6:*:*:*:node.js:*:* between 2025-09-10T17:02:59.000Z and 2025-09-17T17:02:59.000Z
+2025-09-17 13:02:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:02:59: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Avercel%3A9.0.0%3Acanary6%3A%2A%3A%2A%3A%2A%3Anode.js%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A02%3A59.000Z&pubEndDate=2025-09-17T17%3A02%3A59.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:03:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:02: Found CVE's: []
+2025-09-17 13:03:06: Fetching CVEs for CPE 46/50: cpe:2.3:a:jetbrains:hub:2023.2.19677:*:*:*:*:*:*:*
+2025-09-17 13:03:06: Searching for CVEs for CPE cpe:2.3:a:jetbrains:hub:2023.2.19677:*:*:*:*:*:*:* between 2025-09-10T17:03:06.000Z and 2025-09-17T17:03:06.000Z
+2025-09-17 13:03:06: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:08: Found CVE's: []
+2025-09-17 13:03:11: Fetching CVEs for CPE 47/50: cpe:2.3:a:vercel:vercel:12.0.0:canary15:*:*:*:node.js:*:*
+2025-09-17 13:03:11: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:12.0.0:canary15:*:*:*:node.js:*:* between 2025-09-10T17:03:11.000Z and 2025-09-17T17:03:11.000Z
+2025-09-17 13:03:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:11: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Avercel%3A12.0.0%3Acanary15%3A%2A%3A%2A%3A%2A%3Anode.js%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A03%3A11.000Z&pubEndDate=2025-09-17T17%3A03%3A11.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:03:12: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:14: Found CVE's: []
+2025-09-17 13:03:17: Fetching CVEs for CPE 48/50: cpe:2.3:a:nodejs:node.js:5.1.1:*:*:*:-:*:*:*
+2025-09-17 13:03:17: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:5.1.1:*:*:*:-:*:*:* between 2025-09-10T17:03:17.000Z and 2025-09-17T17:03:17.000Z
+2025-09-17 13:03:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:20: Found CVE's: []
+2025-09-17 13:03:23: Fetching CVEs for CPE 49/50: cpe:2.3:a:mongodb:mongosh:0.0.1:alpha19:*:*:*:*:*:*
+2025-09-17 13:03:23: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:0.0.1:alpha19:*:*:*:*:*:* between 2025-09-10T17:03:23.000Z and 2025-09-17T17:03:23.000Z
+2025-09-17 13:03:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:23: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amongodb%3Amongosh%3A0.0.1%3Aalpha19%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A03%3A23.000Z&pubEndDate=2025-09-17T17%3A03%3A23.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:03:24: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:26: Found CVE's: []
+2025-09-17 13:03:29: Fetching CVEs for CPE 50/50: cpe:2.3:a:apache:kafka:0.10.0.0:rc2:*:*:*:*:*:*
+2025-09-17 13:03:29: Searching for CVEs for CPE cpe:2.3:a:apache:kafka:0.10.0.0:rc2:*:*:*:*:*:* between 2025-09-10T17:03:29.000Z and 2025-09-17T17:03:29.000Z
+2025-09-17 13:03:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:32: Found CVE's: []
+2025-09-17 13:03:35: Enhanced crew input saved to: C:\Users\saipk\agentAttempts\server\intelliHunt\crew\NVD\enhanced_crew_input_20250917_130335.json
+2025-09-17 13:03:35: Fetching vulnerabilities from the past 7 days
+2025-09-17 13:03:35: Loading CPE data from: C:\Users\saipk\agentAttempts\server\intelliHunt\crew\NVD\cpe_data_20250917_125841.json
+2025-09-17 13:03:35: Found 11238 unique CPE names
+2025-09-17 13:03:35: Limiting CPE processing to 50 out of 11238 total CPEs to avoid API rate limits
+2025-09-17 13:03:35: Fetching CVEs for CPE 1/50: cpe:2.3:a:microsoft:onedrive:-:*:*:*:*:android:*:*
+2025-09-17 13:03:35: Searching for CVEs for CPE cpe:2.3:a:microsoft:onedrive:-:*:*:*:*:android:*:* between 2025-09-10T17:03:35.000Z and 2025-09-17T17:03:35.000Z
+2025-09-17 13:03:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:35: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amicrosoft%3Aonedrive%3A-%3A%2A%3A%2A%3A%2A%3A%2A%3Aandroid%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A03%3A35.000Z&pubEndDate=2025-09-17T17%3A03%3A35.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:03:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:39: Found CVE's: []
+2025-09-17 13:03:42: Fetching CVEs for CPE 2/50: cpe:2.3:a:quantumcloud:wpbot:6.9.9:*:*:*:free:wordpress:*:*
+2025-09-17 13:03:42: Searching for CVEs for CPE cpe:2.3:a:quantumcloud:wpbot:6.9.9:*:*:*:free:wordpress:*:* between 2025-09-10T17:03:42.000Z and 2025-09-17T17:03:42.000Z
+2025-09-17 13:03:42: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:44: Found CVE's: []
+2025-09-17 13:03:47: Fetching CVEs for CPE 3/50: cpe:2.3:a:vercel:vercel:22.0.2:canary4:*:*:*:*:*:*
+2025-09-17 13:03:47: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:22.0.2:canary4:*:*:*:*:*:* between 2025-09-10T17:03:47.000Z and 2025-09-17T17:03:47.000Z
+2025-09-17 13:03:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:47: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Avercel%3A22.0.2%3Acanary4%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A03%3A47.000Z&pubEndDate=2025-09-17T17%3A03%3A47.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:03:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:51: Found CVE's: []
+2025-09-17 13:03:54: Fetching CVEs for CPE 4/50: cpe:2.3:a:vercel:vercel:13.0.0:canary37:*:*:*:*:*:*
+2025-09-17 13:03:54: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:13.0.0:canary37:*:*:*:*:*:* between 2025-09-10T17:03:54.000Z and 2025-09-17T17:03:54.000Z
+2025-09-17 13:03:54: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:56: Found CVE's: []
+2025-09-17 13:03:59: Fetching CVEs for CPE 5/50: cpe:2.3:a:tolgee:tolgee:3.80.4:*:*:*:*:*:*:*
+2025-09-17 13:03:59: Searching for CVEs for CPE cpe:2.3:a:tolgee:tolgee:3.80.4:*:*:*:*:*:*:* between 2025-09-10T17:03:59.000Z and 2025-09-17T17:03:59.000Z
+2025-09-17 13:03:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:03:59: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Atolgee%3Atolgee%3A3.80.4%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A03%3A59.000Z&pubEndDate=2025-09-17T17%3A03%3A59.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:04:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:02: Found CVE's: []
+2025-09-17 13:04:05: Fetching CVEs for CPE 6/50: cpe:2.3:a:jasper_project:jasper:4.2.0:rc1:*:*:*:*:*:*
+2025-09-17 13:04:05: Searching for CVEs for CPE cpe:2.3:a:jasper_project:jasper:4.2.0:rc1:*:*:*:*:*:* between 2025-09-10T17:04:05.000Z and 2025-09-17T17:04:05.000Z
+2025-09-17 13:04:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:08: Found CVE's: []
+2025-09-17 13:04:11: Fetching CVEs for CPE 7/50: cpe:2.3:a:vercel:vercel:33.7.0:*:*:*:*:*:*:*
+2025-09-17 13:04:11: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:33.7.0:*:*:*:*:*:*:* between 2025-09-10T17:04:11.000Z and 2025-09-17T17:04:11.000Z
+2025-09-17 13:04:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:11: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Avercel%3A33.7.0%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A04%3A11.000Z&pubEndDate=2025-09-17T17%3A04%3A11.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:04:12: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:14: Found CVE's: []
+2025-09-17 13:04:17: Fetching CVEs for CPE 8/50: cpe:2.3:a:tibco:spotfire_enterprise_runtime_for_r:1.19.0:*:*:*:server:*:*:*
+2025-09-17 13:04:17: Searching for CVEs for CPE cpe:2.3:a:tibco:spotfire_enterprise_runtime_for_r:1.19.0:*:*:*:server:*:*:* between 2025-09-10T17:04:17.000Z and 2025-09-17T17:04:17.000Z
+2025-09-17 13:04:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:20: Found CVE's: []
+2025-09-17 13:04:23: Fetching CVEs for CPE 9/50: cpe:2.3:a:python:python:2.4.6:*:*:*:*:*:*:*
+2025-09-17 13:04:23: Searching for CVEs for CPE cpe:2.3:a:python:python:2.4.6:*:*:*:*:*:*:* between 2025-09-10T17:04:23.000Z and 2025-09-17T17:04:23.000Z
+2025-09-17 13:04:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:23: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Apython%3Apython%3A2.4.6%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A04%3A23.000Z&pubEndDate=2025-09-17T17%3A04%3A23.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:04:24: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:26: Found CVE's: []
+2025-09-17 13:04:29: Fetching CVEs for CPE 10/50: cpe:2.3:a:microsoft:exchange_server:4.0:sp3:*:*:*:*:*:*
+2025-09-17 13:04:29: Searching for CVEs for CPE cpe:2.3:a:microsoft:exchange_server:4.0:sp3:*:*:*:*:*:* between 2025-09-10T17:04:29.000Z and 2025-09-17T17:04:29.000Z
+2025-09-17 13:04:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:32: Found CVE's: []
+2025-09-17 13:04:35: Fetching CVEs for CPE 11/50: cpe:2.3:a:vercel:vercel:16.1.4:canary41:*:*:*:*:*:*
+2025-09-17 13:04:35: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:16.1.4:canary41:*:*:*:*:*:* between 2025-09-10T17:04:35.000Z and 2025-09-17T17:04:35.000Z
+2025-09-17 13:04:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:35: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Avercel%3A16.1.4%3Acanary41%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A04%3A35.000Z&pubEndDate=2025-09-17T17%3A04%3A35.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:04:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:38: Found CVE's: []
+2025-09-17 13:04:41: Fetching CVEs for CPE 12/50: cpe:2.3:a:openagentplatform:dive:0.7.4:*:*:*:*:*:*:*
+2025-09-17 13:04:41: Searching for CVEs for CPE cpe:2.3:a:openagentplatform:dive:0.7.4:*:*:*:*:*:*:* between 2025-09-10T17:04:41.000Z and 2025-09-17T17:04:41.000Z
+2025-09-17 13:04:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:41: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aopenagentplatform%3Adive%3A0.7.4%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A04%3A41.000Z&pubEndDate=2025-09-17T17%3A04%3A41.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:04:42: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:45: Found CVE's: []
+2025-09-17 13:04:48: Fetching CVEs for CPE 13/50: cpe:2.3:a:apache:http_server:2.2.15-60:*:*:*:*:*:*:*
+2025-09-17 13:04:48: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.2.15-60:*:*:*:*:*:*:* between 2025-09-10T17:04:48.000Z and 2025-09-17T17:04:48.000Z
+2025-09-17 13:04:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:50: Found CVE's: []
+2025-09-17 13:04:53: Fetching CVEs for CPE 14/50: cpe:2.3:a:ckolivas:lrzip:0.620:*:*:*:*:*:*:*
+2025-09-17 13:04:53: Searching for CVEs for CPE cpe:2.3:a:ckolivas:lrzip:0.620:*:*:*:*:*:*:* between 2025-09-10T17:04:53.000Z and 2025-09-17T17:04:53.000Z
+2025-09-17 13:04:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:56: Found CVE's: []
+2025-09-17 13:04:59: Fetching CVEs for CPE 15/50: cpe:2.3:a:mongodb:mongosh:2.5.7:draft1:*:*:*:*:*:*
+2025-09-17 13:04:59: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:2.5.7:draft1:*:*:*:*:*:* between 2025-09-10T17:04:59.000Z and 2025-09-17T17:04:59.000Z
+2025-09-17 13:04:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:04:59: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amongodb%3Amongosh%3A2.5.7%3Adraft1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A04%3A59.000Z&pubEndDate=2025-09-17T17%3A04%3A59.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:05:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:02: Found CVE's: []
+2025-09-17 13:05:05: Fetching CVEs for CPE 16/50: cpe:2.3:a:mongodb:mongosh:0.0.2:alpha0:*:*:*:*:*:*
+2025-09-17 13:05:05: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:0.0.2:alpha0:*:*:*:*:*:* between 2025-09-10T17:05:05.000Z and 2025-09-17T17:05:05.000Z
+2025-09-17 13:05:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:08: Found CVE's: []
+2025-09-17 13:05:11: Fetching CVEs for CPE 17/50: cpe:2.3:a:oracle:mysql:5.0.1:*:*:*:*:*:*:*
+2025-09-17 13:05:11: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.0.1:*:*:*:*:*:*:* between 2025-09-10T17:05:11.000Z and 2025-09-17T17:05:11.000Z
+2025-09-17 13:05:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:11: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aoracle%3Amysql%3A5.0.1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A05%3A11.000Z&pubEndDate=2025-09-17T17%3A05%3A11.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:05:12: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:14: Found CVE's: []
+2025-09-17 13:05:17: Fetching CVEs for CPE 18/50: cpe:2.3:a:vercel:vercel:27.1.0:*:*:*:*:*:*:*
+2025-09-17 13:05:17: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:27.1.0:*:*:*:*:*:*:* between 2025-09-10T17:05:17.000Z and 2025-09-17T17:05:17.000Z
+2025-09-17 13:05:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:17: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Avercel%3A27.1.0%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A05%3A17.000Z&pubEndDate=2025-09-17T17%3A05%3A17.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:05:18: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:21: Found CVE's: []
+2025-09-17 13:05:24: Fetching CVEs for CPE 19/50: cpe:2.3:a:mongodb:libbson:1.27.4:*:*:*:*:*:*:*
+2025-09-17 13:05:24: Searching for CVEs for CPE cpe:2.3:a:mongodb:libbson:1.27.4:*:*:*:*:*:*:* between 2025-09-10T17:05:24.000Z and 2025-09-17T17:05:24.000Z
+2025-09-17 13:05:24: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:26: Found CVE's: []
+2025-09-17 13:05:29: Fetching CVEs for CPE 20/50: cpe:2.3:a:oracle:mysql:7.3.16:*:*:*:*:*:*:*
+2025-09-17 13:05:29: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:7.3.16:*:*:*:*:*:*:* between 2025-09-10T17:05:29.000Z and 2025-09-17T17:05:29.000Z
+2025-09-17 13:05:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:29: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aoracle%3Amysql%3A7.3.16%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A05%3A29.000Z&pubEndDate=2025-09-17T17%3A05%3A29.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:05:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:33: Found CVE's: []
+2025-09-17 13:05:36: Fetching CVEs for CPE 21/50: cpe:2.3:a:apache:http_server:2.0.23:*:*:*:*:*:*:*
+2025-09-17 13:05:36: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.0.23:*:*:*:*:*:*:* between 2025-09-10T17:05:36.000Z and 2025-09-17T17:05:36.000Z
+2025-09-17 13:05:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:38: Found CVE's: []
+2025-09-17 13:05:41: Fetching CVEs for CPE 22/50: cpe:2.3:a:vercel:vercel:15.6.0:canary3:*:*:*:*:*:*
+2025-09-17 13:05:41: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:15.6.0:canary3:*:*:*:*:*:* between 2025-09-10T17:05:41.000Z and 2025-09-17T17:05:41.000Z
+2025-09-17 13:05:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:41: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Avercel%3A15.6.0%3Acanary3%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A05%3A41.000Z&pubEndDate=2025-09-17T17%3A05%3A41.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:05:42: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:44: Found CVE's: []
+2025-09-17 13:05:47: Fetching CVEs for CPE 23/50: cpe:2.3:a:mailcow:mailcow\:_dockerized:2024-07:*:*:*:*:*:*:*
+2025-09-17 13:05:47: Searching for CVEs for CPE cpe:2.3:a:mailcow:mailcow\:_dockerized:2024-07:*:*:*:*:*:*:* between 2025-09-10T17:05:47.000Z and 2025-09-17T17:05:47.000Z
+2025-09-17 13:05:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:50: Found CVE's: []
+2025-09-17 13:05:53: Fetching CVEs for CPE 24/50: cpe:2.3:a:apache:http_server:2.2.26:*:*:*:*:*:*:*
+2025-09-17 13:05:53: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.2.26:*:*:*:*:*:*:* between 2025-09-10T17:05:53.000Z and 2025-09-17T17:05:53.000Z
+2025-09-17 13:05:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:53: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aapache%3Ahttp_server%3A2.2.26%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A05%3A53.000Z&pubEndDate=2025-09-17T17%3A05%3A53.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:05:54: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:05:56: Found CVE's: []
+2025-09-17 13:06:00: Fetching CVEs for CPE 25/50: cpe:2.3:a:microsoft:office:2013:sp1:*:*:rt:*:*:*
+2025-09-17 13:06:00: Searching for CVEs for CPE cpe:2.3:a:microsoft:office:2013:sp1:*:*:rt:*:*:* between 2025-09-10T17:06:00.000Z and 2025-09-17T17:06:00.000Z
+2025-09-17 13:06:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:02: Found CVE's: []
+2025-09-17 13:06:05: Fetching CVEs for CPE 26/50: cpe:2.3:a:oracle:mysql:8.0.0:*:*:*:*:*:*:*
+2025-09-17 13:06:05: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:8.0.0:*:*:*:*:*:*:* between 2025-09-10T17:06:05.000Z and 2025-09-17T17:06:05.000Z
+2025-09-17 13:06:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:05: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aoracle%3Amysql%3A8.0.0%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A06%3A05.000Z&pubEndDate=2025-09-17T17%3A06%3A05.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:06:06: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:09: Found CVE's: []
+2025-09-17 13:06:12: Fetching CVEs for CPE 27/50: cpe:2.3:a:vercel:vercel:13.0.3:-:*:*:*:node.js:*:*
+2025-09-17 13:06:12: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:13.0.3:-:*:*:*:node.js:*:* between 2025-09-10T17:06:12.000Z and 2025-09-17T17:06:12.000Z
+2025-09-17 13:06:12: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:14: Found CVE's: []
+2025-09-17 13:06:17: Fetching CVEs for CPE 28/50: cpe:2.3:a:vitest.dev:vitest:3.0.6:*:*:*:*:node.js:*:*
+2025-09-17 13:06:17: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:3.0.6:*:*:*:*:node.js:*:* between 2025-09-10T17:06:17.000Z and 2025-09-17T17:06:17.000Z
+2025-09-17 13:06:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:17: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avitest.dev%3Avitest%3A3.0.6%3A%2A%3A%2A%3A%2A%3A%2A%3Anode.js%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A06%3A17.000Z&pubEndDate=2025-09-17T17%3A06%3A17.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:06:18: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:20: Found CVE's: []
+2025-09-17 13:06:23: Fetching CVEs for CPE 29/50: cpe:2.3:o:microsoft:windows_11_22h2:10.0.22621.5909:*:*:*:*:*:x64:*
+2025-09-17 13:06:23: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_11_22h2:10.0.22621.5909:*:*:*:*:*:x64:* between 2025-09-10T17:06:23.000Z and 2025-09-17T17:06:23.000Z
+2025-09-17 13:06:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:26: Found CVE's: []
+2025-09-17 13:06:29: Fetching CVEs for CPE 30/50: cpe:2.3:a:nodejs:node.js:0.6.14:*:*:*:-:*:*:*
+2025-09-17 13:06:29: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:0.6.14:*:*:*:-:*:*:* between 2025-09-10T17:06:29.000Z and 2025-09-17T17:06:29.000Z
+2025-09-17 13:06:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:29: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anodejs%3Anode.js%3A0.6.14%3A%2A%3A%2A%3A%2A%3A-%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A06%3A29.000Z&pubEndDate=2025-09-17T17%3A06%3A29.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:06:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:32: Found CVE's: []
+2025-09-17 13:06:35: Fetching CVEs for CPE 31/50: cpe:2.3:a:microsoft:office:2004:*:*:*:*:*:*:*
+2025-09-17 13:06:35: Searching for CVEs for CPE cpe:2.3:a:microsoft:office:2004:*:*:*:*:*:*:* between 2025-09-10T17:06:35.000Z and 2025-09-17T17:06:35.000Z
+2025-09-17 13:06:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:35: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amicrosoft%3Aoffice%3A2004%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A06%3A35.000Z&pubEndDate=2025-09-17T17%3A06%3A35.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:06:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:39: Found CVE's: []
+2025-09-17 13:06:42: Fetching CVEs for CPE 32/50: cpe:2.3:a:nodejs:node.js:6.12.1:*:*:*:*:*:*:*
+2025-09-17 13:06:42: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:6.12.1:*:*:*:*:*:*:* between 2025-09-10T17:06:42.000Z and 2025-09-17T17:06:42.000Z
+2025-09-17 13:06:42: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:44: Found CVE's: []
+2025-09-17 13:06:47: Fetching CVEs for CPE 33/50: cpe:2.3:a:zlt2000:microservices-platform:2.7.2:*:*:*:*:*:*:*
+2025-09-17 13:06:47: Searching for CVEs for CPE cpe:2.3:a:zlt2000:microservices-platform:2.7.2:*:*:*:*:*:*:* between 2025-09-10T17:06:47.000Z and 2025-09-17T17:06:47.000Z
+2025-09-17 13:06:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:47: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Azlt2000%3Amicroservices-platform%3A2.7.2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A06%3A47.000Z&pubEndDate=2025-09-17T17%3A06%3A47.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:06:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:51: Found CVE's: []
+2025-09-17 13:06:54: Fetching CVEs for CPE 34/50: cpe:2.3:a:vercel:vercel:12.0.0:canary27:*:*:*:*:*:*
+2025-09-17 13:06:54: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:12.0.0:canary27:*:*:*:*:*:* between 2025-09-10T17:06:54.000Z and 2025-09-17T17:06:54.000Z
+2025-09-17 13:06:54: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:56: Found CVE's: []
+2025-09-17 13:06:59: Fetching CVEs for CPE 35/50: cpe:2.3:a:microsoft:sql_server:2005:sp4:x64:*:*:*:*:*
+2025-09-17 13:06:59: Searching for CVEs for CPE cpe:2.3:a:microsoft:sql_server:2005:sp4:x64:*:*:*:*:* between 2025-09-10T17:06:59.000Z and 2025-09-17T17:06:59.000Z
+2025-09-17 13:06:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:06:59: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amicrosoft%3Asql_server%3A2005%3Asp4%3Ax64%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A06%3A59.000Z&pubEndDate=2025-09-17T17%3A06%3A59.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:07:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:03: Found CVE's: []
+2025-09-17 13:07:06: Fetching CVEs for CPE 36/50: cpe:2.3:a:nodejs:node.js:24.2.0:*:*:*:-:*:*:*
+2025-09-17 13:07:06: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:24.2.0:*:*:*:-:*:*:* between 2025-09-10T17:07:06.000Z and 2025-09-17T17:07:06.000Z
+2025-09-17 13:07:06: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:08: Found CVE's: []
+2025-09-17 13:07:11: Fetching CVEs for CPE 37/50: cpe:2.3:a:mongodb:libbson:1.17.5:*:*:*:*:*:*:*
+2025-09-17 13:07:11: Searching for CVEs for CPE cpe:2.3:a:mongodb:libbson:1.17.5:*:*:*:*:*:*:* between 2025-09-10T17:07:11.000Z and 2025-09-17T17:07:11.000Z
+2025-09-17 13:07:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:11: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Amongodb%3Alibbson%3A1.17.5%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A07%3A11.000Z&pubEndDate=2025-09-17T17%3A07%3A11.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:07:12: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:15: Found CVE's: []
+2025-09-17 13:07:18: Fetching CVEs for CPE 38/50: cpe:2.3:a:vercel:vercel:23.1.3:canary62:*:*:*:*:*:*
+2025-09-17 13:07:18: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:23.1.3:canary62:*:*:*:*:*:* between 2025-09-10T17:07:18.000Z and 2025-09-17T17:07:18.000Z
+2025-09-17 13:07:18: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:20: Found CVE's: []
+2025-09-17 13:07:23: Fetching CVEs for CPE 39/50: cpe:2.3:a:vitest.dev:vitest:1.0.0:beta5:*:*:*:node.js:*:*
+2025-09-17 13:07:23: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:1.0.0:beta5:*:*:*:node.js:*:* between 2025-09-10T17:07:23.000Z and 2025-09-17T17:07:23.000Z
+2025-09-17 13:07:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:23: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avitest.dev%3Avitest%3A1.0.0%3Abeta5%3A%2A%3A%2A%3A%2A%3Anode.js%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A07%3A23.000Z&pubEndDate=2025-09-17T17%3A07%3A23.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:07:24: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:26: Found CVE's: []
+2025-09-17 13:07:29: Fetching CVEs for CPE 40/50: cpe:2.3:a:nodejs:node.js:16.13.1:*:*:*:lts:*:*:*
+2025-09-17 13:07:29: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:16.13.1:*:*:*:lts:*:*:* between 2025-09-10T17:07:29.000Z and 2025-09-17T17:07:29.000Z
+2025-09-17 13:07:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:32: Found CVE's: []
+2025-09-17 13:07:35: Fetching CVEs for CPE 41/50: cpe:2.3:a:nodejs:node.js:6.14.1:*:*:*:*:*:*:*
+2025-09-17 13:07:35: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:6.14.1:*:*:*:*:*:*:* between 2025-09-10T17:07:35.000Z and 2025-09-17T17:07:35.000Z
+2025-09-17 13:07:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:35: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anodejs%3Anode.js%3A6.14.1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A07%3A35.000Z&pubEndDate=2025-09-17T17%3A07%3A35.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:07:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:39: Found CVE's: []
+2025-09-17 13:07:42: Fetching CVEs for CPE 42/50: cpe:2.3:a:mongodb:mongosh:2.3.9:draft3:*:*:*:*:*:*
+2025-09-17 13:07:42: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:2.3.9:draft3:*:*:*:*:*:* between 2025-09-10T17:07:42.000Z and 2025-09-17T17:07:42.000Z
+2025-09-17 13:07:42: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:44: Found CVE's: []
+2025-09-17 13:07:47: Fetching CVEs for CPE 43/50: cpe:2.3:a:oracle:mysql:7.4.14:*:*:*:*:*:*:*
+2025-09-17 13:07:47: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:7.4.14:*:*:*:*:*:*:* between 2025-09-10T17:07:47.000Z and 2025-09-17T17:07:47.000Z
+2025-09-17 13:07:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:47: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aoracle%3Amysql%3A7.4.14%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A07%3A47.000Z&pubEndDate=2025-09-17T17%3A07%3A47.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:07:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:50: Found CVE's: []
+2025-09-17 13:07:53: Fetching CVEs for CPE 44/50: cpe:2.3:a:vitest.dev:vitest:0.4.2:*:*:*:*:node.js:*:*
+2025-09-17 13:07:53: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:0.4.2:*:*:*:*:node.js:*:* between 2025-09-10T17:07:53.000Z and 2025-09-17T17:07:53.000Z
+2025-09-17 13:07:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:56: Found CVE's: []
+2025-09-17 13:07:59: Fetching CVEs for CPE 45/50: cpe:2.3:a:vercel:vercel:9.0.0:canary6:*:*:*:node.js:*:*
+2025-09-17 13:07:59: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:9.0.0:canary6:*:*:*:node.js:*:* between 2025-09-10T17:07:59.000Z and 2025-09-17T17:07:59.000Z
+2025-09-17 13:07:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:07:59: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Avercel%3Avercel%3A9.0.0%3Acanary6%3A%2A%3A%2A%3A%2A%3Anode.js%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A07%3A59.000Z&pubEndDate=2025-09-17T17%3A07%3A59.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:08:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:08:02: Found CVE's: []
+2025-09-17 13:08:05: Fetching CVEs for CPE 46/50: cpe:2.3:a:jetbrains:hub:2023.2.19677:*:*:*:*:*:*:*
+2025-09-17 13:08:05: Searching for CVEs for CPE cpe:2.3:a:jetbrains:hub:2023.2.19677:*:*:*:*:*:*:* between 2025-09-10T17:08:05.000Z and 2025-09-17T17:08:05.000Z
+2025-09-17 13:08:05: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:08:05: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Ajetbrains%3Ahub%3A2023.2.19677%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A08%3A05.000Z&pubEndDate=2025-09-17T17%3A08%3A05.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:08:06: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:08:09: Found CVE's: []
+2025-09-17 13:08:12: Fetching CVEs for CPE 47/50: cpe:2.3:a:vercel:vercel:12.0.0:canary15:*:*:*:node.js:*:*
+2025-09-17 13:08:12: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:12.0.0:canary15:*:*:*:node.js:*:* between 2025-09-10T17:08:12.000Z and 2025-09-17T17:08:12.000Z
+2025-09-17 13:08:12: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:08:14: Found CVE's: []
+2025-09-17 13:08:17: Fetching CVEs for CPE 48/50: cpe:2.3:a:nodejs:node.js:5.1.1:*:*:*:-:*:*:*
+2025-09-17 13:08:17: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:5.1.1:*:*:*:-:*:*:* between 2025-09-10T17:08:17.000Z and 2025-09-17T17:08:17.000Z
+2025-09-17 13:08:17: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:08:17: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Anodejs%3Anode.js%3A5.1.1%3A%2A%3A%2A%3A%2A%3A-%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A08%3A17.000Z&pubEndDate=2025-09-17T17%3A08%3A17.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:08:18: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:08:20: Found CVE's: []
+2025-09-17 13:08:23: Fetching CVEs for CPE 49/50: cpe:2.3:a:mongodb:mongosh:0.0.1:alpha19:*:*:*:*:*:*
+2025-09-17 13:08:23: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:0.0.1:alpha19:*:*:*:*:*:* between 2025-09-10T17:08:23.000Z and 2025-09-17T17:08:23.000Z
+2025-09-17 13:08:23: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:08:26: Found CVE's: []
+2025-09-17 13:08:29: Fetching CVEs for CPE 50/50: cpe:2.3:a:apache:kafka:0.10.0.0:rc2:*:*:*:*:*:*
+2025-09-17 13:08:29: Searching for CVEs for CPE cpe:2.3:a:apache:kafka:0.10.0.0:rc2:*:*:*:*:*:* between 2025-09-10T17:08:29.000Z and 2025-09-17T17:08:29.000Z
+2025-09-17 13:08:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:08:29: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aapache%3Akafka%3A0.10.0.0%3Arc2%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A08%3A29.000Z&pubEndDate=2025-09-17T17%3A08%3A29.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:08:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:08:32: Found CVE's: []
+2025-09-17 13:08:35: Vulnerability summary saved to: C:\Users\saipk\agentAttempts\server\intelliHunt\crew\NVD\vulnerability_summary_20250917_130835.md
+2025-09-17 13:41:32: Fetching vulnerabilities from the past 7 days
+2025-09-17 13:41:32: Loading CPE data from: C:\Users\saipk\agentAttempts\server\intelliHunt\crew\NVD\cpe_data_20250917_134130.json
+2025-09-17 13:41:32: Found 11373 unique CPE names
+2025-09-17 13:41:32: Limiting CPE processing to 50 out of 11373 total CPEs to avoid API rate limits
+2025-09-17 13:41:32: Fetching CVEs for CPE 1/50: cpe:2.3:a:mongodb:mongosh:0.0.7:*:*:*:*:*:*:*
+2025-09-17 13:41:32: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:0.0.7:*:*:*:*:*:*:* between 2025-09-10T17:41:32.000Z and 2025-09-17T17:41:32.000Z
+2025-09-17 13:41:32: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:41:35: Found CVE's: []
+2025-09-17 13:41:38: Fetching CVEs for CPE 2/50: cpe:2.3:a:apache:kafka:2.7.1:rc0:*:*:*:*:*:*
+2025-09-17 13:41:38: Searching for CVEs for CPE cpe:2.3:a:apache:kafka:2.7.1:rc0:*:*:*:*:*:* between 2025-09-10T17:41:38.000Z and 2025-09-17T17:41:38.000Z
+2025-09-17 13:41:38: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:41:40: Found CVE's: []
+2025-09-17 13:41:43: Fetching CVEs for CPE 3/50: cpe:2.3:a:mongodb:libbson:1.30.1:*:*:*:*:*:*:*
+2025-09-17 13:41:43: Searching for CVEs for CPE cpe:2.3:a:mongodb:libbson:1.30.1:*:*:*:*:*:*:* between 2025-09-10T17:41:43.000Z and 2025-09-17T17:41:43.000Z
+2025-09-17 13:41:43: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:41:46: Found CVE's: []
+2025-09-17 13:41:49: Fetching CVEs for CPE 4/50: cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*
+2025-09-17 13:41:49: Searching for CVEs for CPE cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:* between 2025-09-10T17:41:49.000Z and 2025-09-17T17:41:49.000Z
+2025-09-17 13:41:49: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:41:51: Retrieved 4 CVE records for cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:* (total: 4)
+2025-09-17 13:41:51: Found CVE's: [{'cve': {'id': 'CVE-2025-10329', 'sourceIdentifier': 'cna@vuldb.com', 'published': '2025-09-12T22:15:33.710', 'lastModified': '2025-09-16T17:17:18.993', 'vulnStatus': 'Analyzed', 'cveTags': [], 'descriptions': [{'lang': 'en', 'value': 'A vulnerability was detected in cdevroe unmark up to 1.9.3. This affects an unknown part of the file /application/controllers/Marks.php. The manipulation of the argument url results in server-side request forgery. The attack may be launched remotely. The exploit is now public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.'}], 'metrics': {'cvssMetricV40': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '4.0', 'vectorString': 'CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:L/VI:L/VA:L/SC:N/SI:N/SA:N/E:P/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X', 'baseScore': 5.3, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'attackRequirements': 'NONE', 'privilegesRequired': 'LOW', 'userInteraction': 'NONE', 'vulnConfidentialityImpact': 'LOW', 'vulnIntegrityImpact': 'LOW', 'vulnAvailabilityImpact': 'LOW', 'subConfidentialityImpact': 'NONE', 'subIntegrityImpact': 'NONE', 'subAvailabilityImpact': 'NONE', 'exploitMaturity': 'PROOF_OF_CONCEPT', 'confidentialityRequirement': 'NOT_DEFINED', 'integrityRequirement': 'NOT_DEFINED', 'availabilityRequirement': 'NOT_DEFINED', 'modifiedAttackVector': 'NOT_DEFINED', 'modifiedAttackComplexity': 'NOT_DEFINED', 'modifiedAttackRequirements': 'NOT_DEFINED', 'modifiedPrivilegesRequired': 'NOT_DEFINED', 'modifiedUserInteraction': 'NOT_DEFINED', 'modifiedVulnConfidentialityImpact': 'NOT_DEFINED', 'modifiedVulnIntegrityImpact': 'NOT_DEFINED', 'modifiedVulnAvailabilityImpact': 'NOT_DEFINED', 'modifiedSubConfidentialityImpact': 'NOT_DEFINED', 'modifiedSubIntegrityImpact': 'NOT_DEFINED', 'modifiedSubAvailabilityImpact': 'NOT_DEFINED', 'Safety': 'NOT_DEFINED', 'Automatable': 'NOT_DEFINED', 'Recovery': 'NOT_DEFINED', 'valueDensity': 'NOT_DEFINED', 'vulnerabilityResponseEffort': 'NOT_DEFINED', 'providerUrgency': 'NOT_DEFINED'}}], 'cvssMetricV31': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:L', 'baseScore': 6.3, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'LOW', 'userInteraction': 'NONE', 'scope': 'UNCHANGED', 'confidentialityImpact': 'LOW', 'integrityImpact': 'LOW', 'availabilityImpact': 'LOW'}, 'exploitabilityScore': 2.8, 'impactScore': 3.4}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H', 'baseScore': 9.8, 'baseSeverity': 'CRITICAL', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'NONE', 'userInteraction': 'NONE', 'scope': 'UNCHANGED', 'confidentialityImpact': 'HIGH', 'integrityImpact': 'HIGH', 'availabilityImpact': 'HIGH'}, 'exploitabilityScore': 3.9, 'impactScore': 5.9}], 'cvssMetricV2': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '2.0', 'vectorString': 'AV:N/AC:L/Au:S/C:P/I:P/A:P', 'baseScore': 6.5, 'accessVector': 'NETWORK', 'accessComplexity': 'LOW', 'authentication': 'SINGLE', 'confidentialityImpact': 'PARTIAL', 'integrityImpact': 'PARTIAL', 'availabilityImpact': 'PARTIAL'}, 'baseSeverity': 'MEDIUM', 'exploitabilityScore': 8.0, 'impactScore': 6.4, 'acInsufInfo': False, 'obtainAllPrivilege': False, 'obtainUserPrivilege': False, 'obtainOtherPrivilege': False, 'userInteractionRequired': False}]}, 'weaknesses': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'description': [{'lang': 'en', 'value': 'CWE-918'}]}], 'configurations': [{'nodes': [{'operator': 'OR', 'negate': False, 'cpeMatch': [{'vulnerable': True, 'criteria': 'cpe:2.3:a:unmark:unmark:*:*:*:*:*:*:*:*', 'versionEndIncluding': '1.9.3', 'matchCriteriaId': '780D14E1-027D-403B-AF5A-CA09E12AA1F2'}]}]}], 'references': [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323755', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'Third Party Advisory']}, {'url': 'https://vuldb.com/?id.323755', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643531', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}]}}, {'cve': {'id': 'CVE-2025-10330', 'sourceIdentifier': 'cna@vuldb.com', 'published': '2025-09-12T23:15:31.323', 'lastModified': '2025-09-16T17:17:31.330', 'vulnStatus': 'Analyzed', 'cveTags': [], 'descriptions': [{'lang': 'en', 'value': 'A flaw has been found in cdevroe unmark up to 1.9.3. This vulnerability affects unknown code of the file application/views/layouts/topbar/searchform.php. This manipulation of the argument q causes cross site scripting. Remote exploitation of the attack is possible. The exploit has been published and may be used. The vendor was contacted early about this disclosure but did not respond in any way.'}], 'metrics': {'cvssMetricV40': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '4.0', 'vectorString': 'CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X', 'baseScore': 5.3, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'attackRequirements': 'NONE', 'privilegesRequired': 'NONE', 'userInteraction': 'PASSIVE', 'vulnConfidentialityImpact': 'NONE', 'vulnIntegrityImpact': 'LOW', 'vulnAvailabilityImpact': 'NONE', 'subConfidentialityImpact': 'NONE', 'subIntegrityImpact': 'NONE', 'subAvailabilityImpact': 'NONE', 'exploitMaturity': 'PROOF_OF_CONCEPT', 'confidentialityRequirement': 'NOT_DEFINED', 'integrityRequirement': 'NOT_DEFINED', 'availabilityRequirement': 'NOT_DEFINED', 'modifiedAttackVector': 'NOT_DEFINED', 'modifiedAttackComplexity': 'NOT_DEFINED', 'modifiedAttackRequirements': 'NOT_DEFINED', 'modifiedPrivilegesRequired': 'NOT_DEFINED', 'modifiedUserInteraction': 'NOT_DEFINED', 'modifiedVulnConfidentialityImpact': 'NOT_DEFINED', 'modifiedVulnIntegrityImpact': 'NOT_DEFINED', 'modifiedVulnAvailabilityImpact': 'NOT_DEFINED', 'modifiedSubConfidentialityImpact': 'NOT_DEFINED', 'modifiedSubIntegrityImpact': 'NOT_DEFINED', 'modifiedSubAvailabilityImpact': 'NOT_DEFINED', 'Safety': 'NOT_DEFINED', 'Automatable': 'NOT_DEFINED', 'Recovery': 'NOT_DEFINED', 'valueDensity': 'NOT_DEFINED', 'vulnerabilityResponseEffort': 'NOT_DEFINED', 'providerUrgency': 'NOT_DEFINED'}}], 'cvssMetricV31': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N', 'baseScore': 4.3, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'NONE', 'userInteraction': 'REQUIRED', 'scope': 'UNCHANGED', 'confidentialityImpact': 'NONE', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.8, 'impactScore': 1.4}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N', 'baseScore': 6.1, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'NONE', 'userInteraction': 'REQUIRED', 'scope': 'CHANGED', 'confidentialityImpact': 'LOW', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.8, 'impactScore': 2.7}], 'cvssMetricV2': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '2.0', 'vectorString': 'AV:N/AC:L/Au:N/C:N/I:P/A:N', 'baseScore': 5.0, 'accessVector': 'NETWORK', 'accessComplexity': 'LOW', 'authentication': 'NONE', 'confidentialityImpact': 'NONE', 'integrityImpact': 'PARTIAL', 'availabilityImpact': 'NONE'}, 'baseSeverity': 'MEDIUM', 'exploitabilityScore': 10.0, 'impactScore': 2.9, 'acInsufInfo': False, 'obtainAllPrivilege': False, 'obtainUserPrivilege': False, 'obtainOtherPrivilege': False, 'userInteractionRequired': False}]}, 'weaknesses': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'description': [{'lang': 'en', 'value': 'CWE-79'}, {'lang': 'en', 'value': 'CWE-94'}]}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'description': [{'lang': 'en', 'value': 'CWE-79'}]}], 'configurations': [{'nodes': [{'operator': 'OR', 'negate': False, 'cpeMatch': [{'vulnerable': True, 'criteria': 'cpe:2.3:a:unmark:unmark:*:*:*:*:*:*:*:*', 'versionEndIncluding': '1.9.3', 'matchCriteriaId': '780D14E1-027D-403B-AF5A-CA09E12AA1F2'}]}]}], 'references': [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323756', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323756', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643532', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}]}}, {'cve': {'id': 'CVE-2025-10331', 'sourceIdentifier': 'cna@vuldb.com', 'published': '2025-09-13T02:15:45.490', 'lastModified': '2025-09-16T17:17:44.793', 'vulnStatus': 'Analyzed', 'cveTags': [], 'descriptions': [{'lang': 'en', 'value': 'A vulnerability has been found in cdevroe unmark up to 1.9.3. This issue affects some unknown processing of the file /application/controllers/Marks.php. Such manipulation of the argument Title leads to cross site scripting. The attack can be executed remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.'}], 'metrics': {'cvssMetricV40': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '4.0', 'vectorString': 'CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X', 'baseScore': 5.1, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'attackRequirements': 'NONE', 'privilegesRequired': 'LOW', 'userInteraction': 'PASSIVE', 'vulnConfidentialityImpact': 'NONE', 'vulnIntegrityImpact': 'LOW', 'vulnAvailabilityImpact': 'NONE', 'subConfidentialityImpact': 'NONE', 'subIntegrityImpact': 'NONE', 'subAvailabilityImpact': 'NONE', 'exploitMaturity': 'PROOF_OF_CONCEPT', 'confidentialityRequirement': 'NOT_DEFINED', 'integrityRequirement': 'NOT_DEFINED', 'availabilityRequirement': 'NOT_DEFINED', 'modifiedAttackVector': 'NOT_DEFINED', 'modifiedAttackComplexity': 'NOT_DEFINED', 'modifiedAttackRequirements': 'NOT_DEFINED', 'modifiedPrivilegesRequired': 'NOT_DEFINED', 'modifiedUserInteraction': 'NOT_DEFINED', 'modifiedVulnConfidentialityImpact': 'NOT_DEFINED', 'modifiedVulnIntegrityImpact': 'NOT_DEFINED', 'modifiedVulnAvailabilityImpact': 'NOT_DEFINED', 'modifiedSubConfidentialityImpact': 'NOT_DEFINED', 'modifiedSubIntegrityImpact': 'NOT_DEFINED', 'modifiedSubAvailabilityImpact': 'NOT_DEFINED', 'Safety': 'NOT_DEFINED', 'Automatable': 'NOT_DEFINED', 'Recovery': 'NOT_DEFINED', 'valueDensity': 'NOT_DEFINED', 'vulnerabilityResponseEffort': 'NOT_DEFINED', 'providerUrgency': 'NOT_DEFINED'}}], 'cvssMetricV31': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:N/I:L/A:N', 'baseScore': 3.5, 'baseSeverity': 'LOW', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'LOW', 'userInteraction': 'REQUIRED', 'scope': 'UNCHANGED', 'confidentialityImpact': 'NONE', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.1, 'impactScore': 1.4}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:L/I:L/A:N', 'baseScore': 5.4, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'LOW', 'userInteraction': 'REQUIRED', 'scope': 'CHANGED', 'confidentialityImpact': 'LOW', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.3, 'impactScore': 2.7}], 'cvssMetricV2': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '2.0', 'vectorString': 'AV:N/AC:L/Au:S/C:N/I:P/A:N', 'baseScore': 4.0, 'accessVector': 'NETWORK', 'accessComplexity': 'LOW', 'authentication': 'SINGLE', 'confidentialityImpact': 'NONE', 'integrityImpact': 'PARTIAL', 'availabilityImpact': 'NONE'}, 'baseSeverity': 'MEDIUM', 'exploitabilityScore': 8.0, 'impactScore': 2.9, 'acInsufInfo': False, 'obtainAllPrivilege': False, 'obtainUserPrivilege': False, 'obtainOtherPrivilege': False, 'userInteractionRequired': False}]}, 'weaknesses': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'description': [{'lang': 'en', 'value': 'CWE-79'}, {'lang': 'en', 'value': 'CWE-94'}]}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'description': [{'lang': 'en', 'value': 'CWE-79'}]}], 'configurations': [{'nodes': [{'operator': 'OR', 'negate': False, 'cpeMatch': [{'vulnerable': True, 'criteria': 'cpe:2.3:a:unmark:unmark:*:*:*:*:*:*:*:*', 'versionEndIncluding': '1.9.3', 'matchCriteriaId': '780D14E1-027D-403B-AF5A-CA09E12AA1F2'}]}]}], 'references': [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323757', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323757', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643533', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}]}}, {'cve': {'id': 'CVE-2025-10332', 'sourceIdentifier': 'cna@vuldb.com', 'published': '2025-09-13T03:15:39.323', 'lastModified': '2025-09-16T17:17:56.620', 'vulnStatus': 'Analyzed', 'cveTags': [], 'descriptions': [{'lang': 'en', 'value': 'A vulnerability was found in cdevroe unmark up to 1.9.3. Impacted is an unknown function of the file application/views/marks/info.php. Performing manipulation of the argument Title results in cross site scripting. The attack is possible to be carried out remotely. The exploit has been made public and could be used. The vendor was contacted early about this disclosure but did not respond in any way.'}], 'metrics': {'cvssMetricV40': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '4.0', 'vectorString': 'CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X', 'baseScore': 5.1, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'attackRequirements': 'NONE', 'privilegesRequired': 'LOW', 'userInteraction': 'PASSIVE', 'vulnConfidentialityImpact': 'NONE', 'vulnIntegrityImpact': 'LOW', 'vulnAvailabilityImpact': 'NONE', 'subConfidentialityImpact': 'NONE', 'subIntegrityImpact': 'NONE', 'subAvailabilityImpact': 'NONE', 'exploitMaturity': 'PROOF_OF_CONCEPT', 'confidentialityRequirement': 'NOT_DEFINED', 'integrityRequirement': 'NOT_DEFINED', 'availabilityRequirement': 'NOT_DEFINED', 'modifiedAttackVector': 'NOT_DEFINED', 'modifiedAttackComplexity': 'NOT_DEFINED', 'modifiedAttackRequirements': 'NOT_DEFINED', 'modifiedPrivilegesRequired': 'NOT_DEFINED', 'modifiedUserInteraction': 'NOT_DEFINED', 'modifiedVulnConfidentialityImpact': 'NOT_DEFINED', 'modifiedVulnIntegrityImpact': 'NOT_DEFINED', 'modifiedVulnAvailabilityImpact': 'NOT_DEFINED', 'modifiedSubConfidentialityImpact': 'NOT_DEFINED', 'modifiedSubIntegrityImpact': 'NOT_DEFINED', 'modifiedSubAvailabilityImpact': 'NOT_DEFINED', 'Safety': 'NOT_DEFINED', 'Automatable': 'NOT_DEFINED', 'Recovery': 'NOT_DEFINED', 'valueDensity': 'NOT_DEFINED', 'vulnerabilityResponseEffort': 'NOT_DEFINED', 'providerUrgency': 'NOT_DEFINED'}}], 'cvssMetricV31': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:N/I:L/A:N', 'baseScore': 3.5, 'baseSeverity': 'LOW', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'LOW', 'userInteraction': 'REQUIRED', 'scope': 'UNCHANGED', 'confidentialityImpact': 'NONE', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.1, 'impactScore': 1.4}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:L/I:L/A:N', 'baseScore': 5.4, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'LOW', 'userInteraction': 'REQUIRED', 'scope': 'CHANGED', 'confidentialityImpact': 'LOW', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.3, 'impactScore': 2.7}], 'cvssMetricV2': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '2.0', 'vectorString': 'AV:N/AC:L/Au:S/C:N/I:P/A:N', 'baseScore': 4.0, 'accessVector': 'NETWORK', 'accessComplexity': 'LOW', 'authentication': 'SINGLE', 'confidentialityImpact': 'NONE', 'integrityImpact': 'PARTIAL', 'availabilityImpact': 'NONE'}, 'baseSeverity': 'MEDIUM', 'exploitabilityScore': 8.0, 'impactScore': 2.9, 'acInsufInfo': False, 'obtainAllPrivilege': False, 'obtainUserPrivilege': False, 'obtainOtherPrivilege': False, 'userInteractionRequired': False}]}, 'weaknesses': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'description': [{'lang': 'en', 'value': 'CWE-79'}, {'lang': 'en', 'value': 'CWE-94'}]}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'description': [{'lang': 'en', 'value': 'CWE-79'}]}], 'configurations': [{'nodes': [{'operator': 'OR', 'negate': False, 'cpeMatch': [{'vulnerable': True, 'criteria': 'cpe:2.3:a:unmark:unmark:*:*:*:*:*:*:*:*', 'versionEndIncluding': '1.9.3', 'matchCriteriaId': '780D14E1-027D-403B-AF5A-CA09E12AA1F2'}]}]}], 'references': [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323758', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323758', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}]}}]
+2025-09-17 13:41:54: Fetching CVEs for CPE 5/50: cpe:2.3:a:nodejs:node.js:15.6.0:*:*:*:-:*:*:*
+2025-09-17 13:41:54: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:15.6.0:*:*:*:-:*:*:* between 2025-09-10T17:41:54.000Z and 2025-09-17T17:41:54.000Z
+2025-09-17 13:41:54: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:41:58: Found CVE's: []
+2025-09-17 13:42:01: Fetching CVEs for CPE 6/50: cpe:2.3:a:oracle:mysql:4.1.3:*:*:*:*:*:*:*
+2025-09-17 13:42:01: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:4.1.3:*:*:*:*:*:*:* between 2025-09-10T17:42:01.000Z and 2025-09-17T17:42:01.000Z
+2025-09-17 13:42:01: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:04: Found CVE's: []
+2025-09-17 13:42:07: Fetching CVEs for CPE 7/50: cpe:2.3:a:nodejs:node.js:11.9.0:*:*:*:lts:*:*:*
+2025-09-17 13:42:07: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:11.9.0:*:*:*:lts:*:*:* between 2025-09-10T17:42:07.000Z and 2025-09-17T17:42:07.000Z
+2025-09-17 13:42:07: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:10: Found CVE's: []
+2025-09-17 13:42:13: Fetching CVEs for CPE 8/50: cpe:2.3:a:adobe:magento:2.4.5:p14:*:*:open_source:*:*:*
+2025-09-17 13:42:13: Searching for CVEs for CPE cpe:2.3:a:adobe:magento:2.4.5:p14:*:*:open_source:*:*:* between 2025-09-10T17:42:13.000Z and 2025-09-17T17:42:13.000Z
+2025-09-17 13:42:13: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:16: Found CVE's: []
+2025-09-17 13:42:19: Fetching CVEs for CPE 9/50: cpe:2.3:a:openagentplatform:dive:0.8.3:*:*:*:*:*:*:*
+2025-09-17 13:42:19: Searching for CVEs for CPE cpe:2.3:a:openagentplatform:dive:0.8.3:*:*:*:*:*:*:* between 2025-09-10T17:42:19.000Z and 2025-09-17T17:42:19.000Z
+2025-09-17 13:42:19: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:21: Found CVE's: []
+2025-09-17 13:42:24: Fetching CVEs for CPE 10/50: cpe:2.3:a:vercel:vercel:16.1.2:canary2:*:*:*:*:*:*
+2025-09-17 13:42:24: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:16.1.2:canary2:*:*:*:*:*:* between 2025-09-10T17:42:24.000Z and 2025-09-17T17:42:24.000Z
+2025-09-17 13:42:24: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:27: Found CVE's: []
+2025-09-17 13:42:30: Fetching CVEs for CPE 11/50: cpe:2.3:a:nodejs:node.js:20.18.2:*:*:*:lts:*:*:*
+2025-09-17 13:42:30: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:20.18.2:*:*:*:lts:*:*:* between 2025-09-10T17:42:30.000Z and 2025-09-17T17:42:30.000Z
+2025-09-17 13:42:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:33: Found CVE's: []
+2025-09-17 13:42:36: Fetching CVEs for CPE 12/50: cpe:2.3:a:vercel:vercel:28.10.2:*:*:*:*:*:*:*
+2025-09-17 13:42:36: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:28.10.2:*:*:*:*:*:*:* between 2025-09-10T17:42:36.000Z and 2025-09-17T17:42:36.000Z
+2025-09-17 13:42:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:39: Found CVE's: []
+2025-09-17 13:42:42: Fetching CVEs for CPE 13/50: cpe:2.3:a:mongodb:mongosh:0.8.0:draft0:*:*:*:*:*:*
+2025-09-17 13:42:42: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:0.8.0:draft0:*:*:*:*:*:* between 2025-09-10T17:42:42.000Z and 2025-09-17T17:42:42.000Z
+2025-09-17 13:42:42: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:44: Found CVE's: []
+2025-09-17 13:42:47: Fetching CVEs for CPE 14/50: cpe:2.3:a:vercel:vercel:21.2.0:*:*:*:*:*:*:*
+2025-09-17 13:42:47: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:21.2.0:*:*:*:*:*:*:* between 2025-09-10T17:42:47.000Z and 2025-09-17T17:42:47.000Z
+2025-09-17 13:42:47: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:50: Found CVE's: []
+2025-09-17 13:42:53: Fetching CVEs for CPE 15/50: cpe:2.3:a:sangoma:freepbx:13.0.195.18:*:*:*:*:*:*:*
+2025-09-17 13:42:53: Searching for CVEs for CPE cpe:2.3:a:sangoma:freepbx:13.0.195.18:*:*:*:*:*:*:* between 2025-09-10T17:42:53.000Z and 2025-09-17T17:42:53.000Z
+2025-09-17 13:42:53: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:56: Found CVE's: []
+2025-09-17 13:42:59: Fetching CVEs for CPE 16/50: cpe:2.3:a:oracle:mysql:5.0.76:*:*:*:*:*:*:*
+2025-09-17 13:42:59: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.0.76:*:*:*:*:*:*:* between 2025-09-10T17:42:59.000Z and 2025-09-17T17:42:59.000Z
+2025-09-17 13:42:59: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:42:59: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aoracle%3Amysql%3A5.0.76%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2025-09-10T17%3A42%3A59.000Z&pubEndDate=2025-09-17T17%3A42%3A59.000Z&resultsPerPage=500&startIndex=0
+2025-09-17 13:43:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:43:05: Found CVE's: []
+2025-09-17 13:43:08: Fetching CVEs for CPE 17/50: cpe:2.3:a:showdownjs:showdown:1.9.0:*:*:*:*:node.js:*:*
+2025-09-17 13:43:08: Searching for CVEs for CPE cpe:2.3:a:showdownjs:showdown:1.9.0:*:*:*:*:node.js:*:* between 2025-09-10T17:43:08.000Z and 2025-09-17T17:43:08.000Z
+2025-09-17 13:43:08: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:43:15: Found CVE's: []
+2025-09-17 13:43:18: Fetching CVEs for CPE 18/50: cpe:2.3:a:nodejs:node.js:0.10.42:*:*:*:*:*:*:*
+2025-09-17 13:43:18: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:0.10.42:*:*:*:*:*:*:* between 2025-09-10T17:43:18.000Z and 2025-09-17T17:43:18.000Z
+2025-09-17 13:43:18: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:43:23: Found CVE's: []
+2025-09-17 13:43:26: Fetching CVEs for CPE 19/50: cpe:2.3:a:sangoma:freepbx:17.0.15.19:*:*:*:*:*:*:*
+2025-09-17 13:43:26: Searching for CVEs for CPE cpe:2.3:a:sangoma:freepbx:17.0.15.19:*:*:*:*:*:*:* between 2025-09-10T17:43:26.000Z and 2025-09-17T17:43:26.000Z
+2025-09-17 13:43:26: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:43:30: Found CVE's: []
+2025-09-17 13:43:33: Fetching CVEs for CPE 20/50: cpe:2.3:a:vercel:vercel:28.9.0:*:*:*:*:*:*:*
+2025-09-17 13:43:33: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:28.9.0:*:*:*:*:*:*:* between 2025-09-10T17:43:33.000Z and 2025-09-17T17:43:33.000Z
+2025-09-17 13:43:33: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:43:37: Found CVE's: []
+2025-09-17 13:43:40: Fetching CVEs for CPE 21/50: cpe:2.3:a:python:python:3.3.0:-:*:*:*:*:*:*
+2025-09-17 13:43:40: Searching for CVEs for CPE cpe:2.3:a:python:python:3.3.0:-:*:*:*:*:*:* between 2025-09-10T17:43:40.000Z and 2025-09-17T17:43:40.000Z
+2025-09-17 13:43:40: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:43:48: Found CVE's: []
+2025-09-17 13:43:51: Fetching CVEs for CPE 22/50: cpe:2.3:a:oracle:mysql:5.0.54a:*:*:*:*:*:*:*
+2025-09-17 13:43:51: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.0.54a:*:*:*:*:*:*:* between 2025-09-10T17:43:51.000Z and 2025-09-17T17:43:51.000Z
+2025-09-17 13:43:51: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:43:55: Found CVE's: []
+2025-09-17 13:43:58: Fetching CVEs for CPE 23/50: cpe:2.3:a:apache:kafka:3.0.1:-:*:*:*:*:*:*
+2025-09-17 13:43:58: Searching for CVEs for CPE cpe:2.3:a:apache:kafka:3.0.1:-:*:*:*:*:*:* between 2025-09-10T17:43:58.000Z and 2025-09-17T17:43:58.000Z
+2025-09-17 13:43:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:44:04: Found CVE's: []
+2025-09-17 13:44:07: Fetching CVEs for CPE 24/50: cpe:2.3:a:python:python:3.2.6:rc1:*:*:*:*:*:*
+2025-09-17 13:44:07: Searching for CVEs for CPE cpe:2.3:a:python:python:3.2.6:rc1:*:*:*:*:*:* between 2025-09-10T17:44:07.000Z and 2025-09-17T17:44:07.000Z
+2025-09-17 13:44:07: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:44:10: Found CVE's: []
+2025-09-17 13:44:13: Fetching CVEs for CPE 25/50: cpe:2.3:a:vitest.dev:vitest:0.19.0:*:*:*:*:node.js:*:*
+2025-09-17 13:44:13: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:0.19.0:*:*:*:*:node.js:*:* between 2025-09-10T17:44:13.000Z and 2025-09-17T17:44:13.000Z
+2025-09-17 13:44:13: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:44:16: Found CVE's: []
+2025-09-17 13:44:19: Fetching CVEs for CPE 26/50: cpe:2.3:a:jetbrains:rider:2024.1.6:*:*:*:*:*:*:*
+2025-09-17 13:44:19: Searching for CVEs for CPE cpe:2.3:a:jetbrains:rider:2024.1.6:*:*:*:*:*:*:* between 2025-09-10T17:44:19.000Z and 2025-09-17T17:44:19.000Z
+2025-09-17 13:44:19: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:44:22: Found CVE's: []
+2025-09-17 13:44:25: Fetching CVEs for CPE 27/50: cpe:2.3:a:vitest.dev:vitest:0.0.12:*:*:*:*:node.js:*:*
+2025-09-17 13:44:25: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:0.0.12:*:*:*:*:node.js:*:* between 2025-09-10T17:44:25.000Z and 2025-09-17T17:44:25.000Z
+2025-09-17 13:44:25: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:44:28: Found CVE's: []
+2025-09-17 13:44:31: Fetching CVEs for CPE 28/50: cpe:2.3:a:oracle:mysql:5.5.39:*:*:*:*:*:*:*
+2025-09-17 13:44:31: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.5.39:*:*:*:*:*:*:* between 2025-09-10T17:44:31.000Z and 2025-09-17T17:44:31.000Z
+2025-09-17 13:44:31: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:44:35: Found CVE's: []
+2025-09-17 13:44:38: Fetching CVEs for CPE 29/50: cpe:2.3:a:nvidia:nemo:1.6.2:*:*:*:*:*:*:*
+2025-09-17 13:44:38: Searching for CVEs for CPE cpe:2.3:a:nvidia:nemo:1.6.2:*:*:*:*:*:*:* between 2025-09-10T17:44:38.000Z and 2025-09-17T17:44:38.000Z
+2025-09-17 13:44:38: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:44:42: Found CVE's: []
+2025-09-17 13:44:45: Fetching CVEs for CPE 30/50: cpe:2.3:a:xwiki:pro_macros:1.27.2:*:*:*:*:*:*:*
+2025-09-17 13:44:45: Searching for CVEs for CPE cpe:2.3:a:xwiki:pro_macros:1.27.2:*:*:*:*:*:*:* between 2025-09-10T17:44:45.000Z and 2025-09-17T17:44:45.000Z
+2025-09-17 13:44:45: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:44:47: Found CVE's: []
+2025-09-17 13:44:50: Fetching CVEs for CPE 31/50: cpe:2.3:a:sangoma:freepbx:13.0.195.8:*:*:*:*:*:*:*
+2025-09-17 13:44:50: Searching for CVEs for CPE cpe:2.3:a:sangoma:freepbx:13.0.195.8:*:*:*:*:*:*:* between 2025-09-10T17:44:50.000Z and 2025-09-17T17:44:50.000Z
+2025-09-17 13:44:50: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:44:54: Found CVE's: []
+2025-09-17 13:44:57: Fetching CVEs for CPE 32/50: cpe:2.3:a:oracle:mysql:7.4.9:*:*:*:*:*:*:*
+2025-09-17 13:44:57: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:7.4.9:*:*:*:*:*:*:* between 2025-09-10T17:44:57.000Z and 2025-09-17T17:44:57.000Z
+2025-09-17 13:44:57: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:45:00: Found CVE's: []
+2025-09-17 13:45:03: Fetching CVEs for CPE 33/50: cpe:2.3:a:nodejs:node.js:4.8.1:*:*:*:lts:*:*:*
+2025-09-17 13:45:03: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:4.8.1:*:*:*:lts:*:*:* between 2025-09-10T17:45:03.000Z and 2025-09-17T17:45:03.000Z
+2025-09-17 13:45:03: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:45:07: Found CVE's: []
+2025-09-17 13:45:10: Fetching CVEs for CPE 34/50: cpe:2.3:a:oracle:mysql:8.0.31:*:*:*:*:*:*:*
+2025-09-17 13:45:10: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:8.0.31:*:*:*:*:*:*:* between 2025-09-10T17:45:10.000Z and 2025-09-17T17:45:10.000Z
+2025-09-17 13:45:10: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:45:16: Found CVE's: []
+2025-09-17 13:45:19: Fetching CVEs for CPE 35/50: cpe:2.3:a:vercel:vercel:33.5.3:*:*:*:*:*:*:*
+2025-09-17 13:45:19: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:33.5.3:*:*:*:*:*:*:* between 2025-09-10T17:45:19.000Z and 2025-09-17T17:45:19.000Z
+2025-09-17 13:45:19: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:45:22: Found CVE's: []
+2025-09-17 13:45:25: Fetching CVEs for CPE 36/50: cpe:2.3:a:vercel:vercel:12.0.0:canary24:*:*:*:*:*:*
+2025-09-17 13:45:25: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:12.0.0:canary24:*:*:*:*:*:* between 2025-09-10T17:45:25.000Z and 2025-09-17T17:45:25.000Z
+2025-09-17 13:45:25: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:45:28: Found CVE's: []
+2025-09-17 13:45:31: Fetching CVEs for CPE 37/50: cpe:2.3:a:nodejs:node.js:1.6.0:*:*:*:-:*:*:*
+2025-09-17 13:45:31: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:1.6.0:*:*:*:-:*:*:* between 2025-09-10T17:45:31.000Z and 2025-09-17T17:45:31.000Z
+2025-09-17 13:45:31: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:45:35: Found CVE's: []
+2025-09-17 13:45:38: Fetching CVEs for CPE 38/50: cpe:2.3:a:oracle:mysql:5.6.34:*:*:*:*:*:*:*
+2025-09-17 13:45:38: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.6.34:*:*:*:*:*:*:* between 2025-09-10T17:45:38.000Z and 2025-09-17T17:45:38.000Z
+2025-09-17 13:45:38: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:45:40: Found CVE's: []
+2025-09-17 13:45:44: Fetching CVEs for CPE 39/50: cpe:2.3:a:hono:hono:4.3.9:*:*:*:*:node.js:*:*
+2025-09-17 13:45:44: Searching for CVEs for CPE cpe:2.3:a:hono:hono:4.3.9:*:*:*:*:node.js:*:* between 2025-09-10T17:45:44.000Z and 2025-09-17T17:45:44.000Z
+2025-09-17 13:45:44: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:45:47: Found CVE's: []
+2025-09-17 13:45:50: Fetching CVEs for CPE 40/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.681:*:*:*:datacenter:*:x64:*
+2025-09-17 13:45:50: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.681:*:*:*:datacenter:*:x64:* between 2025-09-10T17:45:50.000Z and 2025-09-17T17:45:50.000Z
+2025-09-17 13:45:50: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:45:54: Found CVE's: []
+2025-09-17 13:45:57: Fetching CVEs for CPE 41/50: cpe:2.3:a:sangoma:freepbx:17.0.19.14:*:*:*:*:*:*:*
+2025-09-17 13:45:57: Searching for CVEs for CPE cpe:2.3:a:sangoma:freepbx:17.0.19.14:*:*:*:*:*:*:* between 2025-09-10T17:45:57.000Z and 2025-09-17T17:45:57.000Z
+2025-09-17 13:45:57: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:00: Found CVE's: []
+2025-09-17 13:46:03: Fetching CVEs for CPE 42/50: cpe:2.3:a:vercel:vercel:12.0.0:canary38:*:*:*:*:*:*
+2025-09-17 13:46:03: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:12.0.0:canary38:*:*:*:*:*:* between 2025-09-10T17:46:03.000Z and 2025-09-17T17:46:03.000Z
+2025-09-17 13:46:03: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:06: Found CVE's: []
+2025-09-17 13:46:09: Fetching CVEs for CPE 43/50: cpe:2.3:a:apache:http_server:2.0.37:*:*:*:*:*:*:*
+2025-09-17 13:46:09: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.0.37:*:*:*:*:*:*:* between 2025-09-10T17:46:09.000Z and 2025-09-17T17:46:09.000Z
+2025-09-17 13:46:09: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:12: Found CVE's: []
+2025-09-17 13:46:15: Fetching CVEs for CPE 44/50: cpe:2.3:a:mongodb:mongosh:0.4.1:*:*:*:*:*:*:*
+2025-09-17 13:46:15: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:0.4.1:*:*:*:*:*:*:* between 2025-09-10T17:46:15.000Z and 2025-09-17T17:46:15.000Z
+2025-09-17 13:46:15: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:17: Found CVE's: []
+2025-09-17 13:46:20: Fetching CVEs for CPE 45/50: cpe:2.3:a:huashengdun:webssh:0.4.0:*:*:*:*:*:*:*
+2025-09-17 13:46:20: Searching for CVEs for CPE cpe:2.3:a:huashengdun:webssh:0.4.0:*:*:*:*:*:*:* between 2025-09-10T17:46:20.000Z and 2025-09-17T17:46:20.000Z
+2025-09-17 13:46:20: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:23: Found CVE's: []
+2025-09-17 13:46:26: Fetching CVEs for CPE 46/50: cpe:2.3:a:tolgee:tolgee:3.78.2:*:*:*:*:*:*:*
+2025-09-17 13:46:26: Searching for CVEs for CPE cpe:2.3:a:tolgee:tolgee:3.78.2:*:*:*:*:*:*:* between 2025-09-10T17:46:26.000Z and 2025-09-17T17:46:26.000Z
+2025-09-17 13:46:26: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:28: Found CVE's: []
+2025-09-17 13:46:31: Fetching CVEs for CPE 47/50: cpe:2.3:a:mongodb:libbson:1.15.0:*:*:*:*:*:*:*
+2025-09-17 13:46:31: Searching for CVEs for CPE cpe:2.3:a:mongodb:libbson:1.15.0:*:*:*:*:*:*:* between 2025-09-10T17:46:31.000Z and 2025-09-17T17:46:31.000Z
+2025-09-17 13:46:31: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:34: Found CVE's: []
+2025-09-17 13:46:37: Fetching CVEs for CPE 48/50: cpe:2.3:a:apache:http_server:1.2.9:*:*:*:*:*:*:*
+2025-09-17 13:46:37: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:1.2.9:*:*:*:*:*:*:* between 2025-09-10T17:46:37.000Z and 2025-09-17T17:46:37.000Z
+2025-09-17 13:46:37: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:40: Found CVE's: []
+2025-09-17 13:46:43: Fetching CVEs for CPE 49/50: cpe:2.3:a:vitest.dev:vitest:0.25.0:*:*:*:*:node.js:*:*
+2025-09-17 13:46:43: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:0.25.0:*:*:*:*:node.js:*:* between 2025-09-10T17:46:43.000Z and 2025-09-17T17:46:43.000Z
+2025-09-17 13:46:43: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:45: Found CVE's: []
+2025-09-17 13:46:48: Fetching CVEs for CPE 50/50: cpe:2.3:a:nodejs:node.js:0.10.34:*:*:*:*:*:*:*
+2025-09-17 13:46:48: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:0.10.34:*:*:*:*:*:*:* between 2025-09-10T17:46:48.000Z and 2025-09-17T17:46:48.000Z
+2025-09-17 13:46:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:51: Found CVE's: []
+2025-09-17 13:46:54: Enhanced crew input saved to: C:\Users\saipk\agentAttempts\server\intelliHunt\crew\NVD\enhanced_crew_input_20250917_134654.json
+2025-09-17 13:46:54: Fetching vulnerabilities from the past 7 days
+2025-09-17 13:46:54: Loading CPE data from: C:\Users\saipk\agentAttempts\server\intelliHunt\crew\NVD\cpe_data_20250917_134130.json
+2025-09-17 13:46:55: Found 11373 unique CPE names
+2025-09-17 13:46:55: Limiting CPE processing to 50 out of 11373 total CPEs to avoid API rate limits
+2025-09-17 13:46:55: Fetching CVEs for CPE 1/50: cpe:2.3:a:mongodb:mongosh:0.0.7:*:*:*:*:*:*:*
+2025-09-17 13:46:55: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:0.0.7:*:*:*:*:*:*:* between 2025-09-10T17:46:55.000Z and 2025-09-17T17:46:55.000Z
+2025-09-17 13:46:55: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:46:57: Found CVE's: []
+2025-09-17 13:47:00: Fetching CVEs for CPE 2/50: cpe:2.3:a:apache:kafka:2.7.1:rc0:*:*:*:*:*:*
+2025-09-17 13:47:00: Searching for CVEs for CPE cpe:2.3:a:apache:kafka:2.7.1:rc0:*:*:*:*:*:* between 2025-09-10T17:47:00.000Z and 2025-09-17T17:47:00.000Z
+2025-09-17 13:47:00: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:47:06: Found CVE's: []
+2025-09-17 13:47:09: Fetching CVEs for CPE 3/50: cpe:2.3:a:mongodb:libbson:1.30.1:*:*:*:*:*:*:*
+2025-09-17 13:47:09: Searching for CVEs for CPE cpe:2.3:a:mongodb:libbson:1.30.1:*:*:*:*:*:*:* between 2025-09-10T17:47:09.000Z and 2025-09-17T17:47:09.000Z
+2025-09-17 13:47:09: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:47:11: Found CVE's: []
+2025-09-17 13:47:14: Fetching CVEs for CPE 4/50: cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:*
+2025-09-17 13:47:14: Searching for CVEs for CPE cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:* between 2025-09-10T17:47:14.000Z and 2025-09-17T17:47:14.000Z
+2025-09-17 13:47:14: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:47:19: Retrieved 4 CVE records for cpe:2.3:a:unmark:unmark:1.1.0:*:*:*:*:*:*:* (total: 4)
+2025-09-17 13:47:19: Found CVE's: [{'cve': {'id': 'CVE-2025-10329', 'sourceIdentifier': 'cna@vuldb.com', 'published': '2025-09-12T22:15:33.710', 'lastModified': '2025-09-16T17:17:18.993', 'vulnStatus': 'Analyzed', 'cveTags': [], 'descriptions': [{'lang': 'en', 'value': 'A vulnerability was detected in cdevroe unmark up to 1.9.3. This affects an unknown part of the file /application/controllers/Marks.php. The manipulation of the argument url results in server-side request forgery. The attack may be launched remotely. The exploit is now public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.'}], 'metrics': {'cvssMetricV40': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '4.0', 'vectorString': 'CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:L/VI:L/VA:L/SC:N/SI:N/SA:N/E:P/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X', 'baseScore': 5.3, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'attackRequirements': 'NONE', 'privilegesRequired': 'LOW', 'userInteraction': 'NONE', 'vulnConfidentialityImpact': 'LOW', 'vulnIntegrityImpact': 'LOW', 'vulnAvailabilityImpact': 'LOW', 'subConfidentialityImpact': 'NONE', 'subIntegrityImpact': 'NONE', 'subAvailabilityImpact': 'NONE', 'exploitMaturity': 'PROOF_OF_CONCEPT', 'confidentialityRequirement': 'NOT_DEFINED', 'integrityRequirement': 'NOT_DEFINED', 'availabilityRequirement': 'NOT_DEFINED', 'modifiedAttackVector': 'NOT_DEFINED', 'modifiedAttackComplexity': 'NOT_DEFINED', 'modifiedAttackRequirements': 'NOT_DEFINED', 'modifiedPrivilegesRequired': 'NOT_DEFINED', 'modifiedUserInteraction': 'NOT_DEFINED', 'modifiedVulnConfidentialityImpact': 'NOT_DEFINED', 'modifiedVulnIntegrityImpact': 'NOT_DEFINED', 'modifiedVulnAvailabilityImpact': 'NOT_DEFINED', 'modifiedSubConfidentialityImpact': 'NOT_DEFINED', 'modifiedSubIntegrityImpact': 'NOT_DEFINED', 'modifiedSubAvailabilityImpact': 'NOT_DEFINED', 'Safety': 'NOT_DEFINED', 'Automatable': 'NOT_DEFINED', 'Recovery': 'NOT_DEFINED', 'valueDensity': 'NOT_DEFINED', 'vulnerabilityResponseEffort': 'NOT_DEFINED', 'providerUrgency': 'NOT_DEFINED'}}], 'cvssMetricV31': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:L', 'baseScore': 6.3, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'LOW', 'userInteraction': 'NONE', 'scope': 'UNCHANGED', 'confidentialityImpact': 'LOW', 'integrityImpact': 'LOW', 'availabilityImpact': 'LOW'}, 'exploitabilityScore': 2.8, 'impactScore': 3.4}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H', 'baseScore': 9.8, 'baseSeverity': 'CRITICAL', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'NONE', 'userInteraction': 'NONE', 'scope': 'UNCHANGED', 'confidentialityImpact': 'HIGH', 'integrityImpact': 'HIGH', 'availabilityImpact': 'HIGH'}, 'exploitabilityScore': 3.9, 'impactScore': 5.9}], 'cvssMetricV2': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '2.0', 'vectorString': 'AV:N/AC:L/Au:S/C:P/I:P/A:P', 'baseScore': 6.5, 'accessVector': 'NETWORK', 'accessComplexity': 'LOW', 'authentication': 'SINGLE', 'confidentialityImpact': 'PARTIAL', 'integrityImpact': 'PARTIAL', 'availabilityImpact': 'PARTIAL'}, 'baseSeverity': 'MEDIUM', 'exploitabilityScore': 8.0, 'impactScore': 6.4, 'acInsufInfo': False, 'obtainAllPrivilege': False, 'obtainUserPrivilege': False, 'obtainOtherPrivilege': False, 'userInteractionRequired': False}]}, 'weaknesses': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'description': [{'lang': 'en', 'value': 'CWE-918'}]}], 'configurations': [{'nodes': [{'operator': 'OR', 'negate': False, 'cpeMatch': [{'vulnerable': True, 'criteria': 'cpe:2.3:a:unmark:unmark:*:*:*:*:*:*:*:*', 'versionEndIncluding': '1.9.3', 'matchCriteriaId': '780D14E1-027D-403B-AF5A-CA09E12AA1F2'}]}]}], 'references': [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323755', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'Third Party Advisory']}, {'url': 'https://vuldb.com/?id.323755', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643531', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/ssrf1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}]}}, {'cve': {'id': 'CVE-2025-10330', 'sourceIdentifier': 'cna@vuldb.com', 'published': '2025-09-12T23:15:31.323', 'lastModified': '2025-09-16T17:17:31.330', 'vulnStatus': 'Analyzed', 'cveTags': [], 'descriptions': [{'lang': 'en', 'value': 'A flaw has been found in cdevroe unmark up to 1.9.3. This vulnerability affects unknown code of the file application/views/layouts/topbar/searchform.php. This manipulation of the argument q causes cross site scripting. Remote exploitation of the attack is possible. The exploit has been published and may be used. The vendor was contacted early about this disclosure but did not respond in any way.'}], 'metrics': {'cvssMetricV40': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '4.0', 'vectorString': 'CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X', 'baseScore': 5.3, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'attackRequirements': 'NONE', 'privilegesRequired': 'NONE', 'userInteraction': 'PASSIVE', 'vulnConfidentialityImpact': 'NONE', 'vulnIntegrityImpact': 'LOW', 'vulnAvailabilityImpact': 'NONE', 'subConfidentialityImpact': 'NONE', 'subIntegrityImpact': 'NONE', 'subAvailabilityImpact': 'NONE', 'exploitMaturity': 'PROOF_OF_CONCEPT', 'confidentialityRequirement': 'NOT_DEFINED', 'integrityRequirement': 'NOT_DEFINED', 'availabilityRequirement': 'NOT_DEFINED', 'modifiedAttackVector': 'NOT_DEFINED', 'modifiedAttackComplexity': 'NOT_DEFINED', 'modifiedAttackRequirements': 'NOT_DEFINED', 'modifiedPrivilegesRequired': 'NOT_DEFINED', 'modifiedUserInteraction': 'NOT_DEFINED', 'modifiedVulnConfidentialityImpact': 'NOT_DEFINED', 'modifiedVulnIntegrityImpact': 'NOT_DEFINED', 'modifiedVulnAvailabilityImpact': 'NOT_DEFINED', 'modifiedSubConfidentialityImpact': 'NOT_DEFINED', 'modifiedSubIntegrityImpact': 'NOT_DEFINED', 'modifiedSubAvailabilityImpact': 'NOT_DEFINED', 'Safety': 'NOT_DEFINED', 'Automatable': 'NOT_DEFINED', 'Recovery': 'NOT_DEFINED', 'valueDensity': 'NOT_DEFINED', 'vulnerabilityResponseEffort': 'NOT_DEFINED', 'providerUrgency': 'NOT_DEFINED'}}], 'cvssMetricV31': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N', 'baseScore': 4.3, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'NONE', 'userInteraction': 'REQUIRED', 'scope': 'UNCHANGED', 'confidentialityImpact': 'NONE', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.8, 'impactScore': 1.4}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N', 'baseScore': 6.1, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'NONE', 'userInteraction': 'REQUIRED', 'scope': 'CHANGED', 'confidentialityImpact': 'LOW', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.8, 'impactScore': 2.7}], 'cvssMetricV2': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '2.0', 'vectorString': 'AV:N/AC:L/Au:N/C:N/I:P/A:N', 'baseScore': 5.0, 'accessVector': 'NETWORK', 'accessComplexity': 'LOW', 'authentication': 'NONE', 'confidentialityImpact': 'NONE', 'integrityImpact': 'PARTIAL', 'availabilityImpact': 'NONE'}, 'baseSeverity': 'MEDIUM', 'exploitabilityScore': 10.0, 'impactScore': 2.9, 'acInsufInfo': False, 'obtainAllPrivilege': False, 'obtainUserPrivilege': False, 'obtainOtherPrivilege': False, 'userInteractionRequired': False}]}, 'weaknesses': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'description': [{'lang': 'en', 'value': 'CWE-79'}, {'lang': 'en', 'value': 'CWE-94'}]}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'description': [{'lang': 'en', 'value': 'CWE-79'}]}], 'configurations': [{'nodes': [{'operator': 'OR', 'negate': False, 'cpeMatch': [{'vulnerable': True, 'criteria': 'cpe:2.3:a:unmark:unmark:*:*:*:*:*:*:*:*', 'versionEndIncluding': '1.9.3', 'matchCriteriaId': '780D14E1-027D-403B-AF5A-CA09E12AA1F2'}]}]}], 'references': [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323756', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323756', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643532', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss1.md#poc', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}]}}, {'cve': {'id': 'CVE-2025-10331', 'sourceIdentifier': 'cna@vuldb.com', 'published': '2025-09-13T02:15:45.490', 'lastModified': '2025-09-16T17:17:44.793', 'vulnStatus': 'Analyzed', 'cveTags': [], 'descriptions': [{'lang': 'en', 'value': 'A vulnerability has been found in cdevroe unmark up to 1.9.3. This issue affects some unknown processing of the file /application/controllers/Marks.php. Such manipulation of the argument Title leads to cross site scripting. The attack can be executed remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.'}], 'metrics': {'cvssMetricV40': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '4.0', 'vectorString': 'CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X', 'baseScore': 5.1, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'attackRequirements': 'NONE', 'privilegesRequired': 'LOW', 'userInteraction': 'PASSIVE', 'vulnConfidentialityImpact': 'NONE', 'vulnIntegrityImpact': 'LOW', 'vulnAvailabilityImpact': 'NONE', 'subConfidentialityImpact': 'NONE', 'subIntegrityImpact': 'NONE', 'subAvailabilityImpact': 'NONE', 'exploitMaturity': 'PROOF_OF_CONCEPT', 'confidentialityRequirement': 'NOT_DEFINED', 'integrityRequirement': 'NOT_DEFINED', 'availabilityRequirement': 'NOT_DEFINED', 'modifiedAttackVector': 'NOT_DEFINED', 'modifiedAttackComplexity': 'NOT_DEFINED', 'modifiedAttackRequirements': 'NOT_DEFINED', 'modifiedPrivilegesRequired': 'NOT_DEFINED', 'modifiedUserInteraction': 'NOT_DEFINED', 'modifiedVulnConfidentialityImpact': 'NOT_DEFINED', 'modifiedVulnIntegrityImpact': 'NOT_DEFINED', 'modifiedVulnAvailabilityImpact': 'NOT_DEFINED', 'modifiedSubConfidentialityImpact': 'NOT_DEFINED', 'modifiedSubIntegrityImpact': 'NOT_DEFINED', 'modifiedSubAvailabilityImpact': 'NOT_DEFINED', 'Safety': 'NOT_DEFINED', 'Automatable': 'NOT_DEFINED', 'Recovery': 'NOT_DEFINED', 'valueDensity': 'NOT_DEFINED', 'vulnerabilityResponseEffort': 'NOT_DEFINED', 'providerUrgency': 'NOT_DEFINED'}}], 'cvssMetricV31': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:N/I:L/A:N', 'baseScore': 3.5, 'baseSeverity': 'LOW', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'LOW', 'userInteraction': 'REQUIRED', 'scope': 'UNCHANGED', 'confidentialityImpact': 'NONE', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.1, 'impactScore': 1.4}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:L/I:L/A:N', 'baseScore': 5.4, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'LOW', 'userInteraction': 'REQUIRED', 'scope': 'CHANGED', 'confidentialityImpact': 'LOW', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.3, 'impactScore': 2.7}], 'cvssMetricV2': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '2.0', 'vectorString': 'AV:N/AC:L/Au:S/C:N/I:P/A:N', 'baseScore': 4.0, 'accessVector': 'NETWORK', 'accessComplexity': 'LOW', 'authentication': 'SINGLE', 'confidentialityImpact': 'NONE', 'integrityImpact': 'PARTIAL', 'availabilityImpact': 'NONE'}, 'baseSeverity': 'MEDIUM', 'exploitabilityScore': 8.0, 'impactScore': 2.9, 'acInsufInfo': False, 'obtainAllPrivilege': False, 'obtainUserPrivilege': False, 'obtainOtherPrivilege': False, 'userInteractionRequired': False}]}, 'weaknesses': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'description': [{'lang': 'en', 'value': 'CWE-79'}, {'lang': 'en', 'value': 'CWE-94'}]}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'description': [{'lang': 'en', 'value': 'CWE-79'}]}], 'configurations': [{'nodes': [{'operator': 'OR', 'negate': False, 'cpeMatch': [{'vulnerable': True, 'criteria': 'cpe:2.3:a:unmark:unmark:*:*:*:*:*:*:*:*', 'versionEndIncluding': '1.9.3', 'matchCriteriaId': '780D14E1-027D-403B-AF5A-CA09E12AA1F2'}]}]}], 'references': [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323757', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323757', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://vuldb.com/?submit.643533', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}]}}, {'cve': {'id': 'CVE-2025-10332', 'sourceIdentifier': 'cna@vuldb.com', 'published': '2025-09-13T03:15:39.323', 'lastModified': '2025-09-16T17:17:56.620', 'vulnStatus': 'Analyzed', 'cveTags': [], 'descriptions': [{'lang': 'en', 'value': 'A vulnerability was found in cdevroe unmark up to 1.9.3. Impacted is an unknown function of the file application/views/marks/info.php. Performing manipulation of the argument Title results in cross site scripting. The attack is possible to be carried out remotely. The exploit has been made public and could be used. The vendor was contacted early about this disclosure but did not respond in any way.'}], 'metrics': {'cvssMetricV40': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '4.0', 'vectorString': 'CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X', 'baseScore': 5.1, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'attackRequirements': 'NONE', 'privilegesRequired': 'LOW', 'userInteraction': 'PASSIVE', 'vulnConfidentialityImpact': 'NONE', 'vulnIntegrityImpact': 'LOW', 'vulnAvailabilityImpact': 'NONE', 'subConfidentialityImpact': 'NONE', 'subIntegrityImpact': 'NONE', 'subAvailabilityImpact': 'NONE', 'exploitMaturity': 'PROOF_OF_CONCEPT', 'confidentialityRequirement': 'NOT_DEFINED', 'integrityRequirement': 'NOT_DEFINED', 'availabilityRequirement': 'NOT_DEFINED', 'modifiedAttackVector': 'NOT_DEFINED', 'modifiedAttackComplexity': 'NOT_DEFINED', 'modifiedAttackRequirements': 'NOT_DEFINED', 'modifiedPrivilegesRequired': 'NOT_DEFINED', 'modifiedUserInteraction': 'NOT_DEFINED', 'modifiedVulnConfidentialityImpact': 'NOT_DEFINED', 'modifiedVulnIntegrityImpact': 'NOT_DEFINED', 'modifiedVulnAvailabilityImpact': 'NOT_DEFINED', 'modifiedSubConfidentialityImpact': 'NOT_DEFINED', 'modifiedSubIntegrityImpact': 'NOT_DEFINED', 'modifiedSubAvailabilityImpact': 'NOT_DEFINED', 'Safety': 'NOT_DEFINED', 'Automatable': 'NOT_DEFINED', 'Recovery': 'NOT_DEFINED', 'valueDensity': 'NOT_DEFINED', 'vulnerabilityResponseEffort': 'NOT_DEFINED', 'providerUrgency': 'NOT_DEFINED'}}], 'cvssMetricV31': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:N/I:L/A:N', 'baseScore': 3.5, 'baseSeverity': 'LOW', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'LOW', 'userInteraction': 'REQUIRED', 'scope': 'UNCHANGED', 'confidentialityImpact': 'NONE', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.1, 'impactScore': 1.4}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:L/I:L/A:N', 'baseScore': 5.4, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'LOW', 'userInteraction': 'REQUIRED', 'scope': 'CHANGED', 'confidentialityImpact': 'LOW', 'integrityImpact': 'LOW', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.3, 'impactScore': 2.7}], 'cvssMetricV2': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'cvssData': {'version': '2.0', 'vectorString': 'AV:N/AC:L/Au:S/C:N/I:P/A:N', 'baseScore': 4.0, 'accessVector': 'NETWORK', 'accessComplexity': 'LOW', 'authentication': 'SINGLE', 'confidentialityImpact': 'NONE', 'integrityImpact': 'PARTIAL', 'availabilityImpact': 'NONE'}, 'baseSeverity': 'MEDIUM', 'exploitabilityScore': 8.0, 'impactScore': 2.9, 'acInsufInfo': False, 'obtainAllPrivilege': False, 'obtainUserPrivilege': False, 'obtainOtherPrivilege': False, 'userInteractionRequired': False}]}, 'weaknesses': [{'source': 'cna@vuldb.com', 'type': 'Secondary', 'description': [{'lang': 'en', 'value': 'CWE-79'}, {'lang': 'en', 'value': 'CWE-94'}]}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'description': [{'lang': 'en', 'value': 'CWE-79'}]}], 'configurations': [{'nodes': [{'operator': 'OR', 'negate': False, 'cpeMatch': [{'vulnerable': True, 'criteria': 'cpe:2.3:a:unmark:unmark:*:*:*:*:*:*:*:*', 'versionEndIncluding': '1.9.3', 'matchCriteriaId': '780D14E1-027D-403B-AF5A-CA09E12AA1F2'}]}]}], 'references': [{'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': 'cna@vuldb.com', 'tags': ['Exploit']}, {'url': 'https://vuldb.com/?ctiid.323758', 'source': 'cna@vuldb.com', 'tags': ['Permissions Required', 'VDB Entry']}, {'url': 'https://vuldb.com/?id.323758', 'source': 'cna@vuldb.com', 'tags': ['Third Party Advisory', 'VDB Entry']}, {'url': 'https://github.com/YZS17/CVE/blob/main/unmark/xss2.md', 'source': '134c704f-9b21-4f2e-91b3-4a467353bcc0', 'tags': ['Exploit']}]}}]
+2025-09-17 13:47:22: Fetching CVEs for CPE 5/50: cpe:2.3:a:nodejs:node.js:15.6.0:*:*:*:-:*:*:*
+2025-09-17 13:47:22: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:15.6.0:*:*:*:-:*:*:* between 2025-09-10T17:47:22.000Z and 2025-09-17T17:47:22.000Z
+2025-09-17 13:47:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:47:25: Found CVE's: []
+2025-09-17 13:47:28: Fetching CVEs for CPE 6/50: cpe:2.3:a:oracle:mysql:4.1.3:*:*:*:*:*:*:*
+2025-09-17 13:47:28: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:4.1.3:*:*:*:*:*:*:* between 2025-09-10T17:47:28.000Z and 2025-09-17T17:47:28.000Z
+2025-09-17 13:47:28: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:47:31: Found CVE's: []
+2025-09-17 13:47:34: Fetching CVEs for CPE 7/50: cpe:2.3:a:nodejs:node.js:11.9.0:*:*:*:lts:*:*:*
+2025-09-17 13:47:34: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:11.9.0:*:*:*:lts:*:*:* between 2025-09-10T17:47:34.000Z and 2025-09-17T17:47:34.000Z
+2025-09-17 13:47:34: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:47:37: Found CVE's: []
+2025-09-17 13:47:40: Fetching CVEs for CPE 8/50: cpe:2.3:a:adobe:magento:2.4.5:p14:*:*:open_source:*:*:*
+2025-09-17 13:47:40: Searching for CVEs for CPE cpe:2.3:a:adobe:magento:2.4.5:p14:*:*:open_source:*:*:* between 2025-09-10T17:47:40.000Z and 2025-09-17T17:47:40.000Z
+2025-09-17 13:47:40: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:47:43: Found CVE's: []
+2025-09-17 13:47:46: Fetching CVEs for CPE 9/50: cpe:2.3:a:openagentplatform:dive:0.8.3:*:*:*:*:*:*:*
+2025-09-17 13:47:46: Searching for CVEs for CPE cpe:2.3:a:openagentplatform:dive:0.8.3:*:*:*:*:*:*:* between 2025-09-10T17:47:46.000Z and 2025-09-17T17:47:46.000Z
+2025-09-17 13:47:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:47:49: Found CVE's: []
+2025-09-17 13:47:52: Fetching CVEs for CPE 10/50: cpe:2.3:a:vercel:vercel:16.1.2:canary2:*:*:*:*:*:*
+2025-09-17 13:47:52: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:16.1.2:canary2:*:*:*:*:*:* between 2025-09-10T17:47:52.000Z and 2025-09-17T17:47:52.000Z
+2025-09-17 13:47:52: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:47:54: Found CVE's: []
+2025-09-17 13:47:57: Fetching CVEs for CPE 11/50: cpe:2.3:a:nodejs:node.js:20.18.2:*:*:*:lts:*:*:*
+2025-09-17 13:47:57: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:20.18.2:*:*:*:lts:*:*:* between 2025-09-10T17:47:57.000Z and 2025-09-17T17:47:57.000Z
+2025-09-17 13:47:57: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:48:01: Found CVE's: []
+2025-09-17 13:48:04: Fetching CVEs for CPE 12/50: cpe:2.3:a:vercel:vercel:28.10.2:*:*:*:*:*:*:*
+2025-09-17 13:48:04: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:28.10.2:*:*:*:*:*:*:* between 2025-09-10T17:48:04.000Z and 2025-09-17T17:48:04.000Z
+2025-09-17 13:48:04: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:48:06: Found CVE's: []
+2025-09-17 13:48:09: Fetching CVEs for CPE 13/50: cpe:2.3:a:mongodb:mongosh:0.8.0:draft0:*:*:*:*:*:*
+2025-09-17 13:48:09: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:0.8.0:draft0:*:*:*:*:*:* between 2025-09-10T17:48:09.000Z and 2025-09-17T17:48:09.000Z
+2025-09-17 13:48:09: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:48:11: Found CVE's: []
+2025-09-17 13:48:14: Fetching CVEs for CPE 14/50: cpe:2.3:a:vercel:vercel:21.2.0:*:*:*:*:*:*:*
+2025-09-17 13:48:14: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:21.2.0:*:*:*:*:*:*:* between 2025-09-10T17:48:14.000Z and 2025-09-17T17:48:14.000Z
+2025-09-17 13:48:14: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:48:27: Found CVE's: []
+2025-09-17 13:48:30: Fetching CVEs for CPE 15/50: cpe:2.3:a:sangoma:freepbx:13.0.195.18:*:*:*:*:*:*:*
+2025-09-17 13:48:30: Searching for CVEs for CPE cpe:2.3:a:sangoma:freepbx:13.0.195.18:*:*:*:*:*:*:* between 2025-09-10T17:48:30.000Z and 2025-09-17T17:48:30.000Z
+2025-09-17 13:48:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:48:32: Found CVE's: []
+2025-09-17 13:48:35: Fetching CVEs for CPE 16/50: cpe:2.3:a:oracle:mysql:5.0.76:*:*:*:*:*:*:*
+2025-09-17 13:48:35: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.0.76:*:*:*:*:*:*:* between 2025-09-10T17:48:35.000Z and 2025-09-17T17:48:35.000Z
+2025-09-17 13:48:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:48:38: Found CVE's: []
+2025-09-17 13:48:41: Fetching CVEs for CPE 17/50: cpe:2.3:a:showdownjs:showdown:1.9.0:*:*:*:*:node.js:*:*
+2025-09-17 13:48:41: Searching for CVEs for CPE cpe:2.3:a:showdownjs:showdown:1.9.0:*:*:*:*:node.js:*:* between 2025-09-10T17:48:41.000Z and 2025-09-17T17:48:41.000Z
+2025-09-17 13:48:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:48:43: Found CVE's: []
+2025-09-17 13:48:46: Fetching CVEs for CPE 18/50: cpe:2.3:a:nodejs:node.js:0.10.42:*:*:*:*:*:*:*
+2025-09-17 13:48:46: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:0.10.42:*:*:*:*:*:*:* between 2025-09-10T17:48:46.000Z and 2025-09-17T17:48:46.000Z
+2025-09-17 13:48:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:48:49: Found CVE's: []
+2025-09-17 13:48:52: Fetching CVEs for CPE 19/50: cpe:2.3:a:sangoma:freepbx:17.0.15.19:*:*:*:*:*:*:*
+2025-09-17 13:48:52: Searching for CVEs for CPE cpe:2.3:a:sangoma:freepbx:17.0.15.19:*:*:*:*:*:*:* between 2025-09-10T17:48:52.000Z and 2025-09-17T17:48:52.000Z
+2025-09-17 13:48:52: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:48:55: Found CVE's: []
+2025-09-17 13:48:58: Fetching CVEs for CPE 20/50: cpe:2.3:a:vercel:vercel:28.9.0:*:*:*:*:*:*:*
+2025-09-17 13:48:58: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:28.9.0:*:*:*:*:*:*:* between 2025-09-10T17:48:58.000Z and 2025-09-17T17:48:58.000Z
+2025-09-17 13:48:58: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:49:01: Found CVE's: []
+2025-09-17 13:49:04: Fetching CVEs for CPE 21/50: cpe:2.3:a:python:python:3.3.0:-:*:*:*:*:*:*
+2025-09-17 13:49:04: Searching for CVEs for CPE cpe:2.3:a:python:python:3.3.0:-:*:*:*:*:*:* between 2025-09-10T17:49:04.000Z and 2025-09-17T17:49:04.000Z
+2025-09-17 13:49:04: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:49:11: Found CVE's: []
+2025-09-17 13:49:14: Fetching CVEs for CPE 22/50: cpe:2.3:a:oracle:mysql:5.0.54a:*:*:*:*:*:*:*
+2025-09-17 13:49:14: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.0.54a:*:*:*:*:*:*:* between 2025-09-10T17:49:14.000Z and 2025-09-17T17:49:14.000Z
+2025-09-17 13:49:14: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:49:18: Found CVE's: []
+2025-09-17 13:49:21: Fetching CVEs for CPE 23/50: cpe:2.3:a:apache:kafka:3.0.1:-:*:*:*:*:*:*
+2025-09-17 13:49:21: Searching for CVEs for CPE cpe:2.3:a:apache:kafka:3.0.1:-:*:*:*:*:*:* between 2025-09-10T17:49:21.000Z and 2025-09-17T17:49:21.000Z
+2025-09-17 13:49:21: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:49:27: Found CVE's: []
+2025-09-17 13:49:30: Fetching CVEs for CPE 24/50: cpe:2.3:a:python:python:3.2.6:rc1:*:*:*:*:*:*
+2025-09-17 13:49:30: Searching for CVEs for CPE cpe:2.3:a:python:python:3.2.6:rc1:*:*:*:*:*:* between 2025-09-10T17:49:30.000Z and 2025-09-17T17:49:30.000Z
+2025-09-17 13:49:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:49:34: Found CVE's: []
+2025-09-17 13:49:37: Fetching CVEs for CPE 25/50: cpe:2.3:a:vitest.dev:vitest:0.19.0:*:*:*:*:node.js:*:*
+2025-09-17 13:49:37: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:0.19.0:*:*:*:*:node.js:*:* between 2025-09-10T17:49:37.000Z and 2025-09-17T17:49:37.000Z
+2025-09-17 13:49:37: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:49:40: Found CVE's: []
+2025-09-17 13:49:43: Fetching CVEs for CPE 26/50: cpe:2.3:a:jetbrains:rider:2024.1.6:*:*:*:*:*:*:*
+2025-09-17 13:49:43: Searching for CVEs for CPE cpe:2.3:a:jetbrains:rider:2024.1.6:*:*:*:*:*:*:* between 2025-09-10T17:49:43.000Z and 2025-09-17T17:49:43.000Z
+2025-09-17 13:49:43: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:49:45: Found CVE's: []
+2025-09-17 13:49:48: Fetching CVEs for CPE 27/50: cpe:2.3:a:vitest.dev:vitest:0.0.12:*:*:*:*:node.js:*:*
+2025-09-17 13:49:48: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:0.0.12:*:*:*:*:node.js:*:* between 2025-09-10T17:49:48.000Z and 2025-09-17T17:49:48.000Z
+2025-09-17 13:49:48: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:49:51: Found CVE's: []
+2025-09-17 13:49:54: Fetching CVEs for CPE 28/50: cpe:2.3:a:oracle:mysql:5.5.39:*:*:*:*:*:*:*
+2025-09-17 13:49:54: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.5.39:*:*:*:*:*:*:* between 2025-09-10T17:49:54.000Z and 2025-09-17T17:49:54.000Z
+2025-09-17 13:49:54: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:49:58: Found CVE's: []
+2025-09-17 13:50:01: Fetching CVEs for CPE 29/50: cpe:2.3:a:nvidia:nemo:1.6.2:*:*:*:*:*:*:*
+2025-09-17 13:50:01: Searching for CVEs for CPE cpe:2.3:a:nvidia:nemo:1.6.2:*:*:*:*:*:*:* between 2025-09-10T17:50:01.000Z and 2025-09-17T17:50:01.000Z
+2025-09-17 13:50:01: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:50:06: Found CVE's: []
+2025-09-17 13:50:09: Fetching CVEs for CPE 30/50: cpe:2.3:a:xwiki:pro_macros:1.27.2:*:*:*:*:*:*:*
+2025-09-17 13:50:09: Searching for CVEs for CPE cpe:2.3:a:xwiki:pro_macros:1.27.2:*:*:*:*:*:*:* between 2025-09-10T17:50:09.000Z and 2025-09-17T17:50:09.000Z
+2025-09-17 13:50:09: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:50:12: Found CVE's: []
+2025-09-17 13:50:15: Fetching CVEs for CPE 31/50: cpe:2.3:a:sangoma:freepbx:13.0.195.8:*:*:*:*:*:*:*
+2025-09-17 13:50:15: Searching for CVEs for CPE cpe:2.3:a:sangoma:freepbx:13.0.195.8:*:*:*:*:*:*:* between 2025-09-10T17:50:15.000Z and 2025-09-17T17:50:15.000Z
+2025-09-17 13:50:15: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:50:19: Found CVE's: []
+2025-09-17 13:50:22: Fetching CVEs for CPE 32/50: cpe:2.3:a:oracle:mysql:7.4.9:*:*:*:*:*:*:*
+2025-09-17 13:50:22: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:7.4.9:*:*:*:*:*:*:* between 2025-09-10T17:50:22.000Z and 2025-09-17T17:50:22.000Z
+2025-09-17 13:50:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:50:26: Found CVE's: []
+2025-09-17 13:50:29: Fetching CVEs for CPE 33/50: cpe:2.3:a:nodejs:node.js:4.8.1:*:*:*:lts:*:*:*
+2025-09-17 13:50:29: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:4.8.1:*:*:*:lts:*:*:* between 2025-09-10T17:50:29.000Z and 2025-09-17T17:50:29.000Z
+2025-09-17 13:50:29: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:50:33: Found CVE's: []
+2025-09-17 13:50:36: Fetching CVEs for CPE 34/50: cpe:2.3:a:oracle:mysql:8.0.31:*:*:*:*:*:*:*
+2025-09-17 13:50:36: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:8.0.31:*:*:*:*:*:*:* between 2025-09-10T17:50:36.000Z and 2025-09-17T17:50:36.000Z
+2025-09-17 13:50:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:50:40: Found CVE's: []
+2025-09-17 13:50:44: Fetching CVEs for CPE 35/50: cpe:2.3:a:vercel:vercel:33.5.3:*:*:*:*:*:*:*
+2025-09-17 13:50:44: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:33.5.3:*:*:*:*:*:*:* between 2025-09-10T17:50:44.000Z and 2025-09-17T17:50:44.000Z
+2025-09-17 13:50:44: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:50:46: Found CVE's: []
+2025-09-17 13:50:50: Fetching CVEs for CPE 36/50: cpe:2.3:a:vercel:vercel:12.0.0:canary24:*:*:*:*:*:*
+2025-09-17 13:50:50: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:12.0.0:canary24:*:*:*:*:*:* between 2025-09-10T17:50:50.000Z and 2025-09-17T17:50:50.000Z
+2025-09-17 13:50:50: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:50:52: Found CVE's: []
+2025-09-17 13:50:55: Fetching CVEs for CPE 37/50: cpe:2.3:a:nodejs:node.js:1.6.0:*:*:*:-:*:*:*
+2025-09-17 13:50:55: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:1.6.0:*:*:*:-:*:*:* between 2025-09-10T17:50:55.000Z and 2025-09-17T17:50:55.000Z
+2025-09-17 13:50:55: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:50:59: Found CVE's: []
+2025-09-17 13:51:02: Fetching CVEs for CPE 38/50: cpe:2.3:a:oracle:mysql:5.6.34:*:*:*:*:*:*:*
+2025-09-17 13:51:02: Searching for CVEs for CPE cpe:2.3:a:oracle:mysql:5.6.34:*:*:*:*:*:*:* between 2025-09-10T17:51:02.000Z and 2025-09-17T17:51:02.000Z
+2025-09-17 13:51:02: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:51:08: Found CVE's: []
+2025-09-17 13:51:11: Fetching CVEs for CPE 39/50: cpe:2.3:a:hono:hono:4.3.9:*:*:*:*:node.js:*:*
+2025-09-17 13:51:11: Searching for CVEs for CPE cpe:2.3:a:hono:hono:4.3.9:*:*:*:*:node.js:*:* between 2025-09-10T17:51:11.000Z and 2025-09-17T17:51:11.000Z
+2025-09-17 13:51:11: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:51:17: Found CVE's: []
+2025-09-17 13:51:20: Fetching CVEs for CPE 40/50: cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.681:*:*:*:datacenter:*:x64:*
+2025-09-17 13:51:20: Searching for CVEs for CPE cpe:2.3:o:microsoft:windows_server_2022:10.0.20348.681:*:*:*:datacenter:*:x64:* between 2025-09-10T17:51:20.000Z and 2025-09-17T17:51:20.000Z
+2025-09-17 13:51:20: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:51:25: Found CVE's: []
+2025-09-17 13:51:28: Fetching CVEs for CPE 41/50: cpe:2.3:a:sangoma:freepbx:17.0.19.14:*:*:*:*:*:*:*
+2025-09-17 13:51:28: Searching for CVEs for CPE cpe:2.3:a:sangoma:freepbx:17.0.19.14:*:*:*:*:*:*:* between 2025-09-10T17:51:28.000Z and 2025-09-17T17:51:28.000Z
+2025-09-17 13:51:28: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:51:33: Found CVE's: []
+2025-09-17 13:51:36: Fetching CVEs for CPE 42/50: cpe:2.3:a:vercel:vercel:12.0.0:canary38:*:*:*:*:*:*
+2025-09-17 13:51:36: Searching for CVEs for CPE cpe:2.3:a:vercel:vercel:12.0.0:canary38:*:*:*:*:*:* between 2025-09-10T17:51:36.000Z and 2025-09-17T17:51:36.000Z
+2025-09-17 13:51:36: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:51:39: Found CVE's: []
+2025-09-17 13:51:42: Fetching CVEs for CPE 43/50: cpe:2.3:a:apache:http_server:2.0.37:*:*:*:*:*:*:*
+2025-09-17 13:51:42: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:2.0.37:*:*:*:*:*:*:* between 2025-09-10T17:51:42.000Z and 2025-09-17T17:51:42.000Z
+2025-09-17 13:51:42: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:51:46: Found CVE's: []
+2025-09-17 13:51:49: Fetching CVEs for CPE 44/50: cpe:2.3:a:mongodb:mongosh:0.4.1:*:*:*:*:*:*:*
+2025-09-17 13:51:49: Searching for CVEs for CPE cpe:2.3:a:mongodb:mongosh:0.4.1:*:*:*:*:*:*:* between 2025-09-10T17:51:49.000Z and 2025-09-17T17:51:49.000Z
+2025-09-17 13:51:49: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:51:53: Found CVE's: []
+2025-09-17 13:51:56: Fetching CVEs for CPE 45/50: cpe:2.3:a:huashengdun:webssh:0.4.0:*:*:*:*:*:*:*
+2025-09-17 13:51:56: Searching for CVEs for CPE cpe:2.3:a:huashengdun:webssh:0.4.0:*:*:*:*:*:*:* between 2025-09-10T17:51:56.000Z and 2025-09-17T17:51:56.000Z
+2025-09-17 13:51:56: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:51:59: Found CVE's: []
+2025-09-17 13:52:02: Fetching CVEs for CPE 46/50: cpe:2.3:a:tolgee:tolgee:3.78.2:*:*:*:*:*:*:*
+2025-09-17 13:52:02: Searching for CVEs for CPE cpe:2.3:a:tolgee:tolgee:3.78.2:*:*:*:*:*:*:* between 2025-09-10T17:52:02.000Z and 2025-09-17T17:52:02.000Z
+2025-09-17 13:52:02: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:52:05: Found CVE's: []
+2025-09-17 13:52:08: Fetching CVEs for CPE 47/50: cpe:2.3:a:mongodb:libbson:1.15.0:*:*:*:*:*:*:*
+2025-09-17 13:52:08: Searching for CVEs for CPE cpe:2.3:a:mongodb:libbson:1.15.0:*:*:*:*:*:*:* between 2025-09-10T17:52:08.000Z and 2025-09-17T17:52:08.000Z
+2025-09-17 13:52:08: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:52:12: Found CVE's: []
+2025-09-17 13:52:15: Fetching CVEs for CPE 48/50: cpe:2.3:a:apache:http_server:1.2.9:*:*:*:*:*:*:*
+2025-09-17 13:52:15: Searching for CVEs for CPE cpe:2.3:a:apache:http_server:1.2.9:*:*:*:*:*:*:* between 2025-09-10T17:52:15.000Z and 2025-09-17T17:52:15.000Z
+2025-09-17 13:52:15: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:52:19: Found CVE's: []
+2025-09-17 13:52:22: Fetching CVEs for CPE 49/50: cpe:2.3:a:vitest.dev:vitest:0.25.0:*:*:*:*:node.js:*:*
+2025-09-17 13:52:22: Searching for CVEs for CPE cpe:2.3:a:vitest.dev:vitest:0.25.0:*:*:*:*:node.js:*:* between 2025-09-10T17:52:22.000Z and 2025-09-17T17:52:22.000Z
+2025-09-17 13:52:22: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:52:24: Found CVE's: []
+2025-09-17 13:52:27: Fetching CVEs for CPE 50/50: cpe:2.3:a:nodejs:node.js:0.10.34:*:*:*:*:*:*:*
+2025-09-17 13:52:27: Searching for CVEs for CPE cpe:2.3:a:nodejs:node.js:0.10.34:*:*:*:*:*:*:* between 2025-09-10T17:52:27.000Z and 2025-09-17T17:52:27.000Z
+2025-09-17 13:52:27: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2025-09-17 13:52:31: Found CVE's: []
+2025-09-17 13:52:34: Vulnerability summary saved to: C:\Users\saipk\agentAttempts\server\intelliHunt\crew\NVD\vulnerability_summary_20250917_135234.md

@@ -99,7 +99,7 @@ class cyberCrew:
         """Search Google for recent results relevant to cybersecurity threats."""
         results = []
         try:
-            for result in search(query + "2025", num_results=10):
+            for result in search(query + "2025", num_results=5):
                 results.append(str(result))  # Ensure result is a string
             return "\n".join(results) if results else "No results found."
         except Exception as e:
@@ -124,7 +124,7 @@ class cyberCrew:
             llm=llm,  # Ollama(model="ollama/qwen3:8b", base_url="http://localhost:11434")
             tools=[self.google_search, self.scrape_web, rag_tool],
             inject_date=True,
-            output_pydantic=TrendingThreatList,
+            #output_pydantic=TrendingThreatList,
             verbose=True,
         )
 
@@ -135,11 +135,18 @@ class cyberCrew:
             llm=llm,
             tools=[self.google_search, self.scrape_web],
             verbose=True,
+            max_iter=2
         )
 
     @task
     def research_task(self) -> Task:
         return Task(config=self.tasks_config["research_task"],
+        output_pydantic=TrendingThreatList)  # type: ignore[index] TrendingThreatList
+    
+    @task
+    def review_task(self) -> Task:
+        return Task(config=self.tasks_config["review_task"],
+        context=[self.research_task()],
         output_pydantic=TrendingThreatList)  # type: ignore[index]
 
     # @task
@@ -157,7 +164,7 @@ class cyberCrew:
     def splunk_query_task(self) -> Task:
         return Task(
             config=self.tasks_config["splunk_query_task"],  # type: ignore[index]
-            context=[self.research_task()],  # Use the output of research_task as context
+            context=[self.review_task()],  # Use the output of research_task as context
             output_pydantic=DetectionMethod,
         )
 
