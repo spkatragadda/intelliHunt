@@ -1,29 +1,51 @@
-version: '3.8'
 services:
   django:
     build:
       context: .
       dockerfile: Dockerfile
       target: django
+    container_name: intellihunt-django
+    working_dir: /app/server
+    command: bash -lc "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     volumes:
       - ./server:/app/server
     environment:
+      - DJANGO_SETTINGS_MODULE=intelliHunt.settings
+      - PYTHONUNBUFFERED=1
       - PYTHONPATH=/app/server
+    healthcheck:
+      # Use Python stdlib so we don't depend on curl/wget in the image
+      test: ["CMD-SHELL", "python - <<'PY'\nimport sys, urllib.request\ntry:\n  urllib.request.urlopen('http://localhost:8000/', timeout=2)\n  sys.exit(0)\nexcept Exception:\n  sys.exit(1)\nPY"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
 
   nextjs:
     build:
       context: .
       dockerfile: Dockerfile
       target: nextjs
+    container_name: intellihunt-nextjs
+    working_dir: /app          # server.js lives here after COPY .../.next/standalone ./
+    command: [ "node", "server.js" ]
     ports:
       - "3000:3000"
-    volumes:
-      - ./client/intellihunt:/app/client/intellihunt
     environment:
+      - NEXT_PUBLIC_API_BASE=http://localhost:8000
+      - API_BASE_INTERNAL=http://django:8000
       - NODE_ENV=production
+    depends_on:
+      django:
+        condition: service_healthy
+
+
+
 
 networks:
   default:
     driver: bridge
+
+volumes:
+  node_modules_next:
