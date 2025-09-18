@@ -13,9 +13,19 @@ research_task:
     "references": {references}
     Make sure the information is relevant to the last few days.
     Use the Web Scraper tool to gather the necessary information from the urls provided in the references section. 
-    If no information can be found in the urls in provided in the resources section, then use the google search tool to
-    retrieve urls which may contain information on the threat. Then use the webscraper tool to extract information from that webpage
-    for incorporation into the report. 
+  expected_output: >
+    A report on the provided threat, which is relevant to an organizations software stack in a well formatted and concise report.
+    The report should include indicators of compromise for the threat and information associated with detecting
+    that threat. 
+  agent: ctiAnalyst
+
+additional_research_task:
+  description: >
+    You will be given a threat intelligence report for a given CVE. If there is not rnough information on that CVE included
+    within the report, your job is to enrich the report further by using the googlsearch tool and the webscraper tool.
+    User the googlesearch to search for the cve and cve name. Given a url from a reputable source, use the webscraper tool
+    to scrape text from that webpage. Only extract meaningful text from the webpage, do not extract titles, images,
+    formatting or anything other than information directly related to the CVE. This information is to be incorporated into the report.
   expected_output: >
     A report on the provided threat, which is relevant to an organizations software stack in a well formatted and concise report.
     The report should include indicators of compromise for the threat and information associated with detecting
