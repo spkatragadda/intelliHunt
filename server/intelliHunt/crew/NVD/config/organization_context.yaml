@@ -1,0 +1,15 @@
+# Organization Context Configuration
+# This file provides organization-specific context for threat intelligence analysis
+# Business Context
+business_context:
+  critical_assets:
+    - "Customer database"
+    - "Financial systems"
+    - "Customer-facing web applications"
+    - "Internal communication systems"
+
+# Detection Environment
+detection_environment:
+  siem_platform: "Splunk"
+  log_retention: "90 days"
+  search_capacity: "High"

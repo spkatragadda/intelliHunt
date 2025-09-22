@@ -51,6 +51,48 @@ class TrendingNews(BaseModel):
     url: str = Field(description="The URL of the news article")
     source: str = Field(description="The source of the news article")
 
+class ExploitabilityMetrics(BaseModel):
+    attack_vector: str = Field(description="The attack vector (NETWORK, ADJACENT, LOCAL, PHYSICAL)")
+    attack_complexity: str = Field(description="The attack complexity (LOW, HIGH)")
+    privileges_required: str = Field(description="Privileges required (NONE, LOW, HIGH)")
+
+class TechnicalDetails(BaseModel):
+    affected_versions: list[str] = Field(description="List of affected software versions")
+    patched_versions: list[str] = Field(description="List of patched software versions")
+    workarounds: list[str] = Field(description="Available workarounds or mitigations")
+    proof_of_concept: bool = Field(description="Whether proof of concept code is available")
+    exploit_available: bool = Field(description="Whether active exploits are available")
+
+class ThreatIntelligence(BaseModel):
+    first_seen: str = Field(description="Date when threat was first observed")
+    active_exploitation: bool = Field(description="Whether threat is actively being exploited")
+    threat_actors: list[str] = Field(description="Known threat actors using this vulnerability")
+    campaign_names: list[str] = Field(description="Known attack campaigns using this vulnerability")
+    iocs: dict = Field(description="Indicators of compromise including file hashes, IPs, domains")
+
+class OrganizationContext(BaseModel):
+    affected_assets: list[str] = Field(description="Organization assets affected by this vulnerability")
+    current_versions: list[str] = Field(description="Current software versions in organization")
+    security_controls: list[str] = Field(description="Existing security controls")
+    risk_tolerance: str = Field(description="Organization's risk tolerance level")
+    business_impact: str = Field(description="Potential business impact of exploitation")
+
+class EnhancedTrendingThreat(BaseModel):
+    threat_name: str = Field(description="The name of the threat")
+    cve_id: str = Field(description="The CVE identifier")
+    description: str = Field(description="A detailed description of the threat")
+    cvss_score: float = Field(description="The CVSS base score")
+    severity: str = Field(description="The severity level (CRITICAL, HIGH, MEDIUM, LOW)")
+    exploitability_metrics: ExploitabilityMetrics = Field(description="Detailed exploitability information")
+    technical_details: TechnicalDetails = Field(description="Technical details about the vulnerability")
+    threat_intelligence: ThreatIntelligence = Field(description="Threat intelligence and attribution")
+    organization_context: OrganizationContext = Field(description="Organization-specific context")
+    indicators_of_compromise: list[str] = Field(description="The indicators of compromise for the threat")
+    urlList: list[str] = Field(description="A list of URLs related to the threat data")
+    media_coverage: list[TrendingNews] = Field(description="A list of URLs related to the media coverage of the threat")
+    risk_assessment: str = Field(description="Risk assessment for the organization")
+    recommended_actions: list[str] = Field(description="Recommended immediate actions")
+
 class TrendingThreat(BaseModel):
     threat_name: str = Field(description="The name of the threat")
     indicators_of_compromise: list[str] = Field(description="The indicators of compromise for the threat")
@@ -61,8 +103,35 @@ class TrendingThreat(BaseModel):
 class TrendingThreatList(BaseModel):
     threatList: list[TrendingThreat] = Field(description="A list of trending threats")
 
+class EnhancedTrendingThreatList(BaseModel):
+    threatList: list[EnhancedTrendingThreat] = Field(description="A list of enhanced trending threats with detailed analysis")
+
 class RankedTrendingThreatList(BaseModel):
     rankedThreatList: list[TrendingThreat] = Field(description="A list of ranked trending threats")
+
+class DetectionEnvironment(BaseModel):
+    available_sourcetypes: list[str] = Field(description="Available Splunk sourcetypes for detection")
+    existing_rules: list[str] = Field(description="Existing detection rules that might conflict")
+    log_retention: str = Field(description="Log retention period")
+    siem_capabilities: list[str] = Field(description="Available SIEM platforms and capabilities")
+
+class ThreatIndicators(BaseModel):
+    network_indicators: list[str] = Field(description="Network-based indicators (IPs, domains, URLs)")
+    host_indicators: list[str] = Field(description="Host-based indicators (file paths, registry keys, processes)")
+    behavioral_indicators: list[str] = Field(description="Behavioral indicators (process creation, network connections)")
+    temporal_indicators: list[str] = Field(description="Time-based indicators (attack patterns, schedules)")
+
+class EnhancedDetectionMethod(BaseModel):
+    detection_method: str = Field(description="The detection method for the threat (Splunk SPL query)")
+    description: str = Field(description="A detailed description of the detection method")
+    detection_type: str = Field(description="Type of detection (signature-based, behavioral, anomaly)")
+    confidence_level: str = Field(description="Confidence level (HIGH, MEDIUM, LOW)")
+    false_positive_risk: str = Field(description="Risk of false positives (HIGH, MEDIUM, LOW)")
+    detection_environment: DetectionEnvironment = Field(description="Environment context for detection")
+    threat_indicators: ThreatIndicators = Field(description="Specific indicators used in detection")
+    urlList: list[str] = Field(description="A list of URLs related to the detection method")
+    testing_instructions: list[str] = Field(description="Instructions for testing the detection rule")
+    maintenance_notes: str = Field(description="Notes for maintaining and updating the detection rule")
 
 class DetectionMethod(BaseModel):
     detection_method: str = Field(description="The detection method for the threat")
@@ -141,19 +210,19 @@ class cyberCrew:
     @task
     def research_task(self) -> Task:
         return Task(config=self.tasks_config["research_task"],
-        output_pydantic=TrendingThreatList)  # type: ignore[index] TrendingThreatList
+        output_pydantic=EnhancedTrendingThreatList)  # type: ignore[index] EnhancedTrendingThreatList
     
     @task
     def additional_research_task(self) -> Task:
         return Task(config=self.tasks_config["additional_research_task"],
         context=[self.research_task()],
-        output_pydantic=TrendingThreatList)  # type: ignore[index]
+        output_pydantic=EnhancedTrendingThreatList)  # type: ignore[index]
     
     @task
     def review_task(self) -> Task:
         return Task(config=self.tasks_config["review_task"],
         context=[self.additional_research_task()],
-        output_pydantic=TrendingThreatList)  # type: ignore[index]
+        output_pydantic=EnhancedTrendingThreatList)  # type: ignore[index]
 
     # @task
     # def ranking_task(self) -> Task:
@@ -171,7 +240,7 @@ class cyberCrew:
         return Task(
             config=self.tasks_config["splunk_query_task"],  # type: ignore[index]
             context=[self.review_task()],  # Use the output of research_task as context
-            output_pydantic=DetectionMethod,
+            output_pydantic=EnhancedDetectionMethod,
         )
 
     # @task

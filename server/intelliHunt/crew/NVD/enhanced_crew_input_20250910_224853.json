@@ -1,0 +1,670 @@
+{
+  "software_stack": "teams,onedrive,crowdstrike,macos,office,oracle,windows_server_2019,node.js,mysql,windows_server_2022,http_server,iis,sql_server,apache,windows_11,falcon,microsoft,tomcat,kafka,visual_studio,windows_10,python,azure,excel,apple,powerpoint,nodejs,active_directory,exchange_server",
+  "url_list": [
+    "https://nvd.nist.gov/vuln/search",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://msrc.microsoft.com/update-guide/vulnerabilities",
+    "https://www.oracle.com/security-alerts/",
+    "https://apache.org/security/",
+    "https://python.org/security/",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://www.cvedetails.com/",
+    "https://nvd.nist.gov/vuln/search"
+  ],
+  "cpe_data": {
+    "total_records": 13264,
+    "vendors_covered": [
+      "microsoft",
+      "apple",
+      "oracle",
+      "apache",
+      "python",
+      "nodejs",
+      "crowdstrike"
+    ],
+    "products_covered": [
+      "windows_10",
+      "windows_11",
+      "windows_server_2019",
+      "windows_server_2022",
+      "macos",
+      "office",
+      "teams",
+      "powerpoint",
+      "excel",
+      "onedrive",
+      "active_directory",
+      "visual_studio",
+      "sql_server",
+      "iis",
+      "exchange_server",
+      "mysql",
+      "http_server",
+      "tomcat",
+      "kafka",
+      "python",
+      "node.js",
+      "falcon",
+      "azure"
+    ],
+    "operating_systems": [
+      "windows_10",
+      "windows_11",
+      "windows_server_2019",
+      "windows_server_2022",
+      "macos"
+    ],
+    "applications": [
+      "office",
+      "teams",
+      "powerpoint",
+      "excel",
+      "onedrive",
+      "active_directory",
+      "visual_studio",
+      "sql_server",
+      "iis",
+      "exchange_server",
+      "mysql",
+      "http_server",
+      "tomcat",
+      "kafka",
+      "python",
+      "node.js",
+      "falcon"
+    ],
+    "cloud_platforms": [
+      "azure"
+    ]
+  },
+  "collection_metadata": {
+    "timestamp": "2025-09-11T03:38:11.971501",
+    "organization": "Your Organization"
+  },
+  "vulnerability_data": {
+    "recent_cves": [
+      "CVE-2025-57766",
+      "CVE-2025-57815",
+      "CVE-2025-57816",
+      "CVE-2025-57817",
+      "CVE-2025-57766",
+      "CVE-2025-57815",
+      "CVE-2025-57816",
+      "CVE-2025-57817",
+      "CVE-2025-57766",
+      "CVE-2025-57815",
+      "CVE-2025-57816",
+      "CVE-2025-57817"
+    ],
+    "high_priority_cves": [
+      {
+        "cve_id": "CVE-2025-57816",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the Fides Webserver API's built-in IP-based rate limiting is ineffective in environments with CDNs, proxies or load balancers. The system incorrectly applies rate limits based on directly connected infrastructure IPs rather than client IPs, and stores counters in-memory rather than in a shared store. This allows attackers to bypass intended rate limits and potentially cause denial of service. This vulnerability only affects deployments relying on Fides's built-in rate limiting for protection. Deployments using external rate limiting solutions (WAFs, API gateways, etc.) are not affected. Version 2.69.1 fixes the issue. There are no application-level workarounds. However, rate limiting may instead be implemented externally at the infrastructure level using a WAF, API Gateway, or similar technology.",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.703",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.26.1:alpha12:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/59903c195e2f9f8915a1db94950aefd557033a5c",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-fq34-xw6c-fphf",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57816",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the Fides Webserver API's built-in IP-based rate limiting is ineffective in environments with CDNs, proxies or load balancers. The system incorrectly applies rate limits based on directly connected infrastructure IPs rather than client IPs, and stores counters in-memory rather than in a shared store. This allows attackers to bypass intended rate limits and potentially cause denial of service. This vulnerability only affects deployments relying on Fides's built-in rate limiting for protection. Deployments using external rate limiting solutions (WAFs, API gateways, etc.) are not affected. Version 2.69.1 fixes the issue. There are no application-level workarounds. However, rate limiting may instead be implemented externally at the infrastructure level using a WAF, API Gateway, or similar technology.",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.703",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.50.1:alpha14:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/59903c195e2f9f8915a1db94950aefd557033a5c",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-fq34-xw6c-fphf",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57816",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the Fides Webserver API's built-in IP-based rate limiting is ineffective in environments with CDNs, proxies or load balancers. The system incorrectly applies rate limits based on directly connected infrastructure IPs rather than client IPs, and stores counters in-memory rather than in a shared store. This allows attackers to bypass intended rate limits and potentially cause denial of service. This vulnerability only affects deployments relying on Fides's built-in rate limiting for protection. Deployments using external rate limiting solutions (WAFs, API gateways, etc.) are not affected. Version 2.69.1 fixes the issue. There are no application-level workarounds. However, rate limiting may instead be implemented externally at the infrastructure level using a WAF, API Gateway, or similar technology.",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.703",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.27.0:rc6:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/59903c195e2f9f8915a1db94950aefd557033a5c",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-fq34-xw6c-fphf",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57817",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the OAuth client creation and update endpoints of the Fides Webserver API do not properly authorize scope assignment. This allows highly privileged users with `client:create` or `client:update` permissions to escalate their privileges to owner-level. Version 2.69.1 fixes the issue. No known workarounds are available.",
+        "cvss_score": 7.2,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.880",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.26.1:alpha12:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/2ffd125e1089a09b84c27fb5279a05960cbf2452",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-hjfh-p8f5-24wr",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57817",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the OAuth client creation and update endpoints of the Fides Webserver API do not properly authorize scope assignment. This allows highly privileged users with `client:create` or `client:update` permissions to escalate their privileges to owner-level. Version 2.69.1 fixes the issue. No known workarounds are available.",
+        "cvss_score": 7.2,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.880",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.50.1:alpha14:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/2ffd125e1089a09b84c27fb5279a05960cbf2452",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-hjfh-p8f5-24wr",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57817",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the OAuth client creation and update endpoints of the Fides Webserver API do not properly authorize scope assignment. This allows highly privileged users with `client:create` or `client:update` permissions to escalate their privileges to owner-level. Version 2.69.1 fixes the issue. No known workarounds are available.",
+        "cvss_score": 7.2,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.880",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.27.0:rc6:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/2ffd125e1089a09b84c27fb5279a05960cbf2452",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-hjfh-p8f5-24wr",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      }
+    ],
+    "total_cves_found": 12,
+    "time_period": "Last 7 days",
+    "cve_details": [
+      {
+        "cve_id": "CVE-2025-57816",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the Fides Webserver API's built-in IP-based rate limiting is ineffective in environments with CDNs, proxies or load balancers. The system incorrectly applies rate limits based on directly connected infrastructure IPs rather than client IPs, and stores counters in-memory rather than in a shared store. This allows attackers to bypass intended rate limits and potentially cause denial of service. This vulnerability only affects deployments relying on Fides's built-in rate limiting for protection. Deployments using external rate limiting solutions (WAFs, API gateways, etc.) are not affected. Version 2.69.1 fixes the issue. There are no application-level workarounds. However, rate limiting may instead be implemented externally at the infrastructure level using a WAF, API Gateway, or similar technology.",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.703",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.26.1:alpha12:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/59903c195e2f9f8915a1db94950aefd557033a5c",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-fq34-xw6c-fphf",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57816",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the Fides Webserver API's built-in IP-based rate limiting is ineffective in environments with CDNs, proxies or load balancers. The system incorrectly applies rate limits based on directly connected infrastructure IPs rather than client IPs, and stores counters in-memory rather than in a shared store. This allows attackers to bypass intended rate limits and potentially cause denial of service. This vulnerability only affects deployments relying on Fides's built-in rate limiting for protection. Deployments using external rate limiting solutions (WAFs, API gateways, etc.) are not affected. Version 2.69.1 fixes the issue. There are no application-level workarounds. However, rate limiting may instead be implemented externally at the infrastructure level using a WAF, API Gateway, or similar technology.",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.703",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.50.1:alpha14:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/59903c195e2f9f8915a1db94950aefd557033a5c",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-fq34-xw6c-fphf",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57816",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the Fides Webserver API's built-in IP-based rate limiting is ineffective in environments with CDNs, proxies or load balancers. The system incorrectly applies rate limits based on directly connected infrastructure IPs rather than client IPs, and stores counters in-memory rather than in a shared store. This allows attackers to bypass intended rate limits and potentially cause denial of service. This vulnerability only affects deployments relying on Fides's built-in rate limiting for protection. Deployments using external rate limiting solutions (WAFs, API gateways, etc.) are not affected. Version 2.69.1 fixes the issue. There are no application-level workarounds. However, rate limiting may instead be implemented externally at the infrastructure level using a WAF, API Gateway, or similar technology.",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.703",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.27.0:rc6:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/59903c195e2f9f8915a1db94950aefd557033a5c",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-fq34-xw6c-fphf",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57817",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the OAuth client creation and update endpoints of the Fides Webserver API do not properly authorize scope assignment. This allows highly privileged users with `client:create` or `client:update` permissions to escalate their privileges to owner-level. Version 2.69.1 fixes the issue. No known workarounds are available.",
+        "cvss_score": 7.2,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.880",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.26.1:alpha12:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/2ffd125e1089a09b84c27fb5279a05960cbf2452",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-hjfh-p8f5-24wr",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57817",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the OAuth client creation and update endpoints of the Fides Webserver API do not properly authorize scope assignment. This allows highly privileged users with `client:create` or `client:update` permissions to escalate their privileges to owner-level. Version 2.69.1 fixes the issue. No known workarounds are available.",
+        "cvss_score": 7.2,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.880",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.50.1:alpha14:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/2ffd125e1089a09b84c27fb5279a05960cbf2452",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-hjfh-p8f5-24wr",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57817",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the OAuth client creation and update endpoints of the Fides Webserver API do not properly authorize scope assignment. This allows highly privileged users with `client:create` or `client:update` permissions to escalate their privileges to owner-level. Version 2.69.1 fixes the issue. No known workarounds are available.",
+        "cvss_score": 7.2,
+        "severity": "HIGH",
+        "published": "2025-09-08T22:15:33.880",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.27.0:rc6:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/2ffd125e1089a09b84c27fb5279a05960cbf2452",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-hjfh-p8f5-24wr",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57815",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the Fides Admin UI login endpoint relies on a general IP-based rate limit for all API traffic and lacks specific anti-automation controls designed to protect against brute-force attacks. This could allow attackers to conduct credential testing attacks, such as credential stuffing or password spraying, which poses a risk to accounts with weak or previously compromised passwords. Version 2.69.1 fixes the issue. For organizations with commercial Fides Enterprise licenses, configuring Single Sign-On (SSO) through an OIDC provider (like Azure, Google, or Okta) is an effective workaround. When OIDC SSO is enabled, username/password authentication can be disabled entirely, which eliminates this attack vector. This functionality is not available for Fides Open Source users.",
+        "cvss_score": 6.5,
+        "severity": "MEDIUM",
+        "published": "2025-09-08T22:15:33.520",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.26.1:alpha12:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/59903c195e2f9f8915a1db94950aefd557033a5c",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-7q62-r88r-j5gw",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57815",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the Fides Admin UI login endpoint relies on a general IP-based rate limit for all API traffic and lacks specific anti-automation controls designed to protect against brute-force attacks. This could allow attackers to conduct credential testing attacks, such as credential stuffing or password spraying, which poses a risk to accounts with weak or previously compromised passwords. Version 2.69.1 fixes the issue. For organizations with commercial Fides Enterprise licenses, configuring Single Sign-On (SSO) through an OIDC provider (like Azure, Google, or Okta) is an effective workaround. When OIDC SSO is enabled, username/password authentication can be disabled entirely, which eliminates this attack vector. This functionality is not available for Fides Open Source users.",
+        "cvss_score": 6.5,
+        "severity": "MEDIUM",
+        "published": "2025-09-08T22:15:33.520",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.50.1:alpha14:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/59903c195e2f9f8915a1db94950aefd557033a5c",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-7q62-r88r-j5gw",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57815",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, the Fides Admin UI login endpoint relies on a general IP-based rate limit for all API traffic and lacks specific anti-automation controls designed to protect against brute-force attacks. This could allow attackers to conduct credential testing attacks, such as credential stuffing or password spraying, which poses a risk to accounts with weak or previously compromised passwords. Version 2.69.1 fixes the issue. For organizations with commercial Fides Enterprise licenses, configuring Single Sign-On (SSO) through an OIDC provider (like Azure, Google, or Okta) is an effective workaround. When OIDC SSO is enabled, username/password authentication can be disabled entirely, which eliminates this attack vector. This functionality is not available for Fides Open Source users.",
+        "cvss_score": 6.5,
+        "severity": "MEDIUM",
+        "published": "2025-09-08T22:15:33.520",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.27.0:rc6:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/59903c195e2f9f8915a1db94950aefd557033a5c",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-7q62-r88r-j5gw",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57766",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, admin UI user password changes in Fides do not invalidate active user sessions, creating a vulnerability chaining opportunity where attackers who have obtained session tokens through other attack vectors (such as XSS) can maintain access even after password reset. This issue is not directly exploitable on its own and requires a prerequisite vulnerability to obtain valid session tokens in the first place. Version 2.69.1 fixes the issue. No known workarounds are available.",
+        "cvss_score": 4.8,
+        "severity": "MEDIUM",
+        "published": "2025-09-08T22:15:33.320",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.26.1:alpha12:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/8daec4f5ad3daf0f0bdab4814f6757eb0965104b",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-rpw8-82v9-3q87",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57766",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, admin UI user password changes in Fides do not invalidate active user sessions, creating a vulnerability chaining opportunity where attackers who have obtained session tokens through other attack vectors (such as XSS) can maintain access even after password reset. This issue is not directly exploitable on its own and requires a prerequisite vulnerability to obtain valid session tokens in the first place. Version 2.69.1 fixes the issue. No known workarounds are available.",
+        "cvss_score": 4.8,
+        "severity": "MEDIUM",
+        "published": "2025-09-08T22:15:33.320",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.50.1:alpha14:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/8daec4f5ad3daf0f0bdab4814f6757eb0965104b",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-rpw8-82v9-3q87",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-57766",
+        "description": "Fides is an open-source privacy engineering platform. Prior to version 2.69.1, admin UI user password changes in Fides do not invalidate active user sessions, creating a vulnerability chaining opportunity where attackers who have obtained session tokens through other attack vectors (such as XSS) can maintain access even after password reset. This issue is not directly exploitable on its own and requires a prerequisite vulnerability to obtain valid session tokens in the first place. Version 2.69.1 fixes the issue. No known workarounds are available.",
+        "cvss_score": 4.8,
+        "severity": "MEDIUM",
+        "published": "2025-09-08T22:15:33.320",
+        "cpe_name": "cpe:2.3:a:ethyca:fides:2.27.0:rc6:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://github.com/ethyca/fides/commit/8daec4f5ad3daf0f0bdab4814f6757eb0965104b",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Patch"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/releases/tag/2.69.1",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Release Notes"
+            ]
+          },
+          {
+            "url": "https://github.com/ethyca/fides/security/advisories/GHSA-rpw8-82v9-3q87",
+            "source": "security-advisories@github.com",
+            "tags": [
+              "Exploit",
+              "Vendor Advisory"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "research_focus": "Recent Vulnerability Analysis",
+  "threat_intelligence_priority": "High",
+  "analysis_timeframe": "Last 7 days"
+}

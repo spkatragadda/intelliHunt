@@ -1,46 +1,89 @@
 research_task:
   description: >
-    Conduct thorough research on the cybersecurity threats relevant to the organizations software stack. You are provided
-    with a high priority vulnerability and information about that vulnerability, along with urls to access more information
-    about that vulnerability. 
-    Here is the information:
-    "cve_id": {cve_id},
-    "description": {description},
-    "cvss_score": {cvss_score},
-    "severity": {severity},
-    "date_published": {published},
-    "cpe_name": {cpe_name},
-    "references": {references}
-    Make sure the information is relevant to the last few days.
-    Use the Web Scraper tool to gather the necessary information from the urls provided in the references section. 
+    Conduct comprehensive threat intelligence analysis on the provided CVE. You are given detailed vulnerability information
+    including CVE ID, description, CVSS score, severity, publication date, affected CPE, and reference URLs.
+    
+    CRITICAL ANALYSIS REQUIREMENTS:
+    1. EXPLOITABILITY ASSESSMENT: Analyze the attack vector, complexity, privileges required, user interaction, and scope
+    2. TECHNICAL DETAILS: Research affected versions, patches, workarounds, and proof-of-concept availability
+    3. THREAT INTELLIGENCE: Investigate active exploitation, threat actors, campaigns, and real-world usage
+    4. ORGANIZATION CONTEXT: Assess how this vulnerability affects the organization's specific assets and risk profile
+    5. INDICATORS OF COMPROMISE: Identify specific IoCs including file hashes, IP addresses, domains, and behavioral patterns
+    6. RISK ASSESSMENT: Provide organization-specific risk evaluation considering business impact and current security controls
+    7. RECOMMENDED ACTIONS: Suggest immediate and long-term remediation steps
+    
+    Use the Web Scraper tool to gather detailed information from reference URLs and additional threat intelligence sources.
+    Focus on recent developments, active exploitation, and practical attack scenarios.
+    
+    Data provided:
+    - cve_id: {cve_id}
+    - description: {description}
+    - cvss_score: {cvss_score}
+    - severity: {severity}
+    - published: {published}
+    - cpe_name: {cpe_name}
+    - references: {references}
   expected_output: >
-    A report on the provided threat, which is relevant to an organizations software stack in a well formatted and concise report.
-    The report should include indicators of compromise for the threat and information associated with detecting
-    that threat. 
+    A comprehensive threat intelligence report with detailed analysis including exploitability metrics, technical details,
+    threat intelligence, organization context, specific indicators of compromise, risk assessment, and recommended actions.
+    The report must be structured according to the EnhancedTrendingThreat model with all required fields populated.
   agent: ctiAnalyst
 
 additional_research_task:
   description: >
-    You will be given a threat intelligence report for a given CVE. If there is not rnough information on that CVE included
-    within the report, your job is to enrich the report further by using the googlsearch tool and the webscraper tool.
-    User the googlesearch to search for the cve and cve name. Given a url from a reputable source, use the webscraper tool
-    to scrape text from that webpage. Only extract meaningful text from the webpage, do not extract titles, images,
-    formatting or anything other than information directly related to the CVE. This information is to be incorporated into the report.
+    You will receive an initial threat intelligence report for a CVE. Your task is to enrich and validate this report
+    by conducting additional research to fill any gaps or validate findings.
+    
+    ENRICHMENT FOCUS AREAS:
+    1. THREAT ACTOR ATTRIBUTION: Search for specific threat actors, APT groups, or criminal organizations using this vulnerability
+    2. ACTIVE EXPLOITATION: Verify if the vulnerability is being actively exploited in the wild
+    3. CAMPAIGN ANALYSIS: Identify specific attack campaigns or operations using this CVE
+    4. TECHNICAL VALIDATION: Verify technical details, affected versions, and patch information
+    5. IOCs ENRICHMENT: Find additional indicators of compromise not covered in the initial report
+    6. BUSINESS IMPACT: Research real-world impact and business consequences of exploitation
+    
+    RESEARCH METHODOLOGY:
+    - Use Google Search to find recent news, security advisories, and threat intelligence reports
+    - Use Web Scraper to extract detailed information from authoritative sources
+    - Focus on reputable security vendors, government agencies, and threat intelligence providers
+    - Prioritize information from the last 30 days to ensure relevance
+    
+    Only extract and incorporate information directly related to the specific CVE and its exploitation.
+    Validate all findings against multiple sources when possible.
   expected_output: >
-    A report on the provided threat, which is relevant to an organizations software stack in a well formatted and concise report.
-    The report should include indicators of compromise for the threat and information associated with detecting
-    that threat. 
+    An enriched and validated threat intelligence report that builds upon the initial analysis. The report should
+    include any new findings, validated information, and additional context discovered through research.
+    Maintain the EnhancedTrendingThreat structure while incorporating new insights and validated data.
   agent: ctiAnalyst
 
 review_task:
   description: >
-    Conduct a thorough review of the report provided to you. The report should only contain information relevant to 
-    the identified CVE. Any information which is not associated with describing the threat and/or how to detect that 
-    threat should be removed from the report. Also ensure that the report is formatted in a readable manner.
+    Conduct a comprehensive quality review and finalization of the threat intelligence report. Your role is to ensure
+    the report meets the highest standards for accuracy, completeness, and actionability.
+    
+    REVIEW CRITERIA:
+    1. ACCURACY VALIDATION: Verify all technical details, CVSS scores, and threat intelligence information
+    2. COMPLETENESS CHECK: Ensure all required fields in the EnhancedTrendingThreat model are populated
+    3. RELEVANCE FILTERING: Remove any information not directly related to the specific CVE and its exploitation
+    4. CONSISTENCY REVIEW: Ensure all data points are consistent and support the overall threat assessment
+    5. ACTIONABILITY ASSESSMENT: Verify that recommended actions are specific, achievable, and prioritized
+    6. RISK ASSESSMENT VALIDATION: Confirm that the risk assessment accurately reflects the organization's exposure
+    7. FORMATTING STANDARDS: Ensure the report follows proper structure and is professionally formatted
+    
+    QUALITY STANDARDS:
+    - All exploitability metrics must be accurate and well-researched
+    - Technical details must include specific version information and patch status
+    - Threat intelligence must be current and from reliable sources
+    - Organization context must be realistic and applicable
+    - Indicators of compromise must be specific and actionable
+    - Risk assessment must be balanced and evidence-based
+    - Recommended actions must be prioritized and implementable
+    
+    Remove any speculative, outdated, or irrelevant information. Ensure the final report is concise yet comprehensive.
   expected_output: >
-    A report on the provided threat, which is relevant to an organizations software stack in a well formatted and concise report.
-    The report should include indicators of compromise for the threat and information associated with detecting
-    that threat.
+    A finalized, high-quality threat intelligence report that meets professional standards for accuracy, completeness,
+    and actionability. The report should be well-structured, evidence-based, and ready for use by security teams
+    for vulnerability management and incident response planning.
   agent: ctiAnalyst
 
 ranking_task:
@@ -54,13 +97,49 @@ ranking_task:
 
 splunk_query_task:
   description: >
-    Use the provided information on a threat relevant to our organization to construct a splunk spl
-    query for detecting the threat. Step to follow:
-    1. Use rag tool to search for relevant sourcetype. ONLY THESE SOURCE TYPES CAN BE USED.
-    2. Generate query using relevant sourcetype(s) 
+    Develop a comprehensive detection method for the provided threat intelligence. You will receive detailed threat
+    information including exploitability metrics, technical details, threat intelligence, and indicators of compromise.
+    
+    DETECTION DEVELOPMENT REQUIREMENTS:
+    1. SOURCETYPE SELECTION: Use the RAG tool to identify the most appropriate Splunk sourcetypes for detection
+    2. THREAT ANALYSIS: Analyze the threat's attack vectors, techniques, and behavioral patterns
+    3. IOC INTEGRATION: Incorporate specific indicators of compromise into the detection logic
+    4. DETECTION TYPE: Determine if this should be signature-based, behavioral, or anomaly detection
+    5. CONFIDENCE ASSESSMENT: Evaluate the confidence level and false positive risk of the detection
+    6. ENVIRONMENTAL CONSIDERATIONS: Consider the organization's specific environment and data sources
+    
+    DETECTION METHODOLOGY:
+    - Start with the RAG tool to find relevant sourcetypes from the available list
+    - Analyze the threat's technical details and attack patterns
+    - Create detection logic that covers multiple attack vectors when possible
+    - Include both specific IoCs and behavioral patterns
+    - Consider temporal aspects and attack progression
+    - Design for both real-time detection and historical hunting
+    
+    QUALITY STANDARDS:
+    - Detection must be specific to the threat and minimize false positives
+    - Query must be optimized for performance and maintainability
+    - Include clear documentation and testing instructions
+    - Consider edge cases and evasion techniques
+    - Provide confidence assessment and maintenance notes
+    
+    Available sourcetypes:
+    sourcetype name: WinEventLog:Security; fields: EventCode, Account_Name, Logon_Type, Process_Name, Parent_Process_Name, Target_User_Name, host; description: Logs from the Windows Security event log, which tracks events like user logon/logoff, account management, and process creation. This is a critical sourcetype for detecting host-based attacks and insider threats.
+    sourcetype name: linux_secure; fields: user, host, src_ip, authentication_method, session_id; description: Logs from the /var/log/secure file on Linux systems, which records authentication-related events.
+    sourcetype name: linux_audit; fields: type, syscall, pid, exe, comm, success, exit; description: Logs from the Linux Auditd framework, which provides granular monitoring of system calls and file access.
+    sourcetype name: cisco:asa; fields: action, src_ip, dest_ip, src_port, dest_port, protocol, reason, message; description: Logs from Cisco Adaptive Security Appliances (ASA) firewalls, detailing network traffic and security events.
+    sourcetype name: pan:traffic; fields: action, src_ip, dest_ip, src_port, dest_port, protocol, app, bytes_sent, bytes_received, rule; description: Logs from Palo Alto Networks firewalls detailing network traffic flows.
+    sourcetype name: snort; fields: signature_id, signature, src_ip, dest_ip, src_port, dest_port, priority; description: Logs from the Snort Intrusion Detection System (IDS), which identifies malicious network activity.
+    sourcetype name: access_combined; fields: clientip, method, uri_path, status, bytes, useragent; description: A standard format for web server access logs (e.g., from Apache), detailing web requests.
+    sourcetype name: apache_error; fields: client, error_message, level; description: Logs from Apache web servers detailing errors and other server-side issues.
+    sourcetype name: iis; fields: c_ip, cs_method, cs_uri_stem, sc_status, cs_useragent; description: Logs from Microsoft Internet Information Services (IIS) web servers.
+    sourcetype name: Proofpoint:TAP:syslog; fields: event_type, sender, recipient, subject, threat_status, threat_name, url; description: Logs from Proofpoint Targeted Attack Protection (TAP), which provides advanced email threat protection.
+    sourcetype name: MSExchange:2013:MessageTracking; fields: source_context, sender, recipient, message_subject, event_id, message_info; description: Logs from Microsoft Exchange Server that track the flow of messages.
+    sourcetype name: cisco:esa:syslog; fields: sender, recipient, subject, direction, verdict; description: Logs from Cisco Email Security Appliances (ESA) that monitor and control email traffic.
   expected_output: >
-    A valid Splunk query and a description of the query. Do not return anything but the splunk spl query 
-    and a description of its function. The description should include which threat is being detected.
+    A comprehensive detection method including a valid Splunk SPL query, detailed description, detection type,
+    confidence level, false positive risk assessment, environmental context, specific threat indicators used,
+    testing instructions, and maintenance notes. The output must follow the EnhancedDetectionMethod model structure.
   agent: cthAnalyst
 
 python_query_task:
