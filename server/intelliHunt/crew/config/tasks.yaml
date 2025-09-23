@@ -101,7 +101,7 @@ splunk_query_task:
     information including exploitability metrics, technical details, threat intelligence, and indicators of compromise.
     
     DETECTION DEVELOPMENT REQUIREMENTS:
-    1. SOURCETYPE SELECTION: Use the RAG tool to identify the most appropriate Splunk sourcetypes for detection
+    1. SOURCETYPE SELECTION: Use the provided list of sourcetypes to determine which would be most suitable to detect the provided threat
     2. THREAT ANALYSIS: Analyze the threat's attack vectors, techniques, and behavioral patterns
     3. IOC INTEGRATION: Incorporate specific indicators of compromise into the detection logic
     4. DETECTION TYPE: Determine if this should be signature-based, behavioral, or anomaly detection

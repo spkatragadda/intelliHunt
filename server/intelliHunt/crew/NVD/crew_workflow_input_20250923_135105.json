@@ -1,0 +1,112 @@
+{
+  "crew_input": {
+    "software_stack": "exchange_server,apple,nodejs,tomcat,teams,windows_10,sql_server,powerpoint,microsoft,visual_studio,iis,node.js,macos,mysql,office,windows_server_2022,crowdstrike,http_server,apache,windows_server_2019,onedrive,falcon,oracle,kafka,excel,python",
+    "url_list": [
+      "https://nvd.nist.gov/vuln/search",
+      "https://cve.mitre.org/cve/search_cve_list.html",
+      "https://msrc.microsoft.com/update-guide/vulnerabilities",
+      "https://www.oracle.com/security-alerts/",
+      "https://apache.org/security/",
+      "https://python.org/security/"
+    ],
+    "cpe_data": {
+      "total_records": 3926,
+      "vendors_covered": [
+        "microsoft",
+        "apple",
+        "oracle",
+        "apache",
+        "python",
+        "nodejs",
+        "crowdstrike"
+      ],
+      "products_covered": [
+        "windows_10",
+        "windows_server_2019",
+        "windows_server_2022",
+        "macos",
+        "office",
+        "teams",
+        "powerpoint",
+        "excel",
+        "onedrive",
+        "visual_studio",
+        "sql_server",
+        "iis",
+        "exchange_server",
+        "mysql",
+        "http_server",
+        "tomcat",
+        "kafka",
+        "python",
+        "node.js",
+        "falcon"
+      ],
+      "operating_systems": [
+        "windows_10",
+        "windows_server_2019",
+        "windows_server_2022",
+        "macos"
+      ],
+      "applications": [
+        "office",
+        "teams",
+        "powerpoint",
+        "excel",
+        "onedrive",
+        "visual_studio",
+        "sql_server",
+        "iis",
+        "exchange_server",
+        "mysql",
+        "http_server",
+        "tomcat",
+        "kafka",
+        "python",
+        "node.js",
+        "falcon"
+      ],
+      "cloud_platforms": []
+    },
+    "collection_metadata": {
+      "timestamp": "2025-09-23T17:46:07.149351",
+      "organization": "Your Organization"
+    }
+  },
+  "vulnerability_focus_areas": [
+    {
+      "category": "Operating Systems",
+      "description": "Vulnerabilities in operating systems used by the organization",
+      "cpe_count": 4,
+      "priority": "High",
+      "search_terms": [
+        "OS vulnerability",
+        "operating system exploit",
+        "kernel vulnerability"
+      ]
+    },
+    {
+      "category": "Applications",
+      "description": "Vulnerabilities in applications and software used by the organization",
+      "cpe_count": 16,
+      "priority": "High",
+      "search_terms": [
+        "application vulnerability",
+        "software exploit",
+        "zero-day"
+      ]
+    },
+    {
+      "category": "Recent Updates",
+      "description": "Recently discovered or updated vulnerabilities",
+      "cpe_count": 3906,
+      "priority": "Critical",
+      "search_terms": [
+        "recent vulnerability",
+        "new exploit",
+        "emerging threat"
+      ]
+    }
+  ],
+  "processing_timestamp": "2025-09-23T17:51:05.719716"
+}

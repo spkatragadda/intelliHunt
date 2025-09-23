@@ -9,58 +9,78 @@ organization:
 software_stack:
   operating_systems:
     - vendor: "microsoft"
-      products: ["windows_10", "windows_11", "windows_server_2019", "windows_server_2022"]
+      products: 
+        - name: "windows_10"
+        - name: "windows_11"
+        - name: "windows_server_2019"
+        - name: "windows_server_2022"
     - vendor: "apple"
-      products: ["macos"]
+      products: 
+        - name: "macos"
     - vendor: "linux"
-      products: ["ubuntu", "centos", "red_hat_enterprise_linux", "debian"]
+      products: 
+        - name: "ubuntu"
+        - name: "centos"
+        - name: "red_hat_enterprise_linux"
+        - name: "debian"
   
   applications:
     - vendor: "microsoft"
-      products: ["office", "sharepoint", "teams", "powerpoint", "excel", "onedrive", "onedrive_for_business", "active_directory", "visual_studio", "sql_server", "iis", "exchange_server"]
+      products: 
+        - name: "office"
+        - name: "sharepoint"
+        - name: "teams"
+        - name: "powerpoint"
+        - name: "excel"
+        - name: "onedrive"
+        - name: "onedrive_for_business"
+        - name: "active_directory"
+        - name: "visual_studio"
+        - name: "sql_server"
+        - name: "iis"
+        - name: "exchange_server"
     - vendor: "oracle"
-      products: ["java", "mysql", "oracle_database"]
+      products: 
+        - name: "java"
+          # get_all_versions: true # Example: Get all versions for Java due to its complexity
+        - name: "mysql"
+        - name: "oracle_database"
     - vendor: "apache"
-      products: ["http_server", "tomcat", "kafka"]
+      products: 
+        - name: "http_server"
+        - name: "tomcat"
+        - name: "kafka"
     - vendor: "python"
-      products: ["python"]
+      products: 
+        - name: "python"
     - vendor: "nodejs"
-      products: ["node.js"]
+      products: 
+        - name: "node.js"
     - vendor: "crowdstrike"
-      products: ["falcon"]
+      products: 
+        - name: "falcon"
     - vendor: "splunk"
-      products: ["splunk_enterprise", "splunk_universal_forwarder"]
+      products: 
+        - name: "splunk_enterprise"
+        - name: "splunk_universal_forwarder"
     - vendor: "tanium"
-      products: ["tanium_core_platform"]
+      products: 
+        - name: "tanium_core_platform"
     - vendor: "corelight"
-      products: ["zeek"]
+      products: 
+        - name: "zeek"
   
   cloud_platforms:
     - vendor: "amazon"
-      products: ["aws"]
+      products: 
+        - name: "aws"
     - vendor: "microsoft"
-      products: ["azure"]
+      products: 
+        - name: "azure"
     - vendor: "google"
-      products: ["google_cloud_platform"]
-
-# CPE search patterns for automated matching
-cpe_patterns:
-  # Operating Systems
-  - "cpe:2.3:o:microsoft:windows_*"
-  - "cpe:2.3:o:apple:macos:*"
-  - "cpe:2.3:o:*:linux:*"
-  
-  # Applications
-  - "cpe:2.3:a:microsoft:*"
-  - "cpe:2.3:a:oracle:java:*"
-  - "cpe:2.3:a:apache:*"
-  - "cpe:2.3:a:python:python:*"
-  - "cpe:2.3:a:nodejs:node.js:*"
-  - "cpe:2.3:a:crowdstrike:*"
-  - "cpe:2.3:a:splunk:*"
-  - "cpe:2.3:a:tanium:*"
-  - "cpe:2.3:a:corelight:*"
-
+      products: 
+        - name: "google_cloud_platform"
+ 
 # API configuration
 api_config:
   base_url: "https://services.nvd.nist.gov/rest/json"

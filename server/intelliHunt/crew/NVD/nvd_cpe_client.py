@@ -12,6 +12,8 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 from pathlib import Path
 import os
+import re
+from packaging import version
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -86,6 +88,49 @@ class NVDCPEClient:
                     logger.error(f"All {self.max_retries} attempts failed for URL: {url}")
                     return None
     
+    def _filter_latest_cpes(self, cpe_records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Filters a list of CPE records to return only the latest versions for each product.
+        
+        This function iterates through CPE records, grouping them by product name.
+        It then parses the version string for each CPE and identifies the highest version
+        for each product, returning a list of only those records.
+        
+        Args:
+            cpe_records: A list of raw CPE records from the NVD API.
+            
+        Returns:
+            A list containing only the latest CPE record for each product.
+        """
+        product_versions = {}
+        
+        # Group CPEs by product and find the latest version
+        for record in cpe_records:
+            cpe_name = record['cpe']['cpeName']
+            try:
+                # Regular expression to parse the CPE string
+                # Example: cpe:2.3:o:microsoft:windows_10:1809:*:*:*:*:*:*:*
+                parts = cpe_name.split(':')
+                if len(parts) >= 6:
+                    product_name = parts[4]
+                    version_str = parts[5]
+                    
+                    # Use a normalized version object for reliable comparisons
+                    current_version = version.parse(version_str)
+                    
+                    if product_name not in product_versions:
+                        product_versions[product_name] = {'version': current_version, 'record': record}
+                    else:
+                        if current_version > product_versions[product_name]['version']:
+                            product_versions[product_name]['version'] = current_version
+                            product_versions[product_name]['record'] = record
+            except Exception as e:
+                logger.debug(f"Could not parse CPE version for {cpe_name}: {e}")
+                continue
+                
+        # Return the records for the latest versions
+        return [data['record'] for data in product_versions.values()]
+
     def get_cpe_by_vendor(self, vendor: str, product: str = None) -> List[Dict[str, Any]]:
         """
         Retrieve CPE records for a specific vendor and optionally product.
@@ -149,7 +194,6 @@ class NVDCPEClient:
         cpe_records = []
         start_index = 0
         
-        # here might needs to pass a string
         keyword_string = " ".join(keywords)
         logger.info(f"Searching for CPE records with keywords: {keyword_string}")
         
@@ -259,32 +303,50 @@ class NVDCPEClient:
         # Collect OS data
         for os_config in self.config['software_stack']['operating_systems']:
             vendor = os_config['vendor']
-            for product in os_config['products']:
-                logger.info(f"Collecting CPE data for OS: {vendor} {product}")
-                cpe_records = self.get_cpe_by_vendor(vendor, product)
+            for product_config in os_config['products']:
+                product_name = product_config['name']
+                get_all_versions = product_config.get('get_all_versions', False)
+                logger.info(f"Collecting CPE data for OS: {vendor} {product_name} (all versions: {get_all_versions})")
+                cpe_records = self.get_cpe_by_vendor(vendor, product_name)
+                
+                if not get_all_versions:
+                    cpe_records = self._filter_latest_cpes(cpe_records)
+                
                 cpe_data['operating_systems'].extend(cpe_records)
                 cpe_data['summary']['vendors_covered'].add(vendor)
-                cpe_data['summary']['products_covered'].add(product)
+                cpe_data['summary']['products_covered'].add(product_name)
         
         # Collect application data
         for app_config in self.config['software_stack']['applications']:
             vendor = app_config['vendor']
-            for product in app_config['products']:
-                logger.info(f"Collecting CPE data for application: {vendor} {product}")
-                cpe_records = self.get_cpe_by_vendor(vendor, product)
+            for product_config in app_config['products']:
+                product_name = product_config['name']
+                get_all_versions = product_config.get('get_all_versions', False)
+                logger.info(f"Collecting CPE data for application: {vendor} {product_name} (all versions: {get_all_versions})")
+                cpe_records = self.get_cpe_by_vendor(vendor, product_name)
+                
+                if not get_all_versions:
+                    cpe_records = self._filter_latest_cpes(cpe_records)
+                
                 cpe_data['applications'].extend(cpe_records)
                 cpe_data['summary']['vendors_covered'].add(vendor)
-                cpe_data['summary']['products_covered'].add(product)
+                cpe_data['summary']['products_covered'].add(product_name)
         
         # Collect cloud platform data
         for cloud_config in self.config['software_stack']['cloud_platforms']:
             vendor = cloud_config['vendor']
-            for product in cloud_config['products']:
-                logger.info(f"Collecting CPE data for cloud platform: {vendor} {product}")
-                cpe_records = self.get_cpe_by_vendor(vendor, product)
+            for product_config in cloud_config['products']:
+                product_name = product_config['name']
+                get_all_versions = product_config.get('get_all_versions', False)
+                logger.info(f"Collecting CPE data for cloud platform: {vendor} {product_name} (all versions: {get_all_versions})")
+                cpe_records = self.get_cpe_by_vendor(vendor, product_name)
+                
+                if not get_all_versions:
+                    cpe_records = self._filter_latest_cpes(cpe_records)
+                
                 cpe_data['cloud_platforms'].extend(cpe_records)
                 cpe_data['summary']['vendors_covered'].add(vendor)
-                cpe_data['summary']['products_covered'].add(product)
+                cpe_data['summary']['products_covered'].add(product_name)
         
         # Get recent updates
         if self.config['update_settings']['enable_auto_updates']:
