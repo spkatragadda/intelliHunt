@@ -31,6 +31,7 @@ def health_check(request):
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/markdown/', views.get_markdown_content, name='markdown_content'),
+    path('api/generate/', views.run_report, name='run_script'),
     path('', health_check, name='health_check'),
     # The "catch-all" pattern that serves the React app
     #re_path(r'^.*', TemplateView.as_view(template_name='index.html')),

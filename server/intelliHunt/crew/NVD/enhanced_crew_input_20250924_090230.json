@@ -1,0 +1,377 @@
+{
+  "software_stack": "microsoft,powerpoint,mysql,apache,sql_server,http_server,tomcat,exchange_server,node.js,windows_10,kafka,office,nodejs,falcon,windows_server_2019,teams,crowdstrike,visual_studio,iis,windows_server_2022,apple,oracle,macos,excel,python",
+  "url_list": [
+    "https://nvd.nist.gov/vuln/search",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://msrc.microsoft.com/update-guide/vulnerabilities",
+    "https://www.oracle.com/security-alerts/",
+    "https://apache.org/security/",
+    "https://python.org/security/",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://www.cvedetails.com/",
+    "https://nvd.nist.gov/vuln/search"
+  ],
+  "cpe_data": {
+    "total_records": 3755,
+    "vendors_covered": [
+      "microsoft",
+      "apple",
+      "oracle",
+      "apache",
+      "python",
+      "nodejs",
+      "crowdstrike"
+    ],
+    "products_covered": [
+      "windows_10",
+      "windows_server_2019",
+      "windows_server_2022",
+      "macos",
+      "office",
+      "teams",
+      "powerpoint",
+      "excel",
+      "visual_studio",
+      "sql_server",
+      "iis",
+      "exchange_server",
+      "mysql",
+      "http_server",
+      "tomcat",
+      "kafka",
+      "python",
+      "node.js",
+      "falcon"
+    ],
+    "operating_systems": [
+      "windows_10",
+      "windows_server_2019",
+      "windows_server_2022",
+      "macos"
+    ],
+    "applications": [
+      "office",
+      "teams",
+      "powerpoint",
+      "excel",
+      "visual_studio",
+      "sql_server",
+      "iis",
+      "exchange_server",
+      "mysql",
+      "http_server",
+      "tomcat",
+      "kafka",
+      "python",
+      "node.js",
+      "falcon"
+    ],
+    "cloud_platforms": []
+  },
+  "collection_metadata": {
+    "timestamp": "2025-09-24T12:52:36.560036",
+    "organization": "Your Organization"
+  },
+  "vulnerability_data": {
+    "recent_cves": [
+      "CVE-2025-26514",
+      "CVE-2025-26515",
+      "CVE-2025-26516",
+      "CVE-2025-26517"
+    ],
+    "high_priority_cves": [
+      {
+        "cve_id": "CVE-2025-26515",
+        "description": "StorageGRID (formerly \nStorageGRID Webscale) versions prior to 11.8.0.15 and 11.9.0.8 without \nSingle Sign-on enabled are susceptible to a Server-Side Request Forgery \n(SSRF) vulnerability. Successful exploit could allow an unauthenticated \nattacker to change the password of any Grid Manager or Tenant Manager \nnon-federated user.",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "published": "2025-09-19T19:15:38.540",
+        "last_modified": "2025-09-23T14:31:27.840",
+        "cpe_name": "cpe:2.3:a:netapp:storagegrid:11.9.0.5:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://security.netapp.com/advisory/NTAP-20250910-0002",
+            "source": "security-alert@netapp.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://security.netapp.com/advisory/NTAP-20250910-0002"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "NONE",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "11.8.0.15",
+          "11.9.0.8"
+        ],
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:netapp:storagegrid:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "11.8.0.15",
+                    "matchCriteriaId": "52CC3E7A-9725-45F5-805E-9E135B8E69E8"
+                  },
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:netapp:storagegrid:*:*:*:*:*:*:*:*",
+                    "versionStartIncluding": "11.9.0",
+                    "versionEndExcluding": "11.9.0.8",
+                    "matchCriteriaId": "AF444D2C-DE7F-424A-B735-5697CD129016"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "total_cves_found": 4,
+    "time_period": "Last 7 days",
+    "cve_details": [
+      {
+        "cve_id": "CVE-2025-26515",
+        "description": "StorageGRID (formerly \nStorageGRID Webscale) versions prior to 11.8.0.15 and 11.9.0.8 without \nSingle Sign-on enabled are susceptible to a Server-Side Request Forgery \n(SSRF) vulnerability. Successful exploit could allow an unauthenticated \nattacker to change the password of any Grid Manager or Tenant Manager \nnon-federated user.",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "published": "2025-09-19T19:15:38.540",
+        "last_modified": "2025-09-23T14:31:27.840",
+        "cpe_name": "cpe:2.3:a:netapp:storagegrid:11.9.0.5:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://security.netapp.com/advisory/NTAP-20250910-0002",
+            "source": "security-alert@netapp.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://security.netapp.com/advisory/NTAP-20250910-0002"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "NONE",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "11.8.0.15",
+          "11.9.0.8"
+        ],
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:netapp:storagegrid:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "11.8.0.15",
+                    "matchCriteriaId": "52CC3E7A-9725-45F5-805E-9E135B8E69E8"
+                  },
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:netapp:storagegrid:*:*:*:*:*:*:*:*",
+                    "versionStartIncluding": "11.9.0",
+                    "versionEndExcluding": "11.9.0.8",
+                    "matchCriteriaId": "AF444D2C-DE7F-424A-B735-5697CD129016"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-26514",
+        "description": "StorageGRID (formerly \nStorageGRID Webscale) versions prior to 11.8.0.15 and 11.9.0.8 are \nsusceptible to a Reflected Cross-Site Scripting vulnerability. \nSuccessful exploit could allow an attacker to view or modify \nconfiguration settings or add or modify user accounts but requires the \nattacker to know specific information about the target instance and then\n trick a privileged user into clicking a specially crafted link.",
+        "cvss_score": 6.4,
+        "severity": "MEDIUM",
+        "published": "2025-09-19T19:15:38.367",
+        "last_modified": "2025-09-23T14:32:00.057",
+        "cpe_name": "cpe:2.3:a:netapp:storagegrid:11.9.0.5:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://security.netapp.com/advisory/NTAP-20250910-0001",
+            "source": "security-alert@netapp.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://security.netapp.com/advisory/NTAP-20250910-0001"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "HIGH",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "11.8.0.15",
+          "11.9.0.8"
+        ],
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:netapp:storagegrid:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "11.8.0.15",
+                    "matchCriteriaId": "52CC3E7A-9725-45F5-805E-9E135B8E69E8"
+                  },
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:netapp:storagegrid:*:*:*:*:*:*:*:*",
+                    "versionStartIncluding": "11.9.0",
+                    "versionEndExcluding": "11.9.0.8",
+                    "matchCriteriaId": "AF444D2C-DE7F-424A-B735-5697CD129016"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-26517",
+        "description": "StorageGRID (formerly \nStorageGRID Webscale) versions prior to 11.8.0.15 and 11.9.0.8 are \nsusceptible to a privilege escalation vulnerability. Successful exploit \ncould allow an unauthorized authenticated attacker to discover Grid node\n names and IP addresses or modify Storage Grades.",
+        "cvss_score": 5.4,
+        "severity": "MEDIUM",
+        "published": "2025-09-19T19:15:38.840",
+        "last_modified": "2025-09-23T14:30:09.863",
+        "cpe_name": "cpe:2.3:a:netapp:storagegrid:11.9.0.5:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://security.netapp.com/advisory/NTAP-20250910-0004",
+            "source": "security-alert@netapp.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://security.netapp.com/advisory/NTAP-20250910-0004"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "LOW",
+          "user_interaction": "NONE",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "11.8.0.15",
+          "11.9.0.8"
+        ],
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:netapp:storagegrid:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "11.8.0.15",
+                    "matchCriteriaId": "52CC3E7A-9725-45F5-805E-9E135B8E69E8"
+                  },
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:netapp:storagegrid:*:*:*:*:*:*:*:*",
+                    "versionStartIncluding": "11.9.0",
+                    "versionEndExcluding": "11.9.0.8",
+                    "matchCriteriaId": "AF444D2C-DE7F-424A-B735-5697CD129016"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2025-26516",
+        "description": "StorageGRID (formerly \nStorageGRID Webscale) versions prior to 11.8.0.15 and 11.9.0.8 are \nsusceptible to a Denial of Service vulnerability. Successful exploit \ncould allow an unauthenticated attacker to cause a Denial of Service on \nthe Admin node.",
+        "cvss_score": 5.3,
+        "severity": "MEDIUM",
+        "published": "2025-09-19T19:15:38.683",
+        "last_modified": "2025-09-23T14:31:10.757",
+        "cpe_name": "cpe:2.3:a:netapp:storagegrid:11.9.0.5:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://security.netapp.com/advisory/NTAP-20250910-0003",
+            "source": "security-alert@netapp.com",
+            "tags": [
+              "Vendor Advisory"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://security.netapp.com/advisory/NTAP-20250910-0003"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "NONE",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "11.8.0.15",
+          "11.9.0.8"
+        ],
+        "configurations": [
+          {
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:netapp:storagegrid:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "11.8.0.15",
+                    "matchCriteriaId": "52CC3E7A-9725-45F5-805E-9E135B8E69E8"
+                  },
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:netapp:storagegrid:*:*:*:*:*:*:*:*",
+                    "versionStartIncluding": "11.9.0",
+                    "versionEndExcluding": "11.9.0.8",
+                    "matchCriteriaId": "AF444D2C-DE7F-424A-B735-5697CD129016"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "research_focus": "Recent Vulnerability Analysis",
+  "threat_intelligence_priority": "High",
+  "analysis_timeframe": "Last 7 days"
+}
