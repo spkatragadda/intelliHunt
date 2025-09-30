@@ -22,7 +22,8 @@ def get_markdown_content(request):
         return response
     except FileNotFoundError:
         return HttpResponse("Markdown file not found", status=404)
-    
+
+@csrf_exempt
 def run_report(request):
     if request.method == 'POST':
         try:

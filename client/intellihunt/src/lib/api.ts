@@ -28,27 +28,56 @@ export async function fetchReportMarkdown(): Promise<string> {
 /** Kick off a report run with custom inputs */
 export async function runReport(
   payload: GenerateReportPayload
-): Promise<{ run_id?: string; message: string }> {
+): Promise<{ markdown?: string; message: string }> {
   // POST to the PUBLIC base so it works from the browser
-  const res = await fetch(`${PUBLIC_API_BASE}/api/run`, {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/generate/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
 
+  // --- Error Handling (Handles 4xx/5xx status codes) ---
   if (!res.ok) {
-    let msg = `Request failed: ${res.status}`;
+    let msg = `Report generation failed: ${res.status}`;
     try {
+      // Attempt to get a detailed error message from the response body
       const txt = await res.text();
-      if (txt) msg = txt;
-    } catch {}
+      // If the Django view returned an 'error' JSON, we want that message
+      const errorData = JSON.parse(txt);
+      if (errorData.message) {
+          msg = `Server Error: ${errorData.message}`;
+      } else if (txt) {
+          msg = txt;
+      }
+    } catch {
+      // Ignore if parsing fails
+    }
+    // Return the error message
     return { message: msg };
   }
 
+  // --- Success Handling (Handles 200 OK) ---
   try {
-    return await res.json();
+    // 1. Parse the JSON response from the Django view
+    const data = await res.json(); 
+
+    // The successful Django view returns data like: 
+    // { 'status': 'success', 'message': 'Script ran successfully.', 'output': '## Markdown Report' }
+
+    if (data.status === 'success' && data.output) {
+        // 2. Return the report content, which is in the 'output' field
+        return { 
+            markdown: data.output, 
+            message: data.message || "Report generated successfully."
+        };
+    } 
+    
+    // Handle success response that doesn't contain the expected output (e.g., script ran but returned nothing)
+    return { message: data.message || "Script ran, but no report content was returned." };
+
   } catch {
-    return { message: "Report started." };
+    // This handles cases where the response is OK but not valid JSON
+    return { message: "Report generated, but received an unexpected non-JSON response." };
   }
 }
 

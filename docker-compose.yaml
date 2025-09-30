@@ -11,6 +11,7 @@ services:
       - "8000:8000"
     volumes:
       - ./server:/app/server
+      - ./.env:/app/server/.env
     environment:
       - DJANGO_SETTINGS_MODULE=intelliHunt.settings
       - PYTHONUNBUFFERED=1
