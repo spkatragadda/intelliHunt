@@ -1,0 +1,87 @@
+{
+  "software_stack": "windows_10,kafka,iis,python,visual_studio,apache,teams,office,oracle,mysql,crowdstrike,falcon,windows_server_2022,tomcat,exchange_server,powerpoint,macos,onedrive,microsoft,excel,node.js,nodejs,http_server,apple,windows_server_2019,sql_server",
+  "url_list": [
+    "https://nvd.nist.gov/vuln/search",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://msrc.microsoft.com/update-guide/vulnerabilities",
+    "https://www.oracle.com/security-alerts/",
+    "https://apache.org/security/",
+    "https://python.org/security/",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://www.cvedetails.com/",
+    "https://nvd.nist.gov/vuln/search"
+  ],
+  "cpe_data": {
+    "total_records": 4151,
+    "vendors_covered": [
+      "microsoft",
+      "apple",
+      "oracle",
+      "apache",
+      "python",
+      "nodejs",
+      "crowdstrike"
+    ],
+    "products_covered": [
+      "windows_10",
+      "windows_server_2019",
+      "windows_server_2022",
+      "macos",
+      "office",
+      "teams",
+      "powerpoint",
+      "excel",
+      "onedrive",
+      "visual_studio",
+      "sql_server",
+      "iis",
+      "exchange_server",
+      "mysql",
+      "http_server",
+      "tomcat",
+      "kafka",
+      "python",
+      "node.js",
+      "falcon"
+    ],
+    "operating_systems": [
+      "windows_10",
+      "windows_server_2019",
+      "windows_server_2022",
+      "macos"
+    ],
+    "applications": [
+      "office",
+      "teams",
+      "powerpoint",
+      "excel",
+      "onedrive",
+      "visual_studio",
+      "sql_server",
+      "iis",
+      "exchange_server",
+      "mysql",
+      "http_server",
+      "tomcat",
+      "kafka",
+      "python",
+      "node.js",
+      "falcon"
+    ],
+    "cloud_platforms": []
+  },
+  "collection_metadata": {
+    "timestamp": "2025-10-20T00:50:47.813078",
+    "organization": "Your Organization"
+  },
+  "vulnerability_data": {
+    "recent_cves": [],
+    "high_priority_cves": [],
+    "total_cves_found": 0,
+    "time_period": "Last 7 days",
+    "cve_details": []
+  },
+  "research_focus": "Recent Vulnerability Analysis",
+  "threat_intelligence_priority": "High",
+  "analysis_timeframe": "Last 7 days"
+}

@@ -349,6 +349,21 @@ class CVEFetcher:
         logger.info(f"Vulnerability data saved to: {output_path}")
         return str(output_path)
     
+    def load_organization_context(self) -> Dict[str, Any]:
+        """
+        Load organization context from configuration file.
+        
+        Returns:
+            Dictionary containing organization context information
+        """
+        try:
+            config_path = Path(__file__).parent / "config" / "organization_context.yaml"
+            with open(config_path, 'r') as f:
+                return yaml.safe_load(f)
+        except Exception as e:
+            logger.warning(f"Failed to load organization context: {e}")
+            return {}
+
     def generate_research_agent_input(self, vulnerability_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Generate input data for the research agent based on vulnerability data.
@@ -379,26 +394,62 @@ class CVEFetcher:
                             description = desc.get('value', '')
                             break
                     
-                    # Extract CVSS scores
+                    # Extract CVSS scores and exploitability metrics
                     metrics = cve.get('metrics', {})
                     cvss_score = None
                     severity = 'UNKNOWN'
+                    exploitability_metrics = {}
                     
                     if 'cvssMetricV31' in metrics:
                         cvss_data = metrics['cvssMetricV31'][0].get('cvssData', {})
                         cvss_score = cvss_data.get('baseScore')
                         severity = cvss_data.get('baseSeverity', 'UNKNOWN')
+                        exploitability_metrics = {
+                            'attack_vector': cvss_data.get('attackVector', 'UNKNOWN'),
+                            'attack_complexity': cvss_data.get('attackComplexity', 'UNKNOWN'),
+                            'privileges_required': cvss_data.get('privilegesRequired', 'UNKNOWN'),
+                            'user_interaction': cvss_data.get('userInteraction', 'UNKNOWN'),
+                            'scope': cvss_data.get('scope', 'UNKNOWN')
+                        }
                     elif 'cvssMetricV30' in metrics:
                         cvss_data = metrics['cvssMetricV30'][0].get('cvssData', {})
                         cvss_score = cvss_data.get('baseScore')
                         severity = cvss_data.get('baseSeverity', 'UNKNOWN')
+                        exploitability_metrics = {
+                            'attack_vector': cvss_data.get('attackVector', 'UNKNOWN'),
+                            'attack_complexity': cvss_data.get('attackComplexity', 'UNKNOWN'),
+                            'privileges_required': cvss_data.get('privilegesRequired', 'UNKNOWN'),
+                            'user_interaction': cvss_data.get('userInteraction', 'UNKNOWN'),
+                            'scope': cvss_data.get('scope', 'UNKNOWN')
+                        }
                     elif 'cvssMetricV2' in metrics:
                         cvss_data = metrics['cvssMetricV2'][0].get('cvssData', {})
                         cvss_score = cvss_data.get('baseScore')
                         severity = cvss_data.get('baseSeverity', 'UNKNOWN')
+                        exploitability_metrics = {
+                            'attack_vector': cvss_data.get('accessVector', 'UNKNOWN'),
+                            'attack_complexity': cvss_data.get('accessComplexity', 'UNKNOWN'),
+                            'privileges_required': cvss_data.get('authentication', 'UNKNOWN'),
+                        }
                     
-                    # Extract published date
+                    # Extract published date and last modified
                     published = cve.get('published', '')
+                    last_modified = cve.get('lastModified', '')
+                    
+                    # Extract references and categorize them
+                    references = cve.get('references', [])
+                    reference_urls = [ref.get('url', '') for ref in references if ref.get('url')]
+                    
+                    # Extract configurations for affected versions
+                    configurations = cve.get('configurations', [])
+                    affected_versions = []
+                    for config in configurations:
+                        for node in config.get('nodes', []):
+                            for cpe_match in node.get('cpeMatch', []):
+                                if cpe_match.get('vulnerable', False):
+                                    version = cpe_match.get('versionEndExcluding') or cpe_match.get('versionEndIncluding')
+                                    if version:
+                                        affected_versions.append(version)
                     
                     cve_details.append({
                         'cve_id': cve_id,
@@ -406,8 +457,13 @@ class CVEFetcher:
                         'cvss_score': cvss_score,
                         'severity': severity,
                         'published': published,
+                        'last_modified': last_modified,
                         'cpe_name': cpe_name,
-                        'references': cve.get('references', [])
+                        'references': references,
+                        'reference_urls': reference_urls,
+                        'exploitability_metrics': exploitability_metrics,
+                        'affected_versions': affected_versions,
+                        'configurations': configurations
                     })
         
         # Sort by CVSS score (highest first) and then by published date (newest first)
@@ -415,6 +471,9 @@ class CVEFetcher:
             x['cvss_score'] if x['cvss_score'] is not None else 0,
             x['published']
         ), reverse=True)
+        
+        # Load organization context
+        org_context = self.load_organization_context()
         
         # Create research agent input
         research_input = {
@@ -425,7 +484,7 @@ class CVEFetcher:
             'cve_list': all_cves,
             'cve_details': cve_details,
             'high_priority_cves': [cve for cve in cve_details if cve['severity'] in ['CRITICAL', 'HIGH']],
-            'organization_context': vulnerability_data.get('organization', {}),
+            'organization_context': org_context,
             'search_metadata': {
                 'collection_timestamp': vulnerability_data['collection_timestamp'],
                 'cpes_searched': vulnerability_data['summary']['total_cpes_searched'],
