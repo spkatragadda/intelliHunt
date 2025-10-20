@@ -1,4 +1,5 @@
 import os
+import yaml
 from NVD.nvd_cpe_client import NVDCPEClient
 from NVD.cpe_data_processor import CPEDataProcessor
 from NVD.vulnerability_processor import VulnerabilityProcessor
@@ -7,6 +8,113 @@ import json
 from pathlib import Path
 from collections import Counter
 
+
+def modify_yaml_with_user_inputs(user_inputs):
+    """
+    Modify the YAML configuration file with user inputs from the frontend.
+    This function updates the organization_cmdb.yaml file to include user-specific software stack.
+    """
+    try:
+        yaml_path = Path(__file__).parent / "NVD/config/organization_cmdb.yaml"
+        
+        # Load existing YAML configuration
+        if yaml_path.exists():
+            with open(yaml_path, 'r') as f:
+                yaml_config = yaml.safe_load(f)
+        else:
+            # Create default configuration if file doesn't exist
+            yaml_config = {
+                'organization': {'name': 'User Organization', 'description': 'User-configured software stack'},
+                'software_stack': {
+                    'operating_systems': [],
+                    'applications': [],
+                    'cloud_platforms': []
+                },
+                'api_config': {
+                    'base_url': 'https://services.nvd.nist.gov/rest/json',
+                    'cpe_endpoint': '/cpes/2.0',
+                    'cve_endpoint': '/cves/2.0',
+                    'results_per_page': 500,
+                    'max_retries': 3,
+                    'timeout': 30
+                },
+                'update_settings': {
+                    'check_interval_hours': 24,
+                    'last_modified_days': 7,
+                    'enable_auto_updates': True
+                },
+                'output': {
+                    'format': 'json',
+                    'include_metadata': True,
+                    'include_cpe_details': True,
+                    'include_vulnerability_links': True
+                }
+            }
+        
+        # Initialize software_stack if it doesn't exist
+        if 'software_stack' not in yaml_config:
+            yaml_config['software_stack'] = {
+                'operating_systems': [],
+                'applications': [],
+                'cloud_platforms': []
+            }
+        
+        # Add user OS inputs to YAML
+        if 'os' in user_inputs:
+            for os_item in user_inputs['os']:
+                if os_item.get('vendor') and os_item.get('product'):
+                    # Check if vendor already exists
+                    vendor_exists = False
+                    for existing_os in yaml_config['software_stack']['operating_systems']:
+                        if existing_os['vendor'].lower() == os_item['vendor'].lower():
+                            # Add product to existing vendor
+                            if 'products' not in existing_os:
+                                existing_os['products'] = []
+                            existing_os['products'].append({'name': os_item['product']})
+                            vendor_exists = True
+                            break
+                    
+                    if not vendor_exists:
+                        # Add new vendor
+                        yaml_config['software_stack']['operating_systems'].append({
+                            'vendor': os_item['vendor'].lower(),
+                            'products': [{'name': os_item['product']}]
+                        })
+        
+        # Add user application inputs to YAML
+        if 'applications' in user_inputs:
+            for app_item in user_inputs['applications']:
+                if app_item.get('vendor') and app_item.get('products'):
+                    # Check if vendor already exists
+                    vendor_exists = False
+                    for existing_app in yaml_config['software_stack']['applications']:
+                        if existing_app['vendor'].lower() == app_item['vendor'].lower():
+                            # Add products to existing vendor
+                            if 'products' not in existing_app:
+                                existing_app['products'] = []
+                            for product in app_item['products']:
+                                existing_app['products'].append({'name': product})
+                            vendor_exists = True
+                            break
+                    
+                    if not vendor_exists:
+                        # Add new vendor
+                        products = [{'name': product} for product in app_item['products']]
+                        yaml_config['software_stack']['applications'].append({
+                            'vendor': app_item['vendor'].lower(),
+                            'products': products
+                        })
+        
+        # Save the modified YAML configuration
+        with open(yaml_path, 'w') as f:
+            yaml.dump(yaml_config, f, default_flow_style=False, sort_keys=False)
+        
+        print(f"Updated YAML configuration with user inputs: {yaml_path}")
+        return yaml_path
+        
+    except Exception as e:
+        print(f"Error modifying YAML with user inputs: {e}")
+        return None
 
 
 def load_cpe_data_for_crew():
@@ -105,11 +213,30 @@ def load_cpe_data_for_crew():
             "analysis_timeframe": "Last 7 days"
         }
 
-def main():
+def main(payload_file=None):
     """
     Main execution function that integrates CPE data with crew workflow and recent vulnerability data.
     """
     print("Initializing IntelliHunt Crew with Configuration Management Database and Vulnerability Integration...")
+    
+    # Load user inputs from payload file if provided
+    user_inputs = None
+    if payload_file and os.path.exists(payload_file):
+        try:
+            with open(payload_file, 'r') as f:
+                user_inputs = json.load(f)
+            print(f"Loaded user inputs: {user_inputs}")
+        except Exception as e:
+            print(f"Error loading user inputs: {e}")
+    
+    # If user inputs are provided, modify the YAML configuration
+    if user_inputs:
+        print("Modifying YAML configuration with user inputs...")
+        yaml_path = modify_yaml_with_user_inputs(user_inputs)
+        if yaml_path:
+            print(f"YAML configuration updated: {yaml_path}")
+        else:
+            print("Warning: Failed to update YAML configuration, using default")
     
     # Load CPE data and vulnerability data for crew workflow
     inputs = load_cpe_data_for_crew()
@@ -320,4 +447,6 @@ def generate_crew_report(result, inputs):
         print(f"Error generating report: {e}")
 
 if __name__ == "__main__":
-    main()
+    import sys
+    payload_file = sys.argv[1] if len(sys.argv) > 1 else None
+    main(payload_file)

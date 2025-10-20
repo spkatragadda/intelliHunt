@@ -28,7 +28,7 @@ export async function fetchReportMarkdown(): Promise<string> {
 /** Kick off a report run with custom inputs */
 export async function runReport(
   payload: GenerateReportPayload
-): Promise<{ markdown?: string; message: string }> {
+): Promise<{ taskId?: string; message: string }> {
   // POST to the PUBLIC base so it works from the browser
   const res = await fetch(`${PUBLIC_API_BASE}/api/generate/`, {
     method: "POST",
@@ -62,22 +62,74 @@ export async function runReport(
     const data = await res.json(); 
 
     // The successful Django view returns data like: 
-    // { 'status': 'success', 'message': 'Script ran successfully.', 'output': '## Markdown Report' }
+    // { 'status': 'started', 'message': 'Report generation started.', 'task_id': 'uuid' }
 
-    if (data.status === 'success' && data.output) {
-        // 2. Return the report content, which is in the 'output' field
+    if (data.status === 'started' && data.task_id) {
+        // 2. Return the task ID for polling
         return { 
-            markdown: data.output, 
-            message: data.message || "Report generated successfully."
+          taskId: data.task_id, 
+          message: data.message || "Report generation started."
         };
     } 
     
-    // Handle success response that doesn't contain the expected output (e.g., script ran but returned nothing)
-    return { message: data.message || "Script ran, but no report content was returned." };
+    // Handle unexpected response
+    return { message: data.message || "Unexpected response from server." };
 
   } catch {
     // This handles cases where the response is OK but not valid JSON
-    return { message: "Report generated, but received an unexpected non-JSON response." };
+    return { message: "Report generation started, but received an unexpected response." };
+  }
+}
+
+/** Check the status of a running task */
+export async function checkTaskStatus(taskId: string): Promise<{
+  status: string;
+  progress: number;
+  message: string;
+  output?: string;
+  duration?: number;
+}> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/task/${taskId}/`);
+  
+  if (!res.ok) {
+    throw new Error(`Task status check failed: ${res.status}`);
+  }
+  
+  return await res.json();
+}
+
+/** Hit an endpoint to automatically update all pages with the latest report markdown */
+export async function updateReport(): Promise<{ message: string }> {
+  // POST to the PUBLIC base so it works from the browser, hitting the new backend endpoint
+  const res = await fetch(`${PUBLIC_API_BASE}/api/update/`, {
+    method: "POST",
+    // No body is sent, but we can set Content-Type if Django expects it
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!res.ok) {
+    let msg = `Report update failed: ${res.status}`;
+    try {
+      const txt = await res.text();
+      const errorData = JSON.parse(txt);
+      if (errorData.message) {
+          msg = `Server Error: ${errorData.message}`;
+      } else if (txt) {
+          msg = txt;
+      }
+    } catch {
+      // Ignore if parsing fails
+    }
+    return { message: msg };
+  }
+
+  // Expect a successful JSON response with a message
+  try {
+    const data = await res.json();
+    return { message: data.message || "Report updated successfully." };
+  } catch {
+    // Handle cases where the response is OK but not valid JSON (e.g., just an empty 200)
+    return { message: "Report update request succeeded, but received an unexpected response." };
   }
 }
 
@@ -98,4 +150,50 @@ export function guessLastUpdated(md: string): string {
   return match
     ? (Array.isArray(match) ? match[1] : match[0])
     : new Date().toLocaleString();
+}
+
+/** Download YAML template file */
+export async function downloadYamlTemplate(): Promise<void> {
+  const response = await fetch(`${PUBLIC_API_BASE}/api/yaml/template/`);
+  if (!response.ok) {
+    throw new Error(`Template download failed: ${response.status}`);
+  }
+  
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'organization_cmdb_template.yaml';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/** Upload YAML configuration file */
+export async function uploadYamlConfig(file: File): Promise<{ message: string; config: any }> {
+  const formData = new FormData();
+  formData.append('yaml_file', file);
+  
+  const response = await fetch(`${PUBLIC_API_BASE}/api/yaml/upload/`, {
+    method: 'POST',
+    body: formData,
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || `Upload failed: ${response.status}`);
+  }
+  
+  return await response.json();
+}
+
+/** Get current YAML configuration */
+export async function getCurrentYamlConfig(): Promise<{ config: any; raw_content: string }> {
+  const response = await fetch(`${PUBLIC_API_BASE}/api/yaml/config/`);
+  if (!response.ok) {
+    throw new Error(`Config fetch failed: ${response.status}`);
+  }
+  
+  return await response.json();
 }

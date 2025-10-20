@@ -20,16 +20,23 @@ export default function Vulnerabilities() {
   const [cves, setCves] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [err, setErr] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const loadVulnerabilities = async () => {
+    setLoading(true);
+    setErr(null);
+    try {
+      const md = await fetchReportMarkdown();
+      setCves(extractCVEs(md));
+    } catch (e: any) {
+      setErr(e.message ?? "Unable to load vulnerabilities.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const md = await fetchReportMarkdown();
-        setCves(extractCVEs(md));
-      } catch (e: any) {
-        setErr(e.message ?? "Unable to load vulnerabilities.");
-      }
-    })();
+    loadVulnerabilities();
   }, []);
 
   const filtered = useMemo(() => {
@@ -41,7 +48,16 @@ export default function Vulnerabilities() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-slate-100">Vulnerabilities</h1>
-        <div className="text-sm text-slate-400">{filtered.length} item{filtered.length === 1 ? "" : "s"}</div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={loadVulnerabilities}
+            disabled={loading}
+            className="px-3 py-1 text-sm bg-slate-700 hover:bg-slate-600 disabled:opacity-50 rounded-lg text-slate-100"
+          >
+            {loading ? "Loading..." : "Refresh"}
+          </button>
+          <div className="text-sm text-slate-400">{filtered.length} item{filtered.length === 1 ? "" : "s"}</div>
+        </div>
       </div>
 
       {err && (

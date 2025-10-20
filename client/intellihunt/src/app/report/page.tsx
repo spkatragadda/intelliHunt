@@ -8,16 +8,23 @@ import Button from "@/components/Button";
 export default function Report() {
   const [md, setMd] = useState<string>("");
   const [err, setErr] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const loadReport = async () => {
+    setLoading(true);
+    setErr(null);
+    try {
+      const text = await fetchReportMarkdown();
+      setMd(text);
+    } catch (e: any) {
+      setErr(e.message ?? "Unable to load the report.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const text = await fetchReportMarkdown();
-        setMd(text);
-      } catch (e: any) {
-        setErr(e.message ?? "Unable to load the report.");
-      }
-    })();
+    loadReport();
   }, []);
 
   const download = () => {
@@ -45,6 +52,12 @@ export default function Report() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-slate-100">Report</h1>
         <div className="flex gap-2">
+          <Button 
+            onClick={loading ? undefined : loadReport} 
+            className={loading ? "opacity-50 cursor-not-allowed" : ""}
+          >
+            {loading ? "Loading..." : "Refresh"}
+          </Button>
           <Button onClick={download}>Download</Button>
           <Button href={`${PUBLIC_API_BASE}/api/markdown/`} target="_blank">
             Open Raw
