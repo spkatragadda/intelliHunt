@@ -1,104 +1,90 @@
-# Organization Configuration Management Database (CMDB) Configuration
-# This file defines the organization's software stack for CPE vulnerability tracking
-
 organization:
-  name: "Your Organization"
-  description: "Configuration management database for vulnerability tracking"
-  
-# Software stack components to track for vulnerabilities
+  name: Your Organization
+  description: Configuration management database for vulnerability tracking
 software_stack:
   operating_systems:
-    - vendor: "microsoft"
-      products: 
-        - name: "windows_10"
-        - name: "windows_11"
-        - name: "windows_server_2019"
-        - name: "windows_server_2022"
-    - vendor: "apple"
-      products: 
-        - name: "macos"
-    - vendor: "linux"
-      products: 
-        - name: "ubuntu"
-        - name: "centos"
-        - name: "red_hat_enterprise_linux"
-        - name: "debian"
-  
+  - vendor: microsoft
+    products:
+    - name: windows_10
+    - name: windows_11
+    - name: windows_server_2019
+    - name: windows_server_2022
+  - vendor: apple
+    products:
+    - name: macos
+  - vendor: linux
+    products:
+    - name: ubuntu
+    - name: centos
+    - name: red_hat_enterprise_linux
+    - name: debian
   applications:
-    - vendor: "microsoft"
-      products: 
-        - name: "office"
-        - name: "sharepoint"
-        - name: "teams"
-        - name: "powerpoint"
-        - name: "excel"
-        - name: "onedrive"
-        - name: "onedrive_for_business"
-        - name: "active_directory"
-        - name: "visual_studio"
-        - name: "sql_server"
-        - name: "iis"
-        - name: "exchange_server"
-    - vendor: "oracle"
-      products: 
-        - name: "java"
-          # get_all_versions: true # Example: Get all versions for Java due to its complexity
-        - name: "mysql"
-        - name: "oracle_database"
-    - vendor: "apache"
-      products: 
-        - name: "http_server"
-        - name: "tomcat"
-        - name: "kafka"
-    - vendor: "python"
-      products: 
-        - name: "python"
-    - vendor: "nodejs"
-      products: 
-        - name: "node.js"
-    - vendor: "crowdstrike"
-      products: 
-        - name: "falcon"
-    - vendor: "splunk"
-      products: 
-        - name: "splunk_enterprise"
-        - name: "splunk_universal_forwarder"
-    - vendor: "tanium"
-      products: 
-        - name: "tanium_core_platform"
-    - vendor: "corelight"
-      products: 
-        - name: "zeek"
-  
+  - vendor: microsoft
+    products:
+    - name: office
+    - name: sharepoint
+    - name: teams
+    - name: powerpoint
+    - name: excel
+    - name: onedrive
+    - name: onedrive_for_business
+    - name: active_directory
+    - name: visual_studio
+    - name: sql_server
+    - name: iis
+    - name: exchange_server
+  - vendor: oracle
+    products:
+    - name: java
+    - name: mysql
+    - name: oracle_database
+  - vendor: apache
+    products:
+    - name: http_server
+    - name: tomcat
+    - name: kafka
+  - vendor: python
+    products:
+    - name: python
+  - vendor: nodejs
+    products:
+    - name: node.js
+  - vendor: crowdstrike
+    products:
+    - name: falcon
+  - vendor: splunk
+    products:
+    - name: splunk_enterprise
+    - name: splunk_universal_forwarder
+  - vendor: tanium
+    products:
+    - name: tanium_core_platform
+  - vendor: corelight
+    products:
+    - name: zeek
   cloud_platforms:
-    - vendor: "amazon"
-      products: 
-        - name: "aws"
-    - vendor: "microsoft"
-      products: 
-        - name: "azure"
-    - vendor: "google"
-      products: 
-        - name: "google_cloud_platform"
- 
-# API configuration
+  - vendor: amazon
+    products:
+    - name: aws
+  - vendor: microsoft
+    products:
+    - name: azure
+  - vendor: google
+    products:
+    - name: google_cloud_platform
 api_config:
-  base_url: "https://services.nvd.nist.gov/rest/json"
-  cpe_endpoint: "/cpes/2.0"
-  cve_endpoint: "/cves/2.0"
+  base_url: https://services.nvd.nist.gov/rest/json
+  cpe_endpoint: /cpes/2.0
+  cve_endpoint: /cves/2.0
   results_per_page: 500
   max_retries: 3
   timeout: 30
-  
-# Update frequency settings
 update_settings:
   check_interval_hours: 24
-  last_modified_days: 7  # Only check for updates in last 7 days
+  last_modified_days: 7
   enable_auto_updates: true
-
-# Output configuration
 output:
-  format: "json"  # json, yaml, csv
+  format: json
   include_metadata: true
   include_cpe_details: true
   include_vulnerability_links: true
