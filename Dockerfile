@@ -36,14 +36,27 @@ RUN npm run build
 RUN ls -la /app/client/intellihunt/.next/standalone || echo "Standalone build not found"
 RUN ls -la /app/client/intellihunt/.next/static || echo "Static directory not found"
 
+# Pull scanner 
+FROM ghcr.io/google/osv-scanner:latest AS scanner
+
 # --- Stage 2: Run Django ---
 FROM python:3.10-slim AS django
 WORKDIR /app
 ENV PYTHONPATH=/app/server
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
 COPY ./server/requirements.txt /app/server/requirements.txt
 RUN pip install --no-cache-dir -r /app/server/requirements.txt
 COPY ./server /app/server
+# EXPOSE 8000
+# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "intelliHunt.wsgi:application"]
+
+
+COPY --from=scanner /osv-scanner /usr/local/bin/osv-scanner
 EXPOSE 8000
+# Scanner addition
+COPY --from=scanner /osv-scanner /usr/local/bin/osv-scanner
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "intelliHunt.wsgi:application"]
 
 # --- Stage 3: Run the Next.js Frontend ---

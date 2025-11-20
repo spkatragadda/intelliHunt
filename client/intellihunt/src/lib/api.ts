@@ -197,3 +197,48 @@ export async function getCurrentYamlConfig(): Promise<{ config: any; raw_content
   
   return await response.json();
 }
+
+/** Scan a repository for vulnerabilities */
+export async function scanRepo(
+  repoUrl: string
+): Promise<{ taskId?: string; message: string }> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ repo_url: repoUrl }),
+  });
+
+  // --- Error Handling (Handles 4xx/5xx status codes) ---
+  if (!res.ok) {
+    let msg = `Repository scan failed: ${res.status}`;
+    try {
+      const txt = await res.text();
+      const errorData = JSON.parse(txt);
+      if (errorData.message) {
+        msg = `Server Error: ${errorData.message}`;
+      } else if (txt) {
+        msg = txt;
+      }
+    } catch {
+      // Ignore if parsing fails
+    }
+    return { message: msg };
+  }
+
+  // --- Success Handling (Handles 200 OK) ---
+  try {
+    const data = await res.json();
+
+    if (data.status === 'started' && data.task_id) {
+      return {
+        taskId: data.task_id,
+        message: data.message || "Repository scan started."
+      };
+    }
+
+    return { message: data.message || "Unexpected response from server." };
+
+  } catch {
+    return { message: "Repository scan started, but received an unexpected response." };
+  }
+}

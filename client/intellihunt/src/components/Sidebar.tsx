@@ -8,6 +8,7 @@ const nav = [
   { href: "/report", label: "Report" },
   { href: "/vulnerabilities", label: "Vulnerabilities" },
   { href: "/generate", label: "Generate Report" },
+  { href: "/repo-scanner", label: "Repo Scanner" },
 ];
 
 export default function Sidebar() {

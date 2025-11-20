@@ -4,6 +4,7 @@ import threading
 import time
 import yaml
 import json
+import sys
 from django.http import HttpResponse, FileResponse
 from django.conf import settings
 from django.http import JsonResponse
@@ -14,6 +15,11 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+# Import the repo scanner
+vulnscan_path = os.path.join(settings.BASE_DIR, 'vulnScan')
+if vulnscan_path not in sys.path:
+    sys.path.insert(0, vulnscan_path)
+from repoScanner import run_pipeline
 # You might need to import your report generation logic here
 
 # In-memory storage for task status (in production, use Redis or database)
@@ -356,3 +362,133 @@ def update_report_api(request):
     
     except Exception as e:
         return JsonResponse({"message": f"Error broadcasting update signal: {str(e)}"}, status=500)
+
+def run_repo_scan_async(task_id, repo_url):
+    """Run the repo vulnerability scan in a separate thread"""
+    start_time = time.time()
+    
+    try:
+        # Initialize task status
+        status_data = {
+            'status': 'running',
+            'progress': 0,
+            'message': 'Starting repository vulnerability scan...',
+            'start_time': start_time,
+            'repo_url': repo_url
+        }
+        task_status[task_id] = status_data
+        save_task_status(task_id, status_data)
+        
+        # Update progress
+        status_data['progress'] = 10
+        status_data['message'] = 'Initializing scan pipeline...'
+        task_status[task_id] = status_data
+        save_task_status(task_id, status_data)
+        
+        # Update progress
+        status_data['progress'] = 30
+        status_data['message'] = 'Running vulnerability analysis (this may take several minutes)...'
+        task_status[task_id] = status_data
+        save_task_status(task_id, status_data)
+        
+        # Run the pipeline
+        result = run_pipeline(repo_url)
+        
+        # Update progress
+        status_data['progress'] = 90
+        status_data['message'] = 'Finalizing scan results...'
+        task_status[task_id] = status_data
+        save_task_status(task_id, status_data)
+        
+        # Mark as completed
+        end_time = time.time()
+        status_data = {
+            'status': 'completed',
+            'progress': 100,
+            'message': 'Repository vulnerability scan completed successfully!',
+            'output': result,
+            'repo_url': repo_url,
+            'end_time': end_time,
+            'duration': end_time - start_time
+        }
+        task_status[task_id] = status_data
+        save_task_status(task_id, status_data)
+        
+        # Schedule cleanup of task status file after 5 minutes
+        def delayed_cleanup():
+            time.sleep(300)  # 5 minutes
+            cleanup_task_status(task_id)
+        
+        cleanup_thread = threading.Thread(target=delayed_cleanup)
+        cleanup_thread.daemon = True
+        cleanup_thread.start()
+            
+    except Exception as e:
+        end_time = time.time()
+        status_data = {
+            'status': 'error',
+            'progress': 0,
+            'message': f'Scan failed: {str(e)}',
+            'repo_url': repo_url,
+            'end_time': end_time,
+            'duration': end_time - start_time if 'start_time' in locals() else 0
+        }
+        task_status[task_id] = status_data
+        save_task_status(task_id, status_data)
+        
+        # Schedule cleanup of task status file after 5 minutes
+        def delayed_cleanup():
+            time.sleep(300)  # 5 minutes
+            cleanup_task_status(task_id)
+        
+        cleanup_thread = threading.Thread(target=delayed_cleanup)
+        cleanup_thread.daemon = True
+        cleanup_thread.start()
+
+@csrf_exempt
+def scan_repo(request):
+    """Endpoint to scan a repository for vulnerabilities"""
+    if request.method == 'POST':
+        try:
+            # Parse the JSON payload
+            payload = json.loads(request.body)
+            
+            # Validate that repo_url is provided
+            repo_url = payload.get('repo_url') or payload.get('repo') or payload.get('url')
+            if not repo_url:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Missing required parameter: repo_url (or repo/url)'
+                }, status=400)
+            
+            # Generate a unique task ID
+            task_id = str(uuid.uuid4())
+            
+            # Start the scan in a separate thread
+            thread = threading.Thread(target=run_repo_scan_async, args=(task_id, repo_url))
+            thread.daemon = True
+            thread.start()
+            
+            # Return immediately with task ID
+            return JsonResponse({
+                'status': 'started', 
+                'message': 'Repository vulnerability scan started. Use the task ID to check progress.',
+                'task_id': task_id,
+                'repo_url': repo_url
+            })
+            
+        except json.JSONDecodeError as e:
+            return JsonResponse({
+                'status': 'error', 
+                'message': f'Invalid JSON payload: {str(e)}'
+            }, status=400)
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error', 
+                'message': f'An unexpected error occurred: {str(e)}'
+            }, status=500)
+    
+    return JsonResponse({
+        'status': 'error', 
+        'message': 'Invalid request method. Use POST.'
+    }, status=405)

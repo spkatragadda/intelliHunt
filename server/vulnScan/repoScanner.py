@@ -5,10 +5,17 @@ import json
 import requests
 from git import Repo  # From GitPython
 from langchain_openai import OpenAI  # Assuming OpenAI LLM, install langchain-openai
+from langchain_openai.chat_models import ChatOpenAI
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.tools import tool
 from langchain.prompts import PromptTemplate
 from langchain import hub
+from dotenv import load_dotenv
+import os
+load_dotenv() 
+
+os.environ["MODEL"] = os.getenv("MODEL")
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 # Note: You need to install dependencies:
 # pip install gitpython langchain langchain-openai requests
@@ -117,7 +124,7 @@ def search_nvd(keyword: str) -> dict:
 react_prompt = hub.pull("hwchase17/react")
 
 # Initialize LLM (replace with your preferred LLM)
-llm = OpenAI(temperature=0)
+llm = ChatOpenAI(api_key=os.environ["OPENAI_API_KEY"],model="gpt-4o-mini",temperature=.3)
 
 # Tools list
 tools = [
