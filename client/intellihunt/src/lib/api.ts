@@ -200,13 +200,30 @@ export async function getCurrentYamlConfig(): Promise<{ config: any; raw_content
 
 /** Scan a repository for vulnerabilities */
 export async function scanRepo(
-  repoUrl: string
+  repoUrl?: string,
+  repoFile?: File
 ): Promise<{ taskId?: string; message: string }> {
-  const res = await fetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ repo_url: repoUrl }),
-  });
+  let res: Response;
+  
+  if (repoFile) {
+    // File upload mode
+    const formData = new FormData();
+    formData.append('repo_file', repoFile);
+    
+    res = await fetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
+      method: "POST",
+      body: formData,
+    });
+  } else if (repoUrl) {
+    // URL mode
+    res = await fetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ repo_url: repoUrl }),
+    });
+  } else {
+    return { message: "Either repoUrl or repoFile must be provided." };
+  }
 
   // --- Error Handling (Handles 4xx/5xx status codes) ---
   if (!res.ok) {

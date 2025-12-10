@@ -1,17 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Button from "@/components/Button";
 import { scanRepo, checkTaskStatus } from "@/lib/api";
 
 export default function RepoScanner() {
   const [repoUrl, setRepoUrl] = useState("");
+  const [repoFile, setRepoFile] = useState<File | null>(null);
+  const [inputMode, setInputMode] = useState<"url" | "file">("url");
   const [submitting, setSubmitting] = useState(false);
   const [serverMsg, setServerMsg] = useState<string | null>(null);
   const [taskId, setTaskId] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [progressMessage, setProgressMessage] = useState<string>("");
   const [scanResults, setScanResults] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Polling effect for task status
   useEffect(() => {
@@ -48,8 +51,13 @@ export default function RepoScanner() {
   }, [taskId]);
 
   async function handleScan() {
-    if (!repoUrl.trim()) {
-      setServerMsg("Please enter a repository URL, local file path, or directory path.");
+    if (inputMode === "url" && !repoUrl.trim()) {
+      setServerMsg("Please enter a GitHub repository URL.");
+      return;
+    }
+    
+    if (inputMode === "file" && !repoFile) {
+      setServerMsg("Please select a zip file to upload.");
       return;
     }
 
@@ -60,7 +68,9 @@ export default function RepoScanner() {
     setScanResults(null);
 
     try {
-      const res = await scanRepo(repoUrl.trim());
+      const res = inputMode === "file" 
+        ? await scanRepo(undefined, repoFile!)
+        : await scanRepo(repoUrl.trim());
 
       if (res.taskId) {
         setTaskId(res.taskId);
@@ -72,6 +82,18 @@ export default function RepoScanner() {
     } catch (e: any) {
       setServerMsg(e?.message ?? "Failed to submit scan request.");
       setSubmitting(false);
+    }
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.name.endsWith('.zip')) {
+        setServerMsg("Please select a .zip file.");
+        return;
+      }
+      setRepoFile(file);
+      setServerMsg(null);
     }
   }
 
@@ -87,31 +109,105 @@ export default function RepoScanner() {
         <div>
           <h2 className="font-medium text-slate-100 mb-2">Repository Input</h2>
           <p className="text-sm text-slate-300 mb-4">
-            Enter a GitHub repository URL (e.g., https://github.com/user/repo), 
-            a local directory path, or a local file path to scan for vulnerabilities.
+            Choose to scan a public GitHub repository by URL or upload a zip file containing your repository.
+            Note: The zip file should contain the repository files at the root or in a single top-level folder.
           </p>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={repoUrl}
-              onChange={(e) => setRepoUrl(e.target.value)}
-              placeholder="https://github.com/user/repo or /path/to/repo or /path/to/file"
-              className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={submitting}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !submitting) {
-                  handleScan();
-                }
+          
+          {/* Mode Selection */}
+          <div className="flex gap-2 mb-4">
+            <button
+              type="button"
+              onClick={() => {
+                setInputMode("url");
+                setRepoFile(null);
+                if (fileInputRef.current) fileInputRef.current.value = "";
               }}
-            />
-            <Button
-              onClick={handleScan}
-              className={submitting ? "opacity-70 cursor-not-allowed" : ""}
-              disabled={submitting}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                inputMode === "url"
+                  ? "bg-blue-600 text-white"
+                  : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+              }`}
             >
-              {submitting ? "Scanning…" : "Start Scan"}
-            </Button>
+              GitHub URL
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setInputMode("file");
+                setRepoUrl("");
+              }}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                inputMode === "file"
+                  ? "bg-blue-600 text-white"
+                  : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+              }`}
+            >
+              Upload Zip File
+            </button>
           </div>
+
+          {/* URL Input Mode */}
+          {inputMode === "url" && (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={repoUrl}
+                onChange={(e) => setRepoUrl(e.target.value)}
+                placeholder="https://github.com/user/repo"
+                className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={submitting}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !submitting) {
+                    handleScan();
+                  }
+                }}
+              />
+              <Button
+                onClick={handleScan}
+                className={submitting ? "opacity-70 cursor-not-allowed" : ""}
+                disabled={submitting}
+              >
+                {submitting ? "Scanning…" : "Start Scan"}
+              </Button>
+            </div>
+          )}
+
+          {/* File Upload Mode */}
+          {inputMode === "file" && (
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".zip"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="repo-file-input"
+                  disabled={submitting}
+                />
+                <label
+                  htmlFor="repo-file-input"
+                  className={`flex-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-slate-100 cursor-pointer hover:bg-slate-800 transition-colors ${
+                    submitting ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                >
+                  {repoFile ? repoFile.name : "Choose zip file..."}
+                </label>
+                <Button
+                  onClick={handleScan}
+                  className={submitting ? "opacity-70 cursor-not-allowed" : ""}
+                  disabled={submitting || !repoFile}
+                >
+                  {submitting ? "Scanning…" : "Start Scan"}
+                </Button>
+              </div>
+              {repoFile && (
+                <p className="text-xs text-slate-400">
+                  Selected: {repoFile.name} ({(repoFile.size / 1024 / 1024).toFixed(2)} MB)
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </section>
 

@@ -43,9 +43,10 @@ FROM ghcr.io/google/osv-scanner:latest AS scanner
 FROM python:3.10-slim AS django
 WORKDIR /app
 ENV PYTHONPATH=/app/server
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends git \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update \
+#     && apt-get install -y --no-install-recommends git \
+#     && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y git libcurl4-gnutls-dev
 COPY ./server/requirements.txt /app/server/requirements.txt
 RUN pip install --no-cache-dir -r /app/server/requirements.txt
 COPY ./server /app/server
@@ -54,9 +55,11 @@ COPY ./server /app/server
 
 
 COPY --from=scanner /osv-scanner /usr/local/bin/osv-scanner
+RUN chmod +x /usr/local/bin/osv-scanner && \
+    /usr/local/bin/osv-scanner --version || echo "OSV-Scanner verification failed."
+
+
 EXPOSE 8000
-# Scanner addition
-COPY --from=scanner /osv-scanner /usr/local/bin/osv-scanner
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "intelliHunt.wsgi:application"]
 
 # --- Stage 3: Run the Next.js Frontend ---

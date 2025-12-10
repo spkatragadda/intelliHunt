@@ -5,6 +5,9 @@ import time
 import yaml
 import json
 import sys
+import zipfile
+import shutil
+import tempfile
 from django.http import HttpResponse, FileResponse
 from django.conf import settings
 from django.http import JsonResponse
@@ -363,7 +366,7 @@ def update_report_api(request):
     except Exception as e:
         return JsonResponse({"message": f"Error broadcasting update signal: {str(e)}"}, status=500)
 
-def run_repo_scan_async(task_id, repo_url):
+def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None):
     """Run the repo vulnerability scan in a separate thread"""
     start_time = time.time()
     
@@ -414,6 +417,13 @@ def run_repo_scan_async(task_id, repo_url):
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
         
+        # Clean up temporary directory if it was created from a file upload
+        if temp_dir_to_cleanup and os.path.exists(temp_dir_to_cleanup):
+            try:
+                shutil.rmtree(temp_dir_to_cleanup)
+            except Exception as e:
+                print(f"Error cleaning up temp directory {temp_dir_to_cleanup}: {e}")
+        
         # Schedule cleanup of task status file after 5 minutes
         def delayed_cleanup():
             time.sleep(300)  # 5 minutes
@@ -436,6 +446,13 @@ def run_repo_scan_async(task_id, repo_url):
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
         
+        # Clean up temporary directory if it was created from a file upload
+        if temp_dir_to_cleanup and os.path.exists(temp_dir_to_cleanup):
+            try:
+                shutil.rmtree(temp_dir_to_cleanup)
+            except Exception as e:
+                print(f"Error cleaning up temp directory {temp_dir_to_cleanup}: {e}")
+        
         # Schedule cleanup of task status file after 5 minutes
         def delayed_cleanup():
             time.sleep(300)  # 5 minutes
@@ -447,48 +464,125 @@ def run_repo_scan_async(task_id, repo_url):
 
 @csrf_exempt
 def scan_repo(request):
-    """Endpoint to scan a repository for vulnerabilities"""
+    """Endpoint to scan a repository for vulnerabilities.
+    Accepts either:
+    1. JSON payload with 'repo_url' (GitHub URL)
+    2. FormData with 'repo_file' (zip file upload)
+    """
     if request.method == 'POST':
         try:
-            # Parse the JSON payload
-            payload = json.loads(request.body)
+            repo_url = None
+            temp_dir_to_cleanup = None
             
-            # Validate that repo_url is provided
-            repo_url = payload.get('repo_url') or payload.get('repo') or payload.get('url')
+            # Check if this is a file upload (FormData)
+            if 'repo_file' in request.FILES:
+                uploaded_file = request.FILES['repo_file']
+                
+                # Validate file type (should be zip)
+                if not uploaded_file.name.endswith('.zip'):
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Invalid file type. Please upload a .zip file containing the repository.'
+                    }, status=400)
+                
+                # Create a temporary directory to extract the zip file
+                temp_dir = tempfile.mkdtemp(prefix='repo_scan_')
+                temp_dir_to_cleanup = temp_dir
+                
+                try:
+                    # Save uploaded file temporarily
+                    temp_zip_path = os.path.join(temp_dir, uploaded_file.name)
+                    with open(temp_zip_path, 'wb+') as destination:
+                        for chunk in uploaded_file.chunks():
+                            destination.write(chunk)
+                    
+                    # Extract the zip file
+                    extract_dir = os.path.join(temp_dir, 'extracted')
+                    os.makedirs(extract_dir, exist_ok=True)
+                    
+                    with zipfile.ZipFile(temp_zip_path, 'r') as zip_ref:
+                        zip_ref.extractall(extract_dir)
+                    
+                    # Find the root of the repository (handle cases where zip contains a single folder)
+                    extracted_contents = os.listdir(extract_dir)
+                    if len(extracted_contents) == 1:
+                        # If there's a single folder, use that as the repo root
+                        repo_path = os.path.join(extract_dir, extracted_contents[0])
+                        if os.path.isdir(repo_path):
+                            repo_url = repo_path
+                        else:
+                            repo_url = extract_dir
+                    else:
+                        # Multiple files/folders, use extract_dir as root
+                        repo_url = extract_dir
+                    
+                    # Clean up the zip file
+                    os.remove(temp_zip_path)
+                    
+                except zipfile.BadZipFile:
+                    # Clean up on error
+                    if os.path.exists(temp_dir):
+                        shutil.rmtree(temp_dir)
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Invalid zip file. Please ensure the file is a valid zip archive.'
+                    }, status=400)
+                except Exception as e:
+                    # Clean up on error
+                    if os.path.exists(temp_dir):
+                        shutil.rmtree(temp_dir)
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': f'Error processing uploaded file: {str(e)}'
+                    }, status=500)
+            
+            # If not a file upload, try to parse JSON payload
+            elif request.content_type and 'application/json' in request.content_type:
+                try:
+                    payload = json.loads(request.body)
+                    repo_url = payload.get('repo_url') or payload.get('repo') or payload.get('url')
+                except json.JSONDecodeError as e:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': f'Invalid JSON payload: {str(e)}'
+                    }, status=400)
+            
+            # Validate that we have a repo_url or file
             if not repo_url:
                 return JsonResponse({
-                    'status': 'error', 
-                    'message': 'Missing required parameter: repo_url (or repo/url)'
+                    'status': 'error',
+                    'message': 'Missing required parameter: either provide repo_url in JSON payload or upload a repo_file (zip)'
                 }, status=400)
             
             # Generate a unique task ID
             task_id = str(uuid.uuid4())
             
             # Start the scan in a separate thread
-            thread = threading.Thread(target=run_repo_scan_async, args=(task_id, repo_url))
+            thread = threading.Thread(target=run_repo_scan_async, args=(task_id, repo_url, temp_dir_to_cleanup))
             thread.daemon = True
             thread.start()
             
             # Return immediately with task ID
             return JsonResponse({
-                'status': 'started', 
+                'status': 'started',
                 'message': 'Repository vulnerability scan started. Use the task ID to check progress.',
                 'task_id': task_id,
-                'repo_url': repo_url
+                'repo_url': repo_url if isinstance(repo_url, str) and repo_url.startswith('http') else 'uploaded_file'
             })
             
-        except json.JSONDecodeError as e:
-            return JsonResponse({
-                'status': 'error', 
-                'message': f'Invalid JSON payload: {str(e)}'
-            }, status=400)
         except Exception as e:
+            # Clean up temp directory if it was created
+            if temp_dir_to_cleanup and os.path.exists(temp_dir_to_cleanup):
+                try:
+                    shutil.rmtree(temp_dir_to_cleanup)
+                except:
+                    pass
             return JsonResponse({
-                'status': 'error', 
+                'status': 'error',
                 'message': f'An unexpected error occurred: {str(e)}'
             }, status=500)
     
     return JsonResponse({
-        'status': 'error', 
+        'status': 'error',
         'message': 'Invalid request method. Use POST.'
     }, status=405)
