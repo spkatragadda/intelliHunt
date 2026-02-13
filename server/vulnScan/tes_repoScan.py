@@ -1,4 +1,4 @@
-from repoScanner import run_pipeline
+from server.vulnScan.repoScannerCrew import run_pipeline
 
 results = run_pipeline(r"C:\Users\saipk\shippingAgent")
 
