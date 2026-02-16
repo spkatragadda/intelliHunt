@@ -4,6 +4,24 @@ import { useState, useEffect, useRef } from "react";
 import Button from "@/components/Button";
 import { scanRepo, checkTaskStatus } from "@/lib/api";
 
+const card: React.CSSProperties = {
+  background: "var(--surface)",
+  border: "1px solid var(--border)",
+  borderRadius: "8px",
+};
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  background: "var(--bg)",
+  border: "1px solid var(--border)",
+  borderRadius: "6px",
+  padding: "6px 10px",
+  fontSize: "13px",
+  color: "var(--text-primary)",
+  outline: "none",
+  transition: "border-color 150ms",
+};
+
 export default function RepoScanner() {
   const [repoUrl, setRepoUrl] = useState("");
   const [repoFile, setRepoFile] = useState<File | null>(null);
@@ -12,247 +30,189 @@ export default function RepoScanner() {
   const [serverMsg, setServerMsg] = useState<string | null>(null);
   const [taskId, setTaskId] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const [progressMessage, setProgressMessage] = useState<string>("");
+  const [progressMessage, setProgressMessage] = useState("");
   const [scanResults, setScanResults] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Polling effect for task status
   useEffect(() => {
     if (!taskId) return;
-
-    const pollInterval = setInterval(async () => {
+    const id = setInterval(async () => {
       try {
-        const status = await checkTaskStatus(taskId);
-        setProgress(status.progress);
-        setProgressMessage(status.message);
-
-        if (status.status === 'completed') {
-          setSubmitting(false);
-          setServerMsg("Repository scan completed successfully!");
-          setScanResults(status.output || "Scan completed with no output.");
-          setTaskId(null);
-          clearInterval(pollInterval);
-        } else if (status.status === 'error') {
-          setSubmitting(false);
-          setServerMsg(`Error: ${status.message}`);
-          setTaskId(null);
-          clearInterval(pollInterval);
+        const s = await checkTaskStatus(taskId);
+        setProgress(s.progress);
+        setProgressMessage(s.message);
+        if (s.status === "completed") {
+          setSubmitting(false); setServerMsg("Scan completed!");
+          setScanResults(s.output || "No output."); setTaskId(null); clearInterval(id);
+        } else if (s.status === "error") {
+          setSubmitting(false); setServerMsg(`Error: ${s.message}`); setTaskId(null); clearInterval(id);
         }
-      } catch (error) {
-        console.error('Error checking task status:', error);
-        setSubmitting(false);
-        setServerMsg("Error checking task status");
-        setTaskId(null);
-        clearInterval(pollInterval);
+      } catch {
+        setSubmitting(false); setServerMsg("Error checking status"); setTaskId(null); clearInterval(id);
       }
-    }, 2000); // Poll every 2 seconds
-
-    return () => clearInterval(pollInterval);
+    }, 2000);
+    return () => clearInterval(id);
   }, [taskId]);
 
   async function handleScan() {
-    if (inputMode === "url" && !repoUrl.trim()) {
-      setServerMsg("Please enter a GitHub repository URL.");
-      return;
-    }
-    
-    if (inputMode === "file" && !repoFile) {
-      setServerMsg("Please select a zip file to upload.");
-      return;
-    }
+    if (inputMode === "url" && !repoUrl.trim()) { setServerMsg("Enter a repository URL."); return; }
+    if (inputMode === "file" && !repoFile) { setServerMsg("Select a zip file."); return; }
 
-    setSubmitting(true);
-    setServerMsg(null);
-    setProgress(0);
-    setProgressMessage("Starting repository scan...");
-    setScanResults(null);
+    setSubmitting(true); setServerMsg(null); setProgress(0);
+    setProgressMessage("Starting scan..."); setScanResults(null);
 
     try {
-      const res = inputMode === "file" 
-        ? await scanRepo(undefined, repoFile!)
-        : await scanRepo(repoUrl.trim());
-
-      if (res.taskId) {
-        setTaskId(res.taskId);
-        setServerMsg("Repository scan started. Please wait...");
-      } else {
-        setServerMsg(res.message || "Failed to start repository scan.");
-        setSubmitting(false);
-      }
+      const res = inputMode === "file" ? await scanRepo(undefined, repoFile!) : await scanRepo(repoUrl.trim());
+      if (res.taskId) { setTaskId(res.taskId); setServerMsg("Scan started..."); }
+      else { setServerMsg(res.message || "Failed."); setSubmitting(false); }
     } catch (e: any) {
-      setServerMsg(e?.message ?? "Failed to submit scan request.");
-      setSubmitting(false);
+      setServerMsg(e?.message ?? "Failed."); setSubmitting(false);
     }
   }
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (!file.name.endsWith('.zip')) {
-        setServerMsg("Please select a .zip file.");
-        return;
-      }
-      setRepoFile(file);
-      setServerMsg(null);
-    }
-  }
+  const ModeBtn = ({ mode, label }: { mode: "url" | "file"; label: string }) => (
+    <button
+      type="button"
+      onClick={() => {
+        setInputMode(mode);
+        if (mode === "url") { setRepoFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }
+        else setRepoUrl("");
+      }}
+      className="px-3 py-1 rounded-md text-[13px] font-medium transition-colors duration-150"
+      style={{
+        color: inputMode === mode ? "var(--text-primary)" : "var(--text-muted)",
+        background: inputMode === mode ? "var(--surface-hover)" : "transparent",
+      }}
+      onMouseEnter={(e) => {
+        if (inputMode !== mode) e.currentTarget.style.background = "var(--surface-hover)";
+      }}
+      onMouseLeave={(e) => {
+        if (inputMode !== mode) e.currentTarget.style.background = "transparent";
+      }}
+    >
+      {label}
+    </button>
+  );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-100">Repo Scanner</h1>
-        <div className="text-sm text-slate-400">Scan repositories for vulnerabilities</div>
-      </div>
+    <div className="space-y-5">
+      {/* Input */}
+      <div className="p-4 space-y-4" style={card}>
+        <div
+          className="flex gap-1 p-1 rounded-lg w-fit"
+          style={{ background: "var(--bg)", border: "1px solid var(--border)" }}
+        >
+          <ModeBtn mode="url" label="GitHub URL" />
+          <ModeBtn mode="file" label="Upload Zip" />
+        </div>
 
-      {/* Input Section */}
-      <section className="space-y-3 rounded-2xl border border-slate-800 bg-slate-900 p-4">
-        <div>
-          <h2 className="font-medium text-slate-100 mb-2">Repository Input</h2>
-          <p className="text-sm text-slate-300 mb-4">
-            Choose to scan a public GitHub repository by URL or upload a zip file containing your repository.
-            Note: The zip file should contain the repository files at the root or in a single top-level folder.
-          </p>
-          
-          {/* Mode Selection */}
-          <div className="flex gap-2 mb-4">
-            <button
-              type="button"
-              onClick={() => {
-                setInputMode("url");
-                setRepoFile(null);
-                if (fileInputRef.current) fileInputRef.current.value = "";
-              }}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                inputMode === "url"
-                  ? "bg-blue-600 text-white"
-                  : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-              }`}
-            >
-              GitHub URL
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setInputMode("file");
-                setRepoUrl("");
-              }}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                inputMode === "file"
-                  ? "bg-blue-600 text-white"
-                  : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-              }`}
-            >
-              Upload Zip File
-            </button>
+        {inputMode === "url" && (
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={repoUrl}
+              onChange={(e) => setRepoUrl(e.target.value)}
+              placeholder="https://github.com/user/repo"
+              style={inputStyle}
+              disabled={submitting}
+              onKeyDown={(e) => { if (e.key === "Enter" && !submitting) handleScan(); }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
+            />
+            <Button onClick={handleScan} disabled={submitting} className="!px-6 !py-2 !text-[14px]">
+              {submitting ? "Scanning..." : "Scan"}
+            </Button>
           </div>
+        )}
 
-          {/* URL Input Mode */}
-          {inputMode === "url" && (
+        {inputMode === "file" && (
+          <div className="space-y-2">
             <div className="flex gap-2">
               <input
-                type="text"
-                value={repoUrl}
-                onChange={(e) => setRepoUrl(e.target.value)}
-                placeholder="https://github.com/user/repo"
-                className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                disabled={submitting}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !submitting) {
-                    handleScan();
-                  }
+                ref={fileInputRef}
+                type="file"
+                accept=".zip"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f && !f.name.endsWith(".zip")) { setServerMsg("Select a .zip file."); return; }
+                  if (f) { setRepoFile(f); setServerMsg(null); }
                 }}
-              />
-              <Button
-                onClick={handleScan}
-                className={submitting ? "opacity-70 cursor-not-allowed" : ""}
+                className="hidden"
+                id="repo-file-input"
                 disabled={submitting}
+              />
+              <label
+                htmlFor="repo-file-input"
+                className="flex-1 cursor-pointer transition-colors duration-150"
+                style={{
+                  ...inputStyle,
+                  display: "block",
+                  color: repoFile ? "var(--text-primary)" : "var(--text-muted)",
+                  opacity: submitting ? 0.4 : 1,
+                }}
               >
-                {submitting ? "Scanning…" : "Start Scan"}
+                {repoFile ? repoFile.name : "Choose zip file..."}
+              </label>
+              <Button onClick={handleScan} disabled={submitting || !repoFile} className="!px-6 !py-2 !text-[14px]">
+                {submitting ? "Scanning..." : "Scan"}
               </Button>
             </div>
-          )}
+            {repoFile && (
+              <p className="text-[11px]" style={{ color: "var(--text-muted)" }}>
+                {repoFile.name} ({(repoFile.size / 1024 / 1024).toFixed(2)} MB)
+              </p>
+            )}
+          </div>
+        )}
+      </div>
 
-          {/* File Upload Mode */}
-          {inputMode === "file" && (
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".zip"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="repo-file-input"
-                  disabled={submitting}
-                />
-                <label
-                  htmlFor="repo-file-input"
-                  className={`flex-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-slate-100 cursor-pointer hover:bg-slate-800 transition-colors ${
-                    submitting ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                >
-                  {repoFile ? repoFile.name : "Choose zip file..."}
-                </label>
-                <Button
-                  onClick={handleScan}
-                  className={submitting ? "opacity-70 cursor-not-allowed" : ""}
-                  disabled={submitting || !repoFile}
-                >
-                  {submitting ? "Scanning…" : "Start Scan"}
-                </Button>
-              </div>
-              {repoFile && (
-                <p className="text-xs text-slate-400">
-                  Selected: {repoFile.name} ({(repoFile.size / 1024 / 1024).toFixed(2)} MB)
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Progress Section */}
+      {/* Progress */}
       {submitting && (
-        <div className="space-y-3 rounded-2xl border border-slate-800 bg-slate-900 p-4">
+        <div className="space-y-2 p-4" style={card}>
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-slate-100">Scan Progress</h3>
-            <span className="text-sm text-slate-400">{progress}%</span>
+            <span className="text-[13px] font-medium" style={{ color: "var(--text-primary)" }}>Progress</span>
+            <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>{progress}%</span>
           </div>
-          <div className="w-full bg-slate-700 rounded-full h-2">
-            <div
-              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            ></div>
+          <div className="w-full h-1 rounded-full" style={{ background: "var(--border)" }}>
+            <div className="h-1 rounded-full transition-all duration-300" style={{ width: `${progress}%`, background: "var(--accent)" }} />
           </div>
-          <p className="text-sm text-slate-300">{progressMessage}</p>
+          <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>{progressMessage}</p>
         </div>
       )}
 
-      {/* Status Message */}
+      {/* Status */}
       {serverMsg && (
         <div
-          className={`rounded-lg border p-3 text-sm ${
-            serverMsg.includes("Error") || serverMsg.includes("Failed")
-              ? "border-red-900/60 bg-red-950/60 text-red-300"
-              : serverMsg.includes("completed")
-              ? "border-green-900/60 bg-green-950/60 text-green-300"
-              : "border-blue-900/60 bg-blue-950/60 text-blue-300"
-          }`}
+          className="rounded-md p-3 text-[13px]"
+          style={{
+            color: serverMsg.includes("Error") || serverMsg.includes("Failed") ? "var(--danger)"
+              : serverMsg.includes("completed") || serverMsg.includes("Completed") ? "var(--success)"
+              : "var(--info)",
+            background: serverMsg.includes("Error") || serverMsg.includes("Failed") ? "rgba(229,83,75,0.08)"
+              : serverMsg.includes("completed") || serverMsg.includes("Completed") ? "rgba(69,212,131,0.08)"
+              : "rgba(83,155,245,0.08)",
+            border: `1px solid ${
+              serverMsg.includes("Error") || serverMsg.includes("Failed") ? "rgba(229,83,75,0.15)"
+              : serverMsg.includes("completed") || serverMsg.includes("Completed") ? "rgba(69,212,131,0.15)"
+              : "rgba(83,155,245,0.15)"
+            }`,
+          }}
         >
           {serverMsg}
         </div>
       )}
 
-      {/* Scan Results */}
+      {/* Results */}
       {scanResults && (
-        <section className="space-y-3 rounded-2xl border border-slate-800 bg-slate-900 p-4">
+        <div className="p-4 space-y-3" style={card}>
           <div className="flex items-center justify-between">
-            <h2 className="font-medium text-slate-100">Scan Results</h2>
+            <span className="text-[13px] font-medium" style={{ color: "var(--text-primary)" }}>Results</span>
             <Button
+              variant="secondary"
               onClick={() => {
-                const blob = new Blob([scanResults], { type: 'text/plain' });
+                const blob = new Blob([scanResults], { type: "text/plain" });
                 const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
+                const a = document.createElement("a");
                 a.href = url;
                 a.download = `scan-results-${Date.now()}.txt`;
                 document.body.appendChild(a);
@@ -260,39 +220,17 @@ export default function RepoScanner() {
                 a.remove();
                 URL.revokeObjectURL(url);
               }}
-              className="bg-slate-700 hover:bg-slate-600"
             >
-              Download Results
+              Download
             </Button>
           </div>
-          <div className="rounded-lg border border-slate-700 bg-slate-950 p-4">
-            <pre className="whitespace-pre-wrap break-words text-sm text-slate-300 max-h-96 overflow-y-auto">
+          <div className="rounded-md p-4 max-h-96 overflow-y-auto" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+            <pre className="whitespace-pre-wrap break-words text-[12px]" style={{ color: "var(--text-secondary)" }}>
               {scanResults}
             </pre>
           </div>
-        </section>
-      )}
-
-      {/* Info Section */}
-      <section className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
-        <h2 className="font-medium text-slate-100 mb-2">About Repository Scanning</h2>
-        <div className="text-sm text-slate-300 space-y-2">
-          <p>
-            The repository scanner performs comprehensive vulnerability analysis using:
-          </p>
-          <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>OSV-Scanner for dependency vulnerabilities</li>
-            <li>Semgrep for static code analysis</li>
-            <li>CISA Known Exploited Vulnerabilities (KEV) database</li>
-            <li>National Vulnerability Database (NVD) searches</li>
-            <li>GitHub Security Advisories</li>
-          </ul>
-          <p className="mt-2 text-slate-400">
-            Scans may take several minutes depending on repository size and complexity.
-          </p>
         </div>
-      </section>
+      )}
     </div>
   );
 }
-

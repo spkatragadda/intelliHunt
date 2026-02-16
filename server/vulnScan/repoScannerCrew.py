@@ -35,7 +35,7 @@ analyst = Agent(
 
 ## Tasks
 task_scan = Task(
-    description='Clone the repo {repo_url}, run OSV and Semgrep scans, and extract a list of all CVE IDs found.',
+    description='For {repo_url}: if it is a Git URL, clone it; if it is a local directory path, use it directly. Then run OSV and Semgrep scans, and extract a list of all CVE IDs found.',
     expected_output='A JSON list of unique CVE IDs and a summary of code-level vulnerabilities.',
     agent=analyst
 )

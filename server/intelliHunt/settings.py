@@ -123,11 +123,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-# Location of the React build folder, relative to the project root
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'client/build/static'),
-]
+
+# Only include frontend static files if the directory exists
+# (Next.js runs separately in dev mode, so this is only needed for production)
+FRONTEND_BUILD_DIR = os.path.join(BASE_DIR, 'client/build/static')
+if os.path.exists(FRONTEND_BUILD_DIR):
+    STATICFILES_DIRS = [FRONTEND_BUILD_DIR]
+else:
+    STATICFILES_DIRS = []
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
