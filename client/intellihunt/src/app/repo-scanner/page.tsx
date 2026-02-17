@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Button from "@/components/Button";
 import { scanRepo, checkTaskStatus } from "@/lib/api";
+import ReactMarkdown from 'react-markdown';
 
 const card: React.CSSProperties = {
   background: "var(--surface)",
@@ -187,15 +188,14 @@ export default function RepoScanner() {
           style={{
             color: serverMsg.includes("Error") || serverMsg.includes("Failed") ? "var(--danger)"
               : serverMsg.includes("completed") || serverMsg.includes("Completed") ? "var(--success)"
-              : "var(--info)",
+                : "var(--info)",
             background: serverMsg.includes("Error") || serverMsg.includes("Failed") ? "rgba(229,83,75,0.08)"
               : serverMsg.includes("completed") || serverMsg.includes("Completed") ? "rgba(69,212,131,0.08)"
-              : "rgba(83,155,245,0.08)",
-            border: `1px solid ${
-              serverMsg.includes("Error") || serverMsg.includes("Failed") ? "rgba(229,83,75,0.15)"
-              : serverMsg.includes("completed") || serverMsg.includes("Completed") ? "rgba(69,212,131,0.15)"
-              : "rgba(83,155,245,0.15)"
-            }`,
+                : "rgba(83,155,245,0.08)",
+            border: `1px solid ${serverMsg.includes("Error") || serverMsg.includes("Failed") ? "rgba(229,83,75,0.15)"
+                : serverMsg.includes("completed") || serverMsg.includes("Completed") ? "rgba(69,212,131,0.15)"
+                  : "rgba(83,155,245,0.15)"
+              }`,
           }}
         >
           {serverMsg}
@@ -225,9 +225,12 @@ export default function RepoScanner() {
             </Button>
           </div>
           <div className="rounded-md p-4 max-h-96 overflow-y-auto" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
-            <pre className="whitespace-pre-wrap break-words text-[12px]" style={{ color: "var(--text-secondary)" }}>
+            {/* <pre className="whitespace-pre-wrap break-words text-[12px]" style={{ color: "var(--text-secondary)" }}>
               {scanResults}
-            </pre>
+            </pre> */}
+            <ReactMarkdown>
+              {scanResults}
+            </ReactMarkdown>
           </div>
         </div>
       )}

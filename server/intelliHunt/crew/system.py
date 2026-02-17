@@ -1,4 +1,5 @@
 import os
+import glob as glob_module
 import yaml
 from NVD.nvd_cpe_client import NVDCPEClient
 from NVD.cpe_data_processor import CPEDataProcessor
@@ -9,48 +10,80 @@ from pathlib import Path
 from collections import Counter
 
 
-def modify_yaml_with_user_inputs(user_inputs):
+def cleanup_old_data_files():
+    """Remove old NVD data files (CPE, enhanced crew input, vulnerability data, etc.)
+    to ensure fresh data is fetched for each new report generation."""
+    crew_dir = Path(__file__).parent
+    patterns = [
+        "NVD/cpe_data_*.json",
+        "NVD/crew_workflow_input_*.json",
+        "NVD/enhanced_crew_input_*.json",
+        "NVD/vulnerability_data_*.json",
+        "NVD/vulnerability_summary_*.md",
+    ]
+    removed = 0
+    for pattern in patterns:
+        for f in crew_dir.glob(pattern):
+            try:
+                f.unlink()
+                removed += 1
+            except Exception as e:
+                print(f"Error removing {f}: {e}")
+    if removed:
+        print(f"Cleaned up {removed} old data file(s)")
+
+
+def modify_yaml_with_user_inputs(user_inputs, replace_stack=False):
     """
     Modify the YAML configuration file with user inputs from the frontend.
-    This function updates the organization_cmdb.yaml file to include user-specific software stack.
+
+    Args:
+        user_inputs: dict of OS/application entries from the frontend payload.
+        replace_stack: When True, the existing software_stack is cleared before
+                       applying user entries (used when no YAML was uploaded by
+                       the user, so that server-side defaults are not included).
     """
     try:
         yaml_path = Path(__file__).parent / "NVD/config/organization_cmdb.yaml"
-        
-        # Load existing YAML configuration
+
+        # Load existing YAML configuration (non-stack sections are always preserved)
         if yaml_path.exists():
             with open(yaml_path, 'r') as f:
                 yaml_config = yaml.safe_load(f)
         else:
-            # Create default configuration if file doesn't exist
-            yaml_config = {
-                'organization': {'name': 'User Organization', 'description': 'User-configured software stack'},
-                'software_stack': {
-                    'operating_systems': [],
-                    'applications': [],
-                    'cloud_platforms': []
-                },
-                'api_config': {
-                    'base_url': 'https://services.nvd.nist.gov/rest/json',
-                    'cpe_endpoint': '/cpes/2.0',
-                    'cve_endpoint': '/cves/2.0',
-                    'results_per_page': 500,
-                    'max_retries': 3,
-                    'timeout': 30
-                },
-                'update_settings': {
-                    'check_interval_hours': 24,
-                    'last_modified_days': 7,
-                    'enable_auto_updates': True
-                },
-                'output': {
-                    'format': 'json',
-                    'include_metadata': True,
-                    'include_cpe_details': True,
-                    'include_vulnerability_links': True
-                }
+            yaml_config = {}
+
+        # Preserve api_config / update_settings / output from defaults if missing
+        yaml_config.setdefault('organization', {'name': 'User Organization', 'description': 'User-configured software stack'})
+        yaml_config.setdefault('api_config', {
+            'base_url': 'https://services.nvd.nist.gov/rest/json',
+            'cpe_endpoint': '/cpes/2.0',
+            'cve_endpoint': '/cves/2.0',
+            'results_per_page': 500,
+            'max_retries': 3,
+            'timeout': 30
+        })
+        yaml_config.setdefault('update_settings', {
+            'check_interval_hours': 24,
+            'last_modified_days': 7,
+            'enable_auto_updates': True
+        })
+        yaml_config.setdefault('output', {
+            'format': 'json',
+            'include_metadata': True,
+            'include_cpe_details': True,
+            'include_vulnerability_links': True
+        })
+
+        # When replace_stack is True, wipe any existing (default) software_stack
+        # so only the user's own entries drive the report.
+        if replace_stack:
+            yaml_config['software_stack'] = {
+                'operating_systems': [],
+                'applications': [],
+                'cloud_platforms': []
             }
-        
+
         # Initialize software_stack if it doesn't exist
         if 'software_stack' not in yaml_config:
             yaml_config['software_stack'] = {
@@ -218,7 +251,10 @@ def main(payload_file=None):
     Main execution function that integrates CPE data with crew workflow and recent vulnerability data.
     """
     print("Initializing IntelliHunt Crew with Configuration Management Database and Vulnerability Integration...")
-    
+
+    # Clean up old data files to ensure fresh data
+    cleanup_old_data_files()
+
     # Load user inputs from payload file if provided
     user_inputs = None
     if payload_file and os.path.exists(payload_file):
@@ -228,15 +264,30 @@ def main(payload_file=None):
             print(f"Loaded user inputs: {user_inputs}")
         except Exception as e:
             print(f"Error loading user inputs: {e}")
-    
-    # If user inputs are provided, modify the YAML configuration
-    if user_inputs:
-        print("Modifying YAML configuration with user inputs...")
-        yaml_path = modify_yaml_with_user_inputs(user_inputs)
-        if yaml_path:
-            print(f"YAML configuration updated: {yaml_path}")
-        else:
-            print("Warning: Failed to update YAML configuration, using default")
+
+    # Require user-provided configuration
+    if not user_inputs:
+        print("Error: No user inputs provided. Cannot run report without configuration.")
+        sys.exit(1)
+
+    yaml_uploaded = user_inputs.get('yaml_uploaded', False)
+    has_os = bool(user_inputs.get('os', []))
+    has_apps = bool(user_inputs.get('applications', []))
+    has_sources = bool(user_inputs.get('sources', []))
+
+    if not yaml_uploaded and not has_os and not has_apps and not has_sources:
+        print("Error: No software configurations provided. Please add OS entries, applications, or upload a YAML file.")
+        sys.exit(1)
+
+    # Modify the YAML configuration with user inputs.
+    # When the user did not upload a YAML file, replace_stack=True clears any
+    # pre-existing (default) software stack so only user entries are used.
+    print("Modifying YAML configuration with user inputs...")
+    yaml_path = modify_yaml_with_user_inputs(user_inputs, replace_stack=not yaml_uploaded)
+    if yaml_path:
+        print(f"YAML configuration updated: {yaml_path}")
+    else:
+        print("Warning: Failed to update YAML configuration")
     
     # Load CPE data and vulnerability data for crew workflow
     inputs = load_cpe_data_for_crew()
@@ -266,17 +317,10 @@ def main(payload_file=None):
         inputs = inputs['vulnerability_data']['cve_details']
         ids = [d['cve_id'] for d in inputs]
         id_counts = Counter(ids)
-        inputs = [d for d in inputs if id_counts[d['id']] == 1]
-        # inputs=[{"cve_id": "None",
-        #     "description": "thing",
-        #     "cvss_score": 7,
-        #     "severity": 5,
-        #     "published": "yesterday",
-        #     "cpe_name": "threat",
-        #     "references": "Here"
-        # }]
-    except:
-        pass
+        inputs = [d for d in inputs if id_counts[d['cve_id']] == 1]
+    except Exception as e:
+        print(f"Error filtering CVE details: {e}")
+        inputs = []
     
     # Initialize crew
     crew = cyberCrew().crew()

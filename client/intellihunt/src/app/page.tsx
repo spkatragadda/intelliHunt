@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import {
   fetchReportMarkdown,
@@ -200,11 +199,10 @@ type KV = { vendor: string; product: string };
 type AppVendorProducts = { vendor: string; products: string[] };
 type Source = { name: string; fields: string[]; description: string };
 
-function GenerateView() {
-  const router = useRouter();
-  const [os, setOs] = useState<KV[]>([{ vendor: "", product: "" }]);
-  const [apps, setApps] = useState<AppVendorProducts[]>([{ vendor: "", products: [] }]);
-  const [sources, setSources] = useState<Source[]>([{ name: "", fields: [], description: "" }]);
+function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) {
+  const [os, setOs] = useState<KV[]>([]);
+  const [apps, setApps] = useState<AppVendorProducts[]>([]);
+  const [sources, setSources] = useState<Source[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [serverMsg, setServerMsg] = useState<string | null>(null);
   const [taskId, setTaskId] = useState<string | null>(null);
@@ -212,11 +210,23 @@ function GenerateView() {
   const [progressMessage, setProgressMessage] = useState("");
   const [yamlConfig, setYamlConfig] = useState<any>(null);
   const [yamlMsg, setYamlMsg] = useState<string | null>(null);
+  const [yamlUploaded, setYamlUploaded] = useState(false);
+  const [showEmptyPrompt, setShowEmptyPrompt] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
+  const [logsOpen, setLogsOpen] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const logsEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getCurrentYamlConfig().then((c) => setYamlConfig(c.config)).catch(() => {});
   }, []);
+
+  // Auto-scroll logs to bottom when new lines arrive
+  useEffect(() => {
+    if (logsOpen && logsEndRef.current) {
+      logsEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [logs, logsOpen]);
 
   useEffect(() => {
     if (!taskId) return;
@@ -225,8 +235,10 @@ function GenerateView() {
         const s = await checkTaskStatus(taskId);
         setProgress(s.progress);
         setProgressMessage(s.message);
+        if (s.logs) setLogs(s.logs);
         if (s.status === "completed") {
           setSubmitting(false); setServerMsg("Report generated!"); setTaskId(null); clearInterval(id);
+          onReportGenerated();
         } else if (s.status === "error") {
           setSubmitting(false); setServerMsg(`Error: ${s.message}`); setTaskId(null); clearInterval(id);
         }
@@ -235,15 +247,32 @@ function GenerateView() {
       }
     }, 2000);
     return () => clearInterval(id);
-  }, [taskId]);
+  }, [taskId, onReportGenerated]);
+
+  // Computed counts for the stat badges
+  const osCount = os.filter((r) => r.vendor || r.product).length;
+  const appsCount = apps.filter((r) => r.vendor || r.products.length).length;
+  const cloudCount = yamlConfig?.software_stack?.cloud_platforms?.length || 0;
 
   async function submit() {
+    // Check if user has entered any configurations
+    const hasOs = os.some((r) => r.vendor || r.product);
+    const hasApps = apps.some((r) => r.vendor || r.products.length);
+    const hasSources = sources.some((s) => s.name || s.fields.length || s.description);
+
+    if (!hasOs && !hasApps && !hasSources && !yamlUploaded) {
+      setShowEmptyPrompt(true);
+      return;
+    }
+
+    setShowEmptyPrompt(false);
+    setLogs([]); setLogsOpen(true);
     setSubmitting(true); setServerMsg(null); setProgress(0); setProgressMessage("Starting...");
     try {
       const osClean = os.filter((r) => r.vendor || r.product);
       const appsClean = apps.filter((r) => r.vendor || r.products.length).map((r) => ({ vendor: r.vendor, products: r.products.filter(Boolean) }));
       const sourcesClean = sources.filter((s) => s.name || s.fields.length || s.description);
-      const payload: GenerateReportPayload = { os: osClean, applications: appsClean, sources: sourcesClean };
+      const payload: GenerateReportPayload = { os: osClean, applications: appsClean, sources: sourcesClean, yaml_uploaded: yamlUploaded };
       const res = await runReport(payload);
       if (res.taskId) { setTaskId(res.taskId); setServerMsg("Report generation started..."); }
       else { setServerMsg(res.message || "Failed."); setSubmitting(false); }
@@ -283,101 +312,194 @@ function GenerateView() {
 
   return (
     <div className="space-y-5">
+      {/* Stat badges at top */}
+      <div className="flex gap-3">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ ...card, minWidth: 100 }}>
+          <span className="text-[20px] font-semibold" style={{ color: "var(--accent)" }}>{osCount}</span>
+          <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>OS</span>
+        </div>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ ...card, minWidth: 100 }}>
+          <span className="text-[20px] font-semibold" style={{ color: "var(--accent)" }}>{appsCount}</span>
+          <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>Apps</span>
+        </div>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ ...card, minWidth: 100 }}>
+          <span className="text-[20px] font-semibold" style={{ color: "var(--accent)" }}>{cloudCount}</span>
+          <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>Cloud</span>
+        </div>
+      </div>
+
       {/* OS */}
       <div className="p-4" style={card}>
         <SectionLabel onAdd={() => setOs((a) => [...a, { vendor: "", product: "" }])}>Operating Systems</SectionLabel>
-        <div className="space-y-2">
-          {os.map((row, i) => (
-            <div key={i} className="flex gap-2 items-center">
-              <input
-                value={row.vendor} placeholder="Vendor"
-                onChange={(e) => setOs((a) => a.map((r, j) => (j === i ? { ...r, vendor: e.target.value } : r)))}
-                style={inputStyle}
-                onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
-              />
-              <input
-                value={row.product} placeholder="Product"
-                onChange={(e) => setOs((a) => a.map((r, j) => (j === i ? { ...r, product: e.target.value } : r)))}
-                style={inputStyle}
-                onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
-              />
-              <RemoveBtn onClick={() => setOs((a) => a.filter((_, j) => j !== i))} />
-            </div>
-          ))}
-        </div>
+        {os.length === 0 ? (
+          <p className="text-[12px] py-2" style={{ color: "var(--text-muted)" }}>No operating systems added. Click + Add to begin.</p>
+        ) : (
+          <div className="space-y-2">
+            {os.map((row, i) => (
+              <div key={i} className="flex gap-2 items-center">
+                <input
+                  value={row.vendor} placeholder="Vendor"
+                  onChange={(e) => setOs((a) => a.map((r, j) => (j === i ? { ...r, vendor: e.target.value } : r)))}
+                  style={inputStyle}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
+                />
+                <input
+                  value={row.product} placeholder="Product"
+                  onChange={(e) => setOs((a) => a.map((r, j) => (j === i ? { ...r, product: e.target.value } : r)))}
+                  style={inputStyle}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
+                />
+                <RemoveBtn onClick={() => setOs((a) => a.filter((_, j) => j !== i))} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Applications */}
       <div className="p-4" style={card}>
         <SectionLabel onAdd={() => setApps((a) => [...a, { vendor: "", products: [] }])}>Applications</SectionLabel>
-        <div className="space-y-2">
-          {apps.map((row, i) => (
-            <div key={i} className="flex gap-2 items-center">
-              <input
-                value={row.vendor} placeholder="Vendor"
-                onChange={(e) => setApps((a) => a.map((r, j) => (j === i ? { ...r, vendor: e.target.value } : r)))}
-                style={inputStyle}
-                onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
-              />
-              <input
-                value={row.products.join(", ")} placeholder="Products (comma-separated)"
-                onChange={(e) => {
-                  const products = e.target.value.split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
-                  setApps((a) => a.map((r, j) => (j === i ? { ...r, products } : r)));
-                }}
-                style={inputStyle}
-                onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
-              />
-              <RemoveBtn onClick={() => setApps((a) => a.filter((_, j) => j !== i))} />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Sources */}
-      <div className="p-4" style={card}>
-        <SectionLabel onAdd={() => setSources((a) => [...a, { name: "", fields: [], description: "" }])}>Source Types</SectionLabel>
-        <div className="space-y-3">
-          {sources.map((row, i) => (
-            <div key={i} className="space-y-2 p-3 rounded-md" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
-              <div className="flex gap-2 items-center">
+        {apps.length === 0 ? (
+          <p className="text-[12px] py-2" style={{ color: "var(--text-muted)" }}>No applications added. Click + Add to begin.</p>
+        ) : (
+          <div className="space-y-2">
+            {apps.map((row, i) => (
+              <div key={i} className="flex gap-2 items-center">
                 <input
-                  value={row.name} placeholder="Name (e.g. SIEM)"
-                  onChange={(e) => setSources((a) => a.map((r, j) => (j === i ? { ...r, name: e.target.value } : r)))}
+                  value={row.vendor} placeholder="Vendor"
+                  onChange={(e) => setApps((a) => a.map((r, j) => (j === i ? { ...r, vendor: e.target.value } : r)))}
                   style={inputStyle}
                   onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
                   onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
                 />
                 <input
-                  value={row.fields.join(", ")} placeholder="Fields (comma-separated)"
+                  value={row.products.join(", ")} placeholder="Products (comma-separated)"
                   onChange={(e) => {
-                    const fields = e.target.value.split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
-                    setSources((a) => a.map((r, j) => (j === i ? { ...r, fields } : r)));
+                    const products = e.target.value.split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
+                    setApps((a) => a.map((r, j) => (j === i ? { ...r, products } : r)));
                   }}
                   style={inputStyle}
                   onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
                   onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
                 />
-                <RemoveBtn onClick={() => setSources((a) => a.filter((_, j) => j !== i))} />
+                <RemoveBtn onClick={() => setApps((a) => a.filter((_, j) => j !== i))} />
               </div>
-              <textarea
-                value={row.description} placeholder="Description" rows={2}
-                onChange={(e) => setSources((a) => a.map((r, j) => (j === i ? { ...r, description: e.target.value } : r)))}
-                style={{ ...inputStyle, resize: "vertical" as const }}
-                onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
-              />
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Sources */}
+      <div className="p-4" style={card}>
+        <SectionLabel onAdd={() => setSources((a) => [...a, { name: "", fields: [], description: "" }])}>Source Types</SectionLabel>
+        {sources.length === 0 ? (
+          <p className="text-[12px] py-2" style={{ color: "var(--text-muted)" }}>No source types added. Click + Add to begin.</p>
+        ) : (
+          <div className="space-y-3">
+            {sources.map((row, i) => (
+              <div key={i} className="space-y-2 p-3 rounded-md" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+                <div className="flex gap-2 items-center">
+                  <input
+                    value={row.name} placeholder="Name (e.g. SIEM)"
+                    onChange={(e) => setSources((a) => a.map((r, j) => (j === i ? { ...r, name: e.target.value } : r)))}
+                    style={inputStyle}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
+                  />
+                  <input
+                    value={row.fields.join(", ")} placeholder="Fields (comma-separated)"
+                    onChange={(e) => {
+                      const fields = e.target.value.split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
+                      setSources((a) => a.map((r, j) => (j === i ? { ...r, fields } : r)));
+                    }}
+                    style={inputStyle}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
+                  />
+                  <RemoveBtn onClick={() => setSources((a) => a.filter((_, j) => j !== i))} />
+                </div>
+                <textarea
+                  value={row.description} placeholder="Description" rows={2}
+                  onChange={(e) => setSources((a) => a.map((r, j) => (j === i ? { ...r, description: e.target.value } : r)))}
+                  style={{ ...inputStyle, resize: "vertical" as const }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = "var(--border-hover)"; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Progress */}
       {submitting && <ProgressBar progress={progress} message={progressMessage} />}
+
+      {/* Log viewer - visible whenever there are logs (during or after run) */}
+      {logs.length > 0 && (
+        <div style={card} className="overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setLogsOpen((v) => !v)}
+            className="w-full flex items-center justify-between px-4 py-2.5 text-left transition-colors duration-150"
+            style={{ background: "var(--surface)" }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-hover)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "var(--surface)"; }}
+          >
+            <span className="text-[13px] font-medium flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
+              <svg
+                className="w-3 h-3 transition-transform duration-150"
+                style={{ transform: logsOpen ? "rotate(90deg)" : "rotate(0deg)" }}
+                fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+              Output Log
+            </span>
+            <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>
+              {logs.length} line{logs.length !== 1 ? "s" : ""}
+            </span>
+          </button>
+          {logsOpen && (
+            <div
+              className="px-4 py-3 overflow-y-auto font-mono text-[12px] leading-[1.6]"
+              style={{
+                maxHeight: "300px",
+                background: "var(--bg)",
+                borderTop: "1px solid var(--border)",
+                color: "var(--text-secondary)",
+              }}
+            >
+              {logs.map((line, i) => (
+                <div key={i} className="whitespace-pre-wrap break-all" style={{
+                  color: line.startsWith("[error]") ? "var(--danger)"
+                    : line.startsWith("[system]") ? "var(--info)"
+                    : "var(--text-secondary)",
+                }}>
+                  {line}
+                </div>
+              ))}
+              <div ref={logsEndRef} />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Empty prompt - shown when user clicks Run Report with no config */}
+      {showEmptyPrompt && (
+        <div className="p-4 rounded-lg text-[13px]" style={{
+          background: "rgba(229, 165, 36, 0.08)",
+          border: "1px solid rgba(229, 165, 36, 0.2)",
+          color: "var(--text-primary)",
+        }}>
+          <p className="font-medium mb-2" style={{ color: "rgb(229, 165, 36)" }}>No software configurations entered</p>
+          <p style={{ color: "var(--text-muted)" }}>
+            Please add at least one operating system, application, or source type above before generating a report.
+            You can also upload a YAML configuration file below.
+          </p>
+        </div>
+      )}
 
       {/* YAML */}
       <div className="p-4" style={card}>
@@ -395,7 +517,7 @@ function GenerateView() {
             const file = e.target.files?.[0];
             if (!file) return;
             if (!file.name.endsWith(".yaml") && !file.name.endsWith(".yml")) { setYamlMsg("Select a YAML file."); return; }
-            try { setYamlMsg("Uploading..."); const r = await uploadYamlConfig(file); setYamlConfig(r.config); setYamlMsg(r.message); }
+            try { setYamlMsg("Uploading..."); const r = await uploadYamlConfig(file); setYamlConfig(r.config); setYamlMsg(r.message); setYamlUploaded(true); setShowEmptyPrompt(false); }
             catch (err: any) { setYamlMsg(`Failed: ${err.message}`); }
           }}
         />
@@ -408,7 +530,6 @@ function GenerateView() {
         {yamlConfig && (
           <div className="text-[12px] space-y-0.5" style={{ color: "var(--text-muted)" }}>
             <p>Org: {yamlConfig.organization?.name || "N/A"}</p>
-            <p>OS: {yamlConfig.software_stack?.operating_systems?.length || 0} | Apps: {yamlConfig.software_stack?.applications?.length || 0} | Cloud: {yamlConfig.software_stack?.cloud_platforms?.length || 0}</p>
           </div>
         )}
       </div>
@@ -552,12 +673,18 @@ function VulnerabilitiesView() {
 export default function IntelPage() {
   const [tab, setTab] = useState<Tab>("report");
   const [ready, setReady] = useState(false);
+  const [reportKey, setReportKey] = useState(0);
 
   useEffect(() => {
     fetchReportMarkdown()
       .then(() => setTab("report"))
       .catch(() => setTab("generate"))
       .finally(() => setReady(true));
+  }, []);
+
+  const handleReportGenerated = useCallback(() => {
+    setReportKey((k) => k + 1);
+    setTab("report");
   }, []);
 
   if (!ready) {
@@ -583,8 +710,8 @@ export default function IntelPage() {
         <TabButton active={tab === "vulnerabilities"} onClick={() => setTab("vulnerabilities")}>Vulnerabilities</TabButton>
       </div>
 
-      {tab === "report" && <ReportView />}
-      {tab === "generate" && <GenerateView />}
+      {tab === "report" && <ReportView key={reportKey} />}
+      {tab === "generate" && <GenerateView onReportGenerated={handleReportGenerated} />}
       {tab === "vulnerabilities" && <VulnerabilitiesView />}
     </div>
   );

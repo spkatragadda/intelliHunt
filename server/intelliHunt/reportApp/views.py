@@ -163,108 +163,193 @@ def get_current_yaml_config(request):
 def run_report_async(task_id, payload_file_path):
     """Run the report generation in a separate thread"""
     start_time = time.time()
-    
+
     try:
-        # Initialize task status
+        # Initialize task status with logs list
         status_data = {
             'status': 'running',
             'progress': 0,
             'message': 'Starting report generation...',
-            'start_time': start_time
+            'start_time': start_time,
+            'logs': []
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
-        
+
         # Update progress
         status_data['progress'] = 10
         status_data['message'] = 'Loading CPE data...'
+        status_data['logs'].append('[system] Loading CPE data...')
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
-        
+
         # The full path to your script
         script_path = 'intelliHunt/crew/system.py'
-        
+
         # Update progress
         status_data['progress'] = 20
         status_data['message'] = 'Running vulnerability analysis...'
+        status_data['logs'].append('[system] Running vulnerability analysis...')
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
-        
-        # Use subprocess to run the script with the payload file as argument
-        result = subprocess.run(['python', script_path, payload_file_path], 
-                              check=True, capture_output=True, text=True)
-        
+
+        # Use Popen to stream stdout/stderr line-by-line into logs
+        process = subprocess.Popen(
+            ['python', '-u', script_path, payload_file_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1
+        )
+
+        full_output = []
+        deadline = time.time() + 900  # 15-minute timeout
+
+        for line in process.stdout:
+            line = line.rstrip('\n')
+            full_output.append(line)
+            status_data['logs'].append(line)
+            task_status[task_id] = status_data
+            save_task_status(task_id, status_data)
+
+            if time.time() > deadline:
+                process.kill()
+                raise subprocess.TimeoutExpired(cmd=script_path, timeout=900)
+
+        process.wait()
+
+        if process.returncode != 0:
+            raise subprocess.CalledProcessError(
+                process.returncode, script_path,
+                output='\n'.join(full_output),
+                stderr='\n'.join(full_output)
+            )
+
         # Update progress
         status_data['progress'] = 90
         status_data['message'] = 'Generating final report...'
+        status_data['logs'].append('[system] Generating final report...')
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
-        
+
+        # Read the generated report markdown to include in the response
+        report_markdown = ""
+        report_path = os.path.join(settings.BASE_DIR, 'intelliHunt/crew/crew_report.md')
+        try:
+            with open(report_path, 'r', encoding='utf-8') as f:
+                report_markdown = f.read()
+        except Exception as e:
+            print(f"Warning: Could not read report file: {e}")
+
         # Mark as completed
         end_time = time.time()
         status_data = {
             'status': 'completed',
             'progress': 100,
             'message': 'Report generation completed successfully!',
-            'output': result.stdout,
+            'output': '\n'.join(full_output),
+            'logs': status_data['logs'] + ['[system] Report generation completed successfully!'],
+            'report_markdown': report_markdown,
             'end_time': end_time,
             'duration': end_time - start_time
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
-        
+
+        # Broadcast update via WebSocket
+        try:
+            channel_layer = get_channel_layer()
+            if channel_layer:
+                async_to_sync(channel_layer.group_send)(
+                    "report_updates",
+                    {
+                        "type": "report_update_message",
+                        "message": "Report generation completed.",
+                        "action": "content_updated"
+                    }
+                )
+        except Exception as e:
+            print(f"WebSocket broadcast failed (non-critical): {e}")
+
         # Clean up the temporary file
         if os.path.exists(payload_file_path):
             os.unlink(payload_file_path)
-        
+
         # Schedule cleanup of task status file after 5 minutes
         import threading
         def delayed_cleanup():
             time.sleep(300)  # 5 minutes
             cleanup_task_status(task_id)
-        
+
         cleanup_thread = threading.Thread(target=delayed_cleanup)
         cleanup_thread.daemon = True
         cleanup_thread.start()
-            
-    except subprocess.CalledProcessError as e:
+
+    except subprocess.TimeoutExpired:
         end_time = time.time()
         status_data = {
             'status': 'error',
             'progress': 0,
-            'message': f'Script failed with error: {e.stderr}',
+            'message': 'Report generation timed out after 15 minutes. Try reducing the software stack size.',
+            'logs': status_data.get('logs', []) + ['[error] Report generation timed out after 15 minutes.'],
             'end_time': end_time
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
-        
+
+        # Clean up the temporary file
+        if os.path.exists(payload_file_path):
+            os.unlink(payload_file_path)
+
+        def delayed_cleanup():
+            time.sleep(300)
+            cleanup_task_status(task_id)
+
+        cleanup_thread = threading.Thread(target=delayed_cleanup)
+        cleanup_thread.daemon = True
+        cleanup_thread.start()
+
+    except subprocess.CalledProcessError as e:
+        end_time = time.time()
+        error_output = e.stderr or e.output or str(e)
+        status_data = {
+            'status': 'error',
+            'progress': 0,
+            'message': f'Script failed with error: {error_output}',
+            'logs': status_data.get('logs', []) + [f'[error] {error_output}'],
+            'end_time': end_time
+        }
+        task_status[task_id] = status_data
+        save_task_status(task_id, status_data)
+
         # Schedule cleanup of task status file after 5 minutes
         import threading
         def delayed_cleanup():
             time.sleep(300)  # 5 minutes
             cleanup_task_status(task_id)
-        
+
         cleanup_thread = threading.Thread(target=delayed_cleanup)
         cleanup_thread.daemon = True
         cleanup_thread.start()
-        
+
     except Exception as e:
         end_time = time.time()
         status_data = {
             'status': 'error',
             'progress': 0,
             'message': f'An unexpected error occurred: {str(e)}',
+            'logs': status_data.get('logs', []) + [f'[error] {str(e)}'],
             'end_time': end_time
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
-        
+
         # Schedule cleanup of task status file after 5 minutes
         import threading
         def delayed_cleanup():
             time.sleep(300)  # 5 minutes
             cleanup_task_status(task_id)
-        
+
         cleanup_thread = threading.Thread(target=delayed_cleanup)
         cleanup_thread.daemon = True
         cleanup_thread.start()
@@ -296,7 +381,18 @@ def run_report(request):
             
             # Parse the JSON payload from the frontend
             payload = json.loads(request.body)
-            
+
+            # Validate that the user has provided actual input
+            yaml_uploaded = payload.get('yaml_uploaded', False)
+            has_os = bool(payload.get('os', []))
+            has_apps = bool(payload.get('applications', []))
+            has_sources = bool(payload.get('sources', []))
+            if not yaml_uploaded and not has_os and not has_apps and not has_sources:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Please provide at least one operating system, application, or source type, or upload a YAML configuration file.'
+                }, status=400)
+
             # Generate a unique task ID
             task_id = str(uuid.uuid4())
             

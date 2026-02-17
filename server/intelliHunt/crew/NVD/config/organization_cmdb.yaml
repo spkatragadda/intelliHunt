@@ -9,6 +9,7 @@ software_stack:
     - name: windows_11
     - name: windows_server_2019
     - name: windows_server_2022
+    - name: Windows 11
   - vendor: apple
     products:
     - name: macos
@@ -33,6 +34,8 @@ software_stack:
     - name: sql_server
     - name: iis
     - name: exchange_server
+    - name: Notepad
+    - name: Notepad
   - vendor: oracle
     products:
     - name: java

@@ -1,40 +1,70 @@
 # intelliHunt
 
-This repo contains a containerized application to conduct automated threat intelligence and threat hunting 
-for cybersecurity. 
+**IntelliHunt** is a containerized, AI-driven platform designed to automate the heavy lifting of Cyber Threat Intelligence (CTI) and Threat Hunting (CTH). By correlating organizational software stacks with real-time vulnerability data and utilizing an autonomous agentic pipeline, IntelliHunt transforms raw data into actionable hunting strategies.
 
-## To Run
+---
 
-#### docker-compose up --build
+## Key Features
 
-Application will be running on http://localhost:3000
-Webpage should display generated report, static webpage
+* **Automated Data Aggregation:** Programmatically pulls vulnerability data from the National Vulnerability Database (NVD) based on specific Common Platform Enumerations (CPEs).
+* **Agentic AI Enrichment:** Leverages [CrewAI](https://www.crewai.com/) to orchestrate intelligent agents that research CVEs, analyze associated URLs, and perform web searches to contextualize threats.
+* **Automated Hunting Queries:** Generates organization-specific Splunk queries (with more SIEM integrations planned) to detect exploitation attempts within your network.
+* **Flexible Input:** Supports software stack definitions via manual text input or YAML configuration files.
 
+---
 
-## Why and How
+## Getting Started
 
-Cyber Threat Intelligence (CTI) can be an onerous process. One in which an analyst must spend hours combing through articles and databases to find threats relevant to their organizations software. This leaves little or maybe no time to strategize on mitigating the identified threats. Our application aims to alleviate a small portion of the pain faced by CTI and assist in the subsequent process of Cyber Threat Hunt (CTH).
+### Prerequisites
+* Docker and Docker Compose
+* An API Key for a supported LLM provider (OpenAI or Groq)
 
-intelliHunt is comprised of 2 main functions:
-1. Programatically pull vulnerability data 
-2. Utilize Agentic AI to enrich the vulnerability data and create initial threat hunting guidance
+### Installation & Deployment
+1.  **Configure Environment:**
+    Rename `example.env` to `.env` and populate it with your provider, model selection, and API keys.
+2.  **Launch the Containers:**
+    ```bash
+    docker-compose up --build
+    ```
+3.  **Access the Interface:**
+    Navigate to `http://localhost:3000` in your web browser.
 
-For the pull of vulnerability data we utilize the National Vulnerability Database (NVD) (https://nvd.nist.gov/). We plan to incorporate more sources in the future. The CPE's which are pulled depend on the user entered software stack. The front end accepts software stack information via text box input and/or yaml, a template yaml is provided. Inputs from both sources are collated prior to processing, allowing user to append information as they are comfortable with. When the report generation is kicked off, this software stack information is used to pull data from NVD for CPE's then CVE's. This gets us our relevant vulnerabilities.
+---
 
-Next, the vulnerability information is passed to our agentic pipeline. For orchestration of our agents we use CrewAI (https://www.crewai.com/). The example.env file contains information on how to setup your env to specify provider, model, and api keys. Currently supported are OpenAI and Groq, but, local inference  is something that will be added (probably via Ollama but what you guys think?). The agents utilize the vulnerabilities, associates urls returned from NVD, as well as general web search if needed, to gather information on the vulnerability and generate a report entry. The gathered information is also used to generate an example splunk query (via Agent) to search for that vulnerability being exploited on the users network. Future work should incorporate alternative methods of search as well.  
+## Feature Deep Dive
 
-All this runs within 2 docker containers, so you can spin up and use within your environment. 
+### Repository Scanner
+The **Repo Scanner** endpoint provides a proactive way to assess your attack surface by analyzing source code environments. This feature allows users to identify the software stack automatically without manual entry.
 
-## The application has pages to upload software stack (manually or through a yaml) and view the retrieved information and report
+* **GitHub Integration:** Provide a public or private GitHub repository URL to trigger a scan.
+* **Compressed Uploads:** Upload `.zip` or `.tar.gz` archives of local repositories.
+* **Automated CPE Mapping:** The scanner parses dependency files (e.g., `requirements.txt`, `package.json`, `pom.xml`) to identify software versions and map them to relevant CPEs for vulnerability tracking.
 
-### home page
+### The Agentic Pipeline
+IntelliHunt doesn't just list vulnerabilities; it investigates them. Our agents:
+1.  **Analyze** the vulnerability impact relative to your specific stack.
+2.  **Research** secondary sources and technical blogs for exploit patterns.
+3.  **Synthesize** a comprehensive report entry including mitigation steps and detection logic.
+
+---
+
+## User Interface
+
+### Home Page
 ![screenshot](imageFolder/home_page.PNG)
 
-### report generation
+### Report Generation
 ![screenshot](imageFolder/report_generation.PNG)
 
-### report viewer
+### Report Viewer
 ![screenshot](imageFolder/report_page.PNG)
 
-### vulnerability information
+### Vulnerability Information
 ![screenshot](imageFolder/vulnerabilities.PNG)
+
+---
+
+## Roadmap
+* **Local Inference:** Support for Local Models to ensure data privacy.
+* **Expanded Data Sources:** Integration with OSINT feeds and ISAC databases.
+* **Advanced Detection Logic:** Support for Sigma rules and KQL (Microsoft Sentinel).

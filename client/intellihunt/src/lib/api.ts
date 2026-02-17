@@ -16,6 +16,8 @@ export type GenerateReportPayload = {
   applications: { vendor: string; products: string[] }[];
   // Source types: arbitrary user-defined with name, fields, and description
   sources: { name: string; fields: string[]; description: string }[];
+  // True when the user explicitly uploaded a YAML config this session
+  yaml_uploaded?: boolean;
 };
 
 /** Get crew_report.md as text from Django */
@@ -87,6 +89,7 @@ export async function checkTaskStatus(taskId: string): Promise<{
   progress: number;
   message: string;
   output?: string;
+  logs?: string[];
   duration?: number;
 }> {
   const res = await fetch(`${PUBLIC_API_BASE}/api/task/${taskId}/`);
