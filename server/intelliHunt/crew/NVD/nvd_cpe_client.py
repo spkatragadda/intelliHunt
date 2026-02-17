@@ -348,19 +348,11 @@ class NVDCPEClient:
                 cpe_data['summary']['vendors_covered'].add(vendor)
                 cpe_data['summary']['products_covered'].add(product_name)
         
-        # Get recent updates
-        if self.config['update_settings']['enable_auto_updates']:
-            days = self.config['update_settings']['last_modified_days']
-            logger.info(f"Collecting recent CPE updates from last {days} days")
-            recent_updates = self.get_recent_cpe_updates(days)
-            cpe_data['recent_updates'] = recent_updates
-        
         # Calculate summary statistics
         cpe_data['summary']['total_cpe_records'] = (
             len(cpe_data['operating_systems']) +
             len(cpe_data['applications']) +
-            len(cpe_data['cloud_platforms']) +
-            len(cpe_data['recent_updates'])
+            len(cpe_data['cloud_platforms'])
         )
         cpe_data['summary']['vendors_covered'] = list(cpe_data['summary']['vendors_covered'])
         cpe_data['summary']['products_covered'] = list(cpe_data['summary']['products_covered'])

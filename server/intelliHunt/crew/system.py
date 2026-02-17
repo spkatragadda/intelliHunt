@@ -66,7 +66,7 @@ def modify_yaml_with_user_inputs(user_inputs, replace_stack=False):
         yaml_config.setdefault('update_settings', {
             'check_interval_hours': 24,
             'last_modified_days': 7,
-            'enable_auto_updates': True
+            'enable_auto_updates': False
         })
         yaml_config.setdefault('output', {
             'format': 'json',

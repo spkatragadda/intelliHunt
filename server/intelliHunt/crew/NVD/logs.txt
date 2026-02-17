@@ -10231,3 +10231,47 @@
 2026-02-17 15:26:19: Request attempt 1 failed: 429 Client Error: Too Many Requests for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%3A2.3%3Aa%3Aamidaware%3Atactical_rmm%3A0.4.25%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A&pubStartDate=2026-02-10T15%3A26%3A19.000Z&pubEndDate=2026-02-17T15%3A26%3A19.000Z&resultsPerPage=500&startIndex=0
 2026-02-17 15:26:20: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
 2026-02-17 15:26:22: Found CVE's: []
+2026-02-17 23:47:19: Fetching vulnerabilities from the past 7 days
+2026-02-17 23:47:19: Loading CPE data from: /app/server/intelliHunt/crew/NVD/cpe_data_20260217_234718.json
+2026-02-17 23:47:19: Found 6249 unique CPE names
+2026-02-17 23:47:19: Limiting CPE processing to 50 out of 6249 total CPEs to avoid API rate limits
+2026-02-17 23:47:19: Fetching CVEs for CPE 1/50: cpe:2.3:a:envoyproxy:gateway:1.6.0:-:*:*:*:*:*:*
+2026-02-17 23:47:19: Searching for CVEs for CPE cpe:2.3:a:envoyproxy:gateway:1.6.0:-:*:*:*:*:*:* between 2026-02-10T23:47:19.000Z and 2026-02-17T23:47:19.000Z
+2026-02-17 23:47:19: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2026-02-17 23:47:22: Found CVE's: []
+2026-02-17 23:47:25: Fetching CVEs for CPE 2/50: cpe:2.3:a:microsoft:remote_desktop:10.7.0:*:*:*:*:macos:*:*
+2026-02-17 23:47:25: Searching for CVEs for CPE cpe:2.3:a:microsoft:remote_desktop:10.7.0:*:*:*:*:macos:*:* between 2026-02-10T23:47:25.000Z and 2026-02-17T23:47:25.000Z
+2026-02-17 23:47:25: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2026-02-17 23:47:27: Found CVE's: []
+2026-02-17 23:47:30: Fetching CVEs for CPE 3/50: cpe:2.3:a:pion:dtls:2.2.3:*:*:*:*:*:*:*
+2026-02-17 23:47:30: Searching for CVEs for CPE cpe:2.3:a:pion:dtls:2.2.3:*:*:*:*:*:*:* between 2026-02-10T23:47:30.000Z and 2026-02-17T23:47:30.000Z
+2026-02-17 23:47:30: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2026-02-17 23:47:32: Retrieved 1 CVE records for cpe:2.3:a:pion:dtls:2.2.3:*:*:*:*:*:*:* (total: 1)
+2026-02-17 23:47:32: Found CVE's: [{'cve': {'id': 'CVE-2026-26014', 'sourceIdentifier': 'security-advisories@github.com', 'published': '2026-02-11T21:16:21.257', 'lastModified': '2026-02-13T21:37:50.663', 'vulnStatus': 'Analyzed', 'cveTags': [], 'descriptions': [{'lang': 'en', 'value': 'Pion DTLS is a Go implementation of Datagram Transport Layer Security. Pion DTLS versions v1.0.0 through v3.0.10 and 3.1.0 use random nonce generation with AES GCM ciphers, which makes it easier for remote attackers to obtain the authentication key and spoof data by leveraging the reuse of a nonce in a session and a "forbidden attack". Upgrade to v3.0.11, v3.1.1, or later.'}], 'metrics': {'cvssMetricV31': [{'source': 'security-advisories@github.com', 'type': 'Secondary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N', 'baseScore': 5.9, 'baseSeverity': 'MEDIUM', 'attackVector': 'NETWORK', 'attackComplexity': 'HIGH', 'privilegesRequired': 'NONE', 'userInteraction': 'NONE', 'scope': 'UNCHANGED', 'confidentialityImpact': 'HIGH', 'integrityImpact': 'NONE', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 2.2, 'impactScore': 3.6}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'cvssData': {'version': '3.1', 'vectorString': 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N', 'baseScore': 9.1, 'baseSeverity': 'CRITICAL', 'attackVector': 'NETWORK', 'attackComplexity': 'LOW', 'privilegesRequired': 'NONE', 'userInteraction': 'NONE', 'scope': 'UNCHANGED', 'confidentialityImpact': 'HIGH', 'integrityImpact': 'HIGH', 'availabilityImpact': 'NONE'}, 'exploitabilityScore': 3.9, 'impactScore': 5.2}]}, 'weaknesses': [{'source': 'security-advisories@github.com', 'type': 'Secondary', 'description': [{'lang': 'en', 'value': 'CWE-200'}]}, {'source': 'nvd@nist.gov', 'type': 'Primary', 'description': [{'lang': 'en', 'value': 'NVD-CWE-noinfo'}]}], 'configurations': [{'nodes': [{'operator': 'OR', 'negate': False, 'cpeMatch': [{'vulnerable': True, 'criteria': 'cpe:2.3:a:pion:dtls:*:*:*:*:*:*:*:*', 'versionEndExcluding': '3.1.0', 'matchCriteriaId': '637DA08C-B336-461A-88BE-F52B88D93F00'}]}]}], 'references': [{'url': 'https://github.com/pion/dtls/commit/61762dee8217991882c5eb79856b9e7a73ee349f', 'source': 'security-advisories@github.com', 'tags': ['Patch']}, {'url': 'https://github.com/pion/dtls/commit/90e241cfec2985715efdd3d005972847462a67d6', 'source': 'security-advisories@github.com', 'tags': ['Patch']}, {'url': 'https://github.com/pion/dtls/pull/796', 'source': 'security-advisories@github.com', 'tags': ['Issue Tracking']}, {'url': 'https://github.com/pion/dtls/releases/tag/v3.0.11', 'source': 'security-advisories@github.com', 'tags': ['Release Notes']}, {'url': 'https://github.com/pion/dtls/releases/tag/v3.1.1', 'source': 'security-advisories@github.com', 'tags': ['Release Notes']}, {'url': 'https://github.com/pion/dtls/security/advisories/GHSA-9f3f-wv7r-qc8r', 'source': 'security-advisories@github.com', 'tags': ['Patch', 'Vendor Advisory']}]}}]
+2026-02-17 23:47:35: Fetching CVEs for CPE 4/50: cpe:2.3:a:sangoma:filestore:15.0.3.12:*:*:*:*:freepbx:*:*
+2026-02-17 23:47:35: Searching for CVEs for CPE cpe:2.3:a:sangoma:filestore:15.0.3.12:*:*:*:*:freepbx:*:* between 2026-02-10T23:47:35.000Z and 2026-02-17T23:47:35.000Z
+2026-02-17 23:47:35: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2026-02-17 23:47:38: Found CVE's: []
+2026-02-17 23:47:41: Fetching CVEs for CPE 5/50: cpe:2.3:a:fahadmahmood:external_store_for_shopify:1.5.9:*:*:*:*:wordpress:*:*
+2026-02-17 23:47:41: Searching for CVEs for CPE cpe:2.3:a:fahadmahmood:external_store_for_shopify:1.5.9:*:*:*:*:wordpress:*:* between 2026-02-10T23:47:41.000Z and 2026-02-17T23:47:41.000Z
+2026-02-17 23:47:41: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2026-02-17 23:47:43: Found CVE's: []
+2026-02-17 23:47:46: Fetching CVEs for CPE 6/50: cpe:2.3:a:heinlein:opencloud_reva:2.19.4:*:*:*:*:*:*:*
+2026-02-17 23:47:46: Searching for CVEs for CPE cpe:2.3:a:heinlein:opencloud_reva:2.19.4:*:*:*:*:*:*:* between 2026-02-10T23:47:46.000Z and 2026-02-17T23:47:46.000Z
+2026-02-17 23:47:46: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2026-02-17 23:47:48: Found CVE's: []
+2026-02-17 23:47:51: Fetching CVEs for CPE 7/50: cpe:2.3:a:portkey:gateway:1.12.3:*:*:*:*:*:*:*
+2026-02-17 23:47:51: Searching for CVEs for CPE cpe:2.3:a:portkey:gateway:1.12.3:*:*:*:*:*:*:* between 2026-02-10T23:47:51.000Z and 2026-02-17T23:47:51.000Z
+2026-02-17 23:47:51: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2026-02-17 23:47:54: Found CVE's: []
+2026-02-17 23:47:57: Fetching CVEs for CPE 8/50: cpe:2.3:a:emqx:nanomq:0.24.9:*:*:*:*:*:*:*
+2026-02-17 23:47:57: Searching for CVEs for CPE cpe:2.3:a:emqx:nanomq:0.24.9:*:*:*:*:*:*:* between 2026-02-10T23:47:57.000Z and 2026-02-17T23:47:57.000Z
+2026-02-17 23:47:57: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2026-02-17 23:47:59: Found CVE's: []
+2026-02-17 23:48:02: Fetching CVEs for CPE 9/50: cpe:2.3:a:wpdeveloper:betterdocs:1.5.0:*:*:*:free:wordpress:*:*
+2026-02-17 23:48:02: Searching for CVEs for CPE cpe:2.3:a:wpdeveloper:betterdocs:1.5.0:*:*:*:free:wordpress:*:* between 2026-02-10T23:48:02.000Z and 2026-02-17T23:48:02.000Z
+2026-02-17 23:48:02: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2026-02-17 23:48:04: Found CVE's: []
+2026-02-17 23:48:07: Fetching CVEs for CPE 10/50: cpe:2.3:a:amirraminfar:dozzle:1.19.1:*:*:*:*:docker:*:*
+2026-02-17 23:48:07: Searching for CVEs for CPE cpe:2.3:a:amirraminfar:dozzle:1.19.1:*:*:*:*:docker:*:* between 2026-02-10T23:48:07.000Z and 2026-02-17T23:48:07.000Z
+2026-02-17 23:48:07: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
