@@ -13,7 +13,7 @@ function ShellInner({ children }: { children: ReactNode }) {
       <Sidebar />
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto px-10 py-8 pr-40 lg:px-16 lg:pr-56">
+        <main className="flex-1 overflow-y-auto px-6 py-8 lg:px-10">
           {children}
         </main>
       </div>

@@ -8,16 +8,16 @@ import ReactMarkdown from 'react-markdown';
 const card: React.CSSProperties = {
   background: "var(--surface)",
   border: "1px solid var(--border)",
-  borderRadius: "8px",
+  borderRadius: "6px",
 };
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
   background: "var(--bg)",
   border: "1px solid var(--border)",
-  borderRadius: "6px",
-  padding: "6px 10px",
-  fontSize: "13px",
+  borderRadius: "5px",
+  padding: "8px 12px",
+  fontSize: "14px",
   color: "var(--text-primary)",
   outline: "none",
   transition: "border-color 150ms",
@@ -79,7 +79,7 @@ export default function RepoScanner() {
         if (mode === "url") { setRepoFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }
         else setRepoUrl("");
       }}
-      className="px-3 py-1 rounded-md text-[13px] font-medium transition-colors duration-150"
+      className="px-3 py-2 rounded-sm text-[14px] font-medium transition-colors duration-150"
       style={{
         color: inputMode === mode ? "var(--text-primary)" : "var(--text-muted)",
         background: inputMode === mode ? "var(--surface-hover)" : "transparent",
@@ -100,7 +100,7 @@ export default function RepoScanner() {
       {/* Input */}
       <div className="p-4 space-y-4" style={card}>
         <div
-          className="flex gap-1 p-1 rounded-lg w-fit"
+          className="flex gap-1 p-1 rounded-sm w-fit"
           style={{ background: "var(--bg)", border: "1px solid var(--border)" }}
         >
           <ModeBtn mode="url" label="GitHub URL" />
@@ -159,7 +159,7 @@ export default function RepoScanner() {
               </Button>
             </div>
             {repoFile && (
-              <p className="text-[11px]" style={{ color: "var(--text-muted)" }}>
+              <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>
                 {repoFile.name} ({(repoFile.size / 1024 / 1024).toFixed(2)} MB)
               </p>
             )}
@@ -171,20 +171,20 @@ export default function RepoScanner() {
       {submitting && (
         <div className="space-y-2 p-4" style={card}>
           <div className="flex items-center justify-between">
-            <span className="text-[13px] font-medium" style={{ color: "var(--text-primary)" }}>Progress</span>
-            <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>{progress}%</span>
+            <span className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>Progress</span>
+            <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>{progress}%</span>
           </div>
           <div className="w-full h-1 rounded-full" style={{ background: "var(--border)" }}>
             <div className="h-1 rounded-full transition-all duration-300" style={{ width: `${progress}%`, background: "var(--accent)" }} />
           </div>
-          <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>{progressMessage}</p>
+          <p className="text-[13px]" style={{ color: "var(--text-muted)" }}>{progressMessage}</p>
         </div>
       )}
 
       {/* Status */}
       {serverMsg && (
         <div
-          className="rounded-md p-3 text-[13px]"
+          className="rounded-sm p-3 text-[14px]"
           style={{
             color: serverMsg.includes("Error") || serverMsg.includes("Failed") ? "var(--danger)"
               : serverMsg.includes("completed") || serverMsg.includes("Completed") ? "var(--success)"
@@ -206,7 +206,7 @@ export default function RepoScanner() {
       {scanResults && (
         <div className="p-4 space-y-3" style={card}>
           <div className="flex items-center justify-between">
-            <span className="text-[13px] font-medium" style={{ color: "var(--text-primary)" }}>Results</span>
+            <span className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>Results</span>
             <Button
               variant="secondary"
               onClick={() => {
@@ -224,7 +224,7 @@ export default function RepoScanner() {
               Download
             </Button>
           </div>
-          <div className="rounded-md p-4 max-h-96 overflow-y-auto" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+          <div className="rounded-sm p-4 max-h-96 overflow-y-auto" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
             {/* <pre className="whitespace-pre-wrap break-words text-[12px]" style={{ color: "var(--text-secondary)" }}>
               {scanResults}
             </pre> */}

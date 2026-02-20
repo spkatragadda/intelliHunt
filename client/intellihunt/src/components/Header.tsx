@@ -16,14 +16,14 @@ export default function Header() {
 
   return (
     <header
-      className="flex items-center h-12 flex-shrink-0 px-4"
+      className="flex items-center h-12 flex-shrink-0 px-5"
       style={{ borderBottom: "1px solid var(--border)", background: "var(--surface)" }}
     >
       <div className="flex items-center gap-3 flex-1 min-w-0">
         {!open && (
           <button
             onClick={toggle}
-            className="rounded-md p-1 transition-colors duration-150 hover:bg-[var(--surface-hover)]"
+            className="rounded-sm p-1 transition-colors duration-150 hover:bg-[var(--surface-hover)]"
             style={{ color: "var(--text-muted)" }}
             aria-label="Open sidebar"
           >
@@ -34,11 +34,11 @@ export default function Header() {
         )}
 
         <div className="flex items-center gap-2 min-w-0">
-          <h1 className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>
+          <h1 className="text-[15px] font-medium truncate" style={{ color: "var(--text-primary)" }}>
             {pageInfo.title}
           </h1>
           <span style={{ color: "var(--text-muted)" }}>/</span>
-          <span className="text-sm truncate" style={{ color: "var(--text-muted)" }}>
+          <span className="text-[13px] truncate" style={{ color: "var(--text-muted)" }}>
             {pageInfo.subtitle}
           </span>
         </div>
@@ -46,11 +46,11 @@ export default function Header() {
 
       <div className="flex items-center gap-2 flex-shrink-0">
         <div
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium"
+          className="flex items-center gap-1.5 rounded-sm px-2 py-1 text-[12px] font-medium"
           style={{
             color: "var(--success)",
-            background: "rgba(69, 212, 131, 0.08)",
-            border: "1px solid rgba(69, 212, 131, 0.15)",
+            background: "transparent",
+            border: "1px solid rgba(69, 212, 131, 0.35)",
           }}
         >
           <span className="relative flex h-1.5 w-1.5">

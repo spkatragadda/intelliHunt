@@ -21,16 +21,16 @@ type Tab = "report" | "generate" | "vulnerabilities";
 const card: React.CSSProperties = {
   background: "var(--surface)",
   border: "1px solid var(--border)",
-  borderRadius: "8px",
+  borderRadius: "6px",
 };
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
   background: "var(--bg)",
   border: "1px solid var(--border)",
-  borderRadius: "6px",
-  padding: "6px 10px",
-  fontSize: "13px",
+  borderRadius: "5px",
+  padding: "8px 12px",
+  fontSize: "15px",
   color: "var(--text-primary)",
   outline: "none",
   transition: "border-color 150ms",
@@ -50,7 +50,7 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
-      className="px-3 py-1 rounded-md text-[13px] font-medium transition-colors duration-150"
+      className="px-4 py-2 rounded-sm text-[15px] font-medium transition-colors duration-150"
       style={{
         color: active ? "var(--text-primary)" : "var(--text-muted)",
         background: active ? "var(--surface-hover)" : "transparent",
@@ -72,10 +72,10 @@ function ProgressBar({ progress, message }: { progress: number; message: string 
   return (
     <div className="space-y-2 p-4" style={card}>
       <div className="flex items-center justify-between">
-        <span className="text-[13px] font-medium" style={{ color: "var(--text-primary)" }}>
+        <span className="text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>
           Progress
         </span>
-        <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>
+        <span className="text-[14px]" style={{ color: "var(--text-muted)" }}>
           {progress}%
         </span>
       </div>
@@ -85,7 +85,7 @@ function ProgressBar({ progress, message }: { progress: number; message: string 
           style={{ width: `${progress}%`, background: "var(--accent)" }}
         />
       </div>
-      <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>
+      <p className="text-[14px]" style={{ color: "var(--text-muted)" }}>
         {message}
       </p>
     </div>
@@ -95,27 +95,19 @@ function ProgressBar({ progress, message }: { progress: number; message: string 
 /* ═══════════════════════════════════
    REPORT VIEW
    ═══════════════════════════════════ */
-function ReportView() {
-  const [md, setMd] = useState("");
-  const [err, setErr] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const load = async () => {
-    setLoading(true);
-    setErr(null);
-    try {
-      setMd(await fetchReportMarkdown());
-    } catch (e: any) {
-      setErr(e.message ?? "Unable to load report.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { load(); }, []);
-
+function ReportView({
+  md,
+  err,
+  loading,
+  onRefresh,
+}: {
+  md: string;
+  err: string | null;
+  loading: boolean;
+  onRefresh: () => void;
+}) {
   const download = () => {
-    const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+    const blob = new Blob([md || ""], { type: "text/markdown;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -129,7 +121,7 @@ function ReportView() {
   if (err) {
     return (
       <div
-        className="rounded-md p-3 text-[13px]"
+        className="rounded-sm p-3 text-[15px]"
         style={{ background: "rgba(229, 83, 75, 0.08)", border: "1px solid rgba(229, 83, 75, 0.15)", color: "var(--danger)" }}
       >
         {err}
@@ -140,7 +132,7 @@ function ReportView() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-end gap-2">
-        <Button onClick={loading ? undefined : load} variant="secondary" disabled={loading}>
+        <Button onClick={loading ? undefined : onRefresh} variant="secondary" disabled={loading}>
           {loading ? "Loading..." : "Refresh"}
         </Button>
         <Button onClick={download} variant="secondary">Download</Button>
@@ -150,43 +142,49 @@ function ReportView() {
       </div>
 
       <div
-        className="p-6 rounded-lg text-[14px] leading-relaxed space-y-4
-          [&_h1]:text-xl [&_h1]:font-medium [&_h1]:mb-3
-          [&_h2]:text-lg [&_h2]:font-medium [&_h2]:mb-2 [&_h2]:mt-6
-          [&_h3]:text-base [&_h3]:font-medium [&_h3]:mb-2 [&_h3]:mt-4
-          [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1
-          [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1
-          [&_li]:text-[13px]
-          [&_p]:mb-2"
+        className="p-6 rounded-md text-[16px] leading-relaxed space-y-4
+          [&_h1]:text-2xl [&_h1]:font-medium [&_h1]:mb-3
+          [&_h2]:text-xl [&_h2]:font-medium [&_h2]:mb-2 [&_h2]:mt-6
+          [&_h3]:text-lg [&_h3]:font-medium [&_h3]:mb-2 [&_h3]:mt-4
+          [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1.5
+          [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1.5
+          [&_li]:text-[15px]
+          [&_p]:mb-3"
         style={{
           ...card,
           color: "var(--text-secondary)",
         }}
       >
-        <ReactMarkdown
-          components={{
-            h1: ({ children }) => <h1 style={{ color: "var(--text-primary)" }}>{children}</h1>,
-            h2: ({ children }) => <h2 style={{ color: "var(--text-primary)" }}>{children}</h2>,
-            h3: ({ children }) => <h3 style={{ color: "var(--text-primary)" }}>{children}</h3>,
-            code: ({ children, className }) => {
-              const isBlock = className?.includes("language-");
-              if (isBlock) {
+        {md ? (
+          <ReactMarkdown
+            components={{
+              h1: ({ children }) => <h1 style={{ color: "var(--text-primary)" }}>{children}</h1>,
+              h2: ({ children }) => <h2 style={{ color: "var(--text-primary)" }}>{children}</h2>,
+              h3: ({ children }) => <h3 style={{ color: "var(--text-primary)" }}>{children}</h3>,
+              code: ({ children, className }) => {
+                const isBlock = className?.includes("language-");
+                if (isBlock) {
+                  return (
+                    <pre style={{ background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "6px", padding: "12px", fontSize: "13px", overflow: "auto" }}>
+                      <code>{children}</code>
+                    </pre>
+                  );
+                }
                 return (
-                  <pre style={{ background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "6px", padding: "12px", fontSize: "12px", overflow: "auto" }}>
-                    <code>{children}</code>
-                  </pre>
+                  <code style={{ background: "var(--surface-raised)", padding: "1px 5px", borderRadius: "3px", fontSize: "13px" }}>
+                    {children}
+                  </code>
                 );
-              }
-              return (
-                <code style={{ background: "var(--surface-raised)", padding: "1px 5px", borderRadius: "3px", fontSize: "12px" }}>
-                  {children}
-                </code>
-              );
-            },
-          }}
-        >
-          {md}
-        </ReactMarkdown>
+              },
+            }}
+          >
+            {md}
+          </ReactMarkdown>
+        ) : (
+          <div className="text-[15px]" style={{ color: "var(--text-muted)" }}>
+            {loading ? "Loading report..." : "No report available yet."}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -199,7 +197,7 @@ type KV = { vendor: string; product: string };
 type AppVendorProducts = { vendor: string; products: string[] };
 type Source = { name: string; fields: string[]; description: string };
 
-function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) {
+function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: string) => void }) {
   const [os, setOs] = useState<KV[]>([]);
   const [apps, setApps] = useState<AppVendorProducts[]>([]);
   const [sources, setSources] = useState<Source[]>([]);
@@ -214,6 +212,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
   const [showEmptyPrompt, setShowEmptyPrompt] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
   const [logsOpen, setLogsOpen] = useState(true);
+  const [crewOutput, setCrewOutput] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logsEndRef = useRef<HTMLDivElement>(null);
 
@@ -236,9 +235,10 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
         setProgress(s.progress);
         setProgressMessage(s.message);
         if (s.logs) setLogs(s.logs);
+        if (typeof s.output === "string") setCrewOutput(s.output);
         if (s.status === "completed") {
           setSubmitting(false); setServerMsg("Report generated!"); setTaskId(null); clearInterval(id);
-          onReportGenerated();
+          onReportGenerated(typeof s.output === "string" ? s.output : undefined);
         } else if (s.status === "error") {
           setSubmitting(false); setServerMsg(`Error: ${s.message}`); setTaskId(null); clearInterval(id);
         }
@@ -266,7 +266,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
     }
 
     setShowEmptyPrompt(false);
-    setLogs([]); setLogsOpen(true);
+    setLogs([]); setLogsOpen(true); setCrewOutput(null);
     setSubmitting(true); setServerMsg(null); setProgress(0); setProgressMessage("Starting...");
     try {
       const osClean = os.filter((r) => r.vendor || r.product);
@@ -283,10 +283,10 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
 
   const SectionLabel = ({ children, onAdd }: { children: React.ReactNode; onAdd: () => void }) => (
     <div className="flex items-center justify-between mb-3">
-      <span className="text-[13px] font-medium" style={{ color: "var(--text-primary)" }}>{children}</span>
+      <span className="text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>{children}</span>
       <button
         onClick={onAdd}
-        className="text-[12px] rounded-md px-2 py-0.5 transition-colors duration-150"
+        className="text-[14px] rounded-sm px-2.5 py-1 transition-colors duration-150"
         style={{ color: "var(--accent)", background: "var(--accent-muted)" }}
         onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(124, 90, 255, 0.2)"; }}
         onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent-muted)"; }}
@@ -299,7 +299,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
   const RemoveBtn = ({ onClick }: { onClick: () => void }) => (
     <button
       onClick={onClick}
-      className="rounded-md p-1 flex-shrink-0 transition-colors duration-150"
+      className="rounded-sm p-1 flex-shrink-0 transition-colors duration-150"
       style={{ color: "var(--text-muted)" }}
       onMouseEnter={(e) => { e.currentTarget.style.color = "var(--danger)"; }}
       onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; }}
@@ -311,20 +311,20 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
   );
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6 w-full">
       {/* Stat badges at top */}
-      <div className="flex gap-3">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ ...card, minWidth: 100 }}>
-          <span className="text-[20px] font-semibold" style={{ color: "var(--accent)" }}>{osCount}</span>
-          <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>OS</span>
+      <div className="flex gap-4 flex-wrap">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-md" style={{ ...card, minWidth: 100 }}>
+          <span className="text-[22px] font-semibold" style={{ color: "var(--accent)" }}>{osCount}</span>
+          <span className="text-[14px]" style={{ color: "var(--text-muted)" }}>OS</span>
         </div>
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ ...card, minWidth: 100 }}>
-          <span className="text-[20px] font-semibold" style={{ color: "var(--accent)" }}>{appsCount}</span>
-          <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>Apps</span>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-md" style={{ ...card, minWidth: 100 }}>
+          <span className="text-[22px] font-semibold" style={{ color: "var(--accent)" }}>{appsCount}</span>
+          <span className="text-[14px]" style={{ color: "var(--text-muted)" }}>Apps</span>
         </div>
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ ...card, minWidth: 100 }}>
-          <span className="text-[20px] font-semibold" style={{ color: "var(--accent)" }}>{cloudCount}</span>
-          <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>Cloud</span>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-md" style={{ ...card, minWidth: 100 }}>
+          <span className="text-[22px] font-semibold" style={{ color: "var(--accent)" }}>{cloudCount}</span>
+          <span className="text-[14px]" style={{ color: "var(--text-muted)" }}>Cloud</span>
         </div>
       </div>
 
@@ -332,11 +332,11 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
       <div className="p-4" style={card}>
         <SectionLabel onAdd={() => setOs((a) => [...a, { vendor: "", product: "" }])}>Operating Systems</SectionLabel>
         {os.length === 0 ? (
-          <p className="text-[12px] py-2" style={{ color: "var(--text-muted)" }}>No operating systems added. Click + Add to begin.</p>
+          <p className="text-[14px] py-2" style={{ color: "var(--text-muted)" }}>No operating systems added. Click + Add to begin.</p>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {os.map((row, i) => (
-              <div key={i} className="flex gap-2 items-center">
+              <div key={i} className="flex gap-4 items-center">
                 <input
                   value={row.vendor} placeholder="Vendor"
                   onChange={(e) => setOs((a) => a.map((r, j) => (j === i ? { ...r, vendor: e.target.value } : r)))}
@@ -362,11 +362,11 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
       <div className="p-4" style={card}>
         <SectionLabel onAdd={() => setApps((a) => [...a, { vendor: "", products: [] }])}>Applications</SectionLabel>
         {apps.length === 0 ? (
-          <p className="text-[12px] py-2" style={{ color: "var(--text-muted)" }}>No applications added. Click + Add to begin.</p>
+          <p className="text-[14px] py-2" style={{ color: "var(--text-muted)" }}>No applications added. Click + Add to begin.</p>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {apps.map((row, i) => (
-              <div key={i} className="flex gap-2 items-center">
+              <div key={i} className="flex gap-4 items-center">
                 <input
                   value={row.vendor} placeholder="Vendor"
                   onChange={(e) => setApps((a) => a.map((r, j) => (j === i ? { ...r, vendor: e.target.value } : r)))}
@@ -395,12 +395,12 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
       <div className="p-4" style={card}>
         <SectionLabel onAdd={() => setSources((a) => [...a, { name: "", fields: [], description: "" }])}>Source Types</SectionLabel>
         {sources.length === 0 ? (
-          <p className="text-[12px] py-2" style={{ color: "var(--text-muted)" }}>No source types added. Click + Add to begin.</p>
+          <p className="text-[14px] py-2" style={{ color: "var(--text-muted)" }}>No source types added. Click + Add to begin.</p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {sources.map((row, i) => (
-              <div key={i} className="space-y-2 p-3 rounded-md" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
-                <div className="flex gap-2 items-center">
+              <div key={i} className="space-y-3 p-4 rounded-sm" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+                <div className="flex gap-4 items-center">
                   <input
                     value={row.name} placeholder="Name (e.g. SIEM)"
                     onChange={(e) => setSources((a) => a.map((r, j) => (j === i ? { ...r, name: e.target.value } : r)))}
@@ -436,6 +436,20 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
       {/* Progress */}
       {submitting && <ProgressBar progress={progress} message={progressMessage} />}
 
+      {/* Crew output (final or intermediate) */}
+      {crewOutput && (
+        <div className="p-4 space-y-3" style={card}>
+          <div className="flex items-center justify-between">
+            <span className="text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>Crew Output</span>
+          </div>
+          <div className="rounded-sm p-4 max-h-96 overflow-y-auto" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+            <ReactMarkdown>
+              {crewOutput}
+            </ReactMarkdown>
+          </div>
+        </div>
+      )}
+
       {/* Log viewer - visible whenever there are logs (during or after run) */}
       {logs.length > 0 && (
         <div style={card} className="overflow-hidden">
@@ -447,7 +461,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
             onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-hover)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = "var(--surface)"; }}
           >
-            <span className="text-[13px] font-medium flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
+            <span className="text-[15px] font-medium flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
               <svg
                 className="w-3 h-3 transition-transform duration-150"
                 style={{ transform: logsOpen ? "rotate(90deg)" : "rotate(0deg)" }}
@@ -457,13 +471,13 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
               </svg>
               Output Log
             </span>
-            <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>
+            <span className="text-[14px]" style={{ color: "var(--text-muted)" }}>
               {logs.length} line{logs.length !== 1 ? "s" : ""}
             </span>
           </button>
           {logsOpen && (
             <div
-              className="px-4 py-3 overflow-y-auto font-mono text-[12px] leading-[1.6]"
+              className="px-4 py-3 overflow-y-auto font-mono text-[14px] leading-[1.6]"
               style={{
                 maxHeight: "300px",
                 background: "var(--bg)",
@@ -488,7 +502,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
 
       {/* Empty prompt - shown when user clicks Run Report with no config */}
       {showEmptyPrompt && (
-        <div className="p-4 rounded-lg text-[13px]" style={{
+        <div className="p-4 rounded-md text-[15px]" style={{
           background: "rgba(229, 165, 36, 0.08)",
           border: "1px solid rgba(229, 165, 36, 0.2)",
           color: "var(--text-primary)",
@@ -504,7 +518,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
       {/* YAML */}
       <div className="p-4" style={card}>
         <div className="flex items-center justify-between mb-3">
-          <span className="text-[13px] font-medium" style={{ color: "var(--text-primary)" }}>YAML Configuration</span>
+          <span className="text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>YAML Configuration</span>
           <div className="flex gap-2">
             <Button variant="secondary" onClick={() => downloadYamlTemplate().catch((e: any) => setYamlMsg(`Error: ${e.message}`))}>
               Template
@@ -522,13 +536,13 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
           }}
         />
         {yamlMsg && (
-          <p className="text-[12px] mb-2 rounded-md px-2 py-1" style={{
+          <p className="text-[14px] mb-2 rounded-sm px-2 py-1" style={{
             color: yamlMsg.includes("Error") || yamlMsg.includes("Failed") ? "var(--danger)" : "var(--success)",
             background: yamlMsg.includes("Error") || yamlMsg.includes("Failed") ? "rgba(229,83,75,0.08)" : "rgba(69,212,131,0.08)",
           }}>{yamlMsg}</p>
         )}
         {yamlConfig && (
-          <div className="text-[12px] space-y-0.5" style={{ color: "var(--text-muted)" }}>
+          <div className="text-[14px] space-y-0.5" style={{ color: "var(--text-muted)" }}>
             <p>Org: {yamlConfig.organization?.name || "N/A"}</p>
           </div>
         )}
@@ -539,7 +553,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: () => void }) 
         <Button onClick={submit} disabled={submitting}>
           {submitting ? "Generating..." : "Run Report"}
         </Button>
-        {serverMsg && <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>{serverMsg}</span>}
+        {serverMsg && <span className="text-[15px]" style={{ color: "var(--text-muted)" }}>{serverMsg}</span>}
       </div>
     </div>
   );
@@ -569,9 +583,9 @@ function VulnerabilitiesView() {
   }, [cves, query]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>
+        <span className="text-[15px]" style={{ color: "var(--text-muted)" }}>
           {filtered.length} CVE{filtered.length !== 1 ? "s" : ""}
         </span>
         <Button onClick={load} disabled={loading} variant="secondary">
@@ -580,7 +594,7 @@ function VulnerabilitiesView() {
       </div>
 
       {err && (
-        <div className="rounded-md p-3 text-[13px]" style={{ background: "rgba(229,83,75,0.08)", border: "1px solid rgba(229,83,75,0.15)", color: "var(--danger)" }}>
+        <div className="rounded-sm p-3 text-[15px]" style={{ background: "rgba(229,83,75,0.08)", border: "1px solid rgba(229,83,75,0.15)", color: "var(--danger)" }}>
           {err}
         </div>
       )}
@@ -606,14 +620,14 @@ function VulnerabilitiesView() {
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-lg" style={{ border: "1px solid var(--border)" }}>
-        <table className="min-w-full text-[13px]">
+      <div className="overflow-hidden rounded-md" style={{ border: "1px solid var(--border)" }}>
+        <table className="min-w-full text-[15px]">
           <thead>
             <tr style={{ borderBottom: "1px solid var(--border)", background: "var(--surface)" }}>
-              <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
+              <th className="px-4 py-2.5 text-left text-[13px] font-medium uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
                 CVE
               </th>
-              <th className="px-4 py-2.5 text-right text-[11px] font-medium uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
+              <th className="px-4 py-2.5 text-right text-[13px] font-medium uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
                 NVD
               </th>
             </tr>
@@ -640,7 +654,7 @@ function VulnerabilitiesView() {
                   </td>
                   <td className="px-4 py-2.5 text-right">
                     <a
-                      className="transition-colors duration-150 text-[12px]"
+                      className="transition-colors duration-150 text-[14px]"
                       style={{ color: "var(--accent)" }}
                       href={`https://nvd.nist.gov/vuln/detail/${cve}`}
                       target="_blank"
@@ -655,7 +669,7 @@ function VulnerabilitiesView() {
               ))
             ) : (
               <tr>
-                <td colSpan={2} className="px-4 py-10 text-center text-[13px]" style={{ color: "var(--text-muted)" }}>
+                <td colSpan={2} className="px-4 py-10 text-center text-[15px]" style={{ color: "var(--text-muted)" }}>
                   No vulnerabilities found
                 </td>
               </tr>
@@ -673,19 +687,39 @@ function VulnerabilitiesView() {
 export default function IntelPage() {
   const [tab, setTab] = useState<Tab>("report");
   const [ready, setReady] = useState(false);
-  const [reportKey, setReportKey] = useState(0);
+  const [reportMd, setReportMd] = useState("");
+  const [reportErr, setReportErr] = useState<string | null>(null);
+  const [reportLoading, setReportLoading] = useState(false);
+
+  const loadReport = useCallback(async (): Promise<boolean> => {
+    setReportLoading(true);
+    setReportErr(null);
+    try {
+      const md = await fetchReportMarkdown();
+      setReportMd(md);
+      return true;
+    } catch (e: any) {
+      setReportErr(e.message ?? "Unable to load report.");
+      return false;
+    } finally {
+      setReportLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchReportMarkdown()
-      .then(() => setTab("report"))
-      .catch(() => setTab("generate"))
+    loadReport()
+      .then((ok) => setTab(ok ? "report" : "generate"))
       .finally(() => setReady(true));
-  }, []);
+  }, [loadReport]);
 
-  const handleReportGenerated = useCallback(() => {
-    setReportKey((k) => k + 1);
+  const handleReportGenerated = useCallback(async (reportHint?: string) => {
+    const ok = await loadReport();
+    if (!ok && reportHint) {
+      setReportMd(reportHint);
+      setReportErr(null);
+    }
     setTab("report");
-  }, []);
+  }, [loadReport]);
 
   if (!ready) {
     return (
@@ -699,10 +733,10 @@ export default function IntelPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 w-full">
       {/* Tab bar */}
       <div
-        className="flex gap-1 p-1 rounded-lg w-fit"
+        className="flex gap-1 p-1 rounded-sm w-full"
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
         <TabButton active={tab === "report"} onClick={() => setTab("report")}>Report</TabButton>
@@ -711,8 +745,15 @@ export default function IntelPage() {
       </div>
 
       {tab === "report" && <ReportView key={reportKey} />}
-      {tab === "generate" && <GenerateView onReportGenerated={handleReportGenerated} />}
-      {tab === "vulnerabilities" && <VulnerabilitiesView />}
+      <div style={{ display: tab === "report" ? "block" : "none" }}>
+        <ReportView md={reportMd} err={reportErr} loading={reportLoading} onRefresh={loadReport} />
+      </div>
+      <div style={{ display: tab === "generate" ? "block" : "none" }}>
+        <GenerateView onReportGenerated={handleReportGenerated} />
+      </div>
+      <div style={{ display: tab === "vulnerabilities" ? "block" : "none" }}>
+        <VulnerabilitiesView />
+      </div>
     </div>
   );
 }

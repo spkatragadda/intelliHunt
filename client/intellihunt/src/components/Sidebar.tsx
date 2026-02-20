@@ -47,21 +47,21 @@ export default function Sidebar() {
       >
         <Link href="/" className="flex items-center gap-2.5 group">
           <div
-            className="flex h-6 w-6 items-center justify-center rounded-md"
+            className="flex h-6 w-6 items-center justify-center rounded-sm"
             style={{ background: "var(--accent-muted)" }}
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="var(--accent)" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
             </svg>
           </div>
-          <span className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+          <span className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>
             IntelliHunt
           </span>
         </Link>
 
         <button
           onClick={toggle}
-          className="rounded-md p-1 transition-colors duration-150 hover:bg-[var(--surface-hover)]"
+          className="rounded-sm p-1 transition-colors duration-150 hover:bg-[var(--surface-hover)]"
           style={{ color: "var(--text-muted)" }}
           aria-label="Close sidebar"
         >
@@ -72,14 +72,14 @@ export default function Sidebar() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 px-2 py-3 space-y-1 overflow-y-auto">
         {nav.map((item) => {
           const active = path === item.href;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="group flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors duration-150"
+              className="group flex items-center gap-2.5 rounded-sm px-3 py-2 text-[14px] font-medium transition-colors duration-150"
               style={{
                 color: active ? "var(--text-primary)" : "var(--text-secondary)",
                 background: active ? "var(--surface-hover)" : "transparent",
@@ -105,7 +105,7 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="px-3 py-3 flex-shrink-0" style={{ borderTop: "1px solid var(--border)" }}>
-        <div className="flex items-center gap-2 text-[11px]" style={{ color: "var(--text-muted)" }}>
+        <div className="flex items-center gap-2 text-[12px]" style={{ color: "var(--text-muted)" }}>
           <span
             className="inline-block h-1.5 w-1.5 rounded-full"
             style={{ background: "var(--success)" }}

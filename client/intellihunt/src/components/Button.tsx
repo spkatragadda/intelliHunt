@@ -23,7 +23,7 @@ export default function Button({
   icon?: ReactNode;
 }) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-md px-3 py-1.5 text-[13px] font-medium transition-all duration-150 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer";
+    "inline-flex items-center justify-center gap-2 rounded-sm px-3 py-1.5 text-[14px] font-medium transition-colors duration-150 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer";
 
   const variants: Record<ButtonVariant, string> = {
     primary: "",
@@ -35,13 +35,13 @@ export default function Button({
   // Using inline styles for CSS variable support
   const variantStyles: Record<ButtonVariant, React.CSSProperties> = {
     primary: {
-      background: "linear-gradient(180deg, var(--accent) 0%, var(--accent-hover) 100%)",
+      background: "var(--accent)",
       color: "#fff",
-      border: "1px solid rgba(124, 90, 255, 0.3)",
+      border: "1px solid rgba(94, 106, 210, 0.5)",
     },
     secondary: {
-      background: "var(--surface-raised)",
-      color: "var(--text-secondary)",
+      background: "transparent",
+      color: "var(--text-primary)",
       border: "1px solid var(--border)",
     },
     ghost: {
@@ -50,9 +50,9 @@ export default function Button({
       border: "1px solid transparent",
     },
     danger: {
-      background: "rgba(229, 83, 75, 0.1)",
+      background: "transparent",
       color: "var(--danger)",
-      border: "1px solid rgba(229, 83, 75, 0.2)",
+      border: "1px solid rgba(229, 83, 75, 0.35)",
     },
   };
 
@@ -60,7 +60,7 @@ export default function Button({
     primary: { background: "var(--accent-hover)" },
     secondary: { background: "var(--surface-hover)", borderColor: "var(--border-hover)" },
     ghost: { background: "var(--surface-hover)" },
-    danger: { background: "rgba(229, 83, 75, 0.15)" },
+    danger: { background: "rgba(229, 83, 75, 0.08)", borderColor: "rgba(229, 83, 75, 0.45)" },
   };
 
   const classes = `${base} ${variants[variant]} ${className}`;

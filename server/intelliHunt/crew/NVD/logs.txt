@@ -10275,3 +10275,19 @@
 2026-02-17 23:48:07: Fetching CVEs for CPE 10/50: cpe:2.3:a:amirraminfar:dozzle:1.19.1:*:*:*:*:docker:*:*
 2026-02-17 23:48:07: Searching for CVEs for CPE cpe:2.3:a:amirraminfar:dozzle:1.19.1:*:*:*:*:docker:*:* between 2026-02-10T23:48:07.000Z and 2026-02-17T23:48:07.000Z
 2026-02-17 23:48:07: Making request to: https://services.nvd.nist.gov/rest/json/cves/2.0
+2026-02-17 23:54:50: Fetching vulnerabilities from the past 7 days
+2026-02-17 23:54:50: Loading CPE data from: /app/server/intelliHunt/crew/NVD/cpe_data_20260217_235450.json
+2026-02-17 23:54:50: Found 0 unique CPE names
+2026-02-17 23:54:50: Enhanced crew input saved to: /app/server/intelliHunt/crew/NVD/enhanced_crew_input_20260217_235450.json
+2026-02-17 23:54:50: Fetching vulnerabilities from the past 7 days
+2026-02-17 23:54:50: Loading CPE data from: /app/server/intelliHunt/crew/NVD/cpe_data_20260217_235450.json
+2026-02-17 23:54:50: Found 0 unique CPE names
+2026-02-17 23:54:50: Vulnerability summary saved to: /app/server/intelliHunt/crew/NVD/vulnerability_summary_20260217_235450.md
+2026-02-20 02:54:17: Fetching vulnerabilities from the past 7 days
+2026-02-20 02:54:17: Loading CPE data from: /app/server/intelliHunt/crew/NVD/cpe_data_20260220_025417.json
+2026-02-20 02:54:17: Found 0 unique CPE names
+2026-02-20 02:54:17: Enhanced crew input saved to: /app/server/intelliHunt/crew/NVD/enhanced_crew_input_20260220_025417.json
+2026-02-20 02:54:17: Fetching vulnerabilities from the past 7 days
+2026-02-20 02:54:17: Loading CPE data from: /app/server/intelliHunt/crew/NVD/cpe_data_20260220_025417.json
+2026-02-20 02:54:17: Found 0 unique CPE names
+2026-02-20 02:54:17: Vulnerability summary saved to: /app/server/intelliHunt/crew/NVD/vulnerability_summary_20260220_025417.md
