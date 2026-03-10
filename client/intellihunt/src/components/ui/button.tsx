@@ -8,8 +8,8 @@ type ButtonVariant = "default" | "primary" | "secondary" | "outline" | "ghost" |
 type ButtonSize = "default" | "sm" | "lg" | "icon";
 
 const variantStyles: Record<ButtonVariant, React.CSSProperties> = {
-  default:     { background: "var(--accent)", color: "var(--accent-text)", border: "1px solid var(--accent-border-hover)", fontWeight: 600, boxShadow: "0 0 16px rgba(255,255,255,0.18)" },
-  primary:     { background: "var(--accent)", color: "var(--accent-text)", border: "1px solid var(--accent-border-hover)", fontWeight: 600, boxShadow: "0 0 16px rgba(255,255,255,0.18)" },
+  default:     { background: "var(--accent)", color: "var(--accent-text)", border: "1px solid var(--accent-border-hover)", fontWeight: 600, boxShadow: "0 0 18px rgba(74,158,255,0.30)" },
+  primary:     { background: "var(--accent)", color: "var(--accent-text)", border: "1px solid var(--accent-border-hover)", fontWeight: 600, boxShadow: "0 0 18px rgba(74,158,255,0.30)" },
   secondary:   { background: "var(--surface-raised)", color: "var(--text-primary)", border: "1px solid var(--border)" },
   outline:     { background: "transparent", color: "var(--text-primary)", border: "1px solid var(--border)" },
   ghost:       { background: "transparent", color: "var(--text-secondary)", border: "1px solid transparent" },
@@ -19,8 +19,8 @@ const variantStyles: Record<ButtonVariant, React.CSSProperties> = {
 };
 
 const variantHover: Record<ButtonVariant, React.CSSProperties> = {
-  default:     { background: "var(--accent-hover)", boxShadow: "0 0 24px rgba(255,255,255,0.30)" },
-  primary:     { background: "var(--accent-hover)", boxShadow: "0 0 24px rgba(255,255,255,0.30)" },
+  default:     { background: "var(--accent-hover)", boxShadow: "0 0 28px rgba(74,158,255,0.50)" },
+  primary:     { background: "var(--accent-hover)", boxShadow: "0 0 28px rgba(74,158,255,0.50)" },
   secondary:   { background: "var(--surface-hover)", borderColor: "var(--border-hover)" },
   outline:     { background: "var(--surface-hover)", borderColor: "var(--border-hover)" },
   ghost:       { background: "var(--surface-hover)" },

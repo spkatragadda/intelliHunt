@@ -68,7 +68,7 @@ export default function Sidebar() {
               background: "linear-gradient(135deg, var(--accent-muted), var(--accent-subtle))",
               border: "1px solid var(--accent-border)",
               color: "var(--accent)",
-              boxShadow: "0 0 20px rgba(255,255,255,0.14), inset 0 1px 0 rgba(255,255,255,0.08)",
+              boxShadow: "0 0 20px rgba(74,158,255,0.25), inset 0 1px 0 rgba(74,158,255,0.12)",
             }}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">

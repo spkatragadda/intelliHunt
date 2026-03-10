@@ -21,6 +21,7 @@ type ScanRecord = {
   startedAt: string;
   completedAt?: string;
   durationMs?: number;
+  report?: string;
 };
 
 /* ── localStorage helpers ── */
@@ -95,8 +96,8 @@ function statusStyle(msg: string): { color: string; bg: string; border: string }
   const isOk  = msg.includes("completed") || msg.includes("Completed") || msg.includes("started");
   return {
     color:  isErr ? "var(--danger)"        : isOk ? "var(--success)"      : "var(--info)",
-    bg:     isErr ? "rgba(248,113,113,0.08)" : isOk ? "var(--accent-subtle)" : "rgba(148,163,184,0.08)",
-    border: isErr ? "rgba(248,113,113,0.25)" : isOk ? "var(--accent-border)" : "rgba(148,163,184,0.22)",
+    bg:     isErr ? "rgba(248,113,113,0.08)" : isOk ? "var(--accent-subtle)" : "rgba(74,100,160,0.08)",
+    border: isErr ? "rgba(248,113,113,0.25)" : isOk ? "var(--accent-border)" : "rgba(74,158,255,0.20)",
   };
 }
 
@@ -152,6 +153,7 @@ export default function RepoScanner() {
   const [recentScans, setRecentScans]   = useState<ScanRecord[]>([]);
   const [currentScanId, setCurrentScanId] = useState<string | null>(null);
   const [scanStartTime, setScanStartTime] = useState<number | null>(null);
+  const [selectedScan, setSelectedScan] = useState<ScanRecord | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /* Load recent scans from localStorage on mount */
@@ -169,16 +171,18 @@ export default function RepoScanner() {
         setProgressMessage(s.message);
         if (s.status === "completed") {
           const durationMs = scanStartTime ? Date.now() - scanStartTime : undefined;
+          const reportContent = s.report_markdown || s.output || "No output.";
           setSubmitting(false);
           setServerMsg("Scan completed!");
           setScanResults(s.output || "No output.");
           setReportMarkdown(s.report_markdown || null);
+          setSelectedScan(null);
           setTaskId(null);
           clearInterval(id);
-          // Update scan record
+          // Update scan record — persist report so it survives navigation
           setRecentScans(prev => {
             const updated = prev.map(r => r.id === currentScanId
-              ? { ...r, status: "completed" as const, completedAt: new Date().toISOString(), durationMs }
+              ? { ...r, status: "completed" as const, completedAt: new Date().toISOString(), durationMs, report: reportContent }
               : r
             );
             saveScans(updated);
@@ -525,36 +529,63 @@ export default function RepoScanner() {
       {/* ══════════════════════════════════
           RESULTS (full-width)
          ══════════════════════════════════ */}
-      {(reportMarkdown || scanResults) && (
+      {(reportMarkdown || scanResults || selectedScan) && (() => {
+        const displayContent = selectedScan
+          ? (selectedScan.report || "")
+          : (reportMarkdown || scanResults || "");
+        const isHistorical = !!selectedScan;
+        const displayTitle = isHistorical
+          ? `Report — ${selectedScan!.target.split("/").pop()}`
+          : (reportMarkdown ? "Threat Detection Report" : "Scan Results");
+        return (
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <CardTitle>{reportMarkdown ? "Threat Detection Report" : "Scan Results"}</CardTitle>
-                {reportMarkdown && <Badge variant="accent">Complete</Badge>}
-              </div>
-              <Button
-                variant="secondary"
-                icon={
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                  </svg>
+              <div className="flex items-center gap-3 min-w-0">
+                <CardTitle className="truncate">{displayTitle}</CardTitle>
+                {isHistorical
+                  ? <Badge variant="secondary">{relativeTime(selectedScan!.startedAt)}</Badge>
+                  : reportMarkdown && <Badge variant="accent">Complete</Badge>
                 }
-                onClick={() => {
-                  const content = reportMarkdown || scanResults || "";
-                  const blob = new Blob([content], { type: "text/markdown" });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = `scan-report-${Date.now()}.md`;
-                  document.body.appendChild(a);
-                  a.click();
-                  a.remove();
-                  URL.revokeObjectURL(url);
-                }}
-              >
-                Download
-              </Button>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {isHistorical && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedScan(null)}
+                    className="rounded-md p-1.5 transition-colors"
+                    title="Close"
+                    style={{ color: "var(--text-muted)" }}
+                    onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+                <Button
+                  variant="secondary"
+                  icon={
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                  }
+                  onClick={() => {
+                    const blob = new Blob([displayContent], { type: "text/markdown" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `scan-report-${Date.now()}.md`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    URL.revokeObjectURL(url);
+                  }}
+                >
+                  Download
+                </Button>
+              </div>
             </div>
           </CardHeader>
           <div className="overflow-y-auto" style={{ maxHeight: "70vh", background: "var(--bg)" }}>
@@ -592,12 +623,13 @@ export default function RepoScanner() {
                   hr: () => <hr style={{ border: "none", borderTop: "1px solid var(--border)", margin: "24px 0" }} />,
                 }}
               >
-                {reportMarkdown || scanResults || ""}
+                {displayContent}
               </ReactMarkdown>
             </div>
           </div>
         </Card>
-      )}
+        );
+      })()}
 
       {/* ══════════════════════════════════
           RECENT SCANS — DataTable
@@ -646,11 +678,32 @@ export default function RepoScanner() {
                 <TableHead className="px-4">Status</TableHead>
                 <TableHead className="px-4">Started</TableHead>
                 <TableHead className="px-4 text-right">Duration</TableHead>
+                <TableHead className="px-4 text-right w-16"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {recentScans.map(scan => (
-                <TableRow key={scan.id}>
+              {recentScans.map(scan => {
+                const isSelected = selectedScan?.id === scan.id;
+                const isClickable = scan.status === "completed" && !!scan.report;
+                return (
+                <TableRow
+                  key={scan.id}
+                  onClick={() => {
+                    if (!isClickable) return;
+                    if (isSelected) { setSelectedScan(null); return; }
+                    setSelectedScan(scan);
+                    setScanResults(null);
+                    setReportMarkdown(null);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  style={{
+                    cursor: isClickable ? "pointer" : "default",
+                    background: isSelected ? "var(--accent-subtle)" : undefined,
+                    transition: "background 150ms ease",
+                  }}
+                  onMouseEnter={e => { if (isClickable && !isSelected) e.currentTarget.style.background = "var(--surface-hover)"; }}
+                  onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = ""; }}
+                >
                   <TableCell className="max-w-xs">
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div className="flex-shrink-0" style={{ color: "var(--text-muted)" }}>
@@ -688,8 +741,16 @@ export default function RepoScanner() {
                     style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono), ui-monospace, monospace", fontSize: "12px" }}>
                     {formatDuration(scan.durationMs)}
                   </TableCell>
+                  <TableCell className="px-4 text-right">
+                    {isClickable && (
+                      <span className="text-[11px] font-medium" style={{ color: isSelected ? "var(--accent)" : "var(--text-muted)" }}>
+                        {isSelected ? "Viewing" : "View →"}
+                      </span>
+                    )}
+                  </TableCell>
                 </TableRow>
-              ))}
+                );
+              })}
             </TableBody>
           </Table>
         )}

@@ -77,16 +77,17 @@ const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
           className
         )}
         style={{
-          color: active ? "var(--text-primary)" : "var(--text-muted)",
+          color: active ? "var(--accent)" : "var(--text-muted)",
           background: active ? "var(--accent-subtle)" : "transparent",
           borderBottom: active ? "2px solid var(--accent)" : "2px solid transparent",
-          borderRadius: active ? "4px 4px 0 0" : "4px 4px 0 0",
+          borderRadius: "4px 4px 0 0",
           marginBottom: "-1px",
           letterSpacing: "0.005em",
           cursor: "pointer",
           outline: "none",
           fontFamily: "var(--font-display)",
-          boxShadow: active ? "0 0 12px rgba(255,255,255,0.06)" : "none",
+          boxShadow: active ? "0 0 14px rgba(74,158,255,0.12)" : "none",
+          transition: "color 150ms ease, background 150ms ease, box-shadow 150ms ease",
           ...props.style,
         }}
         onMouseEnter={e => {

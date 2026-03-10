@@ -34,7 +34,7 @@ type CustomEntry = {
 
 const PROVIDER_COLORS: Record<string, string> = {
   servicenow: "#62d84e", bmc_helix: "#e8742a",
-  atlassian: "#2684ff",  custom: "#e0e0e0",
+  atlassian: "#2684ff",  custom: "#4a9eff",
 };
 
 /* ══════════════════════════════════════════
@@ -54,8 +54,8 @@ function cardDisplayStatus(saved: boolean, connStatus: ConnStatus) {
     error:     { label: "Auth Failed",    dot: "var(--danger)",   bg: "rgba(248,113,113,0.10)",     color: "var(--danger)" },
     testing:   { label: "Testing…",      dot: "var(--warning)",  bg: "rgba(251,191,36,0.10)",      color: "var(--warning)" },
     idle:      saved
-      ? { label: "Configured",    dot: "var(--info)",    bg: "rgba(148,163,184,0.10)",      color: "var(--info)" }
-      : { label: "Not Configured", dot: "var(--text-muted)", bg: "rgba(100,116,139,0.08)", color: "var(--text-muted)" },
+      ? { label: "Configured",    dot: "var(--accent)",  bg: "rgba(74,158,255,0.09)",       color: "var(--accent)" }
+      : { label: "Not Configured", dot: "var(--text-muted)", bg: "rgba(74,100,160,0.07)", color: "var(--text-muted)" },
   };
   return map[connStatus];
 }
@@ -891,7 +891,7 @@ export default function SettingsPage() {
 
       {/* Info banner */}
       <div className="flex items-start gap-3 px-5 py-4 rounded-lg"
-        style={{ background: "rgba(148,163,184,0.06)", border: "1px solid rgba(148,163,184,0.18)" }}>
+        style={{ background: "rgba(74,158,255,0.06)", border: "1px solid rgba(74,158,255,0.18)" }}>
         <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="var(--info)" strokeWidth={2} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
         </svg>

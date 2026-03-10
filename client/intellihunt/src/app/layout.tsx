@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Syne, Manrope, JetBrains_Mono } from "next/font/google";
+import { Outfit, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
 
-const syne = Syne({
+const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-display",
   weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
-const manrope = Manrope({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   weight: ["400", "500", "600", "700"],
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`dark ${syne.variable} ${manrope.variable} ${jetbrainsMono.variable}`}
+      className={`dark ${outfit.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
     >
       <body className="min-h-screen">
         <AppShell>{children}</AppShell>

@@ -25,7 +25,7 @@ const Progress = forwardRef<HTMLDivElement, ProgressProps>(
           style={{
             width: `${pct}%`,
             background: "linear-gradient(90deg, var(--accent), var(--accent-hover))",
-            boxShadow: "0 0 6px rgba(255,255,255,0.25)",
+            boxShadow: "0 0 8px rgba(74,158,255,0.40)",
           }}
         />
       </div>

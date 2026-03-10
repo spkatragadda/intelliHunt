@@ -2,10 +2,7 @@ organization:
   name: Your Organization
   description: Configuration management database for vulnerability tracking
 software_stack:
-  operating_systems:
-  - vendor: microsoft
-    products:
-    - name: Windows Server 2022
+  operating_systems: []
   applications:
   - vendor: google
     products:

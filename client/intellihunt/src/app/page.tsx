@@ -51,19 +51,19 @@ type DashboardData = {
 };
 
 const SEV_COLORS: Record<CVESeverity, string> = {
-  critical: "#f43f5e",   // rose-500 — vivid red, clearly distinct from high
-  high:     "#f97316",   // orange-500 — warm orange, clearly distinct from critical
-  medium:   "#3b82f6",   // blue-500
-  low:      "#22c55e",   // green-500
-  unknown:  "#64748b",   // slate-500
+  critical: "#f04060",   // jewel ruby — deep vivid red
+  high:     "#f08020",   // jewel amber — rich warm orange
+  medium:   "#2d7ef8",   // jewel sapphire — electric blue
+  low:      "#10b981",   // jewel emerald — deep green
+  unknown:  "#5a7090",   // steel — muted blue-gray
 };
 
 const SEV_BG: Record<CVESeverity, string> = {
-  critical: "rgba(244,63,94,0.13)",
-  high:     "rgba(249,115,22,0.13)",
-  medium:   "rgba(59,130,246,0.13)",
-  low:      "rgba(34,197,94,0.13)",
-  unknown:  "rgba(100,116,139,0.10)",
+  critical: "rgba(240,64,96,0.15)",
+  high:     "rgba(240,128,32,0.15)",
+  medium:   "rgba(45,126,248,0.15)",
+  low:      "rgba(16,185,129,0.15)",
+  unknown:  "rgba(90,112,144,0.12)",
 };
 
 /* ─── Markdown Parsing ─── */
@@ -514,43 +514,47 @@ function StatCard({
       onClick={onClick}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      className="flex-1 min-w-0 p-5 rounded-xl relative overflow-hidden text-left"
+      className="flex-1 min-w-0 p-4 rounded-xl relative overflow-hidden text-left"
       style={{
-        background: active ? `${color}0d` : "var(--surface)",
-        border: `1px solid ${active ? `${color}55` : hov && onClick ? "var(--border-hover)" : "var(--border)"}`,
-        borderTopColor: active ? `${color}55` : "rgba(255,255,255,0.06)",
+        background: active
+          ? `linear-gradient(135deg, ${color}18 0%, var(--surface) 70%)`
+          : `linear-gradient(135deg, ${color}0a 0%, var(--surface) 65%)`,
+        border: `1px solid ${active ? `${color}60` : hov && onClick ? `${color}30` : "var(--border)"}`,
+        borderTopColor: active ? `${color}80` : `${color}40`,
         cursor: onClick ? "pointer" : "default",
         transform: hov && onClick ? "translateY(-2px)" : "none",
         transition: "all 200ms ease",
         boxShadow: active
-          ? `0 0 0 1px ${color}25, 0 8px 28px ${color}18, 0 1px 0 rgba(255,255,255,0.04) inset`
+          ? `0 0 0 1px ${color}20, 0 8px 32px ${color}22, 0 1px 0 rgba(74,158,255,0.06) inset`
           : hov
-          ? "0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.5)"
-          : "0 1px 0 rgba(255,255,255,0.04) inset, 0 4px 16px rgba(0,0,0,0.4)",
+          ? `0 1px 0 rgba(74,158,255,0.05) inset, 0 8px 28px rgba(0,0,0,0.6), 0 0 0 1px ${color}15`
+          : "0 1px 0 rgba(74,158,255,0.04) inset, 0 4px 20px rgba(0,0,0,0.55)",
       }}
     >
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-2">
         <span className="text-[10px] uppercase tracking-[0.13em] font-semibold" style={{ color: "var(--text-muted)", fontFamily: "var(--font-display)" }}>
           {label}
         </span>
-        <div className="flex items-center justify-center rounded-lg w-7 h-7 flex-shrink-0" style={{
-          background: `${color}18`,
-          border: `1px solid ${color}38`,
+        <div className="flex items-center justify-center rounded-md w-6 h-6 flex-shrink-0" style={{
+          background: `${color}22`,
+          border: `1px solid ${color}50`,
+          boxShadow: `0 0 8px ${color}20`,
         }}>
           <span style={{ color, display: "flex" }}>{icon}</span>
         </div>
       </div>
-      <div className="text-[38px] font-bold tabular-nums leading-none mb-2" style={{ color, fontFamily: "var(--font-display)", letterSpacing: "-0.03em" }}>{value}</div>
+      <div className="text-[32px] font-bold tabular-nums leading-none mb-1.5" style={{ color, fontFamily: "var(--font-display)", letterSpacing: "-0.03em" }}>{value}</div>
       <div className="flex items-end justify-between gap-2">
         <div>
-          {sub && <div className="text-[11px]" style={{ color: "var(--text-muted)" }}>{sub}</div>}
+          {sub && <div className="text-[10.5px] tabular-nums" style={{ color: "var(--text-muted)" }}>{sub}</div>}
         </div>
         <Sparkline values={sparkValues} color={color} />
       </div>
-      {active && (
-        <div className="absolute inset-x-0 top-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
-      )}
-      <div className="absolute bottom-0 left-0 right-0 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${color}44, transparent)` }} />
+      <div
+        className="absolute inset-x-0 top-0 h-[2px]"
+        style={{ background: `linear-gradient(90deg, transparent, ${color}${active ? "ff" : "88"}, transparent)` }}
+      />
+      <div className="absolute bottom-0 left-0 right-0 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${color}30, transparent)` }} />
     </button>
   );
 }
@@ -651,23 +655,23 @@ function DashboardView({
               </button>
             )}
           </div>
-          <p className="text-[13px]" style={{ color: "var(--text-muted)" }}>
-            NVD vulnerability analysis{activeSeverity ? (
-              <> · <span className="font-medium capitalize" style={{ color: SEV_COLORS[activeSeverity] }}>{activeSeverity} filter active</span>
-              <button type="button" onClick={() => setActiveSeverity(null)} className="ml-1.5 opacity-60 hover:opacity-100" style={{ color: "var(--text-muted)" }}>✕</button></>
-            ) : ""}
-          </p>
+          {activeSeverity && (
+            <p className="text-[12px] mt-0.5" style={{ color: "var(--text-muted)" }}>
+              <span className="font-medium capitalize" style={{ color: SEV_COLORS[activeSeverity] }}>{activeSeverity}</span>
+              {" filter active "}
+              <button type="button" onClick={() => setActiveSeverity(null)} className="opacity-60 hover:opacity-100" style={{ color: "var(--text-muted)" }}>✕</button>
+            </p>
+          )}
         </div>
         {loading && <div className="h-4 w-4 animate-spin rounded-full border-2 mt-1 flex-shrink-0" style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }} />}
       </div>
 
       {/* ── Stat row ── */}
-      <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
+      <div className="grid gap-3 stagger" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))" }}>
         <StatCard
           label="Total CVEs"
           value={data.total}
           color="var(--accent)"
-          sub="All severities"
           active={activeSeverity === null && data.total > 0}
           onClick={() => handleCardClick("total")}
           sparkValues={sparkAll}
@@ -681,7 +685,7 @@ function DashboardView({
           label="Critical"
           value={data.bySeverity.critical}
           color={SEV_COLORS.critical}
-          sub="CVSS 9.0–10.0"
+          sub="9.0–10.0"
           active={activeSeverity === "critical"}
           onClick={() => handleCardClick("critical")}
           sparkValues={sparkBySev("critical")}
@@ -695,7 +699,7 @@ function DashboardView({
           label="High"
           value={data.bySeverity.high}
           color={SEV_COLORS.high}
-          sub="CVSS 7.0–8.9"
+          sub="7.0–8.9"
           active={activeSeverity === "high"}
           onClick={() => handleCardClick("high")}
           sparkValues={sparkBySev("high")}
@@ -709,7 +713,7 @@ function DashboardView({
           label="Med / Low"
           value={data.bySeverity.medium + data.bySeverity.low}
           color={SEV_COLORS.medium}
-          sub="CVSS < 7.0"
+          sub="< 7.0"
           active={activeSeverity === "medium" || activeSeverity === "low"}
           onClick={() => {
             if (activeSeverity === "medium" || activeSeverity === "low") setActiveSeverity(null);
@@ -725,7 +729,7 @@ function DashboardView({
       </div>
 
       {/* ── Charts row ── */}
-      <div className="grid grid-cols-1 gap-8" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))" }}>
+      <div className="grid grid-cols-1 gap-5 animate-fade-up" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", animationDelay: "320ms" }}>
         {/* Severity Distribution */}
         <Card>
           <CardHeader>
@@ -749,7 +753,7 @@ function DashboardView({
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Threats Ranked by Score</CardTitle>
+              <CardTitle>Top Threats by Score</CardTitle>
               {activeSeverity && (
                 <span className="text-[11px] px-2 py-0.5 rounded capitalize font-medium"
                   style={{ background: SEV_BG[activeSeverity], color: SEV_COLORS[activeSeverity] }}>
@@ -770,7 +774,7 @@ function DashboardView({
           <div className="flex flex-col gap-3 px-6 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
             <div className="flex items-center justify-between gap-4">
               <h3 className="text-[10px] font-semibold uppercase tracking-[0.14em]" style={{ color: "var(--text-muted)" }}>
-                Particularly Vulnerable Software
+                Vulnerable Software
               </h3>
               {activeSeverity && (
                 <span className="text-[11px] capitalize px-2 py-0.5 rounded font-medium"
@@ -855,19 +859,17 @@ function DashboardView({
 
       {/* ── Full Report ── */}
       <Card ref={reportRef}>
-        <div className="flex items-center justify-between gap-4 px-6 py-3.5 flex-wrap"
+        <div className="flex items-center justify-between gap-4 px-5 py-3"
           style={{ borderBottom: "1px solid var(--border)" }}>
-          <h3 className="text-[10px] font-semibold uppercase tracking-[0.14em]" style={{ color: "var(--text-muted)" }}>
-            Full Report
-          </h3>
-          <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.12em]" style={{ color: "var(--text-muted)" }}>Report</span>
+          <div className="flex items-center gap-1.5">
             {/* View toggle */}
-            <div className="flex rounded-md overflow-hidden text-[12px] font-medium"
+            <div className="flex rounded overflow-hidden text-[11.5px] font-medium"
               style={{ border: "1px solid var(--border)", background: "var(--bg)" }}>
               {(["markdown", "formatted"] as const).map(v => (
                 <button key={v} type="button"
                   onClick={() => setReportView(v)}
-                  className="px-3 py-1.5 transition-all duration-150"
+                  className="px-2.5 py-1 transition-all duration-150"
                   style={{
                     background: reportView === v ? "var(--accent)" : "transparent",
                     color: reportView === v ? "var(--accent-text)" : "var(--text-muted)",
@@ -880,7 +882,7 @@ function DashboardView({
             {md && (
               <button
                 onClick={copyReport}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded text-[12px] font-medium transition-colors duration-150"
+                className="flex items-center gap-1 px-2.5 py-1 rounded text-[11.5px] font-medium transition-colors duration-150"
                 style={{
                   background: "var(--surface-hover)",
                   color: copied ? "var(--success)" : "var(--text-muted)",
@@ -889,39 +891,25 @@ function DashboardView({
                 onMouseEnter={e => { if (!copied) e.currentTarget.style.color = "var(--text-primary)"; }}
                 onMouseLeave={e => { if (!copied) e.currentTarget.style.color = copied ? "var(--success)" : "var(--text-muted)"; }}
               >
-                {copied ? (
-                  <>
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
-                    </svg>
-                    Copy
-                  </>
-                )}
+                {copied ? "Copied!" : "Copy"}
               </button>
             )}
             {/* Refresh */}
             <button
               onClick={loading ? undefined : onRefresh}
               disabled={loading}
-              className="px-3 py-1.5 rounded text-[12px] font-medium transition-colors duration-150"
+              className="px-2.5 py-1 rounded text-[11.5px] font-medium transition-colors duration-150"
               style={{ background: "var(--surface-hover)", color: "var(--text-muted)", border: "1px solid var(--border)" }}
               onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; }}
               onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
             >
-              {loading ? "Refreshing..." : "Refresh"}
+              {loading ? "Loading..." : "Refresh"}
             </button>
             {/* Download */}
             {md && (
               <button
                 onClick={downloadReport}
-                className="px-3 py-1.5 rounded text-[12px] font-medium transition-colors duration-150"
+                className="px-2.5 py-1 rounded text-[11.5px] font-medium transition-colors duration-150"
                 style={{ background: "var(--surface-hover)", color: "var(--text-muted)", border: "1px solid var(--border)" }}
                 onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; }}
                 onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}

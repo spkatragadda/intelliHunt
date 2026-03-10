@@ -29,7 +29,7 @@ export default function Header() {
         className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none"
         style={{
           background: "linear-gradient(90deg, transparent 0%, var(--accent-border) 30%, var(--accent) 50%, var(--accent-border) 70%, transparent 100%)",
-          opacity: 0.6,
+          opacity: 0.7,
         }}
       />
 

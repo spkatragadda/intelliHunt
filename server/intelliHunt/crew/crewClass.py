@@ -195,6 +195,7 @@ class cyberCrew:
             tools=[],
             inject_date=True,
             verbose=True,
+            max_iter=1,
         )
 
     @agent

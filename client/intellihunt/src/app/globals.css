@@ -5,29 +5,29 @@
 :root {
   color-scheme: dark;
 
-  /* Base palette — pure black to dark gray */
-  --bg:             #000000;
-  --surface:        #0d0d0d;
-  --surface-hover:  #161616;
-  --surface-raised: #1e1e1e;
-  --border:         #242424;
-  --border-hover:   #3d3d3d;
+  /* Base palette — midnight charcoal-navy */
+  --bg:             #090c14;
+  --surface:        #0e1220;
+  --surface-hover:  #141826;
+  --surface-raised: #1a1f30;
+  --border:         #1e253e;
+  --border-hover:   #2d3a58;
 
-  /* Accent: White — clean, high-contrast, timeless */
-  --accent:              #ffffff;
-  --accent-hover:        #d4d4d4;
-  --accent-text:         #000000;
-  --accent-subtle:       rgba(255,255,255,0.04);
-  --accent-muted:        rgba(255,255,255,0.08);
-  --accent-tint:         rgba(255,255,255,0.12);
-  --accent-muted-hover:  rgba(255,255,255,0.16);
-  --accent-border:       rgba(255,255,255,0.20);
-  --accent-border-hover: rgba(255,255,255,0.40);
+  /* Accent: Electric Blue — high-contrast, technical, vivid */
+  --accent:              #4a9eff;
+  --accent-hover:        #3b82f6;
+  --accent-text:         #ffffff;
+  --accent-subtle:       rgba(74,158,255,0.06);
+  --accent-muted:        rgba(74,158,255,0.11);
+  --accent-tint:         rgba(74,158,255,0.18);
+  --accent-muted-hover:  rgba(74,158,255,0.22);
+  --accent-border:       rgba(74,158,255,0.26);
+  --accent-border-hover: rgba(74,158,255,0.50);
 
-  /* Text hierarchy */
-  --text-primary:   #f0f0f0;
-  --text-secondary: #8a8a8a;
-  --text-muted:     #484848;
+  /* Text hierarchy — cool-tinted whites */
+  --text-primary:   #eef2ff;
+  --text-secondary: #8da0c0;
+  --text-muted:     #637ba0;  /* was #4e5f78 — brightened for WCAG AA on #090c14 */
 
   /* Semantic status — retained for functional clarity */
   --success: #4ade80;  /* green-400 */
@@ -86,14 +86,15 @@ html, body {
 }
 
 body {
-  font-family: var(--font-sans), 'Manrope', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans), 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
   background: var(--bg);
-  /* Subtle gray radial vignettes + white dot grid */
+  /* Deep midnight charcoal — layered blue-tinted gradient depth + dot grid */
   background-image:
-    radial-gradient(ellipse 80% 50% at -8% -8%, rgba(255,255,255,0.035) 0%, transparent 60%),
-    radial-gradient(ellipse 55% 45% at 108% 108%, rgba(255,255,255,0.020) 0%, transparent 55%),
-    radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 22px 22px;
+    radial-gradient(ellipse 110% 70% at 5% 0%,   rgba(74,158,255,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 80%  80% at 95% 100%, rgba(20,40,100,0.22)  0%, transparent 55%),
+    radial-gradient(ellipse 60%  50% at 50% 35%,  rgba(15,25,60,0.18)   0%, transparent 60%),
+    radial-gradient(circle, rgba(74,158,255,0.030) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
   color: var(--text-primary);
   @apply antialiased;
   font-size: 14.5px;
@@ -102,8 +103,19 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
 }
 
+/* ── Grain texture overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)' opacity='0.08'/%3E%3C/svg%3E");
+  opacity: 0.55;
+  pointer-events: none;
+}
+
 /* ── Scrollbar ── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
@@ -152,8 +164,49 @@ table { border-collapse: collapse; @apply w-full; }
 /* ── Focus ring ── */
 *:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent), 0 0 8px rgba(74,158,255,0.30);
   border-radius: var(--radius-md);
+}
+
+/* ── Form element dark theming ── */
+input, select, textarea {
+  color-scheme: dark;
+}
+
+select option {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+/* ── Global interactive press feedback ── */
+button:not(:disabled):active,
+[role="button"]:not(:disabled):active {
+  transform: scale(0.97);
+  transition: transform 80ms ease;
+}
+
+/* ── Cursor pointer on all buttons ── */
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+  cursor: pointer;
+}
+
+/* ── Disabled state ── */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ══════════════════════════════════════════
@@ -181,8 +234,8 @@ table { border-collapse: collapse; @apply w-full; }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 4px rgba(255,255,255,0.15); }
-  50%       { box-shadow: 0 0 12px rgba(255,255,255,0.30), 0 0 4px rgba(255,255,255,0.15); }
+  0%, 100% { box-shadow: 0 0 4px rgba(74,158,255,0.22); }
+  50%       { box-shadow: 0 0 14px rgba(74,158,255,0.45), 0 0 4px rgba(74,158,255,0.22); }
 }
 
 @keyframes dot-pulse {
@@ -206,6 +259,15 @@ table { border-collapse: collapse; @apply w-full; }
 .animate-spin-slow  { animation: spin-slow 4s linear infinite; }
 .animate-scan-line  { animation: scan-line 3s linear infinite; }
 
+/* ── Stagger helpers for child elements ── */
+.stagger > * { animation: fade-up 0.35s ease both; }
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 60ms; }
+.stagger > *:nth-child(3) { animation-delay: 120ms; }
+.stagger > *:nth-child(4) { animation-delay: 180ms; }
+.stagger > *:nth-child(5) { animation-delay: 240ms; }
+.stagger > *:nth-child(n+6) { animation-delay: 300ms; }
+
 /* ══════════════════════════════════════════
    Component Utilities
    ══════════════════════════════════════════ */
@@ -217,21 +279,23 @@ table { border-collapse: collapse; @apply w-full; }
   border: 1px solid var(--border);
   background: var(--surface-raised);
   color: var(--text-primary);
-  padding: 8px 12px;
+  padding: 9px 12px;
   font-size: 13.5px;
   font-family: var(--font-sans), inherit;
   font-weight: 400;
   line-height: 1.5;
   transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
   outline: none;
+  color-scheme: dark;
 }
-.input-base::placeholder { color: var(--text-muted); }
-.input-base:hover { border-color: var(--border-hover); background: var(--surface-hover); }
+.input-base::placeholder { color: var(--text-muted); opacity: 1; }
+.input-base:hover:not(:disabled) { border-color: var(--border-hover); background: var(--surface-hover); }
 .input-base:focus {
   border-color: var(--accent);
   background: var(--surface-hover);
-  box-shadow: 0 0 0 3px var(--accent-subtle), inset 0 0 0 1px var(--accent-border);
+  box-shadow: 0 0 0 3px rgba(74,158,255,0.14), 0 0 0 1px var(--accent);
 }
+.input-base:disabled { opacity: 0.45; cursor: not-allowed; }
 
 /* Accent badge/pill */
 .badge-accent {
@@ -261,21 +325,21 @@ table { border-collapse: collapse; @apply w-full; }
 
 /* ── Glass surface (blurred header/sidebar) ── */
 .glass-surface {
-  background: rgba(8, 8, 8, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(9, 12, 22, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 /* ── Glass card utility ── */
 .glass-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-top-color: rgba(255,255,255,0.07);
+  border-top-color: rgba(74,158,255,0.10);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.04) inset,
-    0 4px 20px rgba(0,0,0,0.4),
-    0 1px 3px rgba(0,0,0,0.5);
+    0 1px 0 rgba(74,158,255,0.06) inset,
+    0 4px 24px rgba(0,0,0,0.6),
+    0 1px 3px rgba(0,0,0,0.6);
 }
 
 /* ── Page header utility ── */

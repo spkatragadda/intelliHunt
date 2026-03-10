@@ -65,7 +65,7 @@ def modify_yaml_with_user_inputs(user_inputs, replace_stack=False):
         })
         yaml_config.setdefault('update_settings', {
             'check_interval_hours': 24,
-            'last_modified_days': 7,
+            'last_modified_days': 1,
             'enable_auto_updates': False
         })
         yaml_config.setdefault('output', {
@@ -198,7 +198,7 @@ def load_cpe_data_for_crew():
             latest_enhanced_input = max(enhanced_crew_input_files, key=lambda x: x.stat().st_mtime)
             # Check if file is less than 6 hours old (vulnerabilities change more frequently)
             import time
-            if time.time() - latest_enhanced_input.stat().st_mtime < 21600:  # 6 hours
+            if time.time() - latest_enhanced_input.stat().st_mtime < 43200:  # 12 hours
                 should_fetch_vulnerabilities = False
                 crew_input_path = str(latest_enhanced_input)
                 print(f"Using existing enhanced crew input: {crew_input_path}")
@@ -206,7 +206,7 @@ def load_cpe_data_for_crew():
         if should_fetch_vulnerabilities:
             print("Fetching recent vulnerability data...")
             # Initialize vulnerability processor
-            vuln_processor = VulnerabilityProcessor(cpe_data_path, days_back=7)
+            vuln_processor = VulnerabilityProcessor(cpe_data_path, days_back=1)
             
             # Generate enhanced crew input with vulnerability data
             crew_input_path = vuln_processor.save_enhanced_crew_input()
@@ -238,12 +238,12 @@ def load_cpe_data_for_crew():
                 "recent_cves": [],
                 "high_priority_cves": [],
                 "total_cves_found": 0,
-                "time_period": "Last 7 days",
+                "time_period": "Last 1 day",
                 "cve_details": []
             },
             "research_focus": "Recent Vulnerability Analysis",
             "threat_intelligence_priority": "High",
-            "analysis_timeframe": "Last 7 days"
+            "analysis_timeframe": "Last 1 day"
         }
 
 def _results_to_markdown(result_list) -> str:
@@ -619,6 +619,10 @@ def main(payload_file=None):
     except Exception as e:
         print(f"Error filtering CVE details: {e}")
         inputs = []
+
+    # Cap to top 10 CVEs by CVSS score to limit LLM calls
+    inputs = sorted(inputs, key=lambda x: x.get('cvss_score') or 0, reverse=True)[:10]
+    print(f"Processing top {len(inputs)} CVEs by CVSS score")
 
     # Mark each CVE with data_sufficient flag so the crew knows whether to search
     for cve in inputs:

@@ -9,9 +9,9 @@ const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
       style={{
         background: "var(--surface)",
         border: "1px solid var(--border)",
-        borderTopColor: "rgba(255,255,255,0.06)",
+        borderTopColor: "rgba(74,158,255,0.10)",
         boxShadow:
-          "0 1px 0 rgba(255,255,255,0.04) inset, 0 4px 16px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.5)",
+          "0 1px 0 rgba(74,158,255,0.06) inset, 0 4px 20px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.6)",
         ...style,
       }}
       {...props}
@@ -37,7 +37,7 @@ const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingEleme
     <h3
       ref={ref}
       className={cn("text-[10.5px] font-semibold uppercase tracking-[0.13em]", className)}
-      style={{ color: "var(--text-muted)", fontFamily: "var(--font-display)", ...style }}
+      style={{ color: "var(--text-secondary)", fontFamily: "var(--font-display)", ...style }}
       {...props}
     />
   )

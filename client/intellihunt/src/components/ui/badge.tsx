@@ -23,11 +23,11 @@ const badgeStyles: Record<BadgeVariant, React.CSSProperties> = {
   outline:     { background: "transparent", color: "var(--text-secondary)", border: "1px solid var(--border)" },
   success:     { background: "rgba(52,211,153,0.10)", color: "var(--success)", border: "1px solid rgba(52,211,153,0.25)" },
   warning:     { background: "rgba(251,191,36,0.10)", color: "var(--warning)", border: "1px solid rgba(251,191,36,0.25)" },
-  critical:    { background: "rgba(244,63,94,0.13)", color: "#f43f5e", border: "1px solid rgba(244,63,94,0.30)" },
-  high:        { background: "rgba(249,115,22,0.13)", color: "#f97316", border: "1px solid rgba(249,115,22,0.30)" },
-  medium:      { background: "rgba(59,130,246,0.13)", color: "#3b82f6", border: "1px solid rgba(59,130,246,0.30)" },
-  low:         { background: "rgba(34,197,94,0.13)", color: "#22c55e", border: "1px solid rgba(34,197,94,0.30)" },
-  scanning:    { background: "rgba(148,163,184,0.10)", color: "var(--info)", border: "1px solid rgba(148,163,184,0.25)" },
+  critical:    { background: "rgba(240,64,96,0.14)",   color: "#f04060", border: "1px solid rgba(240,64,96,0.32)" },
+  high:        { background: "rgba(240,128,32,0.14)",  color: "#f08020", border: "1px solid rgba(240,128,32,0.32)" },
+  medium:      { background: "rgba(45,126,248,0.14)",  color: "#2d7ef8", border: "1px solid rgba(45,126,248,0.32)" },
+  low:         { background: "rgba(16,185,129,0.14)",  color: "#10b981", border: "1px solid rgba(16,185,129,0.32)" },
+  scanning:    { background: "rgba(74,158,255,0.10)",  color: "var(--accent)", border: "1px solid rgba(74,158,255,0.25)" },
 };
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {

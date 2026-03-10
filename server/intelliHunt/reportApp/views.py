@@ -663,13 +663,18 @@ def run_report_async(task_id, payload_file_path):
 
         full_output = []
         deadline = time.time() + 900  # 15-minute timeout
+        _log_flush_counter = 0
 
         for line in process.stdout:
             line = line.rstrip('\n')
             full_output.append(line)
             status_data['logs'].append(line)
             task_status[task_id] = status_data
-            save_task_status(task_id, status_data)
+
+            # Batch disk writes — flush every 10 lines instead of every line
+            _log_flush_counter += 1
+            if _log_flush_counter % 10 == 0:
+                save_task_status(task_id, status_data)
 
             if time.time() > deadline:
                 process.kill()

@@ -76,7 +76,7 @@ class NVDCPEClient:
                 response.raise_for_status()
                 
                 # Rate limiting - NVD recommends 0.6 seconds between requests
-                time.sleep(5)
+                time.sleep(0.6)
                 
                 return response.json()
                 
@@ -227,7 +227,7 @@ class NVDCPEClient:
         
         return cpe_records
     
-    def get_recent_cpe_updates(self, days: int = 7) -> List[Dict[str, Any]]:
+    def get_recent_cpe_updates(self, days: int = 1) -> List[Dict[str, Any]]:
         """
         Retrieve CPE records that have been modified in the last N days.
         
