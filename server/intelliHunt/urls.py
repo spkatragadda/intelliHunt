@@ -37,6 +37,12 @@ urlpatterns = [
     path('api/yaml/template/', views.get_yaml_template, name='yaml_template'),
     path('api/yaml/upload/', views.upload_yaml_config, name='upload_yaml_config'),
     path('api/yaml/config/', views.get_current_yaml_config, name='get_yaml_config'),
+    path('api/scan/repo/', views.scan_repo, name='scan_repo'),
+    # CMDB integration endpoints
+    path('api/cmdb/integrations/', views.cmdb_integrations, name='cmdb_integrations'),
+    path('api/cmdb/integrations/<str:integration_id>/', views.delete_cmdb_integration, name='delete_cmdb_integration'),
+    path('api/cmdb/test/', views.test_cmdb_connection, name='test_cmdb_connection'),
+    path('api/cmdb/import/', views.import_cmdb_data, name='import_cmdb_data'),
     path('', health_check, name='health_check'),
     # The "catch-all" pattern that serves the React app
     #re_path(r'^.*', TemplateView.as_view(template_name='index.html')),

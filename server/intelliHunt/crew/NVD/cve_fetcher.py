@@ -7,6 +7,7 @@ import requests
 import json
 import time
 import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -94,8 +95,7 @@ class CVEFetcher:
                 response.raise_for_status()
                 
                 # Rate limiting - NVD recommends 0.6 seconds between requests
-                # Increase delay to avoid 429 errors
-                time.sleep(2.0)
+                time.sleep(0.6)
                 
                 return response.json()
                 
@@ -107,7 +107,7 @@ class CVEFetcher:
                     logger.error(f"All {self.max_retries} attempts failed for URL: {url}")
                     return None
     
-    def get_cves_for_cpe(self, cpe_name: str, days_back: int = 7) -> List[Dict[str, Any]]:
+    def get_cves_for_cpe(self, cpe_name: str, days_back: int = 1) -> List[Dict[str, Any]]:
         """
         Retrieve CVE entries for a specific CPE from the past N days.
         
@@ -160,7 +160,7 @@ class CVEFetcher:
         
         return cve_records
     
-    def get_recent_cves_by_date(self, days_back: int = 7) -> List[Dict[str, Any]]:
+    def get_recent_cves_by_date(self, days_back: int = 1) -> List[Dict[str, Any]]:
         """
         Retrieve all CVE entries published in the past N days.
         
@@ -211,37 +211,46 @@ class CVEFetcher:
         
         return cve_records
     
-    def get_cves_for_cpe_list(self, cpe_list: List[str], days_back: int = 7, max_cpes: int = 50) -> Dict[str, List[Dict[str, Any]]]:
+    def get_cves_for_cpe_list(self, cpe_list: List[str], days_back: int = 1, max_cpes: int = 15) -> Dict[str, List[Dict[str, Any]]]:
         """
         Retrieve CVE entries for a list of CPEs from the past N days.
-        
+        Uses a thread pool to fetch multiple CPEs concurrently.
+
         Args:
             cpe_list: List of CPE names to search for
             days_back: Number of days to look back for CVEs
-            max_cpes: Maximum number of CPEs to process (to avoid API rate limits)
-            
+            max_cpes: Maximum number of CPEs to process
+
         Returns:
             Dictionary mapping CPE names to their CVE records
         """
         cve_data = {}
-        
-        # unique cpe's
+
+        # Deduplicate and cap
         cpe_list = list(set(cpe_list))
-        # Limit the number of CPEs to process to avoid overwhelming the API
         limited_cpe_list = cpe_list[:max_cpes]
-        
+
         if len(cpe_list) > max_cpes:
-            logger.info(f"Limiting CPE processing to {max_cpes} out of {len(cpe_list)} total CPEs to avoid API rate limits")
-        
-        for i, cpe_name in enumerate(limited_cpe_list):
-            logger.info(f"Fetching CVEs for CPE {i+1}/{len(limited_cpe_list)}: {cpe_name}")
+            logger.info(f"Limiting CPE processing to {max_cpes} out of {len(cpe_list)} total CPEs")
+
+        logger.info(f"Fetching CVEs for {len(limited_cpe_list)} CPEs in parallel (max_workers=5)")
+
+        def _fetch(cpe_name):
             cves = self.get_cves_for_cpe(cpe_name, days_back)
-            cve_data[cpe_name] = cves
-            logger.info(f"Found CVE's: {cves}")
-            
-            # Add a longer delay between CPE searches to be respectful to the API
-            time.sleep(3)
-        
+            logger.info(f"Fetched {len(cves)} CVEs for {cpe_name}")
+            return cpe_name, cves
+
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            futures = {executor.submit(_fetch, cpe): cpe for cpe in limited_cpe_list}
+            for future in as_completed(futures):
+                try:
+                    cpe_name, cves = future.result()
+                    cve_data[cpe_name] = cves
+                except Exception as e:
+                    cpe_name = futures[future]
+                    logger.warning(f"Failed to fetch CVEs for {cpe_name}: {e}")
+                    cve_data[cpe_name] = []
+
         return cve_data
     
     def extract_cpe_names_from_data(self, cpe_data: Dict[str, Any]) -> List[str]:
@@ -282,7 +291,7 @@ class CVEFetcher:
         
         return list(cpe_names)
     #
-    def fetch_recent_vulnerabilities(self, cpe_data_path: str = None, days_back: int = 7) -> Dict[str, Any]:
+    def fetch_recent_vulnerabilities(self, cpe_data_path: str = None, days_back: int = 1) -> Dict[str, Any]:
         """
         Fetch recent vulnerabilities for all CPEs in the organization's data.
         
@@ -501,7 +510,7 @@ def main():
         fetcher = CVEFetcher()
         
         # Fetch recent vulnerabilities
-        vulnerability_data = fetcher.fetch_recent_vulnerabilities(days_back=7)
+        vulnerability_data = fetcher.fetch_recent_vulnerabilities(days_back=1)
         
         # Save vulnerability data
         output_path = fetcher.save_vulnerability_data(vulnerability_data)

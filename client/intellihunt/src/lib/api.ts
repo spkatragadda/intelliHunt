@@ -16,6 +16,8 @@ export type GenerateReportPayload = {
   applications: { vendor: string; products: string[] }[];
   // Source types: arbitrary user-defined with name, fields, and description
   sources: { name: string; fields: string[]; description: string }[];
+  // True when the user explicitly uploaded a YAML config this session
+  yaml_uploaded?: boolean;
 };
 
 /** Get crew_report.md as text from Django */
@@ -87,6 +89,8 @@ export async function checkTaskStatus(taskId: string): Promise<{
   progress: number;
   message: string;
   output?: string;
+  report_markdown?: string;
+  logs?: string[];
   duration?: number;
 }> {
   const res = await fetch(`${PUBLIC_API_BASE}/api/task/${taskId}/`);
@@ -196,4 +200,141 @@ export async function getCurrentYamlConfig(): Promise<{ config: any; raw_content
   }
   
   return await response.json();
+}
+
+// ── CMDB Integration Types & API ──────────────────────────────────────────────
+
+export type CmdbIntegration = {
+  type: string;
+  // ServiceNow
+  instance?: string;
+  table?: string;
+  // BMC Helix
+  server?: string;
+  tenant?: string;
+  // Atlassian
+  email?: string;
+  api_token?: string;
+  workspace_id?: string;
+  // Custom
+  name?: string;
+  endpoint?: string;
+  auth_type?: "none" | "basic" | "bearer" | "api_key";
+  token?: string;
+  key_header?: string;
+  api_key?: string;
+  // Shared
+  username?: string;
+  password?: string;
+  enabled?: boolean;
+  last_synced?: string;
+};
+
+export async function getCmdbIntegrations(): Promise<Record<string, CmdbIntegration>> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to fetch integrations: ${res.status}`);
+  const data = await res.json();
+  return data.integrations ?? {};
+}
+
+export async function saveCmdbIntegration(id: string, config: CmdbIntegration): Promise<{ message: string }> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, config }),
+  });
+  if (!res.ok) throw new Error(`Save failed: ${res.status}`);
+  return res.json();
+}
+
+export async function deleteCmdbIntegration(id: string): Promise<{ message: string }> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/${id}/`, { method: "DELETE" });
+  if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
+  return res.json();
+}
+
+export async function testCmdbConnection(
+  type: string,
+  config: Record<string, string>
+): Promise<{ status: "connected" | "error"; message: string }> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/test/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type, config }),
+  });
+  return res.json();
+}
+
+export async function importCmdbData(
+  id: string,
+  type: string
+): Promise<{ message?: string; error?: string; os_count?: number; app_count?: number }> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/import/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, type }),
+  });
+  return res.json();
+}
+
+/** Scan a repository for vulnerabilities */
+export async function scanRepo(
+  repoUrl?: string,
+  repoFile?: File
+): Promise<{ taskId?: string; message: string }> {
+  let res: Response;
+  
+  if (repoFile) {
+    // File upload mode
+    const formData = new FormData();
+    formData.append('repo_file', repoFile);
+    
+    res = await fetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
+      method: "POST",
+      body: formData,
+    });
+  } else if (repoUrl) {
+    // URL mode
+    res = await fetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ repo_url: repoUrl }),
+    });
+  } else {
+    return { message: "Either repoUrl or repoFile must be provided." };
+  }
+
+  // --- Error Handling (Handles 4xx/5xx status codes) ---
+  if (!res.ok) {
+    let msg = `Repository scan failed: ${res.status}`;
+    try {
+      const txt = await res.text();
+      const errorData = JSON.parse(txt);
+      if (errorData.message) {
+        msg = `Server Error: ${errorData.message}`;
+      } else if (txt) {
+        msg = txt;
+      }
+    } catch {
+      // Ignore if parsing fails
+    }
+    return { message: msg };
+  }
+
+  // --- Success Handling (Handles 200 OK) ---
+  try {
+    const data = await res.json();
+
+    if (data.status === 'started' && data.task_id) {
+      return {
+        taskId: data.task_id,
+        message: data.message || "Repository scan started."
+      };
+    }
+
+    return { message: data.message || "Unexpected response from server." };
+
+  } catch {
+    return { message: "Repository scan started, but received an unexpected response." };
+  }
 }

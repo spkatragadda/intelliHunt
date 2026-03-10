@@ -1,18 +1,523 @@
-/* Tailwind v4 single import (no components/utilities sections) */
+/* Tailwind v4 single import */
 @import "tailwindcss";
 
-/* Keep it simple: force dark, no custom props, no plugins */
-:root { color-scheme: dark; }
+/* ===== Design Tokens — Dark (default) ===== */
+:root {
+  color-scheme: dark;
 
-html, body { height: 100%; }
+  /* Base palette — midnight charcoal-navy */
+  --bg:             #090c14;
+  --surface:        #0e1220;
+  --surface-hover:  #141826;
+  --surface-raised: #1a1f30;
+  --border:         #1e253e;
+  --border-hover:   #2d3a58;
 
-body {
-  /* force dark background + readable text */
-  /* using Tailwind via @apply is simplest and v4-safe */
-  @apply bg-slate-950 text-slate-100;
+  /* Accent: Electric Blue — high-contrast, technical, vivid */
+  --accent:              #4a9eff;
+  --accent-hover:        #3b82f6;
+  --accent-text:         #ffffff;
+  --accent-subtle:       rgba(74,158,255,0.06);
+  --accent-muted:        rgba(74,158,255,0.11);
+  --accent-tint:         rgba(74,158,255,0.18);
+  --accent-muted-hover:  rgba(74,158,255,0.22);
+  --accent-border:       rgba(74,158,255,0.26);
+  --accent-border-hover: rgba(74,158,255,0.50);
+
+  /* Text hierarchy — cool-tinted whites */
+  --text-primary:   #eef2ff;
+  --text-secondary: #8da0c0;
+  --text-muted:     #637ba0;  /* was #4e5f78 — brightened for WCAG AA on #090c14 */
+
+  /* Semantic status — retained for functional clarity */
+  --success: #4ade80;  /* green-400 */
+  --warning: #facc15;  /* yellow-400 */
+  --danger:  #f87171;  /* red-400 */
+  --info:    #94a3b8;  /* slate-400 */
+
+  /* Border-radius scale */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
 }
 
-/* basic readable defaults */
-a { @apply text-blue-300 hover:text-blue-200; }
-code, kbd, pre, samp { @apply bg-slate-800 text-slate-100; }
-table { border-collapse: collapse; }
+/* ===== Light Theme ===== */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg:             #ffffff;
+  --surface:        #f5f5f5;
+  --surface-hover:  #ebebeb;
+  --surface-raised: #e5e5e5;
+  --border:         #d0d0d0;
+  --border-hover:   #b8b8b8;
+
+  /* Light accent — pure black */
+  --accent:              #0a0a0a;
+  --accent-hover:        #333333;
+  --accent-text:         #ffffff;
+  --accent-subtle:       rgba(0,0,0,0.04);
+  --accent-muted:        rgba(0,0,0,0.07);
+  --accent-tint:         rgba(0,0,0,0.11);
+  --accent-muted-hover:  rgba(0,0,0,0.14);
+  --accent-border:       rgba(0,0,0,0.18);
+  --accent-border-hover: rgba(0,0,0,0.38);
+
+  --text-primary:   #0a0a0a;
+  --text-secondary: #555555;
+  --text-muted:     #999999;
+
+  --success: #16a34a;
+  --warning: #ca8a04;
+  --danger:  #dc2626;
+  --info:    #64748b;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-sans), 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  /* Deep midnight charcoal — layered blue-tinted gradient depth + dot grid */
+  background-image:
+    radial-gradient(ellipse 110% 70% at 5% 0%,   rgba(74,158,255,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 80%  80% at 95% 100%, rgba(20,40,100,0.22)  0%, transparent 55%),
+    radial-gradient(ellipse 60%  50% at 50% 35%,  rgba(15,25,60,0.18)   0%, transparent 60%),
+    radial-gradient(circle, rgba(74,158,255,0.030) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+  color: var(--text-primary);
+  @apply antialiased;
+  font-size: 14.5px;
+  line-height: 1.65;
+  letter-spacing: -0.005em;
+  font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+}
+
+/* ── Grain texture overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)' opacity='0.08'/%3E%3C/svg%3E");
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ── Typography — display font for headings ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  @apply tracking-tight;
+  color: var(--text-primary);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+h1 { @apply text-3xl font-bold; }
+h2 { @apply text-xl font-semibold; }
+h3 { @apply text-lg font-semibold; }
+
+p {
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+a:not([class]) {
+  color: var(--accent);
+  text-decoration: none;
+  @apply transition-colors duration-150;
+}
+a:not([class]):hover { color: var(--accent-hover); }
+
+/* ── Code ── */
+code, kbd, pre, samp {
+  @apply rounded text-[12.5px];
+  font-family: var(--font-mono), ui-monospace, "JetBrains Mono", monospace;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  padding: 2px 6px;
+}
+
+pre {
+  @apply p-4 rounded-lg overflow-auto;
+  border: 1px solid var(--border);
+}
+
+table { border-collapse: collapse; @apply w-full; }
+
+/* ── Focus ring ── */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent), 0 0 8px rgba(74,158,255,0.30);
+  border-radius: var(--radius-md);
+}
+
+/* ── Form element dark theming ── */
+input, select, textarea {
+  color-scheme: dark;
+}
+
+select option {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+/* ── Global interactive press feedback ── */
+button:not(:disabled):active,
+[role="button"]:not(:disabled):active {
+  transform: scale(0.97);
+  transition: transform 80ms ease;
+}
+
+/* ── Cursor pointer on all buttons ── */
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+  cursor: pointer;
+}
+
+/* ── Disabled state ── */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ══════════════════════════════════════════
+   Entrance Animations
+   ══════════════════════════════════════════ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-right {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(74,158,255,0.22); }
+  50%       { box-shadow: 0 0 14px rgba(74,158,255,0.45), 0 0 4px rgba(74,158,255,0.22); }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.75); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes scan-line {
+  0%   { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -402; }
+}
+
+.animate-dot-pulse  { animation: dot-pulse 2s ease-in-out infinite; }
+.animate-fade-up    { animation: fade-up 0.35s ease both; }
+.animate-fade-in    { animation: fade-in 0.25s ease both; }
+.animate-spin-slow  { animation: spin-slow 4s linear infinite; }
+.animate-scan-line  { animation: scan-line 3s linear infinite; }
+
+/* ── Stagger helpers for child elements ── */
+.stagger > * { animation: fade-up 0.35s ease both; }
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 60ms; }
+.stagger > *:nth-child(3) { animation-delay: 120ms; }
+.stagger > *:nth-child(4) { animation-delay: 180ms; }
+.stagger > *:nth-child(5) { animation-delay: 240ms; }
+.stagger > *:nth-child(n+6) { animation-delay: 300ms; }
+
+/* ══════════════════════════════════════════
+   Component Utilities
+   ══════════════════════════════════════════ */
+
+/* Input base */
+.input-base {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  padding: 9px 12px;
+  font-size: 13.5px;
+  font-family: var(--font-sans), inherit;
+  font-weight: 400;
+  line-height: 1.5;
+  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+  outline: none;
+  color-scheme: dark;
+}
+.input-base::placeholder { color: var(--text-muted); opacity: 1; }
+.input-base:hover:not(:disabled) { border-color: var(--border-hover); background: var(--surface-hover); }
+.input-base:focus {
+  border-color: var(--accent);
+  background: var(--surface-hover);
+  box-shadow: 0 0 0 3px rgba(74,158,255,0.14), 0 0 0 1px var(--accent);
+}
+.input-base:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Accent badge/pill */
+.badge-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--accent-muted);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+/* ── Skeleton ── */
+@keyframes skeleton-loading {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 0px, var(--surface-raised) 40px, var(--surface) 80px);
+  background-size: 200px 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+/* ── Glass surface (blurred header/sidebar) ── */
+.glass-surface {
+  background: rgba(9, 12, 22, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ── Glass card utility ── */
+.glass-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top-color: rgba(74,158,255,0.10);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    0 1px 0 rgba(74,158,255,0.06) inset,
+    0 4px 24px rgba(0,0,0,0.6),
+    0 1px 3px rgba(0,0,0,0.6);
+}
+
+/* ── Page header utility ── */
+.page-title {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── Accent glow line for active elements ── */
+.accent-glow-line {
+  position: relative;
+}
+.accent-glow-line::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* ══════════════════════════════════════════
+   Report Markdown Viewer
+   ══════════════════════════════════════════ */
+.report-md {
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.report-md h1,
+.report-md h2,
+.report-md h3,
+.report-md h4 {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+  line-height: 1.25;
+}
+
+.report-md h1 {
+  font-size: 1.35em;
+  font-weight: 700;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5em;
+  margin-top: 0;
+}
+
+.report-md h2 {
+  font-size: 1.15em;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.report-md h3 {
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75em;
+}
+
+.report-md p {
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-bottom: 0.85em;
+}
+
+.report-md strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.report-md em {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.report-md ul,
+.report-md ol {
+  padding-left: 1.5em;
+  margin-bottom: 0.85em;
+}
+
+.report-md li {
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-bottom: 0.35em;
+}
+
+.report-md li::marker { color: var(--accent); }
+
+.report-md blockquote {
+  border-left: 2px solid var(--accent);
+  padding: 0.4em 1em;
+  margin: 1em 0;
+  background: var(--accent-subtle);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.report-md code {
+  background: var(--surface-raised);
+  color: var(--warning);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 11.5px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  border: 1px solid var(--border);
+}
+
+.report-md pre {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+
+.report-md pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.report-md table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.2em;
+  font-size: 13px;
+}
+
+.report-md th {
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  padding: 8px 14px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-md td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.report-md tr:hover td { background: var(--surface-hover); }
+
+.report-md a { color: var(--accent); text-decoration: none; }
+.report-md a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+.report-md hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5em 0;
+}
