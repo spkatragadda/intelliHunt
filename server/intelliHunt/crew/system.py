@@ -246,6 +246,304 @@ def load_cpe_data_for_crew():
             "analysis_timeframe": "Last 7 days"
         }
 
+def _results_to_markdown(result_list) -> str:
+    """Convert kickoff_for_each CrewOutput list to a formatted markdown report."""
+    import time as _time
+
+    def _safe(val, default="N/A"):
+        return val if val not in (None, "", [], {}) else default
+
+    def _bool_label(val):
+        return "Yes" if val else "No"
+
+    lines = [
+        "# Cyber Threat Intelligence Report",
+        "",
+        f"**Generated:** {_time.strftime('%Y-%m-%d %H:%M UTC', _time.gmtime())}  ",
+        f"**CVEs Analysed:** {len(result_list)}",
+        "",
+        "---",
+        "",
+    ]
+
+    valid = [o for o in result_list if o is not None]
+    if not valid:
+        lines.append("*No results were produced by the analysis.*")
+        return "\n".join(lines)
+
+    for i, output in enumerate(valid, 1):
+        # ── Collect pydantic data ─────────────────────────────────────────
+        detection = getattr(output, 'pydantic', None)  # EnhancedDetectionMethod
+
+        # Walk tasks_output to find the last one with a threatList
+        threat = None
+        tasks_output = getattr(output, 'tasks_output', []) or []
+        for task_out in reversed(tasks_output):
+            pyd = getattr(task_out, 'pydantic', None)
+            if pyd and hasattr(pyd, 'threatList') and pyd.threatList:
+                threat = pyd.threatList[0]
+                break
+
+        # ── Fallback: try to parse raw JSON if pydantic is missing ───────
+        raw_det = {}
+        if detection is None:
+            try:
+                raw_text = getattr(output, 'raw', '') or ''
+                raw_det = json.loads(raw_text) if raw_text.strip().startswith('{') else {}
+            except Exception:
+                raw_det = {}
+
+        # ── Section header ────────────────────────────────────────────────
+        cve_id   = _safe(getattr(threat, 'cve_id', None) or raw_det.get('cve_id'))
+        thr_name = _safe(getattr(threat, 'threat_name', None) or raw_det.get('threat_name'), f"Threat #{i}")
+        severity = _safe(getattr(threat, 'severity', None) or raw_det.get('severity'))
+        score    = getattr(threat, 'cvss_score', None) or raw_det.get('cvss_score')
+
+        heading = f"## {i}. {thr_name}"
+        if cve_id != "N/A":
+            heading += f" — {cve_id}"
+        lines.append(heading)
+        lines.append("")
+
+        meta = []
+        if severity != "N/A":
+            meta.append(f"**Severity:** {severity}")
+        if score is not None:
+            meta.append(f"**CVSS Score:** {score}")
+        if meta:
+            lines.append("  ".join(meta) + "  ")
+            lines.append("")
+
+        # ── Description ───────────────────────────────────────────────────
+        desc = _safe(getattr(threat, 'description', None) or raw_det.get('description'))
+        if desc != "N/A":
+            lines.append(desc)
+            lines.append("")
+
+        # ── Exploitability Metrics ─────────────────────────────────────────
+        em = getattr(threat, 'exploitability_metrics', None)
+        if em:
+            lines.append("### Exploitability Metrics")
+            lines.append("")
+            lines.append(f"| Attack Vector | Attack Complexity | Privileges Required |")
+            lines.append(f"|---|---|---|")
+            lines.append(f"| {_safe(em.attack_vector)} | {_safe(em.attack_complexity)} | {_safe(em.privileges_required)} |")
+            lines.append("")
+
+        # ── Technical Details ──────────────────────────────────────────────
+        td = getattr(threat, 'technical_details', None)
+        if td:
+            lines.append("### Technical Details")
+            lines.append("")
+            if _safe(td.affected_versions) != "N/A":
+                lines.append("**Affected Versions:**")
+                for v in td.affected_versions:
+                    lines.append(f"- {v}")
+                lines.append("")
+            if _safe(td.patched_versions) != "N/A":
+                lines.append("**Patched Versions:**")
+                for v in td.patched_versions:
+                    lines.append(f"- {v}")
+                lines.append("")
+            if _safe(td.workarounds) != "N/A":
+                lines.append("**Workarounds / Mitigations:**")
+                for w in td.workarounds:
+                    lines.append(f"- {w}")
+                lines.append("")
+            lines.append(f"**Proof of Concept Available:** {_bool_label(td.proof_of_concept)}  ")
+            lines.append(f"**Active Exploit Available:** {_bool_label(td.exploit_available)}  ")
+            lines.append("")
+
+        # ── Threat Intelligence ────────────────────────────────────────────
+        ti = getattr(threat, 'threat_intelligence', None)
+        if ti:
+            lines.append("### Threat Intelligence")
+            lines.append("")
+            if _safe(ti.first_seen) != "N/A":
+                lines.append(f"**First Seen:** {ti.first_seen}  ")
+            lines.append(f"**Active Exploitation:** {_bool_label(ti.active_exploitation)}  ")
+            if _safe(ti.threat_actors) != "N/A":
+                lines.append(f"**Known Threat Actors:** {', '.join(ti.threat_actors)}  ")
+            if _safe(ti.campaign_names) != "N/A":
+                lines.append(f"**Attack Campaigns:** {', '.join(ti.campaign_names)}  ")
+            iocs = ti.iocs if isinstance(ti.iocs, dict) else {}
+            if iocs:
+                lines.append("")
+                lines.append("**Indicators of Compromise (IoCs):**")
+                for k, v in iocs.items():
+                    vals = v if isinstance(v, list) else [v]
+                    for item in vals:
+                        lines.append(f"- **{k}:** {item}")
+            lines.append("")
+
+        # ── Flat IoC list (from top-level field) ──────────────────────────
+        ioc_list = getattr(threat, 'indicators_of_compromise', None) or []
+        if ioc_list:
+            if not ti or not ti.iocs:   # avoid duplication if already printed above
+                lines.append("### Indicators of Compromise")
+                lines.append("")
+                for ioc in ioc_list:
+                    lines.append(f"- {ioc}")
+                lines.append("")
+
+        # ── Organisation Context ───────────────────────────────────────────
+        oc = getattr(threat, 'organization_context', None)
+        if oc:
+            lines.append("### Organisation Context")
+            lines.append("")
+            if _safe(oc.affected_assets) != "N/A":
+                lines.append("**Affected Assets:**")
+                for a in oc.affected_assets:
+                    lines.append(f"- {a}")
+                lines.append("")
+            if _safe(oc.current_versions) != "N/A":
+                lines.append("**Current Versions in Use:**")
+                for v in oc.current_versions:
+                    lines.append(f"- {v}")
+                lines.append("")
+            if _safe(oc.security_controls) != "N/A":
+                lines.append("**Existing Security Controls:**")
+                for c in oc.security_controls:
+                    lines.append(f"- {c}")
+                lines.append("")
+            if _safe(oc.risk_tolerance) != "N/A":
+                lines.append(f"**Risk Tolerance:** {oc.risk_tolerance}  ")
+            if _safe(oc.business_impact) != "N/A":
+                lines.append(f"**Business Impact:** {oc.business_impact}  ")
+            lines.append("")
+
+        # ── Risk Assessment ────────────────────────────────────────────────
+        risk = _safe(getattr(threat, 'risk_assessment', None))
+        if risk != "N/A":
+            lines.append("### Risk Assessment")
+            lines.append("")
+            lines.append(risk)
+            lines.append("")
+
+        # ── Recommended Actions ────────────────────────────────────────────
+        actions = getattr(threat, 'recommended_actions', None) or []
+        if actions:
+            lines.append("### Recommended Actions")
+            lines.append("")
+            for j, act in enumerate(actions, 1):
+                lines.append(f"{j}. {act}")
+            lines.append("")
+
+        # ── Detection Method ───────────────────────────────────────────────
+        det_method = (
+            getattr(detection, 'detection_method', None)
+            or raw_det.get('detection_method')
+        )
+        det_desc = (
+            getattr(detection, 'description', None)
+            or raw_det.get('description')
+        )
+        if det_method or det_desc:
+            lines.append("### Detection (Splunk)")
+            lines.append("")
+            if det_method:
+                lines.append(f"**Query:**")
+                lines.append(f"```spl")
+                lines.append(det_method)
+                lines.append(f"```")
+                lines.append("")
+            if det_desc:
+                lines.append(det_desc)
+                lines.append("")
+
+            det_type  = getattr(detection, 'detection_type', None)  or raw_det.get('detection_type')
+            conf      = getattr(detection, 'confidence_level', None) or raw_det.get('confidence_level')
+            fp_risk   = getattr(detection, 'false_positive_risk', None) or raw_det.get('false_positive_risk')
+            meta2 = []
+            if det_type:
+                meta2.append(f"**Type:** {det_type}")
+            if conf:
+                meta2.append(f"**Confidence:** {conf}")
+            if fp_risk:
+                meta2.append(f"**False Positive Risk:** {fp_risk}")
+            if meta2:
+                lines.append("  ".join(meta2) + "  ")
+                lines.append("")
+
+            # Threat indicators
+            ti_det = getattr(detection, 'threat_indicators', None)
+            if ti_det:
+                any_ind = any([
+                    getattr(ti_det, 'network_indicators', []),
+                    getattr(ti_det, 'host_indicators', []),
+                    getattr(ti_det, 'behavioral_indicators', []),
+                    getattr(ti_det, 'temporal_indicators', []),
+                ])
+                if any_ind:
+                    lines.append("#### Detection Indicators")
+                    lines.append("")
+                    for label, attr in [
+                        ("Network", "network_indicators"),
+                        ("Host", "host_indicators"),
+                        ("Behavioral", "behavioral_indicators"),
+                        ("Temporal", "temporal_indicators"),
+                    ]:
+                        items = getattr(ti_det, attr, []) or []
+                        if items:
+                            lines.append(f"**{label}:**")
+                            for item in items:
+                                lines.append(f"- {item}")
+                            lines.append("")
+
+            # Testing instructions
+            testing = getattr(detection, 'testing_instructions', None) or []
+            if testing:
+                lines.append("#### Testing Instructions")
+                lines.append("")
+                for k, step in enumerate(testing, 1):
+                    lines.append(f"{k}. {step}")
+                lines.append("")
+
+            # Maintenance notes
+            maint = getattr(detection, 'maintenance_notes', None)
+            if maint:
+                lines.append("#### Maintenance Notes")
+                lines.append("")
+                lines.append(maint)
+                lines.append("")
+
+        # ── Media Coverage ────────────────────────────────────────────────
+        media = getattr(threat, 'media_coverage', None) or []
+        if media:
+            lines.append("### Media Coverage")
+            lines.append("")
+            for article in media:
+                title  = getattr(article, 'title',  None) or str(article)
+                url    = getattr(article, 'url',    None) or ''
+                source = getattr(article, 'source', None) or ''
+                entry = f"- [{title}]({url})" if url else f"- {title}"
+                if source:
+                    entry += f" *(source: {source})*"
+                lines.append(entry)
+            lines.append("")
+
+        # ── References ────────────────────────────────────────────────────
+        all_urls = list(getattr(threat, 'urlList', None) or [])
+        det_urls = list(getattr(detection, 'urlList', None) or raw_det.get('urlList', []))
+        seen = set()
+        ref_urls = []
+        for u in all_urls + det_urls:
+            if u and u not in seen:
+                seen.add(u)
+                ref_urls.append(u)
+        if ref_urls:
+            lines.append("### References")
+            lines.append("")
+            for url in ref_urls:
+                lines.append(f"- [{url}]({url})")
+            lines.append("")
+
+        lines.append("---")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
 def main(payload_file=None):
     """
     Main execution function that integrates CPE data with crew workflow and recent vulnerability data.
@@ -321,17 +619,40 @@ def main(payload_file=None):
     except Exception as e:
         print(f"Error filtering CVE details: {e}")
         inputs = []
-    
+
+    # Mark each CVE with data_sufficient flag so the crew knows whether to search
+    for cve in inputs:
+        has_description = bool(cve.get('description', '').strip())
+        has_cvss = cve.get('cvss_score') is not None
+        cve['data_sufficient'] = has_description or has_cvss
+
+    # If no vulnerabilities were found, write a placeholder report and exit early
+    if not inputs:
+        print("No vulnerabilities found. Skipping report generation.")
+        report_path = Path(__file__).parent / "crew_report.md"
+        with open(report_path, "w", encoding='utf-8') as f:
+            f.write("# Cyber Threat Intelligence Report\n\nNo vulnerabilities were found for the configured software stack in the analysis timeframe.\n")
+        return []
+
     # Initialize crew
     crew = cyberCrew().crew()
-    
+
+    # Suppress CrewAI's interactive "view execution traces?" prompt.
+    # When running as a subprocess, stdin is /dev/null and input() raises
+    # EOFError, crashing the process before the report is written.
+    # Redirecting stdin to a StringIO that always returns 'n' prevents this.
+    import io
+    sys.stdin = io.StringIO('n\n')
+
     # Execute crew workflow with CPE and vulnerability-enhanced inputs
     print("\nExecuting crew workflow with recent vulnerability data...")
     result = crew.kickoff_for_each(inputs=inputs)
-    # Generate report
+    # Write formatted markdown report
     print("\nGenerating execution report...")
-    # generate_crew_report(result, inputs)
-    create_threat_report(result)    
+    report_path = Path(__file__).parent / "crew_report.md"
+    markdown = _results_to_markdown(result)
+    with open(report_path, "w", encoding='utf-8') as f:
+        f.write(markdown)
     return result
 
 def create_threat_report(crew_output_list):

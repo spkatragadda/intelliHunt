@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { SidebarProvider, useSidebar } from "./SidebarContext";
+import { ThemeProvider } from "./ThemeContext";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 
@@ -13,7 +14,7 @@ function ShellInner({ children }: { children: ReactNode }) {
       <Sidebar />
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto px-6 py-8 lg:px-10">
+        <main className="flex-1 overflow-y-auto px-7 py-7 lg:px-10 animate-fade-in">
           {children}
         </main>
       </div>
@@ -23,8 +24,10 @@ function ShellInner({ children }: { children: ReactNode }) {
 
 export default function AppShell({ children }: { children: ReactNode }) {
   return (
-    <SidebarProvider>
-      <ShellInner>{children}</ShellInner>
-    </SidebarProvider>
+    <ThemeProvider>
+      <SidebarProvider>
+        <ShellInner>{children}</ShellInner>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }

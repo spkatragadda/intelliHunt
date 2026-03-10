@@ -89,6 +89,7 @@ export async function checkTaskStatus(taskId: string): Promise<{
   progress: number;
   message: string;
   output?: string;
+  report_markdown?: string;
   logs?: string[];
   duration?: number;
 }> {
@@ -199,6 +200,81 @@ export async function getCurrentYamlConfig(): Promise<{ config: any; raw_content
   }
   
   return await response.json();
+}
+
+// ── CMDB Integration Types & API ──────────────────────────────────────────────
+
+export type CmdbIntegration = {
+  type: string;
+  // ServiceNow
+  instance?: string;
+  table?: string;
+  // BMC Helix
+  server?: string;
+  tenant?: string;
+  // Atlassian
+  email?: string;
+  api_token?: string;
+  workspace_id?: string;
+  // Custom
+  name?: string;
+  endpoint?: string;
+  auth_type?: "none" | "basic" | "bearer" | "api_key";
+  token?: string;
+  key_header?: string;
+  api_key?: string;
+  // Shared
+  username?: string;
+  password?: string;
+  enabled?: boolean;
+  last_synced?: string;
+};
+
+export async function getCmdbIntegrations(): Promise<Record<string, CmdbIntegration>> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to fetch integrations: ${res.status}`);
+  const data = await res.json();
+  return data.integrations ?? {};
+}
+
+export async function saveCmdbIntegration(id: string, config: CmdbIntegration): Promise<{ message: string }> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, config }),
+  });
+  if (!res.ok) throw new Error(`Save failed: ${res.status}`);
+  return res.json();
+}
+
+export async function deleteCmdbIntegration(id: string): Promise<{ message: string }> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/${id}/`, { method: "DELETE" });
+  if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
+  return res.json();
+}
+
+export async function testCmdbConnection(
+  type: string,
+  config: Record<string, string>
+): Promise<{ status: "connected" | "error"; message: string }> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/test/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type, config }),
+  });
+  return res.json();
+}
+
+export async function importCmdbData(
+  id: string,
+  type: string
+): Promise<{ message?: string; error?: string; os_count?: number; app_count?: number }> {
+  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/import/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, type }),
+  });
+  return res.json();
 }
 
 /** Scan a repository for vulnerabilities */

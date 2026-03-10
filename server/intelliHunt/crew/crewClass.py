@@ -5,7 +5,7 @@ from typing import List
 from langchain_community.llms import Ollama
 from crewai.tools import tool
 from googlesearch import search
-from crewai_tools import RagTool, ScrapeWebsiteTool
+from crewai_tools import RagTool
 from langchain_groq import ChatGroq
 from openai import OpenAI
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -167,35 +167,33 @@ class cyberCrew:
 
     @tool("Google Search")
     def google_search(query: str) -> str:
-        """Search Google for recent results relevant to cybersecurity threats."""
-        results = []
-        try:
-            for result in search(query + "2025", num_results=5):
-                results.append(str(result))  # Ensure result is a string
-            return "\n".join(results) if results else "No results found."
-        except Exception as e:
-            return f"Error during Google Search: {str(e)}"
+        """Search Google for a CVE ONLY when the provided data is insufficient — i.e. the CVE
+        has NO description AND NO CVSS score in the supplied fields.  If the CVE already has a
+        description or CVSS score, DO NOT call this tool; use the provided NVD data instead."""
+        from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 
-    @tool("Web Scraper")
-    def scrape_web(url: str) -> str:
-        """
-        Scrapes a given URL and returns the text content.
-        This tool can open a URL, scrape its web data, and extract useful text.
-        """
+        def _search():
+            hits = []
+            for r in search(query, num_results=3):
+                hits.append(str(r))
+            return "\n".join(hits) if hits else "No results found."
+
         try:
-            scraper = ScrapeWebsiteTool(website_url=url)
-            return scraper.run()
-        except Exception as e:
-            return f"Error scraping URL {url}: {str(e)}"
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                future = pool.submit(_search)
+                return future.result(timeout=10)
+        except FuturesTimeoutError:
+            return "Search timed out. Proceed using available CVE data."
+        except Exception:
+            return "Search failed. Proceed using available CVE data."
 
     @agent
     def cthAnalyst(self) -> Agent:
         return Agent(
             config=self.agents_config["cthAnalyst"],  # type: ignore[index]
-            llm=llm,  # Ollama(model="ollama/qwen3:8b", base_url="http://localhost:11434")
-            tools=[self.google_search, self.scrape_web], # , rag_tool
+            llm=llm,
+            tools=[],
             inject_date=True,
-            #output_pydantic=TrendingThreatList,
             verbose=True,
         )
 
@@ -204,9 +202,9 @@ class cyberCrew:
         return Agent(
             config=self.agents_config["ctiAnalyst"],  # type: ignore[index]
             llm=llm,
-            tools=[self.google_search, self.scrape_web],
+            tools=[self.google_search],
             verbose=True,
-            max_iter=2
+            max_iter=1
         )
 
     @task
@@ -215,15 +213,9 @@ class cyberCrew:
         output_pydantic=EnhancedTrendingThreatList)  # type: ignore[index] EnhancedTrendingThreatList
     
     @task
-    def additional_research_task(self) -> Task:
-        return Task(config=self.tasks_config["additional_research_task"],
-        context=[self.research_task()],
-        output_pydantic=EnhancedTrendingThreatList)  # type: ignore[index]
-    
-    @task
     def review_task(self) -> Task:
         return Task(config=self.tasks_config["review_task"],
-        context=[self.additional_research_task()],
+        context=[self.research_task()],
         output_pydantic=EnhancedTrendingThreatList)  # type: ignore[index]
 
     # @task

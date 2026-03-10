@@ -1,15 +1,36 @@
 "use client";
 
-// Linear-style: dark-only theme. This context exists for potential future use.
-// No toggle needed — the app is permanently dark.
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
-import { createContext, useContext, ReactNode } from "react";
+type Theme = "dark" | "light";
 
-const ThemeContext = createContext({ theme: "dark" as const });
+const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({
+  theme: "dark",
+  toggle: () => {},
+});
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [theme, setTheme] = useState<Theme>("dark");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("theme") as Theme | null;
+    if (stored === "light" || stored === "dark") {
+      setTheme(stored);
+      document.documentElement.setAttribute("data-theme", stored === "light" ? "light" : "");
+    }
+  }, []);
+
+  const toggle = () => {
+    setTheme(prev => {
+      const next = prev === "dark" ? "light" : "dark";
+      localStorage.setItem("theme", next);
+      document.documentElement.setAttribute("data-theme", next === "light" ? "light" : "");
+      return next;
+    });
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme: "dark" }}>
+    <ThemeContext.Provider value={{ theme, toggle }}>
       {children}
     </ThemeContext.Provider>
   );

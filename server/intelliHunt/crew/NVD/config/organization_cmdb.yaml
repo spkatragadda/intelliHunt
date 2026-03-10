@@ -2,11 +2,14 @@ organization:
   name: Your Organization
   description: Configuration management database for vulnerability tracking
 software_stack:
-  operating_systems: []
-  applications:
+  operating_systems:
   - vendor: microsoft
     products:
-    - name: Notepad
+    - name: Windows Server 2022
+  applications:
+  - vendor: google
+    products:
+    - name: Chrome
   cloud_platforms: []
 api_config:
   base_url: https://services.nvd.nist.gov/rest/json
