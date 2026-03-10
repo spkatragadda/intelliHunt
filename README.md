@@ -51,16 +51,19 @@ IntelliHunt doesn't just list vulnerabilities; it investigates them. Our agents:
 ## User Interface
 
 ### Home Page
-![screenshot](imageFolder/home_page.PNG)
+![screenshot](imageFolder/intellihunt_mainpage.png)
 
 ### Report Generation
-![screenshot](imageFolder/report_generation.PNG)
-
-### Report Viewer
-![screenshot](imageFolder/report_page.PNG)
+![screenshot](imageFolder/intellihunt_generate.png)
 
 ### Vulnerability Information
-![screenshot](imageFolder/vulnerabilities.PNG)
+![screenshot](imageFolder/intellihunt_vulnerabilities.png)
+
+### Repo Scanner
+![screenshot](imageFolder/intellihunt_reposcanner.png)
+
+### Settings
+![screenshot](imageFolder/intellihunt_settings.png)
 
 ---
 
