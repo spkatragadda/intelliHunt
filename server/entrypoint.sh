@@ -44,6 +44,11 @@ python manage.py migrate --noinput
 
 # ── admin account ────────────────────────────────────────────────────────────
 echo "[entrypoint] Ensuring admin account exists..."
+if [ -n "$ADMIN_PASSWORD" ]; then
+  echo "[entrypoint] ADMIN_PASSWORD env var detected — using provided password."
+else
+  echo "[entrypoint] No ADMIN_PASSWORD set — auto-generating password (see credentials file or logs)."
+fi
 python manage.py create_admin
 
 # ── start Gunicorn ───────────────────────────────────────────────────────────

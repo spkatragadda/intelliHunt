@@ -36,6 +36,23 @@ def _generate_password(length: int = 32) -> str:
     return "".join(secrets.choice(alphabet) for _ in range(length))
 
 
+def _resolve_password() -> tuple[str, str]:
+    """
+    Return (password, source) where source describes where the password came from.
+    Priority:
+      1. ADMIN_PASSWORD env var  — set explicitly by the operator
+      2. auto-generated          — random, written to credentials file
+    """
+    env_pw = os.environ.get("ADMIN_PASSWORD", "").strip()
+    if env_pw:
+        if len(env_pw) < 12:
+            raise ValueError(
+                "ADMIN_PASSWORD must be at least 12 characters."
+            )
+        return env_pw, "ADMIN_PASSWORD env var"
+    return _generate_password(), "auto-generated (saved to credentials file)"
+
+
 class Command(BaseCommand):
     help = "Create or verify the admin@admin.com superuser account."
 
@@ -79,7 +96,8 @@ class Command(BaseCommand):
             )
             return
 
-        password = _generate_password()
+        password, source = _resolve_password()
+        from_env = source.startswith("ADMIN_PASSWORD")
 
         if existing:
             # Rotate password (--reset path)
@@ -103,22 +121,24 @@ class Command(BaseCommand):
             UserProfile.objects.get_or_create(user=user, defaults={"organization": org})
             action = "Admin account created"
 
-        # Write credentials file (owner-readable only)
-        try:
-            with open(CREDS_FILE, "w") as f:
-                f.write(f"email:    {ADMIN_EMAIL}\n")
-                f.write(f"password: {password}\n")
-                f.write(
-                    "\nKEEP THIS FILE SECURE. "
-                    "Delete or chmod 600 after noting the password.\n"
-                )
-            os.chmod(CREDS_FILE, 0o600)
-        except OSError as exc:
-            self.stderr.write(f"Warning: could not write credentials file: {exc}")
+        # Only write the credentials file when the password was auto-generated;
+        # if it came from an env var the operator already knows it.
+        if not from_env:
+            try:
+                with open(CREDS_FILE, "w") as f:
+                    f.write(f"email:    {ADMIN_EMAIL}\n")
+                    f.write(f"password: {password}\n")
+                    f.write(
+                        "\nKEEP THIS FILE SECURE. "
+                        "Delete or chmod 600 after noting the password.\n"
+                    )
+                os.chmod(CREDS_FILE, 0o600)
+            except OSError as exc:
+                self.stderr.write(f"Warning: could not write credentials file: {exc}")
 
         self.stdout.write(self.style.SUCCESS(
-            f"{action}.\n"
+            f"{action} ({source}).\n"
             f"  email:    {ADMIN_EMAIL}\n"
-            f"  password: {password}\n"
-            f"  saved to: {CREDS_FILE}\n"
+            + (f"  password: {password}\n  saved to: {CREDS_FILE}\n" if not from_env
+               else "  password: (from ADMIN_PASSWORD env var)\n")
         ))
