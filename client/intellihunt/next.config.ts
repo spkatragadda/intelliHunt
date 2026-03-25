@@ -2,6 +2,21 @@
 const nextConfig = {
   output: "standalone",
 
+  async rewrites() {
+    const backendBase =
+      process.env.API_BASE_INTERNAL ?? "http://django:8000";
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${backendBase}/api/:path*`,
+      },
+      {
+        source: "/admin/",
+        destination: `${backendBase}/admin/`,
+      },
+    ];
+  },
+
   async headers() {
     return [
       {

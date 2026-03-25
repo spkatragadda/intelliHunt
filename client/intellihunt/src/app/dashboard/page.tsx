@@ -5,7 +5,6 @@ import ReactMarkdown from "react-markdown";
 import {
   fetchReportMarkdown,
   extractCVEs,
-  PUBLIC_API_BASE,
   GenerateReportPayload,
   runReport,
   checkTaskStatus,

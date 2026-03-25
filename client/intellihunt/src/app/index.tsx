@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const fetchMarkdown = async () => {
       try {
-        const response = await axios.get<MarkdownResponse>('http://localhost:8000/api/markdown/');
+        const response = await axios.get<MarkdownResponse>('/api/markdown/');
         setMarkdown(response.data.content);
       } catch (err) {
         setError('Failed to fetch Markdown content');
