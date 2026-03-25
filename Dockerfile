@@ -46,7 +46,7 @@ RUN npm run build
 RUN ls -la /app/client/intellihunt/.next/standalone || echo "Standalone build not found"
 RUN ls -la /app/client/intellihunt/.next/static || echo "Static directory not found"
 
-# Pull scanner 
+# Pull scanner
 FROM ghcr.io/google/osv-scanner:latest AS scanner
 
 # --- Stage 2: Run Django ---

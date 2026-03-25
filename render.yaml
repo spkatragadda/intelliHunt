@@ -1,0 +1,43 @@
+services:
+  # Django Backend
+  - type: web
+    name: intellihunt-django
+    runtime: docker
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    dockertarget: django
+    env: docker
+    region: oregon # Or your preferred region
+    plan: free     # Change to 'starter' or higher for production
+    healthCheckPath: /
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: intelliHunt.settings
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PYTHONPATH
+        value: /app/server
+    # Note: Render runs migrations during the build or via a 'preDeployCommand'
+    # It's better to separate migrations from the run command.
+    buildCommand: python manage.py migrate
+    startCommand: python manage.py runserver 0.0.0.0:8000
+
+  # Next.js Frontend
+  - type: web
+    name: intellihunt-nextjs
+    runtime: docker
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    dockertarget: nextjs
+    env: docker
+    region: oregon
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE
+        # This would be the public URL of your Django service once deployed
+        value: https://intellihunt-django.onrender.com 
+      - key: API_BASE_INTERNAL
+        # Render allows internal discovery via the service name
+        value: http://intellihunt-django:8000
+      - key: NODE_ENV
+        value: production
