@@ -1,0 +1,46 @@
+{
+  "organization": {
+    "name": "Your Organization",
+    "description": "Configuration management database for vulnerability tracking"
+  },
+  "collection_timestamp": "2026-03-10T21:16:14.317048",
+  "operating_systems": [],
+  "applications": [
+    {
+      "cpe": {
+        "deprecated": false,
+        "cpeName": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "cpeNameId": "FC6432B1-3913-4F06-AF77-C65DA279577E",
+        "lastModified": "2026-02-17T14:34:36.013",
+        "created": "2026-02-17T14:34:36.013",
+        "titles": [
+          {
+            "title": "Google Chrome 145.0.7632.45",
+            "lang": "en"
+          }
+        ],
+        "refs": [
+          {
+            "ref": "https://www.google.com/chrome/",
+            "type": "Vendor"
+          },
+          {
+            "ref": "https://chromium.googlesource.com/chromium/src/+refs",
+            "type": "Change Log"
+          }
+        ]
+      }
+    }
+  ],
+  "cloud_platforms": [],
+  "recent_updates": [],
+  "summary": {
+    "total_cpe_records": 1,
+    "vendors_covered": [
+      "google"
+    ],
+    "products_covered": [
+      "Chrome"
+    ]
+  }
+}

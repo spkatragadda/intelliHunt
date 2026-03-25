@@ -1,0 +1,1844 @@
+{
+  "software_stack": "chrome,google",
+  "url_list": [
+    "https://nvd.nist.gov/vuln/search",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://cve.mitre.org/cve/search_cve_list.html",
+    "https://www.cvedetails.com/",
+    "https://nvd.nist.gov/vuln/search"
+  ],
+  "cpe_data": {
+    "total_records": 1,
+    "vendors_covered": [
+      "google"
+    ],
+    "products_covered": [
+      "chrome"
+    ],
+    "operating_systems": [],
+    "applications": [
+      "chrome"
+    ],
+    "cloud_platforms": []
+  },
+  "collection_metadata": {
+    "timestamp": "2026-03-10T21:16:14.317048",
+    "organization": "Your Organization"
+  },
+  "vulnerability_data": {
+    "recent_cves": [
+      "CVE-2026-3536",
+      "CVE-2026-3538",
+      "CVE-2026-3539",
+      "CVE-2026-3540",
+      "CVE-2026-3541",
+      "CVE-2026-3542",
+      "CVE-2026-3543",
+      "CVE-2026-3544",
+      "CVE-2026-3545"
+    ],
+    "high_priority_cves": [
+      {
+        "cve_id": "CVE-2026-3545",
+        "description": "Insufficient data validation in Navigation in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 9.6,
+        "severity": "CRITICAL",
+        "published": "2026-03-04T20:16:21.690",
+        "last_modified": "2026-03-05T21:57:27.147",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/487383169",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/487383169"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "CHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3544",
+        "description": "Heap buffer overflow in WebCodecs in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to perform an out of bounds memory write via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:21.550",
+        "last_modified": "2026-03-05T21:54:10.460",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/485683110",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/485683110"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3543",
+        "description": "Inappropriate implementation in V8 in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to potentially perform out of bounds memory access via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:21.443",
+        "last_modified": "2026-03-05T21:54:36.153",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/485267831",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/485267831"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3542",
+        "description": "Inappropriate implementation in WebAssembly in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to perform out of bounds memory access via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:21.340",
+        "last_modified": "2026-03-05T21:55:00.920",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/485152421",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/485152421"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3541",
+        "description": "Inappropriate implementation in CSS in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to perform an out of bounds memory read via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:21.230",
+        "last_modified": "2026-03-05T21:55:52.380",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/484811719",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/484811719"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3540",
+        "description": "Inappropriate implementation in WebAudio in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to perform out of bounds memory access via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:21.123",
+        "last_modified": "2026-03-05T21:56:46.790",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/484088917",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/484088917"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3539",
+        "description": "Object lifecycle issue in DevTools in Google Chrome prior to 145.0.7632.159 allowed an attacker who convinced a user to install a malicious extension to potentially exploit heap corruption via a crafted Chrome Extension. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:20.957",
+        "last_modified": "2026-03-05T22:04:35.160",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/483853098",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/483853098"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3538",
+        "description": "Integer overflow in Skia in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to potentially perform out of bounds memory access via a crafted HTML page. (Chromium security severity: Critical)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:20.817",
+        "last_modified": "2026-03-05T22:06:08.263",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/484983991",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/484983991"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3536",
+        "description": "Integer overflow in ANGLE in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to potentially perform out of bounds memory access via a crafted HTML page. (Chromium security severity: Critical)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:20.557",
+        "last_modified": "2026-03-05T22:10:39.150",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/485622239",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/485622239"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "total_cves_found": 9,
+    "time_period": "Last 7 days",
+    "cve_details": [
+      {
+        "cve_id": "CVE-2026-3545",
+        "description": "Insufficient data validation in Navigation in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 9.6,
+        "severity": "CRITICAL",
+        "published": "2026-03-04T20:16:21.690",
+        "last_modified": "2026-03-05T21:57:27.147",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/487383169",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/487383169"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "CHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3544",
+        "description": "Heap buffer overflow in WebCodecs in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to perform an out of bounds memory write via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:21.550",
+        "last_modified": "2026-03-05T21:54:10.460",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/485683110",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/485683110"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3543",
+        "description": "Inappropriate implementation in V8 in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to potentially perform out of bounds memory access via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:21.443",
+        "last_modified": "2026-03-05T21:54:36.153",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/485267831",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/485267831"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3542",
+        "description": "Inappropriate implementation in WebAssembly in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to perform out of bounds memory access via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:21.340",
+        "last_modified": "2026-03-05T21:55:00.920",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/485152421",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/485152421"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3541",
+        "description": "Inappropriate implementation in CSS in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to perform an out of bounds memory read via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:21.230",
+        "last_modified": "2026-03-05T21:55:52.380",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/484811719",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/484811719"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3540",
+        "description": "Inappropriate implementation in WebAudio in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to perform out of bounds memory access via a crafted HTML page. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:21.123",
+        "last_modified": "2026-03-05T21:56:46.790",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/484088917",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/484088917"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3539",
+        "description": "Object lifecycle issue in DevTools in Google Chrome prior to 145.0.7632.159 allowed an attacker who convinced a user to install a malicious extension to potentially exploit heap corruption via a crafted Chrome Extension. (Chromium security severity: High)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:20.957",
+        "last_modified": "2026-03-05T22:04:35.160",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/483853098",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/483853098"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3538",
+        "description": "Integer overflow in Skia in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to potentially perform out of bounds memory access via a crafted HTML page. (Chromium security severity: Critical)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:20.817",
+        "last_modified": "2026-03-05T22:06:08.263",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/484983991",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/484983991"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cve_id": "CVE-2026-3536",
+        "description": "Integer overflow in ANGLE in Google Chrome prior to 145.0.7632.159 allowed a remote attacker to potentially perform out of bounds memory access via a crafted HTML page. (Chromium security severity: Critical)",
+        "cvss_score": 8.8,
+        "severity": "HIGH",
+        "published": "2026-03-04T20:16:20.557",
+        "last_modified": "2026-03-05T22:10:39.150",
+        "cpe_name": "cpe:2.3:a:google:chrome:145.0.7632.45:*:*:*:*:*:*:*",
+        "references": [
+          {
+            "url": "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Release Notes",
+              "Vendor Advisory"
+            ]
+          },
+          {
+            "url": "https://issues.chromium.org/issues/485622239",
+            "source": "chrome-cve-admin@google.com",
+            "tags": [
+              "Issue Tracking",
+              "Permissions Required"
+            ]
+          }
+        ],
+        "reference_urls": [
+          "https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop.html",
+          "https://issues.chromium.org/issues/485622239"
+        ],
+        "exploitability_metrics": {
+          "attack_vector": "NETWORK",
+          "attack_complexity": "LOW",
+          "privileges_required": "NONE",
+          "user_interaction": "REQUIRED",
+          "scope": "UNCHANGED"
+        },
+        "affected_versions": [
+          "145.0.7632.159",
+          "145.0.7632.160"
+        ],
+        "configurations": [
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.159",
+                    "matchCriteriaId": "7AD3739D-3659-4D93-976A-B6444DAC160F"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:linux:linux_kernel:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "703AF700-7A70-47E2-BC3A-7FD03B3CA9C1"
+                  },
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:microsoft:windows:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "A2572D17-1DE6-457B-99CC-64AFD54487EA"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "nodes": [
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": true,
+                    "criteria": "cpe:2.3:a:google:chrome:*:*:*:*:*:*:*:*",
+                    "versionEndExcluding": "145.0.7632.160",
+                    "matchCriteriaId": "05AB209F-109C-44C0-8CE2-81F4AA11A079"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "negate": false,
+                "cpeMatch": [
+                  {
+                    "vulnerable": false,
+                    "criteria": "cpe:2.3:o:apple:macos:-:*:*:*:*:*:*:*",
+                    "matchCriteriaId": "387021A0-AF36-463C-A605-32EA7DAC172E"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "research_focus": "Recent Vulnerability Analysis",
+  "threat_intelligence_priority": "High",
+  "analysis_timeframe": "Last 7 days"
+}
