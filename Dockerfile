@@ -27,10 +27,20 @@
 # CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "intelliHunt.wsgi:application"]
 
 # --- Stage 1: Build the Next.js Client ---
-FROM node:20-alpine AS client-builder
+# Use node:20 (Debian/glibc) not alpine — Next.js 15's SWC and Turbopack ship
+# prebuilt Rust binaries that require glibc.  Alpine's musl libc causes the
+# native binary lookup to fail silently, leaving node_modules/.bin/next missing.
+FROM node:20 AS client-builder
 WORKDIR /app/client/intellihunt
+
+# Copy manifests first so npm install is cached independently of source changes
 COPY ./client/intellihunt/package.json ./client/intellihunt/package-lock.json* ./
-RUN npm install
+
+# Install all deps (including devDependencies needed for the TypeScript build)
+# NODE_ENV=development ensures devDeps aren't skipped even if the host env
+# exports NODE_ENV=production
+RUN NODE_ENV=development npm ci --prefer-offline || NODE_ENV=development npm install
+
 COPY ./client/intellihunt .
 RUN npm run build
 RUN ls -la /app/client/intellihunt/.next/standalone || echo "Standalone build not found"
