@@ -13,3 +13,4 @@ channels
 GitPython
 semgrep
 langchain-openai
+PyJWT>=2.8.0

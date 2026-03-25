@@ -6,7 +6,7 @@ import { useSidebar } from "./SidebarContext";
 
 const nav = [
   {
-    href: "/",
+    href: "/dashboard",
     label: "Intel",
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
@@ -60,7 +60,7 @@ export default function Sidebar() {
         className="flex items-center gap-2.5 h-14 flex-shrink-0 px-3"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
-        <Link href="/" className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
+        <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
           {/* Shield icon — always visible */}
           <div
             className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-all duration-200"

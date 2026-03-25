@@ -1,124 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Button from "@/components/Button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { scanRepo, checkTaskStatus } from "@/lib/api";
+import { scanRepo, checkTaskStatus, fetchScanHistory, fetchScanReport, ServerScanRecord } from "@/lib/api";
 import ReactMarkdown from "react-markdown";
 
 /* ── Types ── */
 type InputMode = "url" | "file";
 
-type ScanRecord = {
-  id: string;
-  type: InputMode;
-  target: string;
-  status: "scanning" | "completed" | "error";
-  startedAt: string;
-  completedAt?: string;
-  durationMs?: number;
-  report?: string;
-};
-
-/* ── localStorage helpers ── */
-const SCANS_KEY = "intellihunt:recent-scans";
-
-function loadScans(): ScanRecord[] {
-  try {
-    if (typeof window === "undefined") return [];
-    const raw = localStorage.getItem(SCANS_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch { return []; }
-}
-
-function saveScans(scans: ScanRecord[]) {
-  try { localStorage.setItem(SCANS_KEY, JSON.stringify(scans.slice(0, 20))); } catch {}
-}
-
-/* Shared styles removed — using Card component from ui/card */
-
-/* ── Segmented Control ── */
-function SegmentedControl({ mode, onChange, disabled }: {
-  mode: InputMode;
-  onChange: (m: InputMode) => void;
-  disabled: boolean;
-}) {
-  return (
-    <div
-      className="flex gap-1 p-1 rounded-lg w-full"
-      style={{ background: "var(--bg)", border: "1px solid var(--border)" }}
-    >
-      {(["url", "file"] as const).map(m => {
-        const active = mode === m;
-        return (
-          <button
-            key={m}
-            type="button"
-            disabled={disabled}
-            onClick={() => onChange(m)}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
-            style={active
-              ? { background: "var(--surface)", color: "var(--text-primary)", boxShadow: "0 1px 3px rgba(0,0,0,0.5)" }
-              : { background: "transparent", color: "var(--text-muted)" }
-            }
-            onMouseEnter={e => { if (!active && !disabled) e.currentTarget.style.color = "var(--text-secondary)"; }}
-            onMouseLeave={e => { if (!active) e.currentTarget.style.color = "var(--text-muted)"; }}
-          >
-            {m === "url" ? (
-              <>
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                </svg>
-                GitHub URL
-              </>
-            ) : (
-              <>
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                </svg>
-                Upload ZIP
-              </>
-            )}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ── Status dot helper ── */
-function statusStyle(msg: string): { color: string; bg: string; border: string } {
-  const isErr = msg.includes("Error") || msg.includes("Failed") || msg.includes("error");
-  const isOk  = msg.includes("completed") || msg.includes("Completed") || msg.includes("started");
-  return {
-    color:  isErr ? "var(--danger)"        : isOk ? "var(--success)"      : "var(--info)",
-    bg:     isErr ? "rgba(248,113,113,0.08)" : isOk ? "var(--accent-subtle)" : "rgba(74,100,160,0.08)",
-    border: isErr ? "rgba(248,113,113,0.25)" : isOk ? "var(--accent-border)" : "rgba(74,158,255,0.20)",
-  };
-}
-
-/* ── Status badge for table ── */
-function StatusBadge({ status }: { status: ScanRecord["status"] }) {
-  const map: Record<ScanRecord["status"], { label: string; variant: "success" | "destructive" | "scanning" }> = {
-    completed: { label: "Completed", variant: "success" },
-    error:     { label: "Error",     variant: "destructive" },
-    scanning:  { label: "Scanning",  variant: "scanning" },
-  };
-  const { label, variant } = map[status];
-  return (
-    <Badge variant={variant}>
-      <span className={`inline-block h-1.5 w-1.5 rounded-full flex-shrink-0 ${status === "scanning" ? "animate-pulse" : ""}`}
-        style={{ background: "currentColor" }} />
-      {label}
-    </Badge>
-  );
-}
-
-/* ── Time formatter ── */
 function relativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60000);
@@ -135,33 +23,253 @@ function formatDuration(ms?: number): string {
   return `${(ms / 1000).toFixed(1)}s`;
 }
 
-/* ═══════════════════════════════════════════════
+/* ── ScanTerminal: dramatic animated scan visualization ── */
+function ScanTerminal({ progress, message }: { progress: number; message: string }) {
+  const FILES = [
+    { name: "package.json",       group: "deps" },
+    { name: "package-lock.json",  group: "deps" },
+    { name: "requirements.txt",   group: "deps" },
+    { name: "Gemfile.lock",       group: "deps" },
+    { name: "Dockerfile",         group: "infra" },
+    { name: "docker-compose.yml", group: "infra" },
+    { name: ".env.example",       group: "secrets" },
+    { name: "config.yaml",        group: "infra" },
+    { name: "src/auth.ts",        group: "code" },
+    { name: "src/db.ts",          group: "code" },
+    { name: "src/api.ts",         group: "code" },
+    { name: "lib/crypto.ts",      group: "code" },
+    { name: "lib/session.ts",     group: "code" },
+    { name: "src/index.ts",       group: "code" },
+    { name: "README.md",          group: "docs" },
+  ];
+  const GROUP_COLORS: Record<string, string> = {
+    deps:    "#f59e0b",
+    infra:   "var(--accent)",
+    secrets: "var(--danger)",
+    code:    "var(--success)",
+    docs:    "var(--text-muted)",
+  };
+  const LOGS = [
+    { at: 0,  text: "$ initializing scan engine",   color: "var(--success)" },
+    { at: 10, text: "→ cloning repository",          color: "var(--text-secondary)" },
+    { at: 25, text: "→ indexing file tree",           color: "var(--text-secondary)" },
+    { at: 40, text: "→ scanning dependencies",        color: "var(--text-secondary)" },
+    { at: 55, text: "→ checking CVE database",        color: "#f59e0b" },
+    { at: 70, text: "→ analyzing secrets exposure",   color: "#f59e0b" },
+    { at: 85, text: "→ generating threat report",     color: "var(--text-secondary)" },
+  ];
+
+  return (
+    <div style={{
+      background: "var(--bg)",
+      border: "1px solid var(--border)",
+      borderTop: "2px solid #f59e0b",
+      borderRadius: "12px",
+      overflow: "hidden",
+    }}>
+      {/* Header bar */}
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "10px 16px",
+        background: "var(--surface)",
+        borderBottom: "1px solid var(--border)",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span style={{
+            width: "6px", height: "6px", borderRadius: "50%",
+            background: "#f59e0b", boxShadow: "0 0 8px #f59e0b",
+            display: "inline-block", animation: "dot-pulse 1.5s ease-in-out infinite",
+          }} />
+          <span style={{
+            fontFamily: "var(--font-mono), ui-monospace, monospace",
+            fontSize: "10px", fontWeight: 700, letterSpacing: "0.14em",
+            color: "#f59e0b",
+          }}>SCAN OPERATION IN PROGRESS</span>
+        </div>
+        <span style={{
+          fontFamily: "var(--font-mono), ui-monospace, monospace",
+          fontSize: "14px", fontWeight: 800, color: "#f59e0b", letterSpacing: "-0.02em",
+        }}>{progress}%</span>
+      </div>
+
+      {/* Body: file grid + log */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 260px" }}>
+        {/* File analysis grid */}
+        <div style={{ padding: "14px 16px", borderRight: "1px solid var(--border)" }}>
+          <div style={{
+            display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "5px", marginBottom: "12px",
+          }}>
+            {FILES.map((file, i) => {
+              const scanned = (i / FILES.length) * 100 < progress;
+              const c = GROUP_COLORS[file.group];
+              return (
+                <div key={file.name} style={{
+                  padding: "5px 7px", borderRadius: "5px",
+                  background: scanned ? `${c}12` : "var(--surface)",
+                  border: `1px solid ${scanned ? `${c}35` : "var(--border)"}`,
+                  display: "flex", alignItems: "center", gap: "5px",
+                  opacity: scanned ? 1 : 0.3,
+                  transition: "all 0.4s ease",
+                }}>
+                  <span style={{
+                    color: scanned ? c : "var(--text-muted)",
+                    fontSize: "8px", flexShrink: 0,
+                    fontFamily: "var(--font-mono), monospace", fontWeight: 700,
+                  }}>{scanned ? "✓" : "○"}</span>
+                  <span style={{
+                    color: scanned ? "var(--text-secondary)" : "var(--text-muted)",
+                    fontSize: "9.5px",
+                    fontFamily: "var(--font-mono), ui-monospace, monospace",
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                  }}>{file.name}</span>
+                </div>
+              );
+            })}
+          </div>
+          {/* Progress bar */}
+          <div style={{ height: "3px", background: "var(--surface-raised)", borderRadius: "99px", overflow: "hidden" }}>
+            <div style={{
+              height: "100%", width: `${progress}%`,
+              background: "linear-gradient(90deg, #f59e0b 0%, #f97316 100%)",
+              borderRadius: "99px",
+              transition: "width 0.5s ease",
+              boxShadow: "0 0 8px rgba(245,158,11,0.5)",
+            }} />
+          </div>
+        </div>
+
+        {/* Terminal log */}
+        <div style={{
+          padding: "14px",
+          fontFamily: "var(--font-mono), ui-monospace, monospace",
+          fontSize: "10.5px", lineHeight: "1.9",
+          color: "var(--text-muted)",
+          overflowY: "auto", maxHeight: "190px",
+        }}>
+          <div style={{ fontSize: "9px", letterSpacing: "0.1em", color: "var(--border-hover)", marginBottom: "8px" }}>— LIVE OUTPUT —</div>
+          {LOGS.filter(l => l.at <= progress).map((l, i) => (
+            <div key={i} style={{ color: l.color }}>{l.text}</div>
+          ))}
+          <div style={{ color: "var(--accent)", marginTop: "2px" }}>
+            {">"} {message || "processing..."}<span style={{ animation: "dot-pulse 1s ease-in-out infinite", display: "inline-block" }}>█</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Mode Toggle ── */
+function ModeToggle({ mode, onChange, disabled }: {
+  mode: InputMode; onChange: (m: InputMode) => void; disabled: boolean;
+}) {
+  return (
+    <div style={{
+      display: "inline-flex",
+      background: "var(--bg)", border: "1px solid var(--border)",
+      borderRadius: "8px", padding: "3px", gap: "2px",
+    }}>
+      {(["url", "file"] as const).map(m => {
+        const active = mode === m;
+        return (
+          <button key={m} type="button" disabled={disabled} onClick={() => onChange(m)} style={{
+            padding: "5px 14px", borderRadius: "6px",
+            fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em",
+            textTransform: "uppercase" as const,
+            border: "none",
+            cursor: disabled ? "not-allowed" : "pointer",
+            background: active ? "var(--surface)" : "transparent",
+            color: active ? "var(--accent)" : "var(--text-muted)",
+            boxShadow: active ? "0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(74,158,255,0.15)" : "none",
+            transition: "all 0.15s ease",
+            fontFamily: "var(--font-mono), ui-monospace, monospace",
+          }}>
+            {m === "url" ? "GitHub URL" : "Upload ZIP"}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Status Badge ── */
+function StatusPill({ status }: { status: ServerScanRecord["status"] | "scanning" }) {
+  const cfg = {
+    completed: { label: "COMPLETE", color: "var(--success)",  bg: "rgba(74,222,128,0.08)",  border: "rgba(74,222,128,0.22)"  },
+    error:     { label: "FAILED",   color: "var(--danger)",   bg: "rgba(248,113,113,0.08)", border: "rgba(248,113,113,0.22)" },
+    running:   { label: "SCANNING", color: "#f59e0b",         bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.22)"  },
+    scanning:  { label: "SCANNING", color: "#f59e0b",         bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.22)"  },
+  }[status];
+  return (
+    <span style={{
+      display: "inline-flex", alignItems: "center", gap: "5px",
+      padding: "2px 7px", borderRadius: "4px",
+      fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em",
+      color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}`,
+      fontFamily: "var(--font-mono), ui-monospace, monospace",
+    }}>
+      <span style={{
+        width: "5px", height: "5px", borderRadius: "50%",
+        background: "currentColor", flexShrink: 0, display: "inline-block",
+        ...(status === "scanning" || status === "running" ? { animation: "dot-pulse 1s ease-in-out infinite" } : {}),
+      }} />
+      {cfg.label}
+    </span>
+  );
+}
+
+/* ── Inline status message style ── */
+function statusStyle(msg: string) {
+  const isErr = msg.includes("Error") || msg.includes("Failed") || msg.includes("error");
+  const isOk  = msg.includes("completed") || msg.includes("Completed") || msg.includes("started");
+  return {
+    color:  isErr ? "var(--danger)"          : isOk ? "var(--success)"       : "var(--info)",
+    bg:     isErr ? "rgba(248,113,113,0.08)" : isOk ? "var(--accent-subtle)" : "rgba(74,100,160,0.08)",
+    border: isErr ? "rgba(248,113,113,0.25)" : isOk ? "var(--accent-border)" : "rgba(74,158,255,0.20)",
+  };
+}
+
+/* ── Section divider label ── */
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+      <span style={{
+        fontSize: "9px", fontWeight: 700, letterSpacing: "0.14em",
+        color: "var(--text-muted)", fontFamily: "var(--font-mono), ui-monospace, monospace",
+        textTransform: "uppercase" as const, whiteSpace: "nowrap",
+      }}>{children}</span>
+      <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
    REPO SCANNER PAGE
-   ═══════════════════════════════════════════════ */
+   ══════════════════════════════════════════ */
 export default function RepoScanner() {
-  const [repoUrl, setRepoUrl]           = useState("");
-  const [repoFile, setRepoFile]         = useState<File | null>(null);
-  const [inputMode, setInputMode]       = useState<InputMode>("url");
-  const [submitting, setSubmitting]     = useState(false);
-  const [serverMsg, setServerMsg]       = useState<string | null>(null);
-  const [taskId, setTaskId]             = useState<string | null>(null);
-  const [progress, setProgress]         = useState(0);
-  const [progressMessage, setProgressMessage] = useState("");
-  const [scanResults, setScanResults]   = useState<string | null>(null);
-  const [reportMarkdown, setReportMarkdown] = useState<string | null>(null);
-  const [dragActive, setDragActive]     = useState(false);
-  const [recentScans, setRecentScans]   = useState<ScanRecord[]>([]);
-  const [currentScanId, setCurrentScanId] = useState<string | null>(null);
-  const [scanStartTime, setScanStartTime] = useState<number | null>(null);
-  const [selectedScan, setSelectedScan] = useState<ScanRecord | null>(null);
+  const [repoUrl, setRepoUrl]                     = useState("");
+  const [repoFile, setRepoFile]                   = useState<File | null>(null);
+  const [inputMode, setInputMode]                 = useState<InputMode>("url");
+  const [submitting, setSubmitting]               = useState(false);
+  const [serverMsg, setServerMsg]                 = useState<string | null>(null);
+  const [taskId, setTaskId]                       = useState<string | null>(null);
+  const [progress, setProgress]                   = useState(0);
+  const [progressMessage, setProgressMessage]     = useState("");
+  const [scanResults, setScanResults]             = useState<string | null>(null);
+  const [reportMarkdown, setReportMarkdown]       = useState<string | null>(null);
+  const [dragActive, setDragActive]               = useState(false);
+  const [recentScans, setRecentScans]             = useState<ServerScanRecord[]>([]);
+  const [currentScanId, setCurrentScanId]         = useState<string | null>(null);
+  const [scanStartTime, setScanStartTime]         = useState<number | null>(null);
+  const [selectedScan, setSelectedScan]           = useState<ServerScanRecord | null>(null);
+  const [selectedScanMarkdown, setSelectedScanMarkdown] = useState<string | null>(null);
+  const [loadingReport, setLoadingReport]         = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  /* Load recent scans from localStorage on mount */
   useEffect(() => {
-    setRecentScans(loadScans());
+    fetchScanHistory().then(setRecentScans).catch(() => {});
   }, []);
 
-  /* Poll task status */
   useEffect(() => {
     if (!taskId) return;
     const id = setInterval(async () => {
@@ -170,38 +278,21 @@ export default function RepoScanner() {
         setProgress(s.progress);
         setProgressMessage(s.message);
         if (s.status === "completed") {
-          const durationMs = scanStartTime ? Date.now() - scanStartTime : undefined;
-          const reportContent = s.report_markdown || s.output || "No output.";
           setSubmitting(false);
           setServerMsg("Scan completed!");
           setScanResults(s.output || "No output.");
           setReportMarkdown(s.report_markdown || null);
           setSelectedScan(null);
+          setSelectedScanMarkdown(null);
           setTaskId(null);
           clearInterval(id);
-          // Update scan record — persist report so it survives navigation
-          setRecentScans(prev => {
-            const updated = prev.map(r => r.id === currentScanId
-              ? { ...r, status: "completed" as const, completedAt: new Date().toISOString(), durationMs, report: reportContent }
-              : r
-            );
-            saveScans(updated);
-            return updated;
-          });
+          fetchScanHistory().then(setRecentScans).catch(() => {});
         } else if (s.status === "error") {
-          const durationMs = scanStartTime ? Date.now() - scanStartTime : undefined;
           setSubmitting(false);
           setServerMsg(`Error: ${s.message}`);
           setTaskId(null);
           clearInterval(id);
-          setRecentScans(prev => {
-            const updated = prev.map(r => r.id === currentScanId
-              ? { ...r, status: "error" as const, completedAt: new Date().toISOString(), durationMs }
-              : r
-            );
-            saveScans(updated);
-            return updated;
-          });
+          fetchScanHistory().then(setRecentScans).catch(() => {});
         }
       } catch {
         setSubmitting(false);
@@ -216,546 +307,500 @@ export default function RepoScanner() {
   async function handleScan() {
     if (inputMode === "url" && !repoUrl.trim()) { setServerMsg("Enter a repository URL."); return; }
     if (inputMode === "file" && !repoFile) { setServerMsg("Select a .zip file."); return; }
-
-    setSubmitting(true);
-    setServerMsg(null);
-    setProgress(0);
-    setProgressMessage("Starting scan...");
-    setScanResults(null);
-    setReportMarkdown(null);
-
-    // Create scan record
+    setSubmitting(true); setServerMsg(null); setProgress(0);
+    setProgressMessage("Starting scan..."); setScanResults(null); setReportMarkdown(null);
     const now = Date.now();
-    const scanId = now.toString();
-    const newRecord: ScanRecord = {
-      id: scanId,
-      type: inputMode,
-      target: inputMode === "url" ? repoUrl.trim() : repoFile!.name,
-      status: "scanning",
-      startedAt: new Date(now).toISOString(),
-    };
     setScanStartTime(now);
-    setCurrentScanId(scanId);
-    setRecentScans(prev => {
-      const updated = [newRecord, ...prev];
-      saveScans(updated);
-      return updated;
-    });
-
+    const optimisticId = `optimistic-${now}`;
+    const newRecord: ServerScanRecord = {
+      id: optimisticId, task_id: "", username: "",
+      target: inputMode === "url" ? repoUrl.trim() : repoFile!.name,
+      input_type: inputMode,
+      status: "running", duration_ms: null,
+      created_at: new Date(now).toISOString(), completed_at: null, has_report: false,
+    };
+    setCurrentScanId(optimisticId);
+    setRecentScans(prev => [newRecord, ...prev]);
     try {
-      const res = inputMode === "file"
-        ? await scanRepo(undefined, repoFile!)
-        : await scanRepo(repoUrl.trim());
+      const res = inputMode === "file" ? await scanRepo(undefined, repoFile!) : await scanRepo(repoUrl.trim());
       if (res.taskId) {
         setTaskId(res.taskId);
         setServerMsg("Scan started...");
+        setRecentScans(prev => prev.map(r => r.id === optimisticId ? { ...r, task_id: res.taskId! } : r));
       } else {
-        setServerMsg(res.message || "Failed.");
-        setSubmitting(false);
-        setRecentScans(prev => {
-          const updated = prev.map(r => r.id === scanId
-            ? { ...r, status: "error" as const, completedAt: new Date().toISOString() }
-            : r
-          );
-          saveScans(updated);
-          return updated;
-        });
+        setServerMsg(res.message || "Failed."); setSubmitting(false);
+        setRecentScans(prev => prev.map(r => r.id === optimisticId ? { ...r, status: "error" as const } : r));
       }
     } catch (e: any) {
-      setServerMsg(e?.message ?? "Failed.");
-      setSubmitting(false);
-      setRecentScans(prev => {
-        const updated = prev.map(r => r.id === scanId
-          ? { ...r, status: "error" as const, completedAt: new Date().toISOString() }
-          : r
-        );
-        saveScans(updated);
-        return updated;
-      });
+      setServerMsg(e?.message ?? "Failed."); setSubmitting(false);
+      setRecentScans(prev => prev.map(r => r.id === optimisticId ? { ...r, status: "error" as const } : r));
     }
   }
 
   function handleFileSelect(file: File | undefined) {
     if (!file) return;
     if (!file.name.endsWith(".zip")) { setServerMsg("Please select a .zip archive."); return; }
-    setRepoFile(file);
-    setServerMsg(null);
+    setRepoFile(file); setServerMsg(null);
   }
 
-  function clearHistory() {
-    saveScans([]);
-    setRecentScans([]);
-  }
+  const displayContent = selectedScanMarkdown || reportMarkdown || scanResults || "";
+  const hasReport = !!displayContent;
 
-  /* ─── JSX ─── */
+  /* ─── Shared button styles ─── */
+  const btnPrimary = {
+    padding: "9px 20px", borderRadius: "8px",
+    background: "var(--accent)", border: "none",
+    color: "var(--accent-text)", fontSize: "12px", fontWeight: 700,
+    cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
+    fontFamily: "var(--font-mono), monospace", letterSpacing: "0.08em",
+    textTransform: "uppercase" as const, transition: "all 0.15s ease", flexShrink: 0,
+  };
+  const btnSecondary = {
+    padding: "8px 16px", borderRadius: "8px",
+    background: "transparent", border: "1px solid var(--border)",
+    color: "var(--text-muted)", fontSize: "11px", fontWeight: 600,
+    cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
+    fontFamily: "var(--font-mono), monospace", letterSpacing: "0.06em",
+    textTransform: "uppercase" as const, transition: "all 0.15s ease",
+  };
+
   return (
-    <div className="w-full space-y-6">
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px", width: "100%", animation: "fade-up 0.3s ease both" }}>
 
-      {/* ── Page header ── */}
-      <div>
-        <h2 className="text-[22px] font-bold" style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)", letterSpacing: "-0.025em" }}>
-          Repository Scanner
-        </h2>
-        <p className="text-[13px] mt-0.5" style={{ color: "var(--text-muted)" }}>
-          Deep security analysis — vulnerabilities, secrets, and CVE exposure
-        </p>
+      {/* ── Page Header ── */}
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "3px" }}>
+            <h1 style={{
+              fontSize: "22px", fontWeight: 800, letterSpacing: "-0.03em",
+              color: "var(--text-primary)", fontFamily: "var(--font-display)", lineHeight: 1.2, margin: 0,
+            }}>Repository Scanner</h1>
+            <span style={{
+              display: "inline-flex", alignItems: "center", gap: "5px",
+              padding: "2px 8px", background: "rgba(74,222,128,0.07)",
+              border: "1px solid rgba(74,222,128,0.18)", borderRadius: "4px",
+              fontSize: "9px", fontWeight: 700, letterSpacing: "0.12em",
+              color: "var(--success)", fontFamily: "var(--font-mono), monospace",
+            }}>
+              <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "currentColor", display: "inline-block", animation: "dot-pulse 2s ease-in-out infinite" }} />
+              SYSTEM READY
+            </span>
+          </div>
+          <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: 0 }}>
+            Deep security analysis — vulnerabilities, secrets, and CVE exposure
+          </p>
+        </div>
       </div>
 
-      {/* ══════════════════════════════════
-          HERO: Centered interaction card
-         ══════════════════════════════════ */}
-      <Card>
-        <div className="p-6 space-y-5">
+      {/* ══════════════════════════════════════════
+          RESULTS MODE: two-column layout
+         ══════════════════════════════════════════ */}
+      {hasReport ? (
+        <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "16px", alignItems: "start" }}>
 
-          {/* Card header */}
-          <div className="flex items-start gap-4">
-            <div
-              className="flex h-12 w-12 items-center justify-center rounded-xl flex-shrink-0"
-              style={{ background: "var(--accent-muted)", border: "1px solid var(--accent-border)", color: "var(--accent)", boxShadow: "0 0 16px rgba(255,255,255,0.12)" }}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-              </svg>
-            </div>
+          {/* Left: scan summary + controls */}
+          <div style={{
+            background: "var(--surface)", border: "1px solid var(--border)",
+            borderTop: "2px solid var(--success)", borderRadius: "12px", padding: "18px",
+            display: "flex", flexDirection: "column", gap: "14px",
+          }}>
+            <SectionLabel>Scan Complete</SectionLabel>
+
+            {/* Target */}
             <div>
-              <h2 className="text-[16px] font-bold tracking-tight" style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)" }}>
-                Scan Repository
-              </h2>
-              <p className="text-[13px] mt-0.5" style={{ color: "var(--text-muted)" }}>
-                Detect vulnerabilities, exposed secrets, and threat vectors in source code
-              </p>
+              <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "5px", fontFamily: "var(--font-mono), monospace", textTransform: "uppercase" }}>Target</div>
+              <div style={{
+                fontSize: "11px", color: "var(--text-primary)", fontFamily: "var(--font-mono), monospace",
+                overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                padding: "6px 10px", background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "6px",
+              }} title={selectedScan ? selectedScan.target : (inputMode === "url" ? repoUrl : repoFile?.name)}>
+                {selectedScan ? selectedScan.target : (inputMode === "url" ? repoUrl : repoFile?.name || "—")}
+              </div>
+            </div>
+
+            {/* Metadata grid */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {[
+                { label: "Status",   value: <StatusPill status={selectedScan ? selectedScan.status : "completed"} /> },
+                { label: "Duration", value: <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-secondary)", fontFamily: "var(--font-mono), monospace" }}>{formatDuration(selectedScan?.duration_ms ?? undefined)}</span> },
+                { label: "Type",     value: <span style={{ fontSize: "11px", color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace" }}>{selectedScan ? selectedScan.input_type.toUpperCase() : inputMode.toUpperCase()}</span> },
+              ].map(row => (
+                <div key={row.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.08em", color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace", textTransform: "uppercase" }}>{row.label}</span>
+                  {row.value}
+                </div>
+              ))}
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "4px" }}>
+              <button
+                style={{ ...btnPrimary, justifyContent: "center", width: "100%", background: "var(--accent-subtle)", color: "var(--accent)", border: "1px solid var(--accent-border)" }}
+                onClick={() => { setScanResults(null); setReportMarkdown(null); setSelectedScan(null); setSelectedScanMarkdown(null); setServerMsg(null); setRepoUrl(""); setRepoFile(null); }}
+                onMouseEnter={e => { e.currentTarget.style.background = "var(--accent-muted)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "var(--accent-subtle)"; }}
+              >↩ New Scan</button>
+              <button
+                style={{ ...btnSecondary, justifyContent: "center", width: "100%" }}
+                onClick={() => {
+                  const blob = new Blob([displayContent], { type: "text/markdown" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a"); a.href = url; a.download = `scan-report-${Date.now()}.md`;
+                  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = "var(--surface-hover)"; e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.borderColor = "var(--border-hover)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.borderColor = "var(--border)"; }}
+              >↓ Download .md</button>
             </div>
           </div>
 
-          {/* ── Segmented Control ── */}
-          <SegmentedControl mode={inputMode} onChange={m => {
-            setInputMode(m);
-            setServerMsg(null);
-            if (m === "url") { setRepoFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }
-            else setRepoUrl("");
-          }} disabled={submitting} />
-
-          {/* ── URL mode ── */}
-          {inputMode === "url" && (
-            <div className="space-y-3">
-              <label className="block text-[11px] uppercase tracking-widest font-medium" style={{ color: "var(--text-muted)" }}>
-                Repository URL
-              </label>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5" style={{ color: "var(--text-muted)" }}>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                    </svg>
-                  </div>
-                  <Input
-                    value={repoUrl}
-                    onChange={e => setRepoUrl(e.target.value)}
-                    placeholder="https://github.com/owner/repository"
-                    disabled={submitting}
-                    onKeyDown={e => { if (e.key === "Enter" && !submitting) handleScan(); }}
-                    style={{ background: "var(--bg)", padding: "10px 14px 10px 42px", fontSize: "14px" }}
-                  />
-                </div>
-                <Button
-                  onClick={handleScan}
-                  disabled={submitting || !repoUrl.trim()}
-                  icon={submitting
-                    ? <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2" style={{ borderColor: "var(--accent-text)", borderTopColor: "transparent" }} />
-                    : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                      </svg>
-                    )
-                  }
-                >
-                  {submitting ? "Scanning..." : "Scan"}
-                </Button>
+          {/* Right: report viewer */}
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", overflow: "hidden" }}>
+            <div style={{
+              padding: "11px 16px", background: "var(--surface-raised)", borderBottom: "1px solid var(--border)",
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.12em", color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace", textTransform: "uppercase" }}>
+                  {selectedScan ? `Report — ${selectedScan.target.split("/").pop()}` : "Threat Detection Report"}
+                </span>
+                {!selectedScan && (
+                  <span style={{ padding: "1px 6px", background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.2)", borderRadius: "3px", fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--success)", fontFamily: "var(--font-mono), monospace" }}>NEW</span>
+                )}
               </div>
-              <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>
-                Supports public GitHub, GitLab, and Bitbucket repositories
-              </p>
+              {selectedScan && (
+                <button onClick={() => setSelectedScan(null)} style={{ background: "transparent", border: "none", color: "var(--text-muted)", cursor: "pointer", padding: "4px", borderRadius: "4px", display: "flex", alignItems: "center" }}
+                  onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              )}
             </div>
-          )}
-
-          {/* ── File / Drop zone mode ── */}
-          {inputMode === "file" && (
-            <div className="space-y-3">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".zip"
-                className="hidden"
-                disabled={submitting}
-                onChange={e => handleFileSelect(e.target.files?.[0])}
-              />
-
-              {/* Drop zone */}
-              {!repoFile ? (
-                <div
-                  onClick={() => !submitting && fileInputRef.current?.click()}
-                  onDragOver={e => { e.preventDefault(); if (!submitting) setDragActive(true); }}
-                  onDragEnter={e => { e.preventDefault(); if (!submitting) setDragActive(true); }}
-                  onDragLeave={() => setDragActive(false)}
-                  onDrop={e => {
-                    e.preventDefault();
-                    setDragActive(false);
-                    if (!submitting) handleFileSelect(e.dataTransfer.files?.[0]);
-                  }}
-                  className="cursor-pointer rounded-xl flex flex-col items-center justify-center gap-4 py-12 text-center transition-all duration-200 select-none"
-                  style={{
-                    background: dragActive ? "var(--accent-subtle)" : "var(--bg)",
-                    border: `2px dashed ${dragActive ? "var(--accent)" : "var(--border-hover)"}`,
-                    opacity: submitting ? 0.5 : 1,
-                    pointerEvents: submitting ? "none" : "auto",
-                  }}
-                >
-                  <div
-                    className="flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-200"
-                    style={{
-                      background: dragActive ? "var(--accent-muted)" : "var(--surface-raised)",
-                      border: `1px solid ${dragActive ? "var(--accent-border)" : "var(--border-hover)"}`,
-                      color: dragActive ? "var(--accent)" : "var(--text-muted)",
-                    }}
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3 3m0 0l3-3m-3 3V2.25" />
-                    </svg>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[14px] font-medium" style={{ color: dragActive ? "var(--accent)" : "var(--text-secondary)" }}>
-                      {dragActive ? "Release to upload" : (
-                        <>Drop your archive here, or <span style={{ color: "var(--accent)" }}>browse</span></>
-                      )}
-                    </p>
-                    <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>
-                      Accepts{" "}
-                      <code style={{ background: "var(--surface-raised)", padding: "1px 5px", borderRadius: "3px", fontSize: "11px" }}>.zip</code>
-                      {" "}archives only
-                    </p>
-                  </div>
+            <div style={{ overflowY: "auto", maxHeight: "70vh" }}>
+              {loadingReport ? (
+                <div style={{ padding: "48px 24px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", color: "var(--text-muted)", fontSize: "13px" }}>
+                  <span style={{ width: "14px", height: "14px", borderRadius: "50%", border: "2px solid var(--border)", borderTopColor: "var(--accent)", animation: "spin-slow 0.6s linear infinite", display: "inline-block" }} />
+                  Loading report...
                 </div>
               ) : (
-                /* File selected state */
-                <div className="flex items-center justify-between gap-3 p-4 rounded-xl" style={{ background: "var(--accent-subtle)", border: "1px solid var(--accent-border)" }}>
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0" style={{ background: "var(--accent-muted)", color: "var(--accent)" }}>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                      </svg>
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-[14px] font-medium truncate" style={{ color: "var(--text-primary)" }}>{repoFile.name}</p>
-                      <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>{(repoFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                    </div>
+              <div className="report-md" style={{ padding: "24px 28px" }}>
+                <ReactMarkdown
+                  components={{
+                    h1: ({ children }) => <h1>{children}</h1>,
+                    h2: ({ children }) => <h2>{children}</h2>,
+                    h3: ({ children }) => <h3>{children}</h3>,
+                    p: ({ children }) => <p>{children}</p>,
+                    ul: ({ children }) => <ul>{children}</ul>,
+                    ol: ({ children }) => <ol>{children}</ol>,
+                    li: ({ children }) => <li>{children}</li>,
+                    strong: ({ children }) => <strong>{children}</strong>,
+                    code: ({ children }) => <code>{children}</code>,
+                    pre: ({ children }) => <pre>{children}</pre>,
+                    a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>,
+                    hr: () => <hr />,
+                  }}
+                >{displayContent}</ReactMarkdown>
+              </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+      ) : (
+        /* ══════════════════════════════════════════
+            IDLE / SCANNING MODE: focused single column
+           ══════════════════════════════════════════ */
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "740px" }}>
+
+          {/* ── Input panel ── */}
+          <div style={{
+            background: "var(--surface)", border: "1px solid var(--border)",
+            borderRadius: "14px", overflow: "hidden",
+          }}>
+            {/* Panel header */}
+            <div style={{
+              padding: "14px 20px", borderBottom: "1px solid var(--border)",
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{
+                  width: "34px", height: "34px", borderRadius: "9px",
+                  background: "var(--accent-muted)", border: "1px solid var(--accent-border)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "var(--accent)", flexShrink: 0, boxShadow: "0 0 14px rgba(74,158,255,0.14)",
+                }}>
+                  <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                  </svg>
+                </div>
+                <div>
+                  <div style={{ fontSize: "15px", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-display)", letterSpacing: "-0.02em" }}>Analyze Repository</div>
+                  <div style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: "1px" }}>Detect vulnerabilities, secrets, and CVE exposure</div>
+                </div>
+              </div>
+              <ModeToggle mode={inputMode} onChange={m => {
+                setInputMode(m); setServerMsg(null);
+                if (m === "url") { setRepoFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }
+                else setRepoUrl("");
+              }} disabled={submitting} />
+            </div>
+
+            {/* Panel body */}
+            <div style={{ padding: "20px" }}>
+              {inputMode === "url" ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.14em", color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace", textTransform: "uppercase", marginBottom: "2px" }}>
+                    Repository URL
                   </div>
-                  <button
-                    onClick={() => { setRepoFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
-                    disabled={submitting}
-                    className="flex-shrink-0 rounded-md p-1.5 transition-colors duration-150 disabled:opacity-40"
-                    style={{ color: "var(--text-muted)" }}
-                    onMouseEnter={e => { e.currentTarget.style.color = "var(--danger)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <div style={{ position: "relative", flex: 1 }}>
+                      <span style={{
+                        position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)",
+                        color: "var(--text-muted)", pointerEvents: "none",
+                        fontFamily: "var(--font-mono), monospace", fontSize: "13px", fontWeight: 600,
+                      }}>$</span>
+                      <input
+                        value={repoUrl}
+                        onChange={e => setRepoUrl(e.target.value)}
+                        placeholder="github.com/owner/repository"
+                        disabled={submitting}
+                        onKeyDown={e => { if (e.key === "Enter" && !submitting) handleScan(); }}
+                        style={{
+                          width: "100%", padding: "10px 14px 10px 28px",
+                          background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "8px",
+                          color: "var(--text-primary)", fontSize: "13px",
+                          fontFamily: "var(--font-mono), ui-monospace, monospace",
+                          outline: "none", letterSpacing: "0.01em", colorScheme: "dark",
+                          transition: "border-color 0.15s ease, box-shadow 0.15s ease",
+                        }}
+                        onFocus={e => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(74,158,255,0.12)"; }}
+                        onBlur={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "none"; }}
+                      />
+                    </div>
+                    <button
+                      onClick={handleScan}
+                      disabled={submitting || !repoUrl.trim()}
+                      style={{
+                        ...btnPrimary,
+                        opacity: submitting || !repoUrl.trim() ? 0.5 : 1,
+                        cursor: submitting || !repoUrl.trim() ? "not-allowed" : "pointer",
+                      }}
+                      onMouseEnter={e => { if (!submitting && repoUrl.trim()) { e.currentTarget.style.background = "var(--accent-hover)"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(74,158,255,0.3)"; } }}
+                      onMouseLeave={e => { e.currentTarget.style.background = "var(--accent)"; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
+                    >
+                      {submitting ? (
+                        <><span style={{ width: "11px", height: "11px", borderRadius: "50%", border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "white", animation: "spin-slow 0.6s linear infinite", display: "inline-block" }} />Scanning</>
+                      ) : (
+                        <><svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>Scan</>
+                      )}
+                    </button>
+                  </div>
+                  <p style={{ fontSize: "11px", color: "var(--text-muted)", margin: 0 }}>Supports public GitHub, GitLab, and Bitbucket repositories</p>
+                </div>
+              ) : (
+                /* File mode */
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  <input ref={fileInputRef} type="file" accept=".zip" style={{ display: "none" }} disabled={submitting} onChange={e => handleFileSelect(e.target.files?.[0])} />
+                  {!repoFile ? (
+                    <div
+                      onClick={() => !submitting && fileInputRef.current?.click()}
+                      onDragOver={e => { e.preventDefault(); if (!submitting) setDragActive(true); }}
+                      onDragEnter={e => { e.preventDefault(); if (!submitting) setDragActive(true); }}
+                      onDragLeave={() => setDragActive(false)}
+                      onDrop={e => { e.preventDefault(); setDragActive(false); if (!submitting) handleFileSelect(e.dataTransfer.files?.[0]); }}
+                      style={{
+                        cursor: submitting ? "not-allowed" : "pointer",
+                        borderRadius: "10px",
+                        border: `2px dashed ${dragActive ? "var(--accent)" : "var(--border-hover)"}`,
+                        background: dragActive ? "var(--accent-subtle)" : "var(--bg)",
+                        padding: "36px 24px", display: "flex", flexDirection: "column" as const,
+                        alignItems: "center", gap: "12px", textAlign: "center" as const,
+                        opacity: submitting ? 0.5 : 1, transition: "all 0.2s ease",
+                      }}
+                    >
+                      <div style={{
+                        width: "46px", height: "46px", borderRadius: "12px",
+                        background: dragActive ? "var(--accent-muted)" : "var(--surface-raised)",
+                        border: `1px solid ${dragActive ? "var(--accent-border)" : "var(--border-hover)"}`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        color: dragActive ? "var(--accent)" : "var(--text-muted)", transition: "all 0.2s ease",
+                      }}>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3 3m0 0l3-3m-3 3V2.25" /></svg>
+                      </div>
+                      <div>
+                        <p style={{ fontSize: "14px", fontWeight: 500, color: dragActive ? "var(--accent)" : "var(--text-secondary)", margin: "0 0 4px" }}>
+                          {dragActive ? "Release to upload" : <span>Drop your archive here, or <span style={{ color: "var(--accent)" }}>browse</span></span>}
+                        </p>
+                        <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>
+                          Accepts <code style={{ background: "var(--surface-raised)", padding: "1px 5px", borderRadius: "3px", fontSize: "11px", fontFamily: "var(--font-mono), monospace" }}>.zip</code> archives only
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px",
+                      padding: "12px 16px", background: "var(--accent-subtle)", border: "1px solid var(--accent-border)", borderRadius: "10px",
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
+                        <div style={{ width: "34px", height: "34px", borderRadius: "8px", background: "var(--accent-muted)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--accent)", flexShrink: 0 }}>
+                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+                        </div>
+                        <div style={{ minWidth: 0 }}>
+                          <p style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{repoFile.name}</p>
+                          <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>{(repoFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                        </div>
+                      </div>
+                      <button onClick={() => { setRepoFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }} disabled={submitting} style={{ background: "transparent", border: "none", color: "var(--text-muted)", cursor: "pointer", padding: "6px", borderRadius: "6px", flexShrink: 0, display: "flex", alignItems: "center" }}
+                        onMouseEnter={e => { e.currentTarget.style.color = "var(--danger)"; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}>
+                        <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                      </button>
+                    </div>
+                  )}
+                  {repoFile && (
+                    <button onClick={handleScan} disabled={submitting} style={{ ...btnPrimary, width: "100%", justifyContent: "center", opacity: submitting ? 0.5 : 1 }}>
+                      {submitting ? "Scanning..." : "Scan Archive"}
+                    </button>
+                  )}
                 </div>
               )}
 
-              {repoFile && (
-                <Button
-                  onClick={handleScan}
-                  disabled={submitting}
-                  icon={submitting
-                    ? <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2" style={{ borderColor: "var(--accent-text)", borderTopColor: "transparent" }} />
-                    : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                      </svg>
-                    )
-                  }
-                >
-                  {submitting ? "Scanning..." : "Scan Archive"}
-                </Button>
+              {/* Inline status message */}
+              {serverMsg && (
+                <div style={{
+                  marginTop: "12px", padding: "10px 14px", borderRadius: "8px",
+                  fontSize: "13px", display: "flex", alignItems: "center", gap: "8px",
+                  color: statusStyle(serverMsg).color, background: statusStyle(serverMsg).bg,
+                  border: `1px solid ${statusStyle(serverMsg).border}`,
+                }}>
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "currentColor", flexShrink: 0, display: "inline-block" }} />
+                  {serverMsg}
+                </div>
               )}
             </div>
-          )}
+          </div>
 
-          {/* ── Inline status message ── */}
-          {serverMsg && (
-            <div
-              className="rounded-md px-4 py-2.5 text-[13px] flex items-center gap-2.5"
-              style={{
-                color: statusStyle(serverMsg).color,
-                background: statusStyle(serverMsg).bg,
-                border: `1px solid ${statusStyle(serverMsg).border}`,
-              }}
-            >
-              <span className="inline-block h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ background: statusStyle(serverMsg).color }} />
-              {serverMsg}
+          {/* ── Scanning animation ── */}
+          {submitting && (
+            <div style={{ animation: "fade-up 0.25s ease both" }}>
+              <ScanTerminal progress={progress} message={progressMessage} />
             </div>
           )}
         </div>
-      </Card>
-
-      {/* ══════════════════════════════════
-          PROGRESS (full-width)
-         ══════════════════════════════════ */}
-      {submitting && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <span className="inline-block h-2 w-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
-                <span className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>Scanning repository...</span>
-              </div>
-              <span className="text-[13px] font-semibold tabular-nums"
-                style={{ color: "var(--accent)", fontFamily: "var(--font-mono), ui-monospace, monospace" }}>
-                {progress}%
-              </span>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Progress value={progress} />
-            <p className="text-[12px]" style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono), ui-monospace, monospace" }}>
-              {progressMessage}
-            </p>
-          </CardContent>
-        </Card>
       )}
 
-      {/* ══════════════════════════════════
-          RESULTS (full-width)
-         ══════════════════════════════════ */}
-      {(reportMarkdown || scanResults || selectedScan) && (() => {
-        const displayContent = selectedScan
-          ? (selectedScan.report || "")
-          : (reportMarkdown || scanResults || "");
-        const isHistorical = !!selectedScan;
-        const displayTitle = isHistorical
-          ? `Report — ${selectedScan!.target.split("/").pop()}`
-          : (reportMarkdown ? "Threat Detection Report" : "Scan Results");
-        return (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3 min-w-0">
-                <CardTitle className="truncate">{displayTitle}</CardTitle>
-                {isHistorical
-                  ? <Badge variant="secondary">{relativeTime(selectedScan!.startedAt)}</Badge>
-                  : reportMarkdown && <Badge variant="accent">Complete</Badge>
-                }
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {isHistorical && (
-                  <button
-                    type="button"
-                    onClick={() => setSelectedScan(null)}
-                    className="rounded-md p-1.5 transition-colors"
-                    title="Close"
-                    style={{ color: "var(--text-muted)" }}
-                    onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
-                <Button
-                  variant="secondary"
-                  icon={
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
-                  }
-                  onClick={() => {
-                    const blob = new Blob([displayContent], { type: "text/markdown" });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = `scan-report-${Date.now()}.md`;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    URL.revokeObjectURL(url);
-                  }}
-                >
-                  Download
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <div className="overflow-y-auto" style={{ maxHeight: "70vh", background: "var(--bg)" }}>
-            <div className="p-6" style={{ color: "var(--text-secondary)", lineHeight: "1.75", fontSize: "15px" }}>
-              <ReactMarkdown
-                components={{
-                  h1: ({ children }) => (
-                    <h1 style={{ color: "var(--text-primary)", fontSize: "20px", fontWeight: 700, marginBottom: "12px", marginTop: "24px", paddingBottom: "8px", borderBottom: "1px solid var(--border)" }}>{children}</h1>
-                  ),
-                  h2: ({ children }) => (
-                    <h2 style={{ color: "var(--text-primary)", fontSize: "16px", fontWeight: 600, marginBottom: "10px", marginTop: "28px" }}>{children}</h2>
-                  ),
-                  h3: ({ children }) => (
-                    <h3 style={{ color: "var(--accent)", fontSize: "11px", fontWeight: 600, marginBottom: "8px", marginTop: "20px", textTransform: "uppercase", letterSpacing: "0.1em" }}>{children}</h3>
-                  ),
-                  p: ({ children }) => (
-                    <p style={{ color: "var(--text-secondary)", marginBottom: "10px", lineHeight: "1.7" }}>{children}</p>
-                  ),
-                  ul: ({ children }) => <ul style={{ paddingLeft: "20px", marginBottom: "10px" }}>{children}</ul>,
-                  ol: ({ children }) => <ol style={{ paddingLeft: "20px", marginBottom: "10px" }}>{children}</ol>,
-                  li: ({ children }) => <li style={{ color: "var(--text-secondary)", marginBottom: "4px" }}>{children}</li>,
-                  strong: ({ children }) => <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>{children}</strong>,
-                  code: ({ children }) => (
-                    <code style={{ background: "var(--surface-raised)", color: "var(--accent)", padding: "2px 6px", borderRadius: "4px", fontSize: "12px", fontFamily: "var(--font-mono), ui-monospace, monospace" }}>{children}</code>
-                  ),
-                  pre: ({ children }) => (
-                    <pre style={{ background: "var(--surface-raised)", border: "1px solid var(--border)", borderRadius: "8px", padding: "16px", overflowX: "auto", marginBottom: "12px", fontFamily: "var(--font-mono), ui-monospace, monospace", fontSize: "12px" }}>{children}</pre>
-                  ),
-                  a: ({ href, children }) => (
-                    <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: "var(--info)", textDecoration: "none" }}
-                      onMouseEnter={e => { (e.target as HTMLElement).style.color = "var(--accent)"; }}
-                      onMouseLeave={e => { (e.target as HTMLElement).style.color = "var(--info)"; }}
-                    >{children}</a>
-                  ),
-                  hr: () => <hr style={{ border: "none", borderTop: "1px solid var(--border)", margin: "24px 0" }} />,
-                }}
-              >
-                {displayContent}
-              </ReactMarkdown>
-            </div>
-          </div>
-        </Card>
-        );
-      })()}
-
-      {/* ══════════════════════════════════
-          RECENT SCANS — DataTable
-         ══════════════════════════════════ */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <CardTitle>Recent Scans</CardTitle>
-              {recentScans.length > 0 && (
-                <Badge variant="secondary" className="tabular-nums">{recentScans.length}</Badge>
-              )}
-            </div>
-            {recentScans.length > 0 && (
-              <Button variant="ghost" size="sm" onClick={clearHistory}
-                style={{ color: "var(--text-muted)", fontSize: "12px" }}
-                onMouseEnter={e => { e.currentTarget.style.color = "var(--danger)"; }}
-                onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
-              >
-                Clear history
-              </Button>
-            )}
-          </div>
-        </CardHeader>
+      {/* ══════════════════════════════════════════
+          RECENT OPERATIONS TABLE
+         ══════════════════════════════════════════ */}
+      <div style={{ animation: "fade-up 0.4s ease both" }}>
+        <SectionLabel>
+          Recent Operations
+          {recentScans.length > 0 && (
+            <span style={{
+              marginLeft: "8px", padding: "1px 6px",
+              background: "var(--surface-raised)", border: "1px solid var(--border)",
+              borderRadius: "4px", fontSize: "9px", fontWeight: 700,
+              color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace",
+            }}>{recentScans.length}</span>
+          )}
+        </SectionLabel>
 
         {recentScans.length === 0 ? (
-          <div className="mx-5 my-5 flex flex-col items-center justify-center py-12 gap-5 rounded-xl text-center"
-            style={{ border: "1px dashed var(--border-hover)", background: "var(--surface-raised)" }}>
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl"
-              style={{ background: "var(--accent-subtle)", border: "1px solid var(--accent-border)", color: "var(--accent)", boxShadow: "0 0 20px rgba(255,255,255,0.08)" }}>
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+          <div style={{
+            padding: "48px 24px", display: "flex", flexDirection: "column" as const,
+            alignItems: "center", gap: "16px", textAlign: "center" as const,
+            border: "1px dashed var(--border-hover)", borderRadius: "12px", background: "var(--surface-raised)",
+          }}>
+            <div style={{ width: "46px", height: "46px", borderRadius: "12px", background: "var(--accent-subtle)", border: "1px solid var(--accent-border)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--accent)" }}>
+              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
-            <div className="space-y-1.5">
-              <p className="text-[14px] font-semibold" style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)" }}>No scans yet</p>
-              <p className="text-[12.5px]" style={{ color: "var(--text-muted)" }}>Run your first scan above — history appears here automatically</p>
+            <div>
+              <p style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-primary)", margin: "0 0 4px", fontFamily: "var(--font-display)" }}>No scans yet</p>
+              <p style={{ fontSize: "12.5px", color: "var(--text-muted)", margin: 0 }}>Run your first scan above — history appears here automatically</p>
             </div>
           </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Target</TableHead>
-                <TableHead className="px-4">Type</TableHead>
-                <TableHead className="px-4">Status</TableHead>
-                <TableHead className="px-4">Started</TableHead>
-                <TableHead className="px-4 text-right">Duration</TableHead>
-                <TableHead className="px-4 text-right w-16"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recentScans.map(scan => {
-                const isSelected = selectedScan?.id === scan.id;
-                const isClickable = scan.status === "completed" && !!scan.report;
-                return (
-                <TableRow
-                  key={scan.id}
-                  onClick={() => {
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", overflow: "hidden" }}>
+            {/* Table header */}
+            <div style={{
+              display: "grid", gridTemplateColumns: "1fr 72px 108px 96px 76px 54px",
+              padding: "8px 16px", background: "var(--surface-raised)", borderBottom: "1px solid var(--border)",
+            }}>
+              {["Target", "Type", "Status", "Started", "Duration", ""].map(h => (
+                <span key={h} style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.12em", color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace", textTransform: "uppercase" as const, textAlign: h === "" || h === "Duration" ? "right" as const : "left" as const }}>{h}</span>
+              ))}
+            </div>
+
+            {/* Rows */}
+            {recentScans.map(scan => {
+              const isSelected = selectedScan?.id === scan.id;
+              const isClickable = scan.status === "completed" && scan.has_report;
+              return (
+                <div key={scan.id}
+                  onClick={async () => {
                     if (!isClickable) return;
-                    if (isSelected) { setSelectedScan(null); return; }
+                    if (isSelected) { setSelectedScan(null); setSelectedScanMarkdown(null); return; }
                     setSelectedScan(scan);
-                    setScanResults(null);
-                    setReportMarkdown(null);
+                    setScanResults(null); setReportMarkdown(null); setSelectedScanMarkdown(null);
+                    setLoadingReport(true);
                     window.scrollTo({ top: 0, behavior: "smooth" });
+                    try {
+                      const data = await fetchScanReport(scan.task_id);
+                      setSelectedScanMarkdown(data.report_markdown);
+                    } catch { setSelectedScanMarkdown("Failed to load report."); }
+                    finally { setLoadingReport(false); }
                   }}
                   style={{
+                    display: "grid", gridTemplateColumns: "1fr 72px 108px 96px 76px 54px",
+                    padding: "10px 16px", borderBottom: "1px solid var(--border)",
                     cursor: isClickable ? "pointer" : "default",
-                    background: isSelected ? "var(--accent-subtle)" : undefined,
-                    transition: "background 150ms ease",
+                    background: isSelected ? "var(--accent-subtle)" : "transparent",
+                    borderLeft: `2px solid ${isSelected ? "var(--accent)" : "transparent"}`,
+                    transition: "all 0.15s ease",
                   }}
                   onMouseEnter={e => { if (isClickable && !isSelected) e.currentTarget.style.background = "var(--surface-hover)"; }}
-                  onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = ""; }}
+                  onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = "transparent"; }}
                 >
-                  <TableCell className="max-w-xs">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="flex-shrink-0" style={{ color: "var(--text-muted)" }}>
-                        {scan.type === "url" ? (
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                          </svg>
-                        ) : (
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                          </svg>
-                        )}
-                      </div>
-                      <span className="truncate font-medium" title={scan.target}
-                        style={{
-                          color: "var(--text-primary)",
-                          fontFamily: scan.type === "url" ? "var(--font-mono), ui-monospace, monospace" : "inherit",
-                          fontSize: scan.type === "url" ? "12px" : "13px",
-                          maxWidth: "320px", display: "block",
-                        }}>
-                        {scan.target}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-4">
-                    <Badge variant="secondary">{scan.type === "url" ? "URL" : "ZIP"}</Badge>
-                  </TableCell>
-                  <TableCell className="px-4">
-                    <StatusBadge status={scan.status} />
-                  </TableCell>
-                  <TableCell className="px-4" style={{ color: "var(--text-muted)" }}>
-                    {relativeTime(scan.startedAt)}
-                  </TableCell>
-                  <TableCell className="px-4 text-right tabular-nums"
-                    style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono), ui-monospace, monospace", fontSize: "12px" }}>
-                    {formatDuration(scan.durationMs)}
-                  </TableCell>
-                  <TableCell className="px-4 text-right">
-                    {isClickable && (
-                      <span className="text-[11px] font-medium" style={{ color: isSelected ? "var(--accent)" : "var(--text-muted)" }}>
-                        {isSelected ? "Viewing" : "View →"}
-                      </span>
-                    )}
-                  </TableCell>
-                </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        )}
-      </Card>
+                  {/* Target */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "7px", minWidth: 0 }}>
+                    <span style={{ color: "var(--text-muted)", flexShrink: 0 }}>
+                      {scan.input_type === "url"
+                        ? <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>
+                        : <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+                      }
+                    </span>
+                    <span style={{ fontSize: scan.input_type === "url" ? "11px" : "12px", fontFamily: scan.input_type === "url" ? "var(--font-mono), monospace" : "inherit", color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={scan.target}>{scan.target}</span>
+                  </div>
+                  {/* Type */}
+                  <div><span style={{ display: "inline-block", padding: "1px 6px", background: "var(--surface-raised)", border: "1px solid var(--border)", borderRadius: "3px", fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace" }}>{scan.input_type === "url" ? "URL" : "ZIP"}</span></div>
+                  {/* Status */}
+                  <div><StatusPill status={scan.status} /></div>
+                  {/* Started */}
+                  <div style={{ fontSize: "11px", color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace" }}>{relativeTime(scan.created_at)}</div>
+                  {/* Duration */}
+                  <div style={{ textAlign: "right", fontSize: "11px", fontWeight: 600, color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace" }}>{formatDuration(scan.duration_ms ?? undefined)}</div>
+                  {/* Action */}
+                  <div style={{ textAlign: "right" }}>
+                    {isSelected && loadingReport
+                      ? <span style={{ fontSize: "11px", color: "var(--accent)", fontFamily: "var(--font-mono), monospace" }}>…</span>
+                      : isClickable && <span style={{ fontSize: "11px", fontWeight: 600, color: isSelected ? "var(--accent)" : "var(--text-muted)", fontFamily: "var(--font-mono), monospace" }}>{isSelected ? "●" : "View →"}</span>
+                    }
+                  </div>
+                </div>
+              );
+            })}
 
+            {/* Footer */}
+            <div style={{ padding: "8px 16px", display: "flex", justifyContent: "flex-end", background: "var(--surface-raised)", borderTop: "1px solid var(--border)" }}>
+              <button onClick={() => fetchScanHistory().then(setRecentScans).catch(() => {})} style={{ background: "transparent", border: "none", color: "var(--text-muted)", fontSize: "10px", cursor: "pointer", fontFamily: "var(--font-mono), monospace", letterSpacing: "0.08em", textTransform: "uppercase", padding: "3px 6px", borderRadius: "4px", transition: "color 0.15s ease" }}
+                onMouseEnter={e => { e.currentTarget.style.color = "var(--accent)"; }}
+                onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}>
+                Refresh
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

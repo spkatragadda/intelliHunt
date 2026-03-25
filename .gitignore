@@ -1,2 +1,10 @@
 .env
 __pycache__
+admin_credentials.txt
+*.pyc
+db.sqlite3
+logs/
+**/logs/
+devTO.md
+.claude
+mochData/

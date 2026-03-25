@@ -9,6 +9,53 @@ export const INTERNAL_API_BASE =
 // Default base chosen depending on execution context
 export const API_BASE = isServer ? INTERNAL_API_BASE : PUBLIC_API_BASE;
 
+// ── Authenticated fetch ────────────────────────────────────────────────────────
+
+/**
+ * fetch() wrapper that injects Authorization header and handles 401 by
+ * attempting a token refresh then retrying once. On second 401, clears auth
+ * and redirects to /login.
+ */
+export async function authedFetch(url: string, init: RequestInit = {}): Promise<Response> {
+  const { getAccessToken, getRefreshToken, setTokens, clearAuth } = await import("./auth");
+
+  const token = getAccessToken();
+  const headers = new Headers(init.headers as HeadersInit | undefined);
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+
+  let res = await fetch(url, { ...init, headers });
+
+  if (res.status === 401) {
+    // Attempt refresh
+    const refresh = getRefreshToken();
+    if (refresh) {
+      try {
+        const refreshRes = await fetch(`${PUBLIC_API_BASE}/api/auth/refresh/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh }),
+        });
+        if (refreshRes.ok) {
+          const refreshData = await refreshRes.json();
+          setTokens(refreshData.access, refresh);
+          headers.set("Authorization", `Bearer ${refreshData.access}`);
+          res = await fetch(url, { ...init, headers });
+          if (res.status !== 401) return res;
+        }
+      } catch {
+        // fall through to redirect
+      }
+    }
+    // Could not refresh — clear and redirect
+    clearAuth();
+    if (typeof window !== "undefined") {
+      window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`;
+    }
+  }
+
+  return res;
+}
+
 /** ===== Types for Generate Report payload ===== */
 export type GenerateReportPayload = {
   os: { vendor: string; product: string }[];
@@ -22,7 +69,7 @@ export type GenerateReportPayload = {
 
 /** Get crew_report.md as text from Django */
 export async function fetchReportMarkdown(): Promise<string> {
-  const res = await fetch(`${API_BASE}/api/markdown/`, { cache: "no-store" });
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/markdown/`, { cache: "no-store" });
   if (!res.ok) throw new Error(`Report fetch failed: ${res.status}`);
   return await res.text();
 }
@@ -31,8 +78,7 @@ export async function fetchReportMarkdown(): Promise<string> {
 export async function runReport(
   payload: GenerateReportPayload
 ): Promise<{ taskId?: string; message: string }> {
-  // POST to the PUBLIC base so it works from the browser
-  const res = await fetch(`${PUBLIC_API_BASE}/api/generate/`, {
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/generate/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -93,7 +139,7 @@ export async function checkTaskStatus(taskId: string): Promise<{
   logs?: string[];
   duration?: number;
 }> {
-  const res = await fetch(`${PUBLIC_API_BASE}/api/task/${taskId}/`);
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/task/${taskId}/`);
   
   if (!res.ok) {
     throw new Error(`Task status check failed: ${res.status}`);
@@ -104,10 +150,8 @@ export async function checkTaskStatus(taskId: string): Promise<{
 
 /** Hit an endpoint to automatically update all pages with the latest report markdown */
 export async function updateReport(): Promise<{ message: string }> {
-  // POST to the PUBLIC base so it works from the browser, hitting the new backend endpoint
-  const res = await fetch(`${PUBLIC_API_BASE}/api/update/`, {
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/update/`, {
     method: "POST",
-    // No body is sent, but we can set Content-Type if Django expects it
     headers: { "Content-Type": "application/json" },
   });
 
@@ -158,7 +202,7 @@ export function guessLastUpdated(md: string): string {
 
 /** Download YAML template file */
 export async function downloadYamlTemplate(): Promise<void> {
-  const response = await fetch(`${PUBLIC_API_BASE}/api/yaml/template/`);
+  const response = await authedFetch(`${PUBLIC_API_BASE}/api/yaml/template/`);
   if (!response.ok) {
     throw new Error(`Template download failed: ${response.status}`);
   }
@@ -178,8 +222,8 @@ export async function downloadYamlTemplate(): Promise<void> {
 export async function uploadYamlConfig(file: File): Promise<{ message: string; config: any }> {
   const formData = new FormData();
   formData.append('yaml_file', file);
-  
-  const response = await fetch(`${PUBLIC_API_BASE}/api/yaml/upload/`, {
+
+  const response = await authedFetch(`${PUBLIC_API_BASE}/api/yaml/upload/`, {
     method: 'POST',
     body: formData,
   });
@@ -194,7 +238,7 @@ export async function uploadYamlConfig(file: File): Promise<{ message: string; c
 
 /** Get current YAML configuration */
 export async function getCurrentYamlConfig(): Promise<{ config: any; raw_content: string }> {
-  const response = await fetch(`${PUBLIC_API_BASE}/api/yaml/config/`);
+  const response = await authedFetch(`${PUBLIC_API_BASE}/api/yaml/config/`);
   if (!response.ok) {
     throw new Error(`Config fetch failed: ${response.status}`);
   }
@@ -223,6 +267,14 @@ export type CmdbIntegration = {
   token?: string;
   key_header?: string;
   api_key?: string;
+  // CrowdStrike
+  client_id?: string;
+  client_secret?: string;
+  cloud?: string;
+  // SentinelOne
+  base_url?: string;
+  // Defender
+  tenant_id?: string;
   // Shared
   username?: string;
   password?: string;
@@ -231,14 +283,14 @@ export type CmdbIntegration = {
 };
 
 export async function getCmdbIntegrations(): Promise<Record<string, CmdbIntegration>> {
-  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/`, { cache: "no-store" });
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/`, { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to fetch integrations: ${res.status}`);
   const data = await res.json();
   return data.integrations ?? {};
 }
 
 export async function saveCmdbIntegration(id: string, config: CmdbIntegration): Promise<{ message: string }> {
-  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/`, {
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id, config }),
@@ -248,7 +300,7 @@ export async function saveCmdbIntegration(id: string, config: CmdbIntegration): 
 }
 
 export async function deleteCmdbIntegration(id: string): Promise<{ message: string }> {
-  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/${id}/`, { method: "DELETE" });
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/${id}/`, { method: "DELETE" });
   if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
   return res.json();
 }
@@ -257,7 +309,7 @@ export async function testCmdbConnection(
   type: string,
   config: Record<string, string>
 ): Promise<{ status: "connected" | "error"; message: string }> {
-  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/test/`, {
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/cmdb/test/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ type, config }),
@@ -269,7 +321,7 @@ export async function importCmdbData(
   id: string,
   type: string
 ): Promise<{ message?: string; error?: string; os_count?: number; app_count?: number }> {
-  const res = await fetch(`${PUBLIC_API_BASE}/api/cmdb/import/`, {
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/cmdb/import/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id, type }),
@@ -285,17 +337,14 @@ export async function scanRepo(
   let res: Response;
   
   if (repoFile) {
-    // File upload mode
     const formData = new FormData();
     formData.append('repo_file', repoFile);
-    
-    res = await fetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
+    res = await authedFetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
       method: "POST",
       body: formData,
     });
   } else if (repoUrl) {
-    // URL mode
-    res = await fetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
+    res = await authedFetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ repo_url: repoUrl }),
@@ -337,4 +386,71 @@ export async function scanRepo(
   } catch {
     return { message: "Repository scan started, but received an unexpected response." };
   }
+}
+
+// ── Scan history (per-tenant) ──────────────────────────────────────────────
+
+export type ServerScanRecord = {
+  id: string;
+  task_id: string;
+  username: string;
+  target: string;
+  input_type: "url" | "file";
+  status: "running" | "completed" | "error";
+  duration_ms: number | null;
+  created_at: string;
+  completed_at: string | null;
+  has_report: boolean;
+};
+
+export async function fetchScanHistory(): Promise<ServerScanRecord[]> {
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/scan/history/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  const data = await res.json();
+  return data.scans ?? [];
+}
+
+export async function fetchScanReport(taskId: string): Promise<{ report_markdown: string; target: string }> {
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/scan/history/${taskId}/report/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+// ── Admin API ──────────────────────────────────────────────────────────────
+
+export type AdminOrgRow = {
+  id: string; name: string; created_at: string; member_count: number;
+  total_actions: number; report_runs: number; repo_scans: number;
+  cmdb_imports: number; last_active: string | null;
+};
+
+export type AdminUserRow = {
+  id: string; username: string; email: string;
+  org_id: string; org_name: string;
+  total_actions: number; report_runs: number; repo_scans: number;
+  last_active: string | null;
+};
+
+export type AdminActivityRow = {
+  id: string; username: string; org_id: string; org_name: string;
+  action: string; status: string; detail: string;
+  duration_ms: number | null; created_at: string;
+};
+
+export async function fetchAdminSummary(): Promise<{ orgs: AdminOrgRow[]; users: AdminUserRow[] }> {
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/admin/summary/`);
+  if (res.status === 403) throw new Error("403");
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function fetchAdminActivity(
+  orgId?: string, action?: string, limit = 50, offset = 0
+): Promise<{ total: number; rows: AdminActivityRow[] }> {
+  const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+  if (orgId)  params.set("org_id", orgId);
+  if (action) params.set("action", action);
+  const res = await authedFetch(`${PUBLIC_API_BASE}/api/admin/activity/?${params}`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
 }

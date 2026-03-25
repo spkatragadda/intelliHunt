@@ -21,12 +21,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-lo$7$#(5@09(j(b0pfjzg+0)5d(-+5*l143d8$mv(mq_4wy0if"
+# Must be overridden via SECRET_KEY env var in production — the fallback
+# is intentionally rejected when DEBUG=False.
+_SECRET_KEY_DEFAULT = "django-insecure-lo$7$#(5@09(j(b0pfjzg+0)5d(-+5*l143d8$mv(mq_4wy0if"
+SECRET_KEY = os.environ.get("SECRET_KEY", _SECRET_KEY_DEFAULT)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "true").lower() == "true"
 
-ALLOWED_HOSTS = []
+if not DEBUG and SECRET_KEY == _SECRET_KEY_DEFAULT:
+    raise RuntimeError(
+        "SECRET_KEY must be set to a strong random value in production. "
+        "Generate one with: python -c \"import secrets; print(secrets.token_hex(50))\""
+    )
+
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 
 # Application definition
@@ -38,26 +47,65 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
+    "intelliHunt.reportApp",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    'corsheaders.middleware.CorsMiddleware', 
-    'django.middleware.common.CommonMiddleware',
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "intelliHunt.urls"
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # Next.js default dev server
+# CORS — allow the Next.js dev server and any origin set via env var
+_cors_origins = os.environ.get("CORS_ALLOWED_ORIGINS", "http://localhost:3000")
+CORS_ALLOWED_ORIGINS = [o.strip() for o in _cors_origins.split(",") if o.strip()]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
 ]
+
+# ── Security headers (always on) ──────────────────────────────────────────────
+SECURE_BROWSER_XSS_FILTER     = True   # X-XSS-Protection: 1; mode=block
+SECURE_CONTENT_TYPE_NOSNIFF   = True   # X-Content-Type-Options: nosniff
+X_FRAME_OPTIONS               = "DENY" # X-Frame-Options: DENY
+SECURE_REFERRER_POLICY        = "strict-origin-when-cross-origin"
+
+# ── HTTPS-only settings (active when DEBUG=False) ─────────────────────────────
+# Enable behind a TLS-terminating proxy (e.g. nginx/load-balancer).
+# Set BEHIND_PROXY=true in production so Django trusts the X-Forwarded-Proto header.
+_behind_proxy = os.environ.get("BEHIND_PROXY", "false").lower() == "true"
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT          = True     # Redirect all HTTP → HTTPS
+    SECURE_PROXY_SSL_HEADER      = ("HTTP_X_FORWARDED_PROTO", "https") if _behind_proxy else None
+    SESSION_COOKIE_SECURE        = True     # Session cookie sent only over HTTPS
+    CSRF_COOKIE_SECURE           = True     # CSRF cookie sent only over HTTPS
+    SESSION_COOKIE_HTTPONLY      = True     # Prevent JS access to session cookie
+    CSRF_COOKIE_HTTPONLY         = True     # Prevent JS access to CSRF cookie
+    SESSION_COOKIE_SAMESITE      = "Lax"
+    CSRF_COOKIE_SAMESITE         = "Lax"
+    # HSTS: tell browsers to always use HTTPS for this domain.
+    # Start with a short max-age during rollout, then raise to 31536000 (1 year).
+    SECURE_HSTS_SECONDS          = int(os.environ.get("HSTS_SECONDS", "3600"))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD          = False    # Set True only after long HSTS history
 
 TEMPLATES = [
     {
@@ -139,3 +187,65 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+# Root log directory.  Sub-directories are created automatically by
+# DailyDirectoryHandler using the pattern  logs/<YYYY>/<MM>/<YYYY-MM-DD>.log
+_LOG_DIR = str(BASE_DIR / "logs")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[{asctime}] {levelname} {name} [{process}]: {message}",
+            "style": "{",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+        "simple": {
+            "format": "[{asctime}] {levelname}: {message}",
+            "style": "{",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    "handlers": {
+        # ── stdout (always present, useful in Docker / dev) ──────────────────
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        # ── Daily rotating file: logs/<YYYY>/<MM>/<YYYY-MM-DD>.log ──────────
+        # Application events (report runs, scans, logins, errors …)
+        "daily_app": {
+            "()": "intelliHunt.log_handler.DailyDirectoryHandler",
+            "base_dir": _LOG_DIR,
+            "formatter": "verbose",
+        },
+        # Django framework warnings / errors in their own dated file tree
+        "daily_django": {
+            "()": "intelliHunt.log_handler.DailyDirectoryHandler",
+            "base_dir": os.path.join(_LOG_DIR, "django"),
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        # Application logger — used throughout views.py, auth_views.py, etc.
+        "intelliHunt": {
+            "handlers": ["console", "daily_app"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        # Django's own logger (requests, SQL warnings, security events)
+        "django": {
+            "handlers": ["console", "daily_django"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        # Django's security logger specifically (login failures, etc.)
+        "django.security": {
+            "handlers": ["console", "daily_django"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}

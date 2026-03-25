@@ -60,7 +60,9 @@ RUN chmod +x /usr/local/bin/osv-scanner && \
 
 
 EXPOSE 8000
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "intelliHunt.wsgi:application"]
+COPY ./server/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 # --- Stage 3: Run the Next.js Frontend ---
 FROM node:20-alpine AS nextjs

@@ -21,6 +21,8 @@ from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 from .reportApp import views
+from .reportApp import auth_views
+from .reportApp import admin_views
 from .views import ReactAppView
 from django.http import HttpResponse
 
@@ -30,6 +32,14 @@ def health_check(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    # ── Auth endpoints ────────────────────────────────────────────────────────
+    path("api/auth/register/", auth_views.register, name="auth_register"),
+    path("api/auth/login/",    auth_views.login_view, name="auth_login"),
+    path("api/auth/refresh/",  auth_views.refresh_view, name="auth_refresh"),
+    path("api/auth/me/",       auth_views.me, name="auth_me"),
+
+    # ── Application endpoints (all require JWT) ───────────────────────────────
     path('api/markdown/', views.get_markdown_content, name='markdown_content'),
     path('api/generate/', views.run_report, name='run_script'),
     path('api/task/<str:task_id>/', views.check_task_status, name='check_task_status'),
@@ -43,6 +53,12 @@ urlpatterns = [
     path('api/cmdb/integrations/<str:integration_id>/', views.delete_cmdb_integration, name='delete_cmdb_integration'),
     path('api/cmdb/test/', views.test_cmdb_connection, name='test_cmdb_connection'),
     path('api/cmdb/import/', views.import_cmdb_data, name='import_cmdb_data'),
+    # Scan history (per-tenant)
+    path('api/scan/history/', views.get_scan_history, name='scan_history'),
+    path('api/scan/history/<str:task_id>/report/', views.get_scan_report, name='scan_report'),
+    # Admin endpoints
+    path('api/admin/summary/',  admin_views.admin_summary,  name='admin_summary'),
+    path('api/admin/activity/', admin_views.admin_activity, name='admin_activity'),
     path('', health_check, name='health_check'),
     # The "catch-all" pattern that serves the React app
     #re_path(r'^.*', TemplateView.as_view(template_name='index.html')),

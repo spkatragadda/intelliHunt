@@ -20,16 +20,21 @@ from channels.layers import get_channel_layer
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
+import logging
+
+from .auth import require_auth, tenant_path
+from .logging_utils import log_action, create_scan_result, complete_scan_result
+
+logger = logging.getLogger("intelliHunt")
+
 # ── CMDB Integration Helpers ──────────────────────────────────────────────────
-CMDB_INTEGRATIONS_PATH = os.path.join(
-    settings.BASE_DIR, 'intelliHunt/crew/NVD/config/cmdb_integrations.json'
-)
-_SENSITIVE = {'password', 'api_token', 'token', 'api_key'}
+_SENSITIVE = {'password', 'api_token', 'token', 'api_key', 'client_secret'}
 
 
-def _load_cmdb_integrations():
+def _load_cmdb_integrations(org_id: str):
+    path = tenant_path(org_id, 'cmdb_integrations.json')
     try:
-        with open(CMDB_INTEGRATIONS_PATH, 'r') as f:
+        with open(path, 'r') as f:
             return json.load(f)
     except FileNotFoundError:
         return {}
@@ -37,9 +42,9 @@ def _load_cmdb_integrations():
         return {}
 
 
-def _save_cmdb_integrations(data):
-    os.makedirs(os.path.dirname(CMDB_INTEGRATIONS_PATH), exist_ok=True)
-    with open(CMDB_INTEGRATIONS_PATH, 'w') as f:
+def _save_cmdb_integrations(data, org_id: str):
+    path = tenant_path(org_id, 'cmdb_integrations.json')
+    with open(path, 'w') as f:
         json.dump(data, f, indent=2)
 
 
@@ -76,13 +81,77 @@ def _os_entries_from_records(records, os_field_names):
     return [{'vendor': v, 'products': [{'name': p} for p in sorted(ps)]} for v, ps in os_map.items()]
 
 
+_CS_CLOUD_HOSTS = {
+    'us-1':     'api.crowdstrike.com',
+    'us-2':     'api.us-2.crowdstrike.com',
+    'eu-1':     'api.eu-1.crowdstrike.com',
+    'us-gov-1': 'api.laggar.gcw.crowdstrike.com',
+}
+
+
+def _cs_base(cfg):
+    return 'https://' + _CS_CLOUD_HOSTS.get(cfg.get('cloud', 'us-1'), 'api.crowdstrike.com')
+
+
+def _cs_token(rq, cfg):
+    """Exchange CrowdStrike client credentials for an access token."""
+    r = rq.post(
+        _cs_base(cfg) + '/oauth2/token',
+        data={'client_id': cfg.get('client_id', ''), 'client_secret': cfg.get('client_secret', '')},
+        headers={'Content-Type': 'application/x-www-form-urlencoded'},
+        timeout=15,
+    )
+    return r
+
+
+def _s1_headers(cfg):
+    return {'Authorization': f"ApiToken {cfg.get('api_token', '')}", 'Accept': 'application/json'}
+
+
+def _defender_token(rq, cfg):
+    """Exchange Defender (Azure AD) client credentials for an access token."""
+    r = rq.post(
+        f"https://login.microsoftonline.com/{cfg.get('tenant_id', '')}/oauth2/token",
+        data={
+            'grant_type': 'client_credentials',
+            'client_id': cfg.get('client_id', ''),
+            'client_secret': cfg.get('client_secret', ''),
+            'resource': 'https://api.securitycenter.microsoft.com',
+        },
+        timeout=15,
+    )
+    return r
+
+
+def _app_entries_from_software(records, vendor_field, product_field):
+    """Build application entries from a flat list of software records."""
+    from collections import defaultdict
+    vendor_products = defaultdict(set)
+    for rec in records:
+        if not isinstance(rec, dict):
+            continue
+        vendor = str(rec.get(vendor_field) or 'unknown').strip().lower()
+        product = str(rec.get(product_field) or '').strip().lower()
+        if not product:
+            continue
+        vendor_clean = vendor.replace(' ', '_').replace(',', '').replace('.', '').replace('/', '_') or 'unknown'
+        product_clean = product.replace(' ', '_').replace(',', '').replace('.', '').replace('/', '_')
+        vendor_products[vendor_clean].add(product_clean)
+    # Cap to 100 vendors; sort for determinism
+    return [
+        {'vendor': v, 'products': sorted(ps)[:100]}
+        for v, ps in sorted(vendor_products.items())[:100]
+    ]
+
+
 # ── CMDB Integration Views ────────────────────────────────────────────────────
 
 @csrf_exempt
+@require_auth
 def cmdb_integrations(request):
     """GET: list saved integrations (masked). POST: save/update one."""
     if request.method == 'GET':
-        configs = _load_cmdb_integrations()
+        configs = _load_cmdb_integrations(request.org_id)
         return JsonResponse({'integrations': {k: _mask_sensitive(v) for k, v in configs.items()}})
 
     if request.method == 'POST':
@@ -92,7 +161,7 @@ def cmdb_integrations(request):
         if not integration_id:
             return JsonResponse({'error': 'Missing id'}, status=400)
 
-        configs = _load_cmdb_integrations()
+        configs = _load_cmdb_integrations(request.org_id)
         existing = configs.get(integration_id, {})
         # Preserve existing secrets when the UI sends back masked '***'
         for field in _SENSITIVE:
@@ -100,25 +169,27 @@ def cmdb_integrations(request):
                 new_cfg[field] = existing[field]
 
         configs[integration_id] = new_cfg
-        _save_cmdb_integrations(configs)
+        _save_cmdb_integrations(configs, request.org_id)
         return JsonResponse({'message': 'Integration saved', 'id': integration_id})
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
 @csrf_exempt
+@require_auth
 def delete_cmdb_integration(request, integration_id):
     if request.method == 'DELETE':
-        configs = _load_cmdb_integrations()
+        configs = _load_cmdb_integrations(request.org_id)
         if integration_id not in configs:
             return JsonResponse({'error': 'Not found'}, status=404)
         del configs[integration_id]
-        _save_cmdb_integrations(configs)
+        _save_cmdb_integrations(configs, request.org_id)
         return JsonResponse({'message': 'Integration deleted'})
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
 @csrf_exempt
+@require_auth
 def test_cmdb_connection(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'POST required'}, status=405)
@@ -184,6 +255,44 @@ def test_cmdb_connection(request):
                 return JsonResponse({'status': 'connected', 'message': f'Connected (HTTP {r.status_code})'})
             return JsonResponse({'status': 'error', 'message': f'HTTP {r.status_code}'})
 
+        elif itype == 'crowdstrike':
+            tok_r = _cs_token(rq, cfg)
+            if tok_r.status_code == 201:
+                return JsonResponse({'status': 'connected', 'message': 'Connected to CrowdStrike Falcon'})
+            if tok_r.status_code == 401:
+                return JsonResponse({'status': 'error', 'message': 'Invalid client ID or secret'})
+            if tok_r.status_code == 400:
+                return JsonResponse({'status': 'error', 'message': 'Bad request — check client ID format'})
+            return JsonResponse({'status': 'error', 'message': f'HTTP {tok_r.status_code}'})
+
+        elif itype == 'sentinelone':
+            base = cfg.get('base_url', '').rstrip('/')
+            if not base:
+                return JsonResponse({'status': 'error', 'message': 'Base URL is required'})
+            r = rq.get(
+                f"{base}/web/api/v2.1/system/status",
+                headers=_s1_headers(cfg),
+                timeout=15,
+            )
+            if r.status_code == 200:
+                return JsonResponse({'status': 'connected', 'message': 'Connected to SentinelOne'})
+            if r.status_code in (401, 403):
+                return JsonResponse({'status': 'error', 'message': 'Invalid API token'})
+            return JsonResponse({'status': 'error', 'message': f'HTTP {r.status_code}'})
+
+        elif itype == 'defender':
+            tok_r = _defender_token(rq, cfg)
+            if tok_r.status_code == 200 and tok_r.json().get('access_token'):
+                return JsonResponse({'status': 'connected', 'message': 'Connected to Microsoft Defender for Endpoint'})
+            err = ''
+            try:
+                err = tok_r.json().get('error_description', '')[:80]
+            except Exception:
+                pass
+            if tok_r.status_code in (400, 401):
+                return JsonResponse({'status': 'error', 'message': err or 'Authentication failed — check tenant/client credentials'})
+            return JsonResponse({'status': 'error', 'message': f'HTTP {tok_r.status_code}'})
+
         return JsonResponse({'status': 'error', 'message': 'Unknown integration type'}, status=400)
 
     except Exception as ex:
@@ -196,6 +305,7 @@ def test_cmdb_connection(request):
 
 
 @csrf_exempt
+@require_auth
 def import_cmdb_data(request):
     """Pull CI records from a CMDB and write to organization_cmdb.yaml."""
     if request.method != 'POST':
@@ -205,7 +315,7 @@ def import_cmdb_data(request):
     integration_id = body.get('id')
     itype = body.get('type')
 
-    configs = _load_cmdb_integrations()
+    configs = _load_cmdb_integrations(request.org_id)
     if integration_id not in configs:
         return JsonResponse({'error': 'Integration not found'}, status=404)
     cfg = configs[integration_id]
@@ -297,6 +407,105 @@ def import_cmdb_data(request):
                 records, ['os', 'OS', 'operating_system', 'OperatingSystem', 'platform']
             )
 
+        elif itype == 'crowdstrike':
+            base = _cs_base(cfg)
+            # 1. Authenticate
+            tok_r = _cs_token(rq, cfg)
+            if tok_r.status_code != 201:
+                return JsonResponse({'error': f'CrowdStrike auth failed: HTTP {tok_r.status_code}'}, status=400)
+            access_token = tok_r.json().get('access_token', '')
+            hdrs = {'Authorization': f'Bearer {access_token}', 'Accept': 'application/json'}
+
+            # 2. Query device IDs (up to 500)
+            dev_ids_r = rq.get(
+                f"{base}/devices/queries/devices/v1?limit=500",
+                headers=hdrs, timeout=30,
+            )
+            device_ids = dev_ids_r.json().get('resources', [])[:100]
+
+            # 3. Fetch device details for OS info
+            if device_ids:
+                dev_r = rq.post(
+                    f"{base}/devices/entities/devices/v2",
+                    headers=hdrs, json={'ids': device_ids}, timeout=30,
+                )
+                devices = dev_r.json().get('resources', [])
+                os_entries = _os_entries_from_records(
+                    devices, ['os_version', 'platform_name', 'os_product_name', 'platform']
+                )
+            else:
+                os_entries = []
+
+            # 4. Fetch installed applications from Falcon Discover (if available)
+            app_ids_r = rq.get(
+                f"{base}/discover/queries/applications/v1?limit=500",
+                headers=hdrs, timeout=30,
+            )
+            app_ids = app_ids_r.json().get('resources', [])[:500]
+            if app_ids:
+                app_detail_r = rq.post(
+                    f"{base}/discover/entities/applications/v1",
+                    headers=hdrs, json={'ids': app_ids}, timeout=30,
+                )
+                app_records = app_detail_r.json().get('resources', [])
+                app_entries = _app_entries_from_software(app_records, 'vendor', 'name')
+
+        elif itype == 'sentinelone':
+            base = cfg.get('base_url', '').rstrip('/')
+            if not base:
+                return JsonResponse({'error': 'Base URL is required'}, status=400)
+            hdrs = _s1_headers(cfg)
+
+            # 1. Fetch agents with OS info (paginate up to 500 agents)
+            agents_r = rq.get(
+                f"{base}/web/api/v2.1/agents?limit=100&isActive=true",
+                headers=hdrs, timeout=30,
+            )
+            if agents_r.status_code != 200:
+                return JsonResponse({'error': f'Failed to fetch agents: HTTP {agents_r.status_code}'}, status=400)
+            agents = agents_r.json().get('data', [])
+            os_entries = _os_entries_from_records(agents, ['osName', 'osType', 'operatingSystem'])
+
+            # 2. Fetch installed applications
+            apps_r = rq.get(
+                f"{base}/web/api/v2.1/installed-applications?limit=1000",
+                headers=hdrs, timeout=30,
+            )
+            if apps_r.status_code == 200:
+                app_records = apps_r.json().get('data', [])
+                app_entries = _app_entries_from_software(app_records, 'publisher', 'name')
+
+        elif itype == 'defender':
+            # 1. Authenticate with Azure AD
+            tok_r = _defender_token(rq, cfg)
+            if tok_r.status_code != 200:
+                return JsonResponse({'error': f'Defender auth failed: HTTP {tok_r.status_code}'}, status=400)
+            access_token = tok_r.json().get('access_token', '')
+            hdrs = {
+                'Authorization': f'Bearer {access_token}',
+                'Accept': 'application/json',
+            }
+            mde_base = 'https://api.securitycenter.microsoft.com/api'
+
+            # 2. Fetch machines for OS info (top 500)
+            machines_r = rq.get(
+                f"{mde_base}/machines?$top=500&$select=id,computerDnsName,osPlatform,osVersion",
+                headers=hdrs, timeout=30,
+            )
+            if machines_r.status_code != 200:
+                return JsonResponse({'error': f'Failed to fetch machines: HTTP {machines_r.status_code}'}, status=400)
+            machines = machines_r.json().get('value', [])
+            os_entries = _os_entries_from_records(machines, ['osPlatform', 'osVersion'])
+
+            # 3. Fetch software inventory (top 1000 unique software titles)
+            software_r = rq.get(
+                f"{mde_base}/software?$top=1000",
+                headers=hdrs, timeout=30,
+            )
+            if software_r.status_code == 200:
+                software = software_r.json().get('value', [])
+                app_entries = _app_entries_from_software(software, 'vendor', 'name')
+
         else:
             return JsonResponse({'error': 'Unknown integration type'}, status=400)
 
@@ -304,7 +513,7 @@ def import_cmdb_data(request):
         yaml_config = {
             'organization': {
                 'name': f"Imported from {itype}",
-                'description': f"Auto-imported via IntelliHunt CMDB integration ({itype})",
+                'description': f"Auto-imported via IntelliHunt {itype} integration",
             },
             'software_stack': {
                 'operating_systems': os_entries or [{'vendor': 'unknown', 'products': [{'name': 'unknown'}]}],
@@ -312,21 +521,30 @@ def import_cmdb_data(request):
                 'cloud_platforms': [],
             },
         }
-        config_path = os.path.join(settings.BASE_DIR, 'intelliHunt/crew/NVD/config/organization_cmdb.yaml')
+        config_path = tenant_path(request.org_id, 'organization_cmdb.yaml')
         with open(config_path, 'w') as f:
             yaml.dump(yaml_config, f, default_flow_style=False, sort_keys=False)
 
         # Record last-synced time
         configs[integration_id]['last_synced'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-        _save_cmdb_integrations(configs)
+        _save_cmdb_integrations(configs, request.org_id)
 
+        os_count = sum(len(e.get('products', [])) for e in os_entries)
+        app_count = sum(len(e.get('products', [])) for e in app_entries)
+        parts = [f"{os_count} OS variant(s) across {len(os_entries)} vendor(s)"]
+        if app_count:
+            parts.append(f"{app_count} application(s) across {len(app_entries)} vendor(s)")
+        log_action(request.org_id, request.user_id, request.username,
+                   "cmdb_import", "completed", detail=f"id={integration_id} type={itype}")
         return JsonResponse({
-            'message': f"Imported {sum(len(e['products']) for e in os_entries)} OS variants across {len(os_entries)} vendor(s)",
+            'message': f"Imported " + " and ".join(parts),
             'os_count': len(os_entries),
             'app_count': len(app_entries),
         })
 
     except Exception as ex:
+        log_action(request.org_id, request.user_id, request.username,
+                   "cmdb_import", "error", detail=str(ex)[:500])
         return JsonResponse({'error': f'Import failed: {str(ex)}'}, status=500)
 # Import the repo scanner
 vulnscan_path = os.path.join(settings.BASE_DIR, 'vulnScan')
@@ -414,53 +632,57 @@ def get_yaml_template(request):
         return JsonResponse({'error': 'Template file not found'}, status=404)
 
 @csrf_exempt
+@require_auth
 def upload_yaml_config(request):
     """Handle YAML configuration file upload"""
     if request.method == 'POST':
         try:
             if 'yaml_file' not in request.FILES:
                 return JsonResponse({'error': 'No YAML file provided'}, status=400)
-            
+
             yaml_file = request.FILES['yaml_file']
-            
+
             # Validate YAML file
             try:
                 yaml_content = yaml_file.read().decode('utf-8')
                 yaml_data = yaml.safe_load(yaml_content)
-                
+
                 # Basic validation of required fields
                 if 'software_stack' not in yaml_data:
                     return JsonResponse({'error': 'Invalid YAML: missing software_stack section'}, status=400)
-                
-                # Save the uploaded YAML file
-                config_path = os.path.join(settings.BASE_DIR, 'intelliHunt/crew/NVD/config/organization_cmdb.yaml')
+
+                # Save to tenant-specific path
+                config_path = tenant_path(request.org_id, 'organization_cmdb.yaml')
                 with open(config_path, 'w') as f:
                     f.write(yaml_content)
-                
+
+                log_action(request.org_id, request.user_id, request.username,
+                           "yaml_upload", "completed", detail=yaml_file.name)
                 return JsonResponse({
                     'message': 'YAML configuration uploaded successfully',
                     'config': yaml_data
                 })
-                
+
             except yaml.YAMLError as e:
                 return JsonResponse({'error': f'Invalid YAML format: {str(e)}'}, status=400)
             except Exception as e:
                 return JsonResponse({'error': f'Error processing YAML file: {str(e)}'}, status=500)
-                
+
         except Exception as e:
             return JsonResponse({'error': f'Upload failed: {str(e)}'}, status=500)
-    
+
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+@require_auth
 def get_current_yaml_config(request):
     """Get the current YAML configuration"""
-    config_path = os.path.join(settings.BASE_DIR, 'intelliHunt/crew/NVD/config/organization_cmdb.yaml')
-    
+    config_path = tenant_path(request.org_id, 'organization_cmdb.yaml')
+
     try:
         with open(config_path, 'r') as f:
             yaml_content = f.read()
             yaml_data = yaml.safe_load(yaml_content)
-            
+
         return JsonResponse({
             'config': yaml_data,
             'raw_content': yaml_content
@@ -616,7 +838,7 @@ def generate_scan_report_markdown(raw_result) -> str:
     return _detections_to_markdown(detections)
 
 
-def run_report_async(task_id, payload_file_path):
+def run_report_async(task_id, payload_file_path, org_id, user_id=None, username=""):
     """Run the report generation in a separate thread"""
     start_time = time.time()
 
@@ -696,17 +918,21 @@ def run_report_async(task_id, payload_file_path):
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
 
-        # Read the generated report markdown to include in the response
+        # Read the generated report markdown and persist it to the tenant directory
         report_markdown = ""
-        report_path = os.path.join(settings.BASE_DIR, 'intelliHunt/crew/crew_report.md')
+        global_report_path = os.path.join(settings.BASE_DIR, 'intelliHunt/crew/crew_report.md')
         try:
-            with open(report_path, 'r', encoding='utf-8') as f:
+            with open(global_report_path, 'r', encoding='utf-8') as f:
                 report_markdown = f.read()
+            # Write to per-tenant path so get_markdown_content serves the right report
+            with open(tenant_path(org_id, 'crew_report.md'), 'w', encoding='utf-8') as f:
+                f.write(report_markdown)
         except Exception as e:
-            print(f"Warning: Could not read report file: {e}")
+            print(f"Warning: Could not read/copy report file: {e}")
 
         # Mark as completed
         end_time = time.time()
+        duration_ms = int((end_time - start_time) * 1000)
         status_data = {
             'status': 'completed',
             'progress': 100,
@@ -719,6 +945,8 @@ def run_report_async(task_id, payload_file_path):
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
+        log_action(org_id, user_id, username, "report_run", "completed",
+                   detail=f"task={task_id}", duration_ms=duration_ms)
 
         # Broadcast update via WebSocket
         try:
@@ -760,6 +988,8 @@ def run_report_async(task_id, payload_file_path):
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
+        log_action(org_id, user_id, username, "report_run", "error",
+                   detail=f"task={task_id} timeout")
 
         # Clean up the temporary file
         if os.path.exists(payload_file_path):
@@ -785,6 +1015,8 @@ def run_report_async(task_id, payload_file_path):
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
+        log_action(org_id, user_id, username, "report_run", "error",
+                   detail=f"task={task_id} script_error")
 
         # Schedule cleanup of task status file after 5 minutes
         import threading
@@ -819,30 +1051,26 @@ def run_report_async(task_id, payload_file_path):
         cleanup_thread.start()
 
 
+@require_auth
 def get_markdown_content(request):
-    """Serves the raw Markdown file as a text/markdown HTTP response."""
-
-    # Path to your Markdown file
-    markdown_file_path = os.path.join(settings.BASE_DIR, 'intelliHunt/crew/crew_report.md')
+    """Serves the tenant's report Markdown file."""
+    markdown_file_path = tenant_path(request.org_id, 'crew_report.md')
 
     try:
-        # Open and read the file in binary mode for streaming
         file_handle = open(markdown_file_path, 'rb')
-
-        # Use FileResponse for efficient streaming of large files
         response = FileResponse(file_handle, content_type='text/markdown')
-
         return response
     except FileNotFoundError:
         return HttpResponse("Markdown file not found", status=404)
 
 @csrf_exempt
+@require_auth
 def run_report(request):
     if request.method == 'POST':
         try:
             import json
             import tempfile
-            
+
             # Parse the JSON payload from the frontend
             payload = json.loads(request.body)
 
@@ -859,20 +1087,27 @@ def run_report(request):
 
             # Generate a unique task ID
             task_id = str(uuid.uuid4())
-            
+
             # Create a temporary JSON file with the payload
             with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as temp_file:
                 json.dump(payload, temp_file, indent=2)
                 temp_file_path = temp_file.name
-            
-            # Start the report generation in a separate thread
-            thread = threading.Thread(target=run_report_async, args=(task_id, temp_file_path))
+
+            # Log start
+            log_action(request.org_id, request.user_id, request.username,
+                       "report_run", "started", detail=f"task={task_id}")
+
+            # Start the report generation in a separate thread (pass org_id for tenant isolation)
+            thread = threading.Thread(
+                target=run_report_async,
+                args=(task_id, temp_file_path, request.org_id, request.user_id, request.username),
+            )
             thread.daemon = True
             thread.start()
-            
+
             # Return immediately with task ID
             return JsonResponse({
-                'status': 'started', 
+                'status': 'started',
                 'message': 'Report generation started. Use the task ID to check progress.',
                 'task_id': task_id
             })
@@ -885,6 +1120,7 @@ def run_report(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
 
 @csrf_exempt
+@require_auth
 def check_task_status(request, task_id):
     """Check the status of a running task"""
     # First check in-memory storage
@@ -926,7 +1162,8 @@ def update_report_api(request):
     except Exception as e:
         return JsonResponse({"message": f"Error broadcasting update signal: {str(e)}"}, status=500)
 
-def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None):
+def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None,
+                        org_id=None, user_id=None, username=""):
     """Run the repo vulnerability scan in a separate thread"""
     start_time = time.time()
     
@@ -968,6 +1205,7 @@ def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None):
 
         # Mark as completed
         end_time = time.time()
+        duration_ms = int((end_time - start_time) * 1000)
         status_data = {
             'status': 'completed',
             'progress': 100,
@@ -980,6 +1218,11 @@ def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None):
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
+        if org_id:
+            complete_scan_result(task_id, "completed", report_markdown, duration_ms)
+            log_action(org_id, user_id, username, "repo_scan", "completed",
+                       detail=repo_url if isinstance(repo_url, str) else "uploaded_file",
+                       duration_ms=duration_ms)
         
         # Clean up temporary directory if it was created from a file upload
         if temp_dir_to_cleanup and os.path.exists(temp_dir_to_cleanup):
@@ -1009,7 +1252,10 @@ def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None):
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
-        
+        if org_id:
+            complete_scan_result(task_id, "error")
+            log_action(org_id, user_id, username, "repo_scan", "error", detail=str(e)[:500])
+
         # Clean up temporary directory if it was created from a file upload
         if temp_dir_to_cleanup and os.path.exists(temp_dir_to_cleanup):
             try:
@@ -1027,6 +1273,7 @@ def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None):
         cleanup_thread.start()
 
 @csrf_exempt
+@require_auth
 def scan_repo(request):
     """Endpoint to scan a repository for vulnerabilities.
     Accepts either:
@@ -1120,18 +1367,30 @@ def scan_repo(request):
             
             # Generate a unique task ID
             task_id = str(uuid.uuid4())
-            
+            target_label = repo_url if isinstance(repo_url, str) and repo_url.startswith('http') else 'uploaded_file'
+            input_type   = 'url' if isinstance(repo_url, str) and repo_url.startswith('http') else 'file'
+
+            # Persist scan record and log start
+            create_scan_result(request.org_id, request.user_id, request.username,
+                               task_id, target_label, input_type)
+            log_action(request.org_id, request.user_id, request.username,
+                       "repo_scan", "started", detail=target_label)
+
             # Start the scan in a separate thread
-            thread = threading.Thread(target=run_repo_scan_async, args=(task_id, repo_url, temp_dir_to_cleanup))
+            thread = threading.Thread(
+                target=run_repo_scan_async,
+                args=(task_id, repo_url, temp_dir_to_cleanup,
+                      request.org_id, request.user_id, request.username),
+            )
             thread.daemon = True
             thread.start()
-            
+
             # Return immediately with task ID
             return JsonResponse({
                 'status': 'started',
                 'message': 'Repository vulnerability scan started. Use the task ID to check progress.',
                 'task_id': task_id,
-                'repo_url': repo_url if isinstance(repo_url, str) and repo_url.startswith('http') else 'uploaded_file'
+                'repo_url': target_label,
             })
             
         except Exception as e:
@@ -1150,3 +1409,38 @@ def scan_repo(request):
         'status': 'error',
         'message': 'Invalid request method. Use POST.'
     }, status=405)
+
+
+# ── Scan history (per-tenant) ─────────────────────────────────────────────────
+
+@csrf_exempt
+@require_auth
+def get_scan_history(request):
+    """GET /api/scan/history/  — returns this org's scans, newest first."""
+    from .models import ScanResult
+    qs = ScanResult.objects.filter(organization_id=request.org_id).order_by('-created_at')[:50]
+    rows = [{
+        'id':           str(r.id),
+        'task_id':      r.task_id,
+        'username':     r.username,
+        'target':       r.target,
+        'input_type':   r.input_type,
+        'status':       r.status,
+        'duration_ms':  r.duration_ms,
+        'created_at':   r.created_at.isoformat(),
+        'completed_at': r.completed_at.isoformat() if r.completed_at else None,
+        'has_report':   bool(r.report_markdown),
+    } for r in qs]
+    return JsonResponse({'scans': rows})
+
+
+@csrf_exempt
+@require_auth
+def get_scan_report(request, task_id):
+    """GET /api/scan/history/<task_id>/report/  — returns markdown for one scan."""
+    from .models import ScanResult
+    try:
+        r = ScanResult.objects.get(task_id=task_id, organization_id=request.org_id)
+    except ScanResult.DoesNotExist:
+        return JsonResponse({'error': 'Not found'}, status=404)
+    return JsonResponse({'report_markdown': r.report_markdown, 'target': r.target})

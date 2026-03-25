@@ -33,8 +33,13 @@ type CustomEntry = {
 /* Shared styles removed — using Input/Select components from ui/ */
 
 const PROVIDER_COLORS: Record<string, string> = {
-  servicenow: "#62d84e", bmc_helix: "#e8742a",
-  atlassian: "#2684ff",  custom: "#4a9eff",
+  servicenow:  "#62d84e",
+  bmc_helix:   "#e8742a",
+  atlassian:   "#2684ff",
+  custom:      "#4a9eff",
+  crowdstrike: "#e8002d",
+  sentinelone: "#a855f7",
+  defender:    "#0ea5e9",
 };
 
 /* ══════════════════════════════════════════
@@ -261,55 +266,86 @@ function MarketplaceCard({ accentColor, icon, name, description, connStatus, sav
   return (
     <div
       onClick={onClick}
-      className="cursor-pointer flex flex-col rounded-xl overflow-hidden transition-all duration-200"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
+        cursor: "pointer",
+        display: "flex", flexDirection: "column",
+        borderRadius: "12px", overflow: "hidden",
         background: "var(--surface)",
-        border: "1px solid var(--border)",
+        border: `1px solid ${hovered ? `${accentColor}45` : "var(--border)"}`,
         boxShadow: hovered
-          ? `0 8px 28px rgba(0,0,0,0.55), 0 0 0 1px ${accentColor}50`
-          : "0 2px 8px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.5)",
-        transform: hovered ? "translateY(-2px)" : "translateY(0)",
+          ? `0 12px 32px rgba(0,0,0,0.6), 0 0 0 1px ${accentColor}30, inset 0 1px 0 ${accentColor}15`
+          : "0 2px 8px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.02)",
+        transform: hovered ? "translateY(-3px)" : "translateY(0)",
+        transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)",
       }}
     >
-      {/* Top accent bar */}
-      <div style={{ height: "3px", background: accentColor, flexShrink: 0 }} />
+      {/* Top accent stripe */}
+      <div style={{ height: "2px", background: `linear-gradient(90deg, ${accentColor}cc, ${accentColor})`, flexShrink: 0 }} />
 
       {/* Card body */}
-      <div className="flex flex-col flex-1 p-5">
-        {/* Icon row + status badge */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl flex-shrink-0"
-            style={{ background: `${accentColor}1a`, border: `1px solid ${accentColor}35` }}>
+      <div style={{ display: "flex", flexDirection: "column", flex: 1, padding: "18px 20px 16px" }}>
+
+        {/* Icon + status row */}
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "16px" }}>
+          <div style={{
+            width: "44px", height: "44px", borderRadius: "10px", flexShrink: 0,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            background: `${accentColor}18`, border: `1px solid ${accentColor}30`,
+            boxShadow: hovered ? `0 0 16px ${accentColor}25` : "none",
+            transition: "box-shadow 0.2s ease",
+          }}>
             {icon}
           </div>
-          {/* Status badge */}
-          <Badge style={{ background: s.bg, color: s.color, border: "none" }}>
-            <span className={`w-1.5 h-1.5 rounded-full inline-block flex-shrink-0 ${connStatus === "testing" ? "animate-pulse" : ""}`}
-              style={{ background: s.dot }} />
+          {/* Status pill */}
+          <span style={{
+            display: "inline-flex", alignItems: "center", gap: "5px",
+            padding: "3px 8px", borderRadius: "4px",
+            fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em",
+            color: s.color, background: s.bg, border: `1px solid ${s.color}30`,
+            fontFamily: "var(--font-mono), monospace",
+          }}>
+            <span style={{
+              width: "5px", height: "5px", borderRadius: "50%",
+              background: s.dot, display: "inline-block", flexShrink: 0,
+              ...(connStatus === "testing" ? { animation: "dot-pulse 1s ease-in-out infinite" } : {}),
+            }} />
             {s.label}
-          </Badge>
+          </span>
         </div>
 
         {/* Name + description */}
-        <div className="flex-1 min-w-0">
-          <h3 className="text-[15px] font-semibold tracking-tight mb-1.5" style={{ color: "var(--text-primary)" }}>{name}</h3>
-          <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-muted)" }}>{description}</p>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h3 style={{
+            fontSize: "15px", fontWeight: 700, letterSpacing: "-0.015em", marginBottom: "6px",
+            color: "var(--text-primary)", fontFamily: "var(--font-display)", margin: "0 0 5px",
+          }}>{name}</h3>
+          <p style={{ fontSize: "12.5px", lineHeight: "1.6", color: "var(--text-muted)", margin: 0 }}>{description}</p>
         </div>
 
         {/* Footer */}
-        <div className="mt-4 pt-4 flex items-center justify-between" style={{ borderTop: "1px solid var(--border)" }}>
-          <span className="text-[13px] font-medium flex items-center gap-1.5 transition-colors duration-150"
-            style={{ color: hovered ? accentColor : "var(--text-muted)" }}>
+        <div style={{
+          marginTop: "16px", paddingTop: "14px",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          borderTop: "1px solid var(--border)",
+        }}>
+          <span style={{
+            fontSize: "12px", fontWeight: 600,
+            display: "flex", alignItems: "center", gap: "4px",
+            color: hovered ? accentColor : "var(--text-muted)",
+            transition: "color 0.15s ease",
+            fontFamily: "var(--font-mono), monospace", letterSpacing: "0.04em",
+          }}>
             Configure
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"
+              style={{ transform: hovered ? "translateX(2px)" : "none", transition: "transform 0.15s ease" }}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
           </span>
           {lastSynced && (
-            <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>
-              Synced {timeSince(lastSynced)}
+            <span style={{ fontSize: "10px", color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace" }}>
+              ↻ {timeSince(lastSynced)}
             </span>
           )}
         </div>
@@ -377,6 +413,35 @@ function CustomIcon({ size = 20 }: { size?: number }) {
     <svg viewBox="0 0 24 24" width={size} height={size} fill="none"
       stroke={PROVIDER_COLORS.custom} strokeWidth={1.75}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+    </svg>
+  );
+}
+
+function CrowdStrikeIcon({ size = 20 }: { size?: number }) {
+  // Stylised falcon silhouette
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill={PROVIDER_COLORS.crowdstrike}>
+      <path d="M12 2C9.5 2 7.2 3.1 5.6 4.9L8 7.3C9 6.5 10.4 6 12 6c3.3 0 6 2.7 6 6s-2.7 6-6 6c-1.6 0-3-.5-4-1.3L5.6 19.1C7.2 20.9 9.5 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2z"/>
+      <path d="M2 12c0-1.9.5-3.6 1.4-5.1L6 9.5C5.4 10.3 5 11.1 5 12s.4 1.7 1 2.5l-2.6 2.6C2.5 15.6 2 13.9 2 12z"/>
+      <circle cx="12" cy="12" r="2.5"/>
+    </svg>
+  );
+}
+
+function SentinelOneIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill={PROVIDER_COLORS.sentinelone}>
+      <path d="M12 2L3 7v5c0 5.1 3.8 9.8 9 11 5.2-1.2 9-5.9 9-11V7L12 2zm0 3.2l6 3.3V12c0 3.7-2.6 7-6 8.1-3.4-1.1-6-4.4-6-8.1V8.5l6-3.3z"/>
+      <path d="M12 9l-3 1.7v2.8c0 1.9 1.3 3.5 3 4.1 1.7-.6 3-2.2 3-4.1v-2.8L12 9z"/>
+    </svg>
+  );
+}
+
+function DefenderIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill={PROVIDER_COLORS.defender}>
+      <path d="M12 2L4 5.5V11c0 5.2 3.4 10 8 11.5C16.6 21 20 16.2 20 11V5.5L12 2zm0 2.3l6 2.6V11c0 4.1-2.6 7.8-6 9.2C8.6 18.8 6 15.1 6 11V6.9l6-2.6z"/>
+      <path d="M10.5 11.5l1.5 1.5 3-3-1-1-2 2-0.5-0.5-1 1z"/>
     </svg>
   );
 }
@@ -845,6 +910,276 @@ function CustomIntegrations({ savedAll, onSaved }: {
 }
 
 /* ══════════════════════════════════════════
+   CrowdStrike Falcon Integration
+   ══════════════════════════════════════════ */
+function CrowdStrikeIntegration({ saved, onSaved }: { saved: CmdbIntegration | undefined; onSaved: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [clientId,     setClientId]     = useState(saved?.client_id     ?? "");
+  const [clientSecret, setClientSecret] = useState(saved?.client_secret ?? "");
+  const [cloud,        setCloud]        = useState(saved?.cloud         ?? "us-1");
+  const [connStatus, setConnStatus] = useState<ConnStatus>("idle");
+  const [connMsg, setConnMsg]       = useState("");
+  const [importStatus, setImportStatus] = useState<ImportStatus>("idle");
+  const [importMsg, setImportMsg]       = useState("");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setClientId(saved?.client_id ?? "");
+      setClientSecret(saved?.client_secret ?? "");
+      setCloud(saved?.cloud ?? "us-1");
+    }
+  }, [open, saved]);
+
+  const test = async () => {
+    setConnStatus("testing"); setConnMsg("");
+    const r = await testCmdbConnection("crowdstrike", { client_id: clientId, client_secret: clientSecret, cloud });
+    setConnStatus(r.status); setConnMsg(r.message);
+  };
+  const save = async () => {
+    setSaving(true);
+    try { await saveCmdbIntegration("crowdstrike", { type: "crowdstrike", client_id: clientId, client_secret: clientSecret, cloud }); onSaved(); }
+    finally { setSaving(false); }
+  };
+  const imp = async () => {
+    setImportStatus("importing"); setImportMsg("");
+    const r = await importCmdbData("crowdstrike", "crowdstrike");
+    if (r.error) { setImportStatus("error"); setImportMsg(r.error); }
+    else { setImportStatus("done"); setImportMsg(r.message ?? "Import complete"); onSaved(); }
+  };
+
+  return (
+    <>
+      <MarketplaceCard
+        accentColor={PROVIDER_COLORS.crowdstrike}
+        icon={<CrowdStrikeIcon />}
+        name="CrowdStrike Falcon"
+        description="Pull installed software and OS inventory from Falcon Discover to detect endpoint vulnerabilities."
+        connStatus={connStatus}
+        saved={!!saved}
+        lastSynced={saved?.last_synced}
+        onClick={() => setOpen(true)}
+      />
+      <Drawer open={open} onClose={() => setOpen(false)}
+        title="CrowdStrike Falcon" subtitle="Retrieve software inventory via Falcon Discover API"
+        icon={<CrowdStrikeIcon size={18} />} accentColor={PROVIDER_COLORS.crowdstrike}>
+
+        <DrawerSection label="OAuth2 Credentials">
+          <FieldRow label="Client ID" value={clientId} onChange={setClientId}
+            placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            hint="Found in Falcon Console → API Clients & Keys" />
+          <FieldRow label="Client Secret" value={clientSecret} onChange={setClientSecret}
+            type="password"
+            hint="Requires Hosts: Read and Discover: Read scopes" />
+        </DrawerSection>
+
+        <DrawerSection label="Cloud Region">
+          <FieldRow label="Cloud" value={cloud} onChange={setCloud} type="select"
+            options={[
+              { value: "us-1",     label: "US-1  (api.crowdstrike.com)" },
+              { value: "us-2",     label: "US-2  (api.us-2.crowdstrike.com)" },
+              { value: "eu-1",     label: "EU-1  (api.eu-1.crowdstrike.com)" },
+              { value: "us-gov-1", label: "US-GOV-1  (GovCloud)" },
+            ]}
+          />
+        </DrawerSection>
+
+        {connStatus !== "idle" && <StatusPill status={connStatus} message={connMsg} />}
+        <ImportPill status={importStatus} message={importMsg} />
+        {saved?.last_synced && (
+          <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>Last synced: {timeSince(saved.last_synced)}</p>
+        )}
+
+        <DrawerActions>
+          <ActionBtn variant="secondary" onClick={test} disabled={connStatus === "testing"}>
+            {connStatus === "testing" ? "Testing…" : "Test Connection"}
+          </ActionBtn>
+          <ActionBtn variant="secondary" onClick={imp} disabled={importStatus === "importing"}>
+            {importStatus === "importing" ? "Importing…" : "Import Now"}
+          </ActionBtn>
+          <ActionBtn variant="primary" onClick={save} disabled={saving}>
+            {saving ? "Saving…" : "Save Config"}
+          </ActionBtn>
+        </DrawerActions>
+      </Drawer>
+    </>
+  );
+}
+
+/* ══════════════════════════════════════════
+   SentinelOne Integration
+   ══════════════════════════════════════════ */
+function SentinelOneIntegration({ saved, onSaved }: { saved: CmdbIntegration | undefined; onSaved: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [baseUrl,  setBaseUrl]  = useState(saved?.base_url  ?? "");
+  const [apiToken, setApiToken] = useState(saved?.api_token ?? "");
+  const [connStatus, setConnStatus] = useState<ConnStatus>("idle");
+  const [connMsg, setConnMsg]       = useState("");
+  const [importStatus, setImportStatus] = useState<ImportStatus>("idle");
+  const [importMsg, setImportMsg]       = useState("");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setBaseUrl(saved?.base_url ?? "");
+      setApiToken(saved?.api_token ?? "");
+    }
+  }, [open, saved]);
+
+  const test = async () => {
+    setConnStatus("testing"); setConnMsg("");
+    const r = await testCmdbConnection("sentinelone", { base_url: baseUrl, api_token: apiToken });
+    setConnStatus(r.status); setConnMsg(r.message);
+  };
+  const save = async () => {
+    setSaving(true);
+    try { await saveCmdbIntegration("sentinelone", { type: "sentinelone", base_url: baseUrl, api_token: apiToken }); onSaved(); }
+    finally { setSaving(false); }
+  };
+  const imp = async () => {
+    setImportStatus("importing"); setImportMsg("");
+    const r = await importCmdbData("sentinelone", "sentinelone");
+    if (r.error) { setImportStatus("error"); setImportMsg(r.error); }
+    else { setImportStatus("done"); setImportMsg(r.message ?? "Import complete"); onSaved(); }
+  };
+
+  return (
+    <>
+      <MarketplaceCard
+        accentColor={PROVIDER_COLORS.sentinelone}
+        icon={<SentinelOneIcon />}
+        name="SentinelOne"
+        description="Retrieve agent software inventory and OS data from SentinelOne for vulnerability correlation."
+        connStatus={connStatus}
+        saved={!!saved}
+        lastSynced={saved?.last_synced}
+        onClick={() => setOpen(true)}
+      />
+      <Drawer open={open} onClose={() => setOpen(false)}
+        title="SentinelOne" subtitle="Pull installed software via SentinelOne Management API"
+        icon={<SentinelOneIcon size={18} />} accentColor={PROVIDER_COLORS.sentinelone}>
+
+        <DrawerSection label="Connection">
+          <FieldRow label="Management URL" value={baseUrl} onChange={setBaseUrl}
+            placeholder="https://usea1.sentinelone.net"
+            hint="Your SentinelOne console base URL" />
+          <FieldRow label="API Token" value={apiToken} onChange={setApiToken}
+            type="password"
+            hint="Generate in SentinelOne Console → Settings → Users → API Token" />
+        </DrawerSection>
+
+        {connStatus !== "idle" && <StatusPill status={connStatus} message={connMsg} />}
+        <ImportPill status={importStatus} message={importMsg} />
+        {saved?.last_synced && (
+          <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>Last synced: {timeSince(saved.last_synced)}</p>
+        )}
+
+        <DrawerActions>
+          <ActionBtn variant="secondary" onClick={test} disabled={connStatus === "testing"}>
+            {connStatus === "testing" ? "Testing…" : "Test Connection"}
+          </ActionBtn>
+          <ActionBtn variant="secondary" onClick={imp} disabled={importStatus === "importing"}>
+            {importStatus === "importing" ? "Importing…" : "Import Now"}
+          </ActionBtn>
+          <ActionBtn variant="primary" onClick={save} disabled={saving}>
+            {saving ? "Saving…" : "Save Config"}
+          </ActionBtn>
+        </DrawerActions>
+      </Drawer>
+    </>
+  );
+}
+
+/* ══════════════════════════════════════════
+   Microsoft Defender Integration
+   ══════════════════════════════════════════ */
+function DefenderIntegration({ saved, onSaved }: { saved: CmdbIntegration | undefined; onSaved: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [tenantId,     setTenantId]     = useState(saved?.tenant_id     ?? "");
+  const [clientId,     setClientId]     = useState(saved?.client_id     ?? "");
+  const [clientSecret, setClientSecret] = useState(saved?.client_secret ?? "");
+  const [connStatus, setConnStatus] = useState<ConnStatus>("idle");
+  const [connMsg, setConnMsg]       = useState("");
+  const [importStatus, setImportStatus] = useState<ImportStatus>("idle");
+  const [importMsg, setImportMsg]       = useState("");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setTenantId(saved?.tenant_id ?? "");
+      setClientId(saved?.client_id ?? "");
+      setClientSecret(saved?.client_secret ?? "");
+    }
+  }, [open, saved]);
+
+  const test = async () => {
+    setConnStatus("testing"); setConnMsg("");
+    const r = await testCmdbConnection("defender", { tenant_id: tenantId, client_id: clientId, client_secret: clientSecret });
+    setConnStatus(r.status); setConnMsg(r.message);
+  };
+  const save = async () => {
+    setSaving(true);
+    try { await saveCmdbIntegration("defender", { type: "defender", tenant_id: tenantId, client_id: clientId, client_secret: clientSecret }); onSaved(); }
+    finally { setSaving(false); }
+  };
+  const imp = async () => {
+    setImportStatus("importing"); setImportMsg("");
+    const r = await importCmdbData("defender", "defender");
+    if (r.error) { setImportStatus("error"); setImportMsg(r.error); }
+    else { setImportStatus("done"); setImportMsg(r.message ?? "Import complete"); onSaved(); }
+  };
+
+  return (
+    <>
+      <MarketplaceCard
+        accentColor={PROVIDER_COLORS.defender}
+        icon={<DefenderIcon />}
+        name="Microsoft Defender"
+        description="Import machine inventory and software data from Defender for Endpoint via Microsoft Graph API."
+        connStatus={connStatus}
+        saved={!!saved}
+        lastSynced={saved?.last_synced}
+        onClick={() => setOpen(true)}
+      />
+      <Drawer open={open} onClose={() => setOpen(false)}
+        title="Microsoft Defender for Endpoint" subtitle="Machine & software inventory via MDE API"
+        icon={<DefenderIcon size={18} />} accentColor={PROVIDER_COLORS.defender}>
+
+        <DrawerSection label="Azure AD App Registration">
+          <FieldRow label="Tenant ID" value={tenantId} onChange={setTenantId}
+            placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            hint="Azure Portal → Azure Active Directory → Tenant ID" />
+          <FieldRow label="Client ID (App ID)" value={clientId} onChange={setClientId}
+            placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            hint="App Registration → Application (client) ID" />
+          <FieldRow label="Client Secret" value={clientSecret} onChange={setClientSecret}
+            type="password"
+            hint="App Registration → Certificates & Secrets. Requires WindowsDefenderATP Machine.Read.All" />
+        </DrawerSection>
+
+        {connStatus !== "idle" && <StatusPill status={connStatus} message={connMsg} />}
+        <ImportPill status={importStatus} message={importMsg} />
+        {saved?.last_synced && (
+          <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>Last synced: {timeSince(saved.last_synced)}</p>
+        )}
+
+        <DrawerActions>
+          <ActionBtn variant="secondary" onClick={test} disabled={connStatus === "testing"}>
+            {connStatus === "testing" ? "Testing…" : "Test Connection"}
+          </ActionBtn>
+          <ActionBtn variant="secondary" onClick={imp} disabled={importStatus === "importing"}>
+            {importStatus === "importing" ? "Importing…" : "Import Now"}
+          </ActionBtn>
+          <ActionBtn variant="primary" onClick={save} disabled={saving}>
+            {saving ? "Saving…" : "Save Config"}
+          </ActionBtn>
+        </DrawerActions>
+      </Drawer>
+    </>
+  );
+}
+
+/* ══════════════════════════════════════════
    Settings Page
    ══════════════════════════════════════════ */
 export default function SettingsPage() {
@@ -868,44 +1203,96 @@ export default function SettingsPage() {
   const configuredCount = Object.keys(integrations).length;
 
   return (
-    <div className="space-y-8 w-full">
+    <div className="space-y-7 w-full">
 
       {/* Page header */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-[22px] font-bold" style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)", letterSpacing: "-0.025em" }}>
-            Integrations
-          </h2>
-          <p className="text-[13px] mt-0.5" style={{ color: "var(--text-muted)" }}>
-            Connect CMDB sources to auto-import asset data for vulnerability scanning.
-          </p>
-        </div>
-        {configuredCount > 0 && (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-medium flex-shrink-0"
-            style={{ background: "var(--accent-muted)", color: "var(--accent)", border: "1px solid var(--accent-border)" }}>
-            <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "var(--accent)" }} />
-            {configuredCount} configured
+      <div style={{ position: "relative", paddingBottom: "20px", borderBottom: "1px solid var(--border)" }}>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-3">
+            {/* Icon block */}
+            <div style={{
+              width: "42px", height: "42px", borderRadius: "12px", flexShrink: 0,
+              background: "linear-gradient(135deg, rgba(74,158,255,0.18), rgba(74,158,255,0.06))",
+              border: "1px solid rgba(74,158,255,0.28)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 0 20px rgba(74,158,255,0.15), inset 0 1px 0 rgba(74,158,255,0.12)",
+              marginTop: "2px",
+            }}>
+              <svg width="18" height="18" fill="none" stroke="var(--accent)" strokeWidth={1.8} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875c-1.243 0-2.25.84-2.25 1.875 0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 01-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 00-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 01-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 00.657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 01-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 005.427-.63 48.05 48.05 0 00.582-4.717.532.532 0 00-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.959.401v0a.656.656 0 00.658-.663 48.422 48.422 0 00-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 01-.61-.58v0z" />
+              </svg>
+            </div>
+            <div>
+              <h2 style={{
+                fontSize: "22px", fontWeight: 700, lineHeight: 1.2,
+                color: "var(--text-primary)", fontFamily: "var(--font-display)", letterSpacing: "-0.028em",
+                marginBottom: "4px",
+              }}>
+                Integrations
+              </h2>
+              <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: 1.5 }}>
+                Connect CMDB sources to auto-import asset data for vulnerability scanning.
+              </p>
+            </div>
           </div>
-        )}
+
+          {/* Configured count badge */}
+          {configuredCount > 0 ? (
+            <div style={{
+              display: "flex", alignItems: "center", gap: "6px",
+              padding: "5px 11px 5px 8px", borderRadius: "8px", flexShrink: 0,
+              background: "rgba(74,158,255,0.08)", border: "1px solid rgba(74,158,255,0.22)",
+              fontFamily: "var(--font-mono), monospace",
+            }}>
+              <span style={{
+                width: "6px", height: "6px", borderRadius: "50%",
+                background: "var(--accent)", boxShadow: "0 0 6px var(--accent)",
+                display: "inline-block", animation: "dot-pulse 3s ease-in-out infinite",
+              }} />
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--accent)", letterSpacing: "0.06em" }}>
+                {configuredCount} ACTIVE
+              </span>
+            </div>
+          ) : (
+            <div style={{
+              display: "flex", alignItems: "center", gap: "6px",
+              padding: "5px 11px 5px 8px", borderRadius: "8px", flexShrink: 0,
+              background: "var(--surface)", border: "1px solid var(--border)",
+              fontFamily: "var(--font-mono), monospace",
+            }}>
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--text-muted)", display: "inline-block" }} />
+              <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-muted)", letterSpacing: "0.06em" }}>
+                NONE CONFIGURED
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Info banner */}
-      <div className="flex items-start gap-3 px-5 py-4 rounded-lg"
-        style={{ background: "rgba(74,158,255,0.06)", border: "1px solid rgba(74,158,255,0.18)" }}>
-        <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="var(--info)" strokeWidth={2} viewBox="0 0 24 24">
+      <div style={{
+        display: "flex", alignItems: "flex-start", gap: "12px",
+        padding: "14px 16px", borderRadius: "10px",
+        background: "rgba(74,158,255,0.05)",
+        border: "1px solid rgba(74,158,255,0.15)",
+        borderLeft: "3px solid rgba(74,158,255,0.5)",
+      }}>
+        <svg width="15" height="15" fill="none" stroke="var(--accent)" strokeWidth={2} viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: "1px" }}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
         </svg>
-        <p className="text-[13px] leading-relaxed" style={{ color: "var(--info)" }}>
-          Click any card to configure credentials. Use <strong>Import Now</strong> to pull live CI data into your organization CMDB config — used automatically when generating vulnerability reports from the <strong>Intel</strong> dashboard.
+        <p style={{ fontSize: "12.5px", lineHeight: 1.6, color: "var(--text-secondary)", margin: 0 }}>
+          Click any card to configure credentials. Use <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Import Now</strong> to retrieve installed software and OS inventory from your EDR/CMDB platform — imported data is used automatically when generating vulnerability reports from the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Intel</strong> dashboard.
         </p>
       </div>
 
-      {/* Section header */}
-      <div className="flex items-center gap-3">
-        <h2 className="text-[10px] font-semibold uppercase tracking-[0.14em]" style={{ color: "var(--text-muted)" }}>
-          CMDB Integrations
-        </h2>
-        <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
+      {/* Section label */}
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <span style={{
+          fontSize: "9.5px", fontWeight: 700, letterSpacing: "0.14em",
+          color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace",
+          flexShrink: 0,
+        }}>EDR &amp; CMDB INTEGRATIONS</span>
+        <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
       </div>
 
       {/* Content */}
@@ -922,6 +1309,9 @@ export default function SettingsPage() {
       ) : (
         /* ── Marketplace Grid ── */
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <CrowdStrikeIntegration saved={integrations["crowdstrike"]} onSaved={reload} />
+          <SentinelOneIntegration saved={integrations["sentinelone"]} onSaved={reload} />
+          <DefenderIntegration    saved={integrations["defender"]}    onSaved={reload} />
           <ServiceNowIntegration  saved={integrations["servicenow"]}  onSaved={reload} />
           <BmcHelixIntegration    saved={integrations["bmc_helix"]}   onSaved={reload} />
           <AtlassianIntegration   saved={integrations["atlassian"]}   onSaved={reload} />
