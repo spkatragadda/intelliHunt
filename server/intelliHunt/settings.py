@@ -35,7 +35,10 @@ if not DEBUG and SECRET_KEY == _SECRET_KEY_DEFAULT:
         "Generate one with: python -c \"import secrets; print(secrets.token_hex(50))\""
     )
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+_allowed_hosts = [h.strip() for h in os.environ.get("ALLOWED_HOSTS", "*").split(",") if h.strip()]
+# Always allow internal Docker service name and loopback so Next.js → Django
+# proxy requests and healthchecks are never rejected by the Host header check.
+ALLOWED_HOSTS = _allowed_hosts + ["django", "localhost", "127.0.0.1"]
 
 # Trusted origins for CSRF — must include your full domain(s) with scheme.
 # e.g. CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com

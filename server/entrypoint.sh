@@ -42,6 +42,10 @@ GUNICORN_LOG="$LOG_DIR/${DAY}-gunicorn.log"
 echo "[entrypoint] Running database migrations..."
 python manage.py migrate --noinput
 
+# ── static files ─────────────────────────────────────────────────────────────
+echo "[entrypoint] Collecting static files..."
+python manage.py collectstatic --noinput --clear
+
 # ── admin account ────────────────────────────────────────────────────────────
 echo "[entrypoint] Ensuring admin account exists..."
 if [ -n "$ADMIN_PASSWORD" ]; then
