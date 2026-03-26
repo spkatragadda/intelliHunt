@@ -16,7 +16,7 @@ services:
     expose:
       - "8000"
     volumes:
-      - django_logs:/app/server/logs
+      - ./logs:/app/server/logs
       - django_db:/app/server/db
     healthcheck:
       test:
@@ -58,5 +58,4 @@ networks:
     driver: bridge
 
 volumes:
-  django_logs:
   django_db:
