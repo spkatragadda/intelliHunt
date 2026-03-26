@@ -19,7 +19,7 @@ services:
       - ./logs:/app/server/logs
       - django_db:/app/server/db
     healthcheck:
-      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/', timeout=3)\""]
+      test: ["CMD-SHELL", "python -c \"import socket; s=socket.socket(); s.settimeout(3); s.connect(('127.0.0.1',8000)); s.close()\""]
       interval: 15s
       timeout: 5s
       retries: 10

@@ -39,6 +39,7 @@ class DailyDirectoryHandler(logging.Handler):
         super().__init__()
         self.base_dir = base_dir
         self.encoding = encoding
+        self.terminator = "\n"  # logging.StreamHandler sets this; Handler base does not
         self._lock = threading.RLock()
         self._current_date: date | None = None
         self._stream = None
