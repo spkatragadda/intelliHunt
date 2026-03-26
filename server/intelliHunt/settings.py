@@ -37,6 +37,11 @@ if not DEBUG and SECRET_KEY == _SECRET_KEY_DEFAULT:
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
+# Trusted origins for CSRF — must include your full domain(s) with scheme.
+# e.g. CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+_csrf_origins = os.environ.get("CSRF_TRUSTED_ORIGINS", "http://localhost:3000")
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_origins.split(",") if o.strip()]
+
 
 # Application definition
 
@@ -92,9 +97,15 @@ SECURE_REFERRER_POLICY        = "strict-origin-when-cross-origin"
 # Set BEHIND_PROXY=true in production so Django trusts the X-Forwarded-Proto header.
 _behind_proxy = os.environ.get("BEHIND_PROXY", "false").lower() == "true"
 
+if _behind_proxy:
+    # Trust the X-Forwarded-For and X-Forwarded-Host headers set by Nginx.
+    # Required when running behind Nginx/Cloudflare so Django sees the real
+    # client IP and scheme instead of the proxy's.
+    USE_X_FORWARDED_HOST         = True
+    SECURE_PROXY_SSL_HEADER      = ("HTTP_X_FORWARDED_PROTO", "https")
+
 if not DEBUG:
-    SECURE_SSL_REDIRECT          = True     # Redirect all HTTP → HTTPS
-    SECURE_PROXY_SSL_HEADER      = ("HTTP_X_FORWARDED_PROTO", "https") if _behind_proxy else None
+    SECURE_SSL_REDIRECT          = not _behind_proxy  # Nginx handles redirect when behind proxy
     SESSION_COOKIE_SECURE        = True     # Session cookie sent only over HTTPS
     CSRF_COOKIE_SECURE           = True     # CSRF cookie sent only over HTTPS
     SESSION_COOKIE_HTTPONLY      = True     # Prevent JS access to session cookie
@@ -132,7 +143,9 @@ WSGI_APPLICATION = "intelliHunt.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        # Stored in a dedicated subdirectory so a named Docker volume can
+        # cover exactly this path without hiding other server files.
+        "NAME": BASE_DIR / "db" / "db.sqlite3",
     }
 }
 
