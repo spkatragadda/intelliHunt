@@ -6,12 +6,19 @@ const nextConfig: NextConfig = {
   async rewrites() {
     const backendBase =
       process.env.API_BASE_INTERNAL ?? "http://django:8000";
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${backendBase}/api/:path*`,
-      },
-    ];
+    // beforeFiles runs BEFORE Next.js trailing-slash normalisation so the
+    // rewrite intercepts /api/* before the router can 308-redirect /api/foo/
+    // to /api/foo and turn a POST into a loop.
+    return {
+      beforeFiles: [
+        {
+          source: "/api/:path*",
+          destination: `${backendBase}/api/:path*`,
+        },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
   },
 
   async headers() {
