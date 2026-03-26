@@ -37,11 +37,15 @@ function LoginForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
+      const text = await res.text();
+      console.log("[login] status:", res.status, "body:", text.slice(0, 300));
       if (!res.ok) {
-        setError(data.error ?? "Login failed.");
+        let msg = "Login failed.";
+        try { msg = JSON.parse(text).error ?? msg; } catch { msg = text.slice(0, 200) || msg; }
+        setError(msg);
         return;
       }
+      const data = JSON.parse(text);
       setTokens(data.access, data.refresh);
       setUser({
         id: data.user.id,
@@ -51,8 +55,9 @@ function LoginForm() {
       });
       const from = searchParams.get("from") ?? "/dashboard";
       router.replace(from);
-    } catch {
-      setError("Network error. Is the server running?");
+    } catch (err) {
+      console.error("[login] fetch error:", err);
+      setError(`Network error: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setLoading(false);
     }
