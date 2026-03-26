@@ -102,10 +102,15 @@ SECURE_REFERRER_POLICY        = "strict-origin-when-cross-origin"
 _behind_proxy = os.environ.get("BEHIND_PROXY", "false").lower() == "true"
 
 if _behind_proxy:
-    # Trust the X-Forwarded-For and X-Forwarded-Host headers set by Nginx.
-    # Required when running behind Nginx/Cloudflare so Django sees the real
-    # client IP and scheme instead of the proxy's.
-    USE_X_FORWARDED_HOST         = True
+    # Trust X-Forwarded-Proto so Django knows requests arrive over TLS
+    # even though it receives plain HTTP from the Next.js proxy.
+    # NOTE: Do NOT set USE_X_FORWARDED_HOST here — Django sits behind
+    # Next.js (not directly behind Nginx), so the Host header it receives
+    # is always "django:8000" from Next.js's internal HTTP client.
+    # Setting USE_X_FORWARDED_HOST causes Django to read X-Forwarded-Host,
+    # which can contain multiple comma-separated values accumulated across
+    # the Cloudflare → Nginx → Next.js hop chain, triggering a
+    # SuspiciousOperation / Bad Request (400).
     SECURE_PROXY_SSL_HEADER      = ("HTTP_X_FORWARDED_PROTO", "https")
 
 if not DEBUG:
