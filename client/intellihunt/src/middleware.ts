@@ -42,11 +42,12 @@ export const config = {
   matcher: [
     /*
      * Match all request paths EXCEPT:
+     * - api/* (proxied to Django — Django handles its own JWT auth)
      * - _next/static (static files)
      * - _next/image (image optimisation)
      * - favicon.ico, robots.txt
      * - public asset extensions
      */
-    "/((?!_next/static|_next/image|favicon\\.ico|robots\\.txt|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|woff2?)$).*)",
+    "/((?!api/|_next/static|_next/image|favicon\\.ico|robots\\.txt|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|woff2?)$).*)",
   ],
 };
