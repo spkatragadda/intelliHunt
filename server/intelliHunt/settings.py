@@ -40,9 +40,6 @@ _allowed_hosts = [h.strip() for h in os.environ.get("ALLOWED_HOSTS", "*").split(
 # proxy requests and healthchecks are never rejected by the Host header check.
 ALLOWED_HOSTS = _allowed_hosts + ["django", "localhost", "127.0.0.1"]
 
-# Don't redirect /api/auth/login → /api/auth/login/ — Cloudflare strips
-# trailing slashes and the 301 redirect converts POST to GET.
-APPEND_SLASH = False
 
 # Trusted origins for CSRF — must include your full domain(s) with scheme.
 # e.g. CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com

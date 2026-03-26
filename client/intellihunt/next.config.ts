@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         {
           source: "/api/:path*",
-          destination: `${backendBase}/api/:path*`,
+          destination: `${backendBase}/api/:path*/`,
         },
       ],
       afterFiles: [],
