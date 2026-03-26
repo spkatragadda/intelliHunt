@@ -19,17 +19,7 @@ services:
       - ./logs:/app/server/logs
       - django_db:/app/server/db
     healthcheck:
-      test:
-        - CMD-SHELL
-        - |
-          python - <<'PY'
-          import sys, urllib.request
-          try:
-            urllib.request.urlopen('http://localhost:8000/', timeout=3)
-            sys.exit(0)
-          except Exception:
-            sys.exit(1)
-          PY
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/', timeout=3)\""]
       interval: 15s
       timeout: 5s
       retries: 10
