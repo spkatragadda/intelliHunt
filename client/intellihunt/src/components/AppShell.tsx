@@ -8,7 +8,7 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 
 // Routes that render without the sidebar/header shell
-const SHELL_BYPASS = ["/", "/login", "/register", "/admin"];
+const SHELL_BYPASS = ["/", "/login", "/register", "/admin", "/about", "/forgot-password", "/reset-password"];
 
 function ShellInner({ children }: { children: ReactNode }) {
   const pathname = usePathname();
