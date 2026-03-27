@@ -431,6 +431,36 @@ export type AdminActivityRow = {
   duration_ms: number | null; created_at: string;
 };
 
+export type PendingUserRow = {
+  id: string; username: string; email: string;
+  org_id: string; org_name: string; joined_at: string;
+};
+
+export async function fetchPendingUsers(): Promise<PendingUserRow[]> {
+  const res = await authedFetch(`/api/admin/pending/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  const data = await res.json();
+  return data.pending ?? [];
+}
+
+export async function approveUser(userId: string): Promise<{ message: string }> {
+  const res = await authedFetch(`/api/admin/users/${userId}/approve/`, { method: "POST" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `Approve failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function rejectUser(userId: string): Promise<{ message: string }> {
+  const res = await authedFetch(`/api/admin/users/${userId}/reject/`, { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `Reject failed: ${res.status}`);
+  }
+  return res.json();
+}
+
 export async function fetchAdminSummary(): Promise<{ orgs: AdminOrgRow[]; users: AdminUserRow[] }> {
   const res = await authedFetch(`/api/admin/summary/`);
   if (res.status === 403) throw new Error("403");

@@ -3,7 +3,8 @@
 import { useEffect, useState, useCallback } from "react";
 import {
   fetchAdminSummary, fetchAdminActivity, deleteAdminUser,
-  type AdminOrgRow, type AdminUserRow, type AdminActivityRow,
+  fetchPendingUsers, approveUser, rejectUser,
+  type AdminOrgRow, type AdminUserRow, type AdminActivityRow, type PendingUserRow,
 } from "@/lib/api";
 import { getUser, clearAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -266,11 +267,16 @@ const ICONS = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
     </svg>
   ),
+  requests: (
+    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+    </svg>
+  ),
 };
 
 /* ══════════════════════════════════════════════════════════ */
 
-type View = "dashboard" | "orgs" | "users" | "activity";
+type View = "dashboard" | "orgs" | "users" | "activity" | "requests";
 
 export default function AdminConsole() {
   const router = useRouter();
@@ -291,6 +297,9 @@ export default function AdminConsole() {
   const [confirmUser, setConfirmUser] = useState<AdminUserRow | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [pendingUsers, setPendingUsers] = useState<PendingUserRow[]>([]);
+  const [pendingLoading, setPendingLoading] = useState(false);
+  const [actioningUser, setActioningUser] = useState<string | null>(null);
 
   const loadSummary = useCallback(() => {
     setLoading(true);
@@ -311,11 +320,44 @@ export default function AdminConsole() {
       .finally(() => setActLoading(false));
   }, [orgFilter, actionFilter, actOffset]);
 
-  useEffect(() => { loadSummary(); }, [loadSummary]);
+  const loadPending = useCallback(() => {
+    setPendingLoading(true);
+    fetchPendingUsers()
+      .then(rows => setPendingUsers(rows))
+      .catch(e => setError(e.message))
+      .finally(() => setPendingLoading(false));
+  }, []);
+
+  useEffect(() => { loadSummary(); loadPending(); }, [loadSummary, loadPending]);
 
   useEffect(() => {
     if (view === "activity") loadActivity();
-  }, [view, loadActivity]);
+    if (view === "requests") loadPending();
+  }, [view, loadActivity, loadPending]);
+
+  async function handleApprove(userId: string) {
+    setActioningUser(userId);
+    try {
+      await approveUser(userId);
+      setPendingUsers(prev => prev.filter(u => u.id !== userId));
+    } catch (e: any) {
+      setError(e.message ?? "Approve failed.");
+    } finally {
+      setActioningUser(null);
+    }
+  }
+
+  async function handleReject(userId: string) {
+    setActioningUser(userId);
+    try {
+      await rejectUser(userId);
+      setPendingUsers(prev => prev.filter(u => u.id !== userId));
+    } catch (e: any) {
+      setError(e.message ?? "Reject failed.");
+    } finally {
+      setActioningUser(null);
+    }
+  }
 
   function handleLogout() {
     clearAuth();
@@ -420,6 +462,7 @@ export default function AdminConsole() {
             { id: "orgs",      label: "Organizations", icon: ICONS.orgs },
             { id: "users",     label: "Users",         icon: ICONS.users },
             { id: "activity",  label: "Activity Log",  icon: ICONS.activity },
+            { id: "requests",  label: "Requests",      icon: ICONS.requests },
           ] as const).map(item => (
             <div key={item.id}
               style={S.navLink(view === item.id)}
@@ -439,12 +482,13 @@ export default function AdminConsole() {
               {[
                 { label: "Orgs",    value: orgs.length },
                 { label: "Users",   value: users.length },
+                { label: "Pending", value: pendingUsers.length, highlight: pendingUsers.length > 0 },
                 { label: "Reports", value: totalReports },
                 { label: "Scans",   value: totalScans },
               ].map(s => (
                 <div key={s.label} style={{ display: "flex", justifyContent: "space-between", padding: "4px 16px", fontSize: "11px" }}>
                   <span style={{ color: "#374151", fontFamily: "monospace" }}>{s.label}</span>
-                  <span style={{ color: "#64748b", fontFamily: "monospace", fontWeight: 700 }}>{s.value}</span>
+                  <span style={{ color: (s as any).highlight ? "#f59e0b" : "#64748b", fontFamily: "monospace", fontWeight: 700 }}>{s.value}</span>
                 </div>
               ))}
             </>
@@ -471,11 +515,12 @@ export default function AdminConsole() {
 
               <div style={S.statsGrid}>
                 {[
-                  { label: "ORGANIZATIONS", value: orgs.length,   color: "#4a9eff" },
-                  { label: "USERS",         value: users.length,  color: "#22c55e" },
-                  { label: "REPORT RUNS",   value: totalReports,  color: "#a855f7" },
-                  { label: "REPO SCANS",    value: totalScans,    color: "#f59e0b" },
-                  { label: "TOTAL ACTIONS", value: totalActions,  color: "#06b6d4" },
+                  { label: "ORGANIZATIONS",    value: orgs.length,          color: "#4a9eff" },
+                  { label: "ACTIVE USERS",     value: users.length,         color: "#22c55e" },
+                  { label: "PENDING REQUESTS", value: pendingUsers.length,  color: "#f59e0b" },
+                  { label: "REPORT RUNS",      value: totalReports,         color: "#a855f7" },
+                  { label: "REPO SCANS",       value: totalScans,           color: "#f59e0b" },
+                  { label: "TOTAL ACTIONS",    value: totalActions,         color: "#06b6d4" },
                 ].map(s => (
                   <div key={s.label} style={S.statCard}>
                     <div style={{ ...S.statLabel, color: s.color + "99" }}>{s.label}</div>
@@ -788,6 +833,111 @@ export default function AdminConsole() {
               </div>
             </>
           )}
+          {/* ─────────────────────────────────────────
+              PENDING REQUESTS
+             ───────────────────────────────────────── */}
+          {view === "requests" && (
+            <>
+              <div style={S.pageTitle}>Access Requests</div>
+              <div style={S.pageSubtitle}>
+                {pendingUsers.length} PENDING — APPROVE TO GRANT ACCESS, REJECT TO REMOVE
+              </div>
+              <div style={S.card}>
+                <div style={S.cardHeader}>
+                  <span style={S.cardTitle}>PENDING ACCOUNTS</span>
+                  <button style={S.refreshBtn} onClick={loadPending}>↻ REFRESH</button>
+                </div>
+                {pendingLoading ? (
+                  <div style={{ padding: "40px", textAlign: "center" }}>
+                    <div style={{ display: "inline-block", width: "18px", height: "18px", borderRadius: "50%", border: "2px solid rgba(74,158,255,0.15)", borderTopColor: "#4a9eff", animation: "spin 0.8s linear infinite" }} />
+                  </div>
+                ) : (
+                  <div style={{ overflowX: "auto" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                      <thead>
+                        <tr>
+                          {["USER", "EMAIL", "ORGANIZATION", "REQUESTED", ""].map(h => (
+                            <th key={h} style={S.th}>{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {pendingUsers.map(u => {
+                          const acting = actioningUser === u.id;
+                          return (
+                            <tr key={u.id}
+                              onMouseEnter={e => { (e.currentTarget as HTMLTableRowElement).style.background = "rgba(245,158,11,0.03)"; }}
+                              onMouseLeave={e => { (e.currentTarget as HTMLTableRowElement).style.background = ""; }}
+                            >
+                              <td style={{ ...S.td, color: "#e2e8f0", fontWeight: 600 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                  <div style={{ width: "20px", height: "20px", borderRadius: "5px", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.25)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "monospace", fontSize: "9px", fontWeight: 700, color: "#f59e0b", flexShrink: 0 }}>
+                                    {u.username.charAt(0).toUpperCase()}
+                                  </div>
+                                  {u.username}
+                                </div>
+                              </td>
+                              <td style={S.td}>{u.email}</td>
+                              <td style={S.td}>
+                                <span style={{ padding: "2px 7px", borderRadius: "4px", background: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.2)", color: "#f59e0b", fontFamily: "monospace", fontSize: "10px", fontWeight: 700 }}>
+                                  {u.org_name}
+                                </span>
+                              </td>
+                              <td style={S.tdMono}>{relTime(u.joined_at)}</td>
+                              <td style={{ ...S.td, textAlign: "right" as const }}>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "6px" }}>
+                                  <button
+                                    disabled={acting}
+                                    onClick={() => handleApprove(u.id)}
+                                    style={{
+                                      padding: "4px 10px", borderRadius: "5px",
+                                      background: acting ? "transparent" : "rgba(34,197,94,0.08)",
+                                      border: "1px solid rgba(34,197,94,0.25)",
+                                      color: acting ? "#374151" : "#22c55e",
+                                      fontSize: "10px", fontWeight: 700,
+                                      cursor: acting ? "not-allowed" : "pointer",
+                                      fontFamily: "monospace", letterSpacing: "0.06em",
+                                      transition: "all 0.15s",
+                                    }}
+                                    onMouseEnter={e => { if (!acting) { e.currentTarget.style.background = "rgba(34,197,94,0.15)"; e.currentTarget.style.borderColor = "rgba(34,197,94,0.5)"; } }}
+                                    onMouseLeave={e => { if (!acting) { e.currentTarget.style.background = "rgba(34,197,94,0.08)"; e.currentTarget.style.borderColor = "rgba(34,197,94,0.25)"; } }}
+                                  >
+                                    {acting ? "…" : "APPROVE"}
+                                  </button>
+                                  <button
+                                    disabled={acting}
+                                    onClick={() => handleReject(u.id)}
+                                    style={{
+                                      padding: "4px 10px", borderRadius: "5px",
+                                      background: "transparent",
+                                      border: "1px solid rgba(239,68,68,0.2)",
+                                      color: acting ? "#374151" : "#ef444488",
+                                      fontSize: "10px", fontWeight: 700,
+                                      cursor: acting ? "not-allowed" : "pointer",
+                                      fontFamily: "monospace", letterSpacing: "0.06em",
+                                      transition: "all 0.15s",
+                                    }}
+                                    onMouseEnter={e => { if (!acting) { e.currentTarget.style.background = "rgba(239,68,68,0.1)"; e.currentTarget.style.borderColor = "rgba(239,68,68,0.5)"; e.currentTarget.style.color = "#ef4444"; } }}
+                                    onMouseLeave={e => { if (!acting) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(239,68,68,0.2)"; e.currentTarget.style.color = "#ef444488"; } }}
+                                  >
+                                    REJECT
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                        {pendingUsers.length === 0 && (
+                          <tr><td colSpan={5} style={S.emptyRow}>No pending access requests</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
         </main>
       </div>
 

@@ -9,7 +9,9 @@ import json
 import logging
 from functools import wraps
 
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -136,6 +138,121 @@ def delete_user(request, user_id):
         "message":       f"User '{username}' deleted.",
         "org_now_empty": org_now_empty,
     })
+
+
+@csrf_exempt
+@require_admin
+def list_pending_users(request):
+    """
+    GET /api/admin/pending/
+    Returns all users with is_active=False (awaiting approval).
+    """
+    if request.method != "GET":
+        return JsonResponse({"error": "GET required"}, status=405)
+
+    pending = []
+    for profile in (
+        UserProfile.objects.select_related("user", "organization")
+        .filter(user__is_active=False)
+        .order_by("user__date_joined")
+    ):
+        u = profile.user
+        pending.append({
+            "id":          str(u.pk),
+            "username":    u.username,
+            "email":       u.email,
+            "org_name":    profile.organization.name,
+            "org_id":      str(profile.organization.id),
+            "joined_at":   u.date_joined.isoformat(),
+        })
+
+    return JsonResponse({"pending": pending})
+
+
+@csrf_exempt
+@require_admin
+def approve_user(request, user_id):
+    """
+    POST /api/admin/users/<user_id>/approve/
+    Activates the account and sends an approval email.
+    """
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User not found"}, status=404)
+
+    if user.is_active:
+        return JsonResponse({"error": "Account is already active"}, status=400)
+
+    user.is_active = True
+    user.save(update_fields=["is_active"])
+
+    logger.info(
+        "ADMIN_APPROVE_USER by=%s target=%s email=%s",
+        getattr(request, "username", "?"), user.username, user.email,
+    )
+
+    frontend_url = settings.FRONTEND_URL.rstrip("/")
+    subject = "Your IntelliHunt account has been approved"
+    body_text = (
+        f"Hi {user.username},\n\n"
+        f"Great news — your IntelliHunt account has been approved!\n\n"
+        f"You can now sign in at:\n\n"
+        f"  {frontend_url}/login\n\n"
+        f"If you have any questions, reply to this email.\n\n"
+        f"— The IntelliHunt Team"
+    )
+    try:
+        send_mail(
+            subject=subject,
+            message=body_text,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+    except Exception as exc:
+        logger.error("approve_user: send_mail failed for user %s: %s", user.id, exc)
+
+    return JsonResponse({"message": f"User '{user.username}' approved and notified."})
+
+
+@csrf_exempt
+@require_admin
+def reject_user(request, user_id):
+    """
+    DELETE /api/admin/users/<user_id>/reject/
+    Permanently removes a pending (inactive) user and their org.
+    """
+    if request.method != "DELETE":
+        return JsonResponse({"error": "DELETE required"}, status=405)
+
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User not found"}, status=404)
+
+    if user.is_active:
+        return JsonResponse({"error": "Cannot reject an already-active account. Use delete instead."}, status=400)
+
+    username = user.username
+    try:
+        org = user.profile.organization
+        # Remove the org only if this was its only member
+        if org.members.count() <= 1:
+            org.delete()  # cascades to profile and then user
+        else:
+            user.delete()
+    except UserProfile.DoesNotExist:
+        user.delete()
+
+    logger.info(
+        "ADMIN_REJECT_USER by=%s target=%s",
+        getattr(request, "username", "?"), username,
+    )
+    return JsonResponse({"message": f"Request from '{username}' rejected and removed."})
 
 
 @csrf_exempt

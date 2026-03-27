@@ -60,9 +60,12 @@ urlpatterns = [
     path('api/scan/history/', views.get_scan_history, name='scan_history'),
     path('api/scan/history/<str:task_id>/report/', views.get_scan_report, name='scan_report'),
     # Admin endpoints
-    path('api/admin/summary/',                admin_views.admin_summary,  name='admin_summary'),
-    path('api/admin/activity/',               admin_views.admin_activity, name='admin_activity'),
-    path('api/admin/users/<str:user_id>/',    admin_views.delete_user,    name='admin_delete_user'),
+    path('api/admin/summary/',                        admin_views.admin_summary,    name='admin_summary'),
+    path('api/admin/activity/',                       admin_views.admin_activity,   name='admin_activity'),
+    path('api/admin/pending/',                        admin_views.list_pending_users, name='admin_pending_users'),
+    path('api/admin/users/<str:user_id>/',            admin_views.delete_user,      name='admin_delete_user'),
+    path('api/admin/users/<str:user_id>/approve/',    admin_views.approve_user,     name='admin_approve_user'),
+    path('api/admin/users/<str:user_id>/reject/',     admin_views.reject_user,      name='admin_reject_user'),
     path('', health_check, name='health_check'),
     # The "catch-all" pattern that serves the React app
     #re_path(r'^.*', TemplateView.as_view(template_name='index.html')),
