@@ -163,21 +163,6 @@ export default function AboutPage() {
           </p>
         </Section>
 
-        <Section title="How it&apos;s built">
-          <p>
-            The platform is built on a Next.js frontend and a Django REST API backend,
-            backed by PostgreSQL. Authentication is JWT-based with scoped
-            organization-level access controls. All inter-service communication runs
-            over HTTPS, and passwords are hashed using Django&apos;s PBKDF2 algorithm
-            before storage — raw credentials are never written to the database.
-          </p>
-          <p>
-            The AI layer uses a multi-agent crew that coordinates research, synthesis,
-            and report formatting in parallel, making report generation fast even for
-            large software inventories.
-          </p>
-        </Section>
-
         <Section title="Who it&apos;s for">
           <p>
             IntelliHunt is designed for small-to-mid-sized security and DevSecOps teams
