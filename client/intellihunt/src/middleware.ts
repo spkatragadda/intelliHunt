@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Paths that are always public (no auth required)
-const PUBLIC_PATHS = ["/", "/login", "/register", "/forgot-password", "/reset-password"];
+const PUBLIC_PATHS = ["/", "/login", "/register", "/forgot-password", "/reset-password", "/about"];
 // Paths where an authenticated user should be redirected to the dashboard
 const AUTH_ONLY_PATHS = ["/login", "/register"];
 
