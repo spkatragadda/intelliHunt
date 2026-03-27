@@ -23,7 +23,7 @@ function ShellInner({ children }: { children: ReactNode }) {
       <Sidebar />
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto px-6 py-6 lg:px-8 animate-fade-in">
+        <main className="flex-1 overflow-y-auto px-8 py-8 lg:px-12 pb-12 animate-fade-in">
           {children}
         </main>
       </div>

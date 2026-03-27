@@ -95,7 +95,7 @@ export default function Header() {
       height: "52px",
       display: "flex", alignItems: "center",
       padding: "0 20px",
-      background: "rgba(9,12,22,0.94)",
+      background: theme === "dark" ? "rgba(9,12,22,0.94)" : "rgba(255,255,255,0.88)",
       backdropFilter: "blur(16px)",
       WebkitBackdropFilter: "blur(16px)",
       borderBottom: "1px solid var(--border)",
@@ -247,7 +247,7 @@ export default function Header() {
                   background: "var(--surface)",
                   border: "1px solid var(--border)",
                   borderRadius: "10px",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                  boxShadow: theme === "dark" ? "0 8px 32px rgba(0,0,0,0.5)" : "0 8px 32px rgba(0,0,0,0.12)",
                   padding: "6px",
                   zIndex: 50,
                 }}>

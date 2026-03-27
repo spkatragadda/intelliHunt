@@ -46,32 +46,34 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  --bg:             #ffffff;
-  --surface:        #f5f5f5;
-  --surface-hover:  #ebebeb;
-  --surface-raised: #e5e5e5;
-  --border:         #d0d0d0;
-  --border-hover:   #b8b8b8;
+  /* Cool blue-gray base — surfaces lift above background with real depth */
+  --bg:             #edf0f7;
+  --surface:        #ffffff;
+  --surface-hover:  #f5f7fc;
+  --surface-raised: #ffffff;
+  --border:         #d2d8eb;
+  --border-hover:   #b3bdd6;
 
-  /* Light accent — pure black */
-  --accent:              #0a0a0a;
-  --accent-hover:        #333333;
+  /* Accent: Cobalt blue — matches dark theme's electric blue character */
+  --accent:              #2563eb;
+  --accent-hover:        #1d4ed8;
   --accent-text:         #ffffff;
-  --accent-subtle:       rgba(0,0,0,0.04);
-  --accent-muted:        rgba(0,0,0,0.07);
-  --accent-tint:         rgba(0,0,0,0.11);
-  --accent-muted-hover:  rgba(0,0,0,0.14);
-  --accent-border:       rgba(0,0,0,0.18);
-  --accent-border-hover: rgba(0,0,0,0.38);
+  --accent-subtle:       rgba(37,99,235,0.05);
+  --accent-muted:        rgba(37,99,235,0.09);
+  --accent-tint:         rgba(37,99,235,0.14);
+  --accent-muted-hover:  rgba(37,99,235,0.18);
+  --accent-border:       rgba(37,99,235,0.22);
+  --accent-border-hover: rgba(37,99,235,0.42);
 
-  --text-primary:   #0a0a0a;
-  --text-secondary: #555555;
-  --text-muted:     #999999;
+  /* Deep navy text — warmer and softer than pure black */
+  --text-primary:   #0d1526;
+  --text-secondary: #374263;
+  --text-muted:     #6878a4;
 
-  --success: #16a34a;
-  --warning: #ca8a04;
+  --success: #15803d;
+  --warning: #b45309;
   --danger:  #dc2626;
-  --info:    #64748b;
+  --info:    #475569;
 }
 
 * {
@@ -103,6 +105,15 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
 }
 
+/* Light mode body: soft blue-white gradient with subtle dot grid */
+[data-theme="light"] body {
+  background-image:
+    radial-gradient(ellipse 110% 70% at 5% 0%,   rgba(37,99,235,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 80%  80% at 95% 100%, rgba(37,99,235,0.04) 0%, transparent 55%),
+    radial-gradient(circle, rgba(37,99,235,0.035) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 28px 28px;
+}
+
 /* ── Grain texture overlay ── */
 body::before {
   content: '';
@@ -112,6 +123,10 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)' opacity='0.08'/%3E%3C/svg%3E");
   opacity: 0.55;
   pointer-events: none;
+}
+
+[data-theme="light"] body::before {
+  opacity: 0.18;
 }
 
 /* ── Scrollbar ── */
@@ -164,13 +179,19 @@ table { border-collapse: collapse; @apply w-full; }
 /* ── Focus ring ── */
 *:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent), 0 0 8px rgba(74,158,255,0.30);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent), 0 0 8px var(--accent-tint);
   border-radius: var(--radius-md);
 }
 
-/* ── Form element dark theming ── */
+/* ── Form element theming ── */
 input, select, textarea {
   color-scheme: dark;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+  color-scheme: light;
 }
 
 select option {
@@ -288,6 +309,10 @@ textarea:disabled {
   outline: none;
   color-scheme: dark;
 }
+
+[data-theme="light"] .input-base {
+  color-scheme: light;
+}
 .input-base::placeholder { color: var(--text-muted); opacity: 1; }
 .input-base:hover:not(:disabled) { border-color: var(--border-hover); background: var(--surface-hover); }
 .input-base:focus {
@@ -330,6 +355,12 @@ textarea:disabled {
   -webkit-backdrop-filter: blur(16px);
 }
 
+[data-theme="light"] .glass-surface {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
 /* ── Glass card utility ── */
 .glass-card {
   background: var(--surface);
@@ -340,6 +371,14 @@ textarea:disabled {
     0 1px 0 rgba(74,158,255,0.06) inset,
     0 4px 24px rgba(0,0,0,0.6),
     0 1px 3px rgba(0,0,0,0.6);
+}
+
+[data-theme="light"] .glass-card {
+  border-top-color: rgba(37,99,235,0.12);
+  box-shadow:
+    0 1px 0 rgba(37,99,235,0.05) inset,
+    0 4px 24px rgba(0,0,0,0.08),
+    0 1px 3px rgba(0,0,0,0.06);
 }
 
 /* ── Page header utility ── */
