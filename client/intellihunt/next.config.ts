@@ -1,6 +1,25 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   output: "standalone",
+
+  async rewrites() {
+    const backendBase =
+      process.env.API_BASE_INTERNAL ?? "http://django:8000";
+    // beforeFiles runs BEFORE Next.js trailing-slash normalisation so the
+    // rewrite intercepts /api/* before the router can 308-redirect /api/foo/
+    // to /api/foo and turn a POST into a loop.
+    return {
+      beforeFiles: [
+        {
+          source: "/api/:path*",
+          destination: `${backendBase}/api/:path*/`,
+        },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
 
   async headers() {
     return [
@@ -27,7 +46,7 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob:",
               "font-src 'self'",
@@ -43,4 +62,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

@@ -1,27 +1,53 @@
 services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: intellihunt-postgres
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-intellihunt}
+      - POSTGRES_USER=${POSTGRES_USER:-intellihunt}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-intellihunt} -d ${POSTGRES_DB:-intellihunt}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
   django:
     build:
       context: .
       dockerfile: Dockerfile
       target: django
     container_name: intellihunt-django
-    working_dir: /app/server
-    command: bash -lc "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./server:/app/server
-      - ./.env:/app/server/.env
+    restart: unless-stopped
+    env_file: .env
     environment:
       - DJANGO_SETTINGS_MODULE=intelliHunt.settings
       - PYTHONUNBUFFERED=1
       - PYTHONPATH=/app/server
+      - BEHIND_PROXY=true
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-intellihunt}
+      - POSTGRES_USER=${POSTGRES_USER:-intellihunt}
+    expose:
+      - "8000"
+    volumes:
+      - ./logs:/app/server/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
     healthcheck:
-      # Use Python stdlib so we don't depend on curl/wget in the image
-      test: ["CMD-SHELL", "python - <<'PY'\nimport sys, urllib.request\ntry:\n  urllib.request.urlopen('http://localhost:8000/', timeout=2)\n  sys.exit(0)\nexcept Exception:\n  sys.exit(1)\nPY"]
-      interval: 10s
-      timeout: 3s
+      test: ["CMD-SHELL", "python -c \"import socket; s=socket.socket(); s.settimeout(3); s.connect(('127.0.0.1',8000)); s.close()\""]
+      interval: 15s
+      timeout: 5s
       retries: 10
+      start_period: 30s
 
   nextjs:
     build:
@@ -29,24 +55,21 @@ services:
       dockerfile: Dockerfile
       target: nextjs
     container_name: intellihunt-nextjs
-    working_dir: /app          # server.js lives here after COPY .../.next/standalone ./
-    command: [ "node", "server.js" ]
+    restart: unless-stopped
+    working_dir: /app
+    command: ["node", "server.js"]
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_BASE=http://localhost:8000
       - API_BASE_INTERNAL=http://django:8000
       - NODE_ENV=production
     depends_on:
       django:
         condition: service_healthy
 
-
-
-
 networks:
   default:
     driver: bridge
 
 volumes:
-  node_modules_next:
+  postgres_data:

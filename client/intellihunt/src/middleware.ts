@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Paths that are always public (no auth required)
-const PUBLIC_PATHS = ["/", "/login", "/register"];
+const PUBLIC_PATHS = ["/", "/login", "/register", "/forgot-password", "/reset-password", "/about"];
 // Paths where an authenticated user should be redirected to the dashboard
 const AUTH_ONLY_PATHS = ["/login", "/register"];
 
@@ -42,11 +42,12 @@ export const config = {
   matcher: [
     /*
      * Match all request paths EXCEPT:
+     * - api/* (proxied to Django — Django handles its own JWT auth)
      * - _next/static (static files)
      * - _next/image (image optimisation)
      * - favicon.ico, robots.txt
      * - public asset extensions
      */
-    "/((?!_next/static|_next/image|favicon\\.ico|robots\\.txt|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|woff2?)$).*)",
+    "/((?!api/|_next/static|_next/image|favicon\\.ico|robots\\.txt|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|woff2?)$).*)",
   ],
 };

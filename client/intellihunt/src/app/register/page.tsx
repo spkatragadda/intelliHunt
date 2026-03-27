@@ -1,25 +1,22 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import { setTokens, setUser } from "@/lib/auth";
-import { PUBLIC_API_BASE } from "@/lib/api";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [orgName, setOrgName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      const res = await fetch(`${PUBLIC_API_BASE}/api/auth/register/`, {
+      const res = await fetch(`/api/auth/register/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ org_name: orgName, username, email, password }),
@@ -29,14 +26,7 @@ export default function RegisterPage() {
         setError(data.error ?? "Registration failed.");
         return;
       }
-      setTokens(data.access, data.refresh);
-      setUser({
-        id: data.user.id,
-        username: data.user.username,
-        email: data.user.email,
-        organization: data.organization,
-      });
-      router.replace("/dashboard");
+      setSubmitted(true);
     } catch {
       setError("Network error. Is the server running?");
     } finally {
@@ -99,6 +89,41 @@ export default function RegisterPage() {
           padding: "28px",
           boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
         }}>
+          {submitted ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              <div style={{
+                padding: "16px 18px",
+                background: "rgba(74,222,128,0.06)",
+                border: "1px solid rgba(74,222,128,0.2)",
+                borderRadius: "10px",
+                display: "flex", gap: "14px", alignItems: "flex-start",
+              }}>
+                <div style={{
+                  width: "32px", height: "32px", borderRadius: "8px", flexShrink: 0,
+                  background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.25)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <svg width="14" height="14" fill="none" stroke="#4ade80" strokeWidth={2.2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <div style={{ fontSize: "13px", fontWeight: 700, color: "#4ade80", fontFamily: "var(--font-mono), monospace", letterSpacing: "0.05em", marginBottom: "5px" }}>
+                    REQUEST SUBMITTED
+                  </div>
+                  <div style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: 1.6 }}>
+                    Your account request is pending admin approval. You&apos;ll receive an email at <strong style={{ color: "var(--text-secondary)" }}>{email}</strong> once your account is approved.
+                  </div>
+                </div>
+              </div>
+              <div style={{ textAlign: "center" }}>
+                <a href="/login" style={{
+                  fontSize: "12px", color: "var(--text-muted)", textDecoration: "none",
+                  fontFamily: "var(--font-mono), monospace", letterSpacing: "0.05em",
+                }}>← Back to sign in</a>
+              </div>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
             {error && (
               <div style={{
@@ -224,22 +249,23 @@ export default function RegisterPage() {
                 </>
               ) : "CREATE ORGANIZATION →"}
             </button>
-          </form>
 
-          <div style={{
-            marginTop: "20px", paddingTop: "20px",
-            borderTop: "1px solid var(--border)",
-            textAlign: "center",
-            fontSize: "13px",
-            color: "var(--text-muted)",
-          }}>
-            Already have an account?{" "}
-            <a href="/login" style={{
-              color: "var(--accent)", textDecoration: "none", fontWeight: 600,
+            <div style={{
+              marginTop: "2px", paddingTop: "20px",
+              borderTop: "1px solid var(--border)",
+              textAlign: "center",
+              fontSize: "13px",
+              color: "var(--text-muted)",
             }}>
-              Sign in
-            </a>
-          </div>
+              Already have an account?{" "}
+              <a href="/login" style={{
+                color: "var(--accent)", textDecoration: "none", fontWeight: 600,
+              }}>
+                Sign in
+              </a>
+            </div>
+          </form>
+          )}
         </div>
       </div>
     </div>

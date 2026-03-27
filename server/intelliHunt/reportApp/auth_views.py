@@ -69,16 +69,17 @@ def register(request):
 
         org = Organization.objects.create(name=org_name)
         user = User.objects.create_user(
-            username=username, email=email, password=password
+            username=username, email=email, password=password,
+            is_active=False,  # account is pending admin approval
         )
         UserProfile.objects.create(user=user, organization=org)
 
-        log_action(str(org.id), user.pk, username, "register", "completed")
-        logger.info("REGISTER user=%s email=%s org=%s", username, email, org_name)
-        payload = _user_payload(user, org)
-        payload["access"] = create_access_token(user.pk, org.id, user.username)
-        payload["refresh"] = create_refresh_token(user.pk, org.id)
-        return JsonResponse(payload, status=201)
+        log_action(str(org.id), user.pk, username, "register", "pending")
+        logger.info("REGISTER_PENDING user=%s email=%s org=%s", username, email, org_name)
+        return JsonResponse({
+            "pending": True,
+            "message": "Your request has been submitted. You'll receive an email once an admin approves your account.",
+        }, status=201)
 
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
@@ -112,6 +113,13 @@ def login_view(request):
         if not user.check_password(password):
             logger.warning("LOGIN_FAIL email=%s reason=wrong_password", email)
             return JsonResponse({"error": "Invalid credentials"}, status=401)
+
+        if not user.is_active:
+            logger.warning("LOGIN_FAIL email=%s reason=pending_approval", email)
+            return JsonResponse(
+                {"error": "Your account is pending approval. You'll receive an email once an admin approves your request."},
+                status=403,
+            )
 
         try:
             org = user.profile.organization

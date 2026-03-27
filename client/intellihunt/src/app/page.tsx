@@ -316,6 +316,17 @@ export default function HomePage() {
 
         {/* Nav links */}
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <a href="/about" style={{
+            padding: "7px 16px", borderRadius: "8px",
+            color: "var(--text-muted)", textDecoration: "none",
+            fontSize: "13.5px", fontWeight: 500,
+            transition: "color 0.15s",
+          }}
+            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--text-primary)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--text-muted)"; }}
+          >
+            About
+          </a>
           <a href="/login" style={{
             padding: "7px 16px", borderRadius: "8px",
             color: "var(--text-muted)", textDecoration: "none",
@@ -731,10 +742,20 @@ export default function HomePage() {
             }}>Threat intelligence, automated.</div>
           </div>
         </div>
-        <div style={{
-          fontSize: "12px", color: "var(--text-muted)",
-          fontFamily: "var(--font-mono)",
-        }}>© 2025 IntelliHunt. All rights reserved.</div>
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <a href="/about" style={{
+            fontSize: "12px", color: "var(--text-muted)",
+            fontFamily: "var(--font-mono)", textDecoration: "none",
+            letterSpacing: "0.04em", transition: "color 0.15s",
+          }}
+            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--accent)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--text-muted)"; }}
+          >About</a>
+          <div style={{
+            fontSize: "12px", color: "var(--text-muted)",
+            fontFamily: "var(--font-mono)",
+          }}>© 2025 IntelliHunt. All rights reserved.</div>
+        </div>
       </footer>
     </div>
   );

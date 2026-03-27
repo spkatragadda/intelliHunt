@@ -35,7 +35,16 @@ if not DEBUG and SECRET_KEY == _SECRET_KEY_DEFAULT:
         "Generate one with: python -c \"import secrets; print(secrets.token_hex(50))\""
     )
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+_allowed_hosts = [h.strip() for h in os.environ.get("ALLOWED_HOSTS", "*").split(",") if h.strip()]
+# Always allow internal Docker service name and loopback so Next.js → Django
+# proxy requests and healthchecks are never rejected by the Host header check.
+ALLOWED_HOSTS = _allowed_hosts + ["django", "localhost", "127.0.0.1"]
+
+
+# Trusted origins for CSRF — must include your full domain(s) with scheme.
+# e.g. CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+_csrf_origins = os.environ.get("CSRF_TRUSTED_ORIGINS", "http://localhost:3000")
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_origins.split(",") if o.strip()]
 
 
 # Application definition
@@ -92,9 +101,20 @@ SECURE_REFERRER_POLICY        = "strict-origin-when-cross-origin"
 # Set BEHIND_PROXY=true in production so Django trusts the X-Forwarded-Proto header.
 _behind_proxy = os.environ.get("BEHIND_PROXY", "false").lower() == "true"
 
+if _behind_proxy:
+    # Trust X-Forwarded-Proto so Django knows requests arrive over TLS
+    # even though it receives plain HTTP from the Next.js proxy.
+    # NOTE: Do NOT set USE_X_FORWARDED_HOST here — Django sits behind
+    # Next.js (not directly behind Nginx), so the Host header it receives
+    # is always "django:8000" from Next.js's internal HTTP client.
+    # Setting USE_X_FORWARDED_HOST causes Django to read X-Forwarded-Host,
+    # which can contain multiple comma-separated values accumulated across
+    # the Cloudflare → Nginx → Next.js hop chain, triggering a
+    # SuspiciousOperation / Bad Request (400).
+    SECURE_PROXY_SSL_HEADER      = ("HTTP_X_FORWARDED_PROTO", "https")
+
 if not DEBUG:
-    SECURE_SSL_REDIRECT          = True     # Redirect all HTTP → HTTPS
-    SECURE_PROXY_SSL_HEADER      = ("HTTP_X_FORWARDED_PROTO", "https") if _behind_proxy else None
+    SECURE_SSL_REDIRECT          = not _behind_proxy  # Nginx handles redirect when behind proxy
     SESSION_COOKIE_SECURE        = True     # Session cookie sent only over HTTPS
     CSRF_COOKIE_SECURE           = True     # CSRF cookie sent only over HTTPS
     SESSION_COOKIE_HTTPONLY      = True     # Prevent JS access to session cookie
@@ -126,13 +146,39 @@ TEMPLATES = [
 WSGI_APPLICATION = "intelliHunt.wsgi.application"
 
 
-# Database
+# Database — PostgreSQL
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+#
+# Password security: Django's built-in PBKDF2PasswordHasher (SHA-256,
+# 600,000 iterations) hashes all user passwords before storage.  Raw
+# passwords are never written to the database.
+#
+# Connection persistence: CONN_MAX_AGE=600 keeps each Gunicorn worker's
+# connection alive for 10 minutes, eliminating TCP + TLS handshake overhead
+# on every request.  With 3 workers this means at most 3 long-lived
+# connections — well within PostgreSQL's default max_connections=100.
+#
+# Query safety: statement_timeout aborts any single query that runs longer
+# than 30 seconds, protecting against runaway scans or accidental full-table
+# operations.
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME":     os.environ.get("POSTGRES_DB",       "intellihunt"),
+        "USER":     os.environ.get("POSTGRES_USER",     "intellihunt"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
+        "HOST":     os.environ.get("POSTGRES_HOST",     "localhost"),
+        "PORT":     os.environ.get("POSTGRES_PORT",     "5432"),
+        # Reuse DB connections across requests within the same worker process.
+        "CONN_MAX_AGE": 600,
+        "OPTIONS": {
+            # Abort queries that take longer than 30 seconds.
+            "options": "-c statement_timeout=30000",
+        },
+        "TEST": {
+            "NAME": "test_intellihunt",
+        },
     }
 }
 
@@ -187,6 +233,26 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ── Email ─────────────────────────────────────────────────────────────────────
+# In development (DEBUG=True) emails are printed to the console so no SMTP
+# setup is required. Set EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+# (or leave unset in production) and supply SMTP credentials via env vars.
+_email_backend_default = (
+    "django.core.mail.backends.console.EmailBackend"
+    if DEBUG
+    else "django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_BACKEND       = os.environ.get("EMAIL_BACKEND", _email_backend_default)
+EMAIL_HOST          = os.environ.get("EMAIL_HOST",          "smtp.gmail.com")
+EMAIL_PORT          = int(os.environ.get("EMAIL_PORT",      "587"))
+EMAIL_USE_TLS       = os.environ.get("EMAIL_USE_TLS",       "true").lower() == "true"
+EMAIL_HOST_USER     = os.environ.get("EMAIL_HOST_USER",     "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL  = os.environ.get("DEFAULT_FROM_EMAIL",  "noreply@intellihunt.io")
+
+# Base URL of the Next.js frontend — used to build password-reset links in emails.
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 # Root log directory.  Sub-directories are created automatically by

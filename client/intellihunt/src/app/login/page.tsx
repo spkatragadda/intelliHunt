@@ -3,7 +3,6 @@
 import { Suspense, useState, useEffect, FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { setTokens, setUser, isAuthenticated } from "@/lib/auth";
-import { PUBLIC_API_BASE } from "@/lib/api";
 
 export default function LoginPage() {
   return (
@@ -33,16 +32,18 @@ function LoginForm() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch(`${PUBLIC_API_BASE}/api/auth/login/`, {
+      const res = await fetch(`/api/auth/login/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Login failed.");
+        let msg = "Login failed.";
+        try { msg = (await res.json()).error ?? msg; } catch { msg = "Login failed."; }
+        setError(msg);
         return;
       }
+      const data = await res.json();
       setTokens(data.access, data.refresh);
       setUser({
         id: data.user.id,
@@ -52,8 +53,8 @@ function LoginForm() {
       });
       const from = searchParams.get("from") ?? "/dashboard";
       router.replace(from);
-    } catch {
-      setError("Network error. Is the server running?");
+    } catch (err) {
+      setError(`Network error: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setLoading(false);
     }
@@ -179,6 +180,15 @@ function LoginForm() {
                 onFocus={e => { e.currentTarget.style.borderColor = "var(--accent-border)"; }}
                 onBlur={e => { e.currentTarget.style.borderColor = "var(--border)"; }}
               />
+            </div>
+
+            <div style={{ textAlign: "right" }}>
+              <a href="/forgot-password" style={{
+                fontSize: "12px", color: "var(--text-muted)",
+                textDecoration: "none", fontFamily: "var(--font-mono), monospace",
+              }}>
+                Forgot password?
+              </a>
             </div>
 
             <button

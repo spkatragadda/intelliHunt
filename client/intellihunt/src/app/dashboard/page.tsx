@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import {
   fetchReportMarkdown,
   extractCVEs,
-  PUBLIC_API_BASE,
   GenerateReportPayload,
   runReport,
   checkTaskStatus,
@@ -1144,6 +1144,7 @@ function EmptyState({ icon, title, description, onAdd, addLabel }: {
 }
 
 function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: string) => void }) {
+  const router = useRouter();
   const [os, setOs] = useState<KV[]>([]);
   const [apps, setApps] = useState<AppVendorProducts[]>([]);
   const [sources, setSources] = useState<Source[]>([]);
@@ -1161,11 +1162,16 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
   const [crewOutput, setCrewOutput] = useState<string | null>(null);
   const [genTab, setGenTab] = useState<GenTab>("builder");
   const [dragActive, setDragActive] = useState(false);
+  const [configLoading, setConfigLoading] = useState(true);
+  const [welcomeDismissed, setWelcomeDismissed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logsEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getCurrentYamlConfig().then(c => setYamlConfig(c.config)).catch(() => {});
+    getCurrentYamlConfig()
+      .then(c => { setYamlConfig(c.config); })
+      .catch(() => {})
+      .finally(() => setConfigLoading(false));
   }, []);
 
   useEffect(() => {
@@ -1197,6 +1203,9 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
   const osCount = os.filter(r => r.vendor || r.product).length;
   const appsCount = apps.filter(r => r.vendor || r.products.length).length;
   const cloudCount = yamlConfig?.software_stack?.cloud_platforms?.length || 0;
+  const showWelcome = !configLoading && !welcomeDismissed
+    && os.length === 0 && apps.length === 0 && sources.length === 0
+    && !yamlUploaded && !yamlConfig;
   async function submit() {
     const hasOs = os.some(r => r.vendor || r.product);
     const hasApps = apps.some(r => r.vendor || r.products.length);
@@ -1229,7 +1238,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
   }
 
   return (
-    <div className="space-y-5 w-full">
+    <div className="space-y-6 w-full">
 
       {/* ── Page Header ── */}
       <div>
@@ -1237,360 +1246,481 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
           Generate Report
         </h2>
         <p className="text-[13px] mt-0.5" style={{ color: "var(--text-muted)" }}>
-          Configure your tech stack and run an automated NVD vulnerability analysis
+          Configure your software stack, then run an automated NVD vulnerability analysis
         </p>
       </div>
 
-      {/* ── Sticky Page Sub-Header: Run Report + stats ── */}
-      <div
-        className="sticky top-0 z-20 -mx-8 lg:-mx-10 px-8 lg:px-10 py-4"
-        style={{
-          background: "var(--bg)",
-          borderBottom: "1px solid var(--border)",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-        }}
-      >
-        <div className="flex items-center justify-between gap-4">
-          {/* Summary stat pills */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {[
-              { label: "OS", count: osCount },
-              { label: "Apps", count: appsCount },
-              { label: "Cloud", count: cloudCount },
-            ].map(b => (
-              <div
-                key={b.label}
-                className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl"
-                style={{
-                  background: b.count > 0 ? "var(--accent-muted)" : "var(--surface-raised)",
-                  border: `1px solid ${b.count > 0 ? "var(--accent-border)" : "var(--border)"}`,
-                  color: b.count > 0 ? "var(--accent)" : "var(--text-muted)",
-                  boxShadow: b.count > 0 ? "0 0 10px rgba(255,255,255,0.10)" : "none",
-                }}
-              >
-                <span className="font-bold tabular-nums text-[20px] leading-none" style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.03em" }}>{b.count}</span>
-                <span className="font-semibold text-[11px] uppercase tracking-[0.08em]">{b.label}</span>
+      {/* ── Loading ── */}
+      {configLoading ? (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 0" }}>
+          <span className="animate-spin" style={{
+            display: "inline-block", width: "18px", height: "18px",
+            border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%",
+          }} />
+        </div>
+
+      ) : showWelcome ? (
+        /* ── Welcome / 3-path picker ── */
+        <div>
+          <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: "1.7", marginBottom: "28px", maxWidth: "500px" }}>
+            Before running a report, describe your software stack. Choose the method that fits your workflow:
+          </p>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: "14px" }}>
+
+            {/* Card 1 — Manual Entry */}
+            <button
+              onClick={() => { setOs([{ vendor: "", product: "" }]); setGenTab("builder"); setWelcomeDismissed(true); }}
+              style={{
+                textAlign: "left", padding: "22px 20px", borderRadius: "14px",
+                background: "var(--surface)", border: "1px solid var(--border)",
+                cursor: "pointer", transition: "border-color 0.15s, background 0.15s",
+                display: "flex", flexDirection: "column",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--accent-border)"; e.currentTarget.style.background = "var(--surface-raised)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surface)"; }}
+            >
+              <div style={{
+                width: "40px", height: "40px", borderRadius: "10px", flexShrink: 0,
+                background: "var(--accent-muted)", border: "1px solid var(--accent-border)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                color: "var(--accent)", marginBottom: "16px",
+              }}>
+                <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                </svg>
               </div>
-            ))}
-            {yamlUploaded && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[13px]"
-                style={{ background: "var(--accent-muted)", border: "1px solid var(--accent-border)", color: "var(--accent)" }}>
+              <div style={{ fontSize: "14px", fontWeight: 650, color: "var(--text-primary)", fontFamily: "var(--font-display)", letterSpacing: "-0.01em", marginBottom: "7px" }}>
+                Manual Entry
+              </div>
+              <div style={{ fontSize: "12.5px", color: "var(--text-muted)", lineHeight: "1.65", flex: 1, marginBottom: "18px" }}>
+                Type your operating systems, applications, and data sources directly using the guided form builder.
+              </div>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--accent)", fontFamily: "var(--font-mono), monospace" }}>
+                START BUILDING
+                <svg width="9" height="9" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </div>
+            </button>
+
+            {/* Card 2 — YAML Upload */}
+            <button
+              onClick={() => { setGenTab("yaml"); setWelcomeDismissed(true); }}
+              style={{
+                textAlign: "left", padding: "22px 20px", borderRadius: "14px",
+                background: "var(--surface)", border: "1px solid var(--border)",
+                cursor: "pointer", transition: "border-color 0.15s, background 0.15s",
+                display: "flex", flexDirection: "column",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--accent-border)"; e.currentTarget.style.background = "var(--surface-raised)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surface)"; }}
+            >
+              <div style={{
+                width: "40px", height: "40px", borderRadius: "10px", flexShrink: 0,
+                background: "var(--accent-muted)", border: "1px solid var(--accent-border)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                color: "var(--accent)", marginBottom: "16px",
+              }}>
+                <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+              </div>
+              <div style={{ fontSize: "14px", fontWeight: 650, color: "var(--text-primary)", fontFamily: "var(--font-display)", letterSpacing: "-0.01em", marginBottom: "7px" }}>
+                YAML Config File
+              </div>
+              <div style={{ fontSize: "12.5px", color: "var(--text-muted)", lineHeight: "1.65", flex: 1, marginBottom: "18px" }}>
+                Upload a <code style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11px", background: "var(--bg)", padding: "1px 4px", borderRadius: "3px" }}>.yaml</code> or <code style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11px", background: "var(--bg)", padding: "1px 4px", borderRadius: "3px" }}>.yml</code> file with your full stack definition. Download our template to get started quickly.
+              </div>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--accent)", fontFamily: "var(--font-mono), monospace" }}>
+                UPLOAD FILE
+                <svg width="9" height="9" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </div>
+            </button>
+
+            {/* Card 3 — Integrations */}
+            <button
+              onClick={() => router.push("/settings")}
+              style={{
+                textAlign: "left", padding: "22px 20px", borderRadius: "14px",
+                background: "var(--surface)", border: "1px solid var(--border)",
+                cursor: "pointer", transition: "border-color 0.15s, background 0.15s",
+                display: "flex", flexDirection: "column",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--accent-border)"; e.currentTarget.style.background = "var(--surface-raised)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surface)"; }}
+            >
+              <div style={{
+                width: "40px", height: "40px", borderRadius: "10px", flexShrink: 0,
+                background: "var(--accent-muted)", border: "1px solid var(--accent-border)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                color: "var(--accent)", marginBottom: "16px",
+              }}>
+                <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                </svg>
+              </div>
+              <div style={{ fontSize: "14px", fontWeight: 650, color: "var(--text-primary)", fontFamily: "var(--font-display)", letterSpacing: "-0.01em", marginBottom: "7px" }}>
+                Integrations
+              </div>
+              <div style={{ fontSize: "12.5px", color: "var(--text-muted)", lineHeight: "1.65", flex: 1, marginBottom: "18px" }}>
+                Connect your CMDB, cloud platform, or asset management tool in <span style={{ color: "var(--text-secondary)", fontWeight: 500 }}>Settings → Integrations</span>. Your stack is configured automatically.
+              </div>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--accent)", fontFamily: "var(--font-mono), monospace" }}>
+                GO TO SETTINGS
+                <svg width="9" height="9" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </div>
+            </button>
+
+          </div>
+        </div>
+
+      ) : (
+        /* ── Builder (data exists) ── */
+        <>
+          {/* Run report bar */}
+          <div
+            className="flex items-center justify-between gap-4 px-5 py-3.5 rounded-xl"
+            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+          >
+            <div className="flex items-center gap-2 flex-wrap">
+              {[
+                { label: "OS", count: osCount },
+                { label: "Apps", count: appsCount },
+                { label: "Cloud", count: cloudCount },
+              ].map(b => (
+                <div
+                  key={b.label}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                  style={{
+                    background: b.count > 0 ? "var(--accent-muted)" : "var(--bg)",
+                    border: `1px solid ${b.count > 0 ? "var(--accent-border)" : "var(--border)"}`,
+                    color: b.count > 0 ? "var(--accent)" : "var(--text-muted)",
+                  }}
+                >
+                  <span className="font-bold tabular-nums text-[17px] leading-none" style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.03em" }}>{b.count}</span>
+                  <span className="font-semibold text-[11px] uppercase tracking-[0.08em]">{b.label}</span>
+                </div>
+              ))}
+              {yamlUploaded && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg"
+                  style={{ background: "var(--accent-muted)", border: "1px solid var(--accent-border)", color: "var(--accent)" }}>
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                  </svg>
+                  <span className="font-medium text-[11px]">YAML</span>
+                </div>
+              )}
+              <button
+                onClick={() => setWelcomeDismissed(false)}
+                style={{
+                  fontSize: "11px", color: "var(--text-muted)", background: "none",
+                  border: "none", cursor: "pointer", padding: "4px 6px",
+                  fontFamily: "var(--font-mono), monospace", letterSpacing: "0.04em",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.color = "var(--accent)"; }}
+                onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
+              >
+                ← change method
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 flex-shrink-0">
+              {serverMsg && (
+                <span className="text-[13px] hidden sm:block" style={{ color: serverMsg.toLowerCase().includes("error") ? "var(--danger)" : "var(--text-muted)" }}>
+                  {serverMsg}
+                </span>
+              )}
+              <Button
+                onClick={submit}
+                disabled={submitting}
+                icon={submitting
+                  ? <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2" style={{ borderColor: "var(--accent-text)", borderTopColor: "transparent" }} />
+                  : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                    </svg>
+                  )
+                }
+              >
+                {submitting ? "Generating..." : "Run Report"}
+              </Button>
+            </div>
+          </div>
+
+          {/* Tab switcher */}
+          <div
+            className="flex gap-1 p-1 rounded-lg"
+            style={{ background: "var(--surface)", border: "1px solid var(--border)", maxWidth: "380px" }}
+          >
+            <GenTabBtn active={genTab === "builder"} onClick={() => setGenTab("builder")}>
+              <span className="flex items-center justify-center gap-2">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l5.654-4.654m5.63-4.179l.813-.814a2.25 2.25 0 013.182 3.182l-.814.813" />
+                </svg>
+                Manual Builder
+              </span>
+            </GenTabBtn>
+            <GenTabBtn active={genTab === "yaml"} onClick={() => setGenTab("yaml")}>
+              <span className="flex items-center justify-center gap-2">
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                 </svg>
-                <span className="font-medium">YAML</span>
-              </div>
-            )}
-          </div>
-
-          {/* Run Report CTA */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            {serverMsg && (
-              <span className="text-[13px] hidden sm:block" style={{ color: serverMsg.toLowerCase().includes("error") ? "var(--danger)" : "var(--text-muted)" }}>
-                {serverMsg}
+                YAML Config
               </span>
-            )}
-            <Button
-              onClick={submit}
-              disabled={submitting}
-              icon={submitting
-                ? <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2" style={{ borderColor: "var(--accent-text)", borderTopColor: "transparent" }} />
-                : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-                  </svg>
-                )
-              }
-            >
-              {submitting ? "Generating..." : "Run Report"}
-            </Button>
+            </GenTabBtn>
           </div>
-        </div>
-      </div>
 
-      {/* ── Inner tab switcher ── */}
-      <div
-        className="flex gap-1 p-1 rounded-lg"
-        style={{ background: "var(--surface)", border: "1px solid var(--border)", maxWidth: "380px" }}
-      >
-        <GenTabBtn active={genTab === "builder"} onClick={() => setGenTab("builder")}>
-          <span className="flex items-center justify-center gap-2">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l5.654-4.654m5.63-4.179l.813-.814a2.25 2.25 0 013.182 3.182l-.814.813" />
-            </svg>
-            Manual Builder
-          </span>
-        </GenTabBtn>
-        <GenTabBtn active={genTab === "yaml"} onClick={() => setGenTab("yaml")}>
-          <span className="flex items-center justify-center gap-2">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-            </svg>
-            YAML Config
-          </span>
-        </GenTabBtn>
-      </div>
-
-      {/* ══════════════════════════
-          TAB 1 — Manual Builder
-         ══════════════════════════ */}
-      {genTab === "builder" && (
-        <div className="space-y-4">
-
-          {/* Operating Systems */}
-          <Card><CardContent className="p-6">
-            <SectionHeader
-              title="Operating Systems"
-              description="Specify OS targets to scan for known CVEs"
-              count={os.filter(r => r.vendor || r.product).length}
-              action={os.length > 0 ? <AddBtn onClick={() => setOs(a => [...a, { vendor: "", product: "" }])} /> : undefined}
-            />
-            {os.length === 0 ? (
-              <EmptyState
-                icon={
-                  <svg className="w-6 h-6" fill="none" stroke="var(--text-muted)" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3" />
-                  </svg>
-                }
-                title="No operating systems added"
-                description="Add vendor and product pairs to include OS-level CVEs in your threat report."
-                onAdd={() => setOs(a => [...a, { vendor: "", product: "" }])}
-                addLabel="Add Operating System"
-              />
-            ) : (
-              <div className="space-y-3">
-                {os.map((row, i) => (
-                  <div key={i} className="flex gap-3 items-end p-4 rounded-md" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
-                    <div className="flex-1 space-y-1.5">
-                      <Label>Vendor</Label>
-                      <Input value={row.vendor} placeholder="e.g. Microsoft" onChange={e => setOs(a => a.map((r, j) => j === i ? { ...r, vendor: e.target.value } : r))} />
-                    </div>
-                    <div className="flex-1 space-y-1.5">
-                      <Label>Product</Label>
-                      <Input value={row.product} placeholder="e.g. Windows Server 2022" onChange={e => setOs(a => a.map((r, j) => j === i ? { ...r, product: e.target.value } : r))} />
-                    </div>
-                    <div className="mb-0.5">
-                      <RemoveBtn onClick={() => setOs(a => a.filter((_, j) => j !== i))} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent></Card>
-
-          {/* Applications */}
-          <Card><CardContent className="p-6">
-            <SectionHeader
-              title="Applications"
-              description="Software applications to include in vulnerability scanning"
-              count={apps.filter(r => r.vendor || r.products.length).length}
-              action={apps.length > 0 ? <AddBtn onClick={() => setApps(a => [...a, { vendor: "", products: [] }])} /> : undefined}
-            />
-            {apps.length === 0 ? (
-              <EmptyState
-                icon={
-                  <svg className="w-6 h-6" fill="none" stroke="var(--text-muted)" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                  </svg>
-                }
-                title="No applications added"
-                description="Add application vendors and products to detect known software vulnerabilities."
-                onAdd={() => setApps(a => [...a, { vendor: "", products: [] }])}
-                addLabel="Add Application"
-              />
-            ) : (
-              <div className="space-y-3">
-                {apps.map((row, i) => (
-                  <div key={i} className="flex gap-3 items-end p-4 rounded-md" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
-                    <div className="flex-1 space-y-1.5">
-                      <Label>Vendor</Label>
-                      <Input value={row.vendor} placeholder="e.g. Adobe" onChange={e => setApps(a => a.map((r, j) => j === i ? { ...r, vendor: e.target.value } : r))} />
-                    </div>
-                    <div className="flex-1 space-y-1.5">
-                      <Label>Products <span style={{ textTransform: "none", letterSpacing: 0, opacity: 0.6 }}>(comma-separated)</span></Label>
-                      <Input value={row.products.join(", ")} placeholder="e.g. Acrobat, Photoshop"
-                        onChange={e => { const products = e.target.value.split(/[,\n]/).map(s => s.trim()).filter(Boolean); setApps(a => a.map((r, j) => j === i ? { ...r, products } : r)); }} />
-                    </div>
-                    <div className="mb-0.5">
-                      <RemoveBtn onClick={() => setApps(a => a.filter((_, j) => j !== i))} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent></Card>
-
-          {/* Source Types */}
-          <Card><CardContent className="p-6">
-            <SectionHeader
-              title="Source Types"
-              description="Data sources for threat intelligence correlation"
-              count={sources.filter(s => s.name || s.fields.length || s.description).length}
-              action={sources.length > 0 ? <AddBtn onClick={() => setSources(a => [...a, { name: "", fields: [], description: "" }])} /> : undefined}
-            />
-            {sources.length === 0 ? (
-              <EmptyState
-                icon={
-                  <svg className="w-6 h-6" fill="none" stroke="var(--text-muted)" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
-                  </svg>
-                }
-                title="No source types added"
-                description="Define your SIEM, firewall, EDR, or other log sources for deeper correlation."
-                onAdd={() => setSources(a => [...a, { name: "", fields: [], description: "" }])}
-                addLabel="Add Source Type"
-              />
-            ) : (
-              <div className="space-y-3">
-                {sources.map((row, i) => (
-                  <div key={i} className="space-y-4 p-4 rounded-md" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
-                    <div className="flex gap-3 items-end">
-                      <div className="flex-1 space-y-1.5">
-                        <Label>Source Name</Label>
-                        <Input value={row.name} placeholder="e.g. SIEM, Firewall, EDR"
-                          onChange={e => setSources(a => a.map((r, j) => j === i ? { ...r, name: e.target.value } : r))} />
+          {/* TAB 1 — Manual Builder */}
+          {genTab === "builder" && (
+            <div className="space-y-4">
+              <Card><CardContent className="p-6">
+                <SectionHeader
+                  title="Operating Systems"
+                  description="Specify OS targets to scan for known CVEs"
+                  count={os.filter(r => r.vendor || r.product).length}
+                  action={os.length > 0 ? <AddBtn onClick={() => setOs(a => [...a, { vendor: "", product: "" }])} /> : undefined}
+                />
+                {os.length === 0 ? (
+                  <EmptyState
+                    icon={
+                      <svg className="w-6 h-6" fill="none" stroke="var(--text-muted)" strokeWidth={1.5} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3" />
+                      </svg>
+                    }
+                    title="No operating systems added"
+                    description="Add vendor and product pairs to include OS-level CVEs in your threat report."
+                    onAdd={() => setOs(a => [...a, { vendor: "", product: "" }])}
+                    addLabel="Add Operating System"
+                  />
+                ) : (
+                  <div className="space-y-3">
+                    {os.map((row, i) => (
+                      <div key={i} className="flex gap-3 items-end p-4 rounded-md" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+                        <div className="flex-1 space-y-1.5">
+                          <Label>Vendor</Label>
+                          <Input value={row.vendor} placeholder="e.g. Microsoft" onChange={e => setOs(a => a.map((r, j) => j === i ? { ...r, vendor: e.target.value } : r))} />
+                        </div>
+                        <div className="flex-1 space-y-1.5">
+                          <Label>Product</Label>
+                          <Input value={row.product} placeholder="e.g. Windows Server 2022" onChange={e => setOs(a => a.map((r, j) => j === i ? { ...r, product: e.target.value } : r))} />
+                        </div>
+                        <div className="mb-0.5">
+                          <RemoveBtn onClick={() => setOs(a => a.filter((_, j) => j !== i))} />
+                        </div>
                       </div>
-                      <div className="flex-1 space-y-1.5">
-                        <Label>Fields <span style={{ textTransform: "none", letterSpacing: 0, opacity: 0.6 }}>(comma-separated)</span></Label>
-                        <Input value={row.fields.join(", ")} placeholder="e.g. source_ip, event_id, hostname"
-                          onChange={e => { const fields = e.target.value.split(/[,\n]/).map(s => s.trim()).filter(Boolean); setSources(a => a.map((r, j) => j === i ? { ...r, fields } : r)); }} />
-                      </div>
-                      <div className="mb-0.5">
-                        <RemoveBtn onClick={() => setSources(a => a.filter((_, j) => j !== i))} />
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Description</Label>
-                      <textarea value={row.description} placeholder="Describe the data source and what events it captures..." rows={2}
-                        onChange={e => setSources(a => a.map((r, j) => j === i ? { ...r, description: e.target.value } : r))}
-                        className="input-base"
-                        style={{ resize: "vertical" }} />
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent></Card>
-        </div>
-      )}
+                )}
+              </CardContent></Card>
 
-      {/* ══════════════════════════
-          TAB 2 — YAML Config
-         ══════════════════════════ */}
-      {genTab === "yaml" && (
-        <div className="space-y-4">
+              <Card><CardContent className="p-6">
+                <SectionHeader
+                  title="Applications"
+                  description="Software applications to include in vulnerability scanning"
+                  count={apps.filter(r => r.vendor || r.products.length).length}
+                  action={apps.length > 0 ? <AddBtn onClick={() => setApps(a => [...a, { vendor: "", products: [] }])} /> : undefined}
+                />
+                {apps.length === 0 ? (
+                  <EmptyState
+                    icon={
+                      <svg className="w-6 h-6" fill="none" stroke="var(--text-muted)" strokeWidth={1.5} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                      </svg>
+                    }
+                    title="No applications added"
+                    description="Add application vendors and products to detect known software vulnerabilities."
+                    onAdd={() => setApps(a => [...a, { vendor: "", products: [] }])}
+                    addLabel="Add Application"
+                  />
+                ) : (
+                  <div className="space-y-3">
+                    {apps.map((row, i) => (
+                      <div key={i} className="flex gap-3 items-end p-4 rounded-md" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+                        <div className="flex-1 space-y-1.5">
+                          <Label>Vendor</Label>
+                          <Input value={row.vendor} placeholder="e.g. Adobe" onChange={e => setApps(a => a.map((r, j) => j === i ? { ...r, vendor: e.target.value } : r))} />
+                        </div>
+                        <div className="flex-1 space-y-1.5">
+                          <Label>Products <span style={{ textTransform: "none", letterSpacing: 0, opacity: 0.6 }}>(comma-separated)</span></Label>
+                          <Input value={row.products.join(", ")} placeholder="e.g. Acrobat, Photoshop"
+                            onChange={e => { const products = e.target.value.split(/[,\n]/).map(s => s.trim()).filter(Boolean); setApps(a => a.map((r, j) => j === i ? { ...r, products } : r)); }} />
+                        </div>
+                        <div className="mb-0.5">
+                          <RemoveBtn onClick={() => setApps(a => a.filter((_, j) => j !== i))} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent></Card>
 
-          {/* Drop zone */}
-          <Card><CardContent className="p-6">
-            <SectionHeader
-              title="YAML Configuration"
-              description="Upload a CMDB YAML to override manual builder entries"
-              action={
-                <Button variant="secondary" onClick={() => downloadYamlTemplate().catch((e: any) => setYamlMsg(`Error: ${e.message}`))}>
-                  Download Template
-                </Button>
-              }
-            />
-
-            <input ref={fileInputRef} type="file" accept=".yaml,.yml" className="hidden"
-              onChange={async e => { await handleYamlFile(e.target.files?.[0]); e.target.value = ""; }}
-            />
-
-            {/* Drop zone */}
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              onDragOver={e => { e.preventDefault(); setDragActive(true); }}
-              onDragEnter={e => { e.preventDefault(); setDragActive(true); }}
-              onDragLeave={() => setDragActive(false)}
-              onDrop={async e => { e.preventDefault(); setDragActive(false); await handleYamlFile(e.dataTransfer.files?.[0]); }}
-              className="cursor-pointer rounded-xl flex flex-col items-center justify-center gap-4 py-12 px-6 text-center transition-all duration-200"
-              style={{
-                background: dragActive ? "var(--accent-subtle)" : "var(--bg)",
-                border: `2px dashed ${dragActive ? "var(--accent)" : "var(--border-hover)"}`,
-                boxShadow: dragActive ? "inset 0 0 0 1px var(--accent-border)" : "none",
-              }}
-            >
-              <div
-                className="flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-200"
-                style={{
-                  background: dragActive ? "var(--accent-muted)" : "var(--surface-raised)",
-                  border: `1px solid ${dragActive ? "var(--accent-border)" : "var(--border-hover)"}`,
-                  color: dragActive ? "var(--accent)" : "var(--text-muted)",
-                }}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-[14px] font-medium" style={{ color: "var(--text-secondary)" }}>
-                  Drop your YAML file here, or{" "}
-                  <span style={{ color: "var(--accent)" }}>browse to upload</span>
-                </p>
-                <p className="text-[12px] mt-1" style={{ color: "var(--text-muted)" }}>
-                  Accepts <code style={{ background: "var(--surface-raised)", padding: "1px 5px", borderRadius: "3px" }}>.yaml</code> and{" "}
-                  <code style={{ background: "var(--surface-raised)", padding: "1px 5px", borderRadius: "3px" }}>.yml</code> files
-                </p>
-              </div>
+              <Card><CardContent className="p-6">
+                <SectionHeader
+                  title="Source Types"
+                  description="Data sources for threat intelligence correlation"
+                  count={sources.filter(s => s.name || s.fields.length || s.description).length}
+                  action={sources.length > 0 ? <AddBtn onClick={() => setSources(a => [...a, { name: "", fields: [], description: "" }])} /> : undefined}
+                />
+                {sources.length === 0 ? (
+                  <EmptyState
+                    icon={
+                      <svg className="w-6 h-6" fill="none" stroke="var(--text-muted)" strokeWidth={1.5} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                      </svg>
+                    }
+                    title="No source types added"
+                    description="Define your SIEM, firewall, EDR, or other log sources for deeper correlation."
+                    onAdd={() => setSources(a => [...a, { name: "", fields: [], description: "" }])}
+                    addLabel="Add Source Type"
+                  />
+                ) : (
+                  <div className="space-y-3">
+                    {sources.map((row, i) => (
+                      <div key={i} className="space-y-4 p-4 rounded-md" style={{ background: "var(--bg)", border: "1px solid var(--border)" }}>
+                        <div className="flex gap-3 items-end">
+                          <div className="flex-1 space-y-1.5">
+                            <Label>Source Name</Label>
+                            <Input value={row.name} placeholder="e.g. SIEM, Firewall, EDR"
+                              onChange={e => setSources(a => a.map((r, j) => j === i ? { ...r, name: e.target.value } : r))} />
+                          </div>
+                          <div className="flex-1 space-y-1.5">
+                            <Label>Fields <span style={{ textTransform: "none", letterSpacing: 0, opacity: 0.6 }}>(comma-separated)</span></Label>
+                            <Input value={row.fields.join(", ")} placeholder="e.g. source_ip, event_id, hostname"
+                              onChange={e => { const fields = e.target.value.split(/[,\n]/).map(s => s.trim()).filter(Boolean); setSources(a => a.map((r, j) => j === i ? { ...r, fields } : r)); }} />
+                          </div>
+                          <div className="mb-0.5">
+                            <RemoveBtn onClick={() => setSources(a => a.filter((_, j) => j !== i))} />
+                          </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label>Description</Label>
+                          <textarea value={row.description} placeholder="Describe the data source and what events it captures..." rows={2}
+                            onChange={e => setSources(a => a.map((r, j) => j === i ? { ...r, description: e.target.value } : r))}
+                            className="input-base"
+                            style={{ resize: "vertical" }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent></Card>
             </div>
+          )}
 
-            {/* Status messages */}
-            {yamlMsg && (
-              <div className="mt-4 text-[14px] rounded-md px-4 py-2.5" style={{
-                color: yamlMsg.includes("Error") || yamlMsg.includes("Failed") ? "var(--danger)" : "var(--success)",
-                background: yamlMsg.includes("Error") || yamlMsg.includes("Failed") ? "rgba(248,113,113,0.08)" : "var(--accent-subtle)",
-                border: `1px solid ${yamlMsg.includes("Error") || yamlMsg.includes("Failed") ? "rgba(248,113,113,0.25)" : "var(--accent-border)"}`,
-              }}>{yamlMsg}</div>
-            )}
-          </CardContent></Card>
-
-          {/* Loaded config status */}
-          <Card><CardContent className="p-6">
-            <h3 className="text-[13px] font-semibold uppercase tracking-wider mb-4" style={{ color: "var(--text-muted)" }}>Loaded Configuration</h3>
-            {yamlConfig ? (
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 px-4 py-3.5 rounded-lg" style={{ background: "var(--accent-subtle)", border: "1px solid var(--accent-border)" }}>
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg flex-shrink-0" style={{ background: "var(--accent-muted)", color: "var(--accent)" }}>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          {/* TAB 2 — YAML Config */}
+          {genTab === "yaml" && (
+            <div className="space-y-4">
+              <Card><CardContent className="p-6">
+                <SectionHeader
+                  title="YAML Configuration"
+                  description="Upload a CMDB YAML to override manual builder entries"
+                  action={
+                    <Button variant="secondary" onClick={() => downloadYamlTemplate().catch((e: any) => setYamlMsg(`Error: ${e.message}`))}>
+                      Download Template
+                    </Button>
+                  }
+                />
+                <input ref={fileInputRef} type="file" accept=".yaml,.yml" className="hidden"
+                  onChange={async e => { await handleYamlFile(e.target.files?.[0]); e.target.value = ""; }}
+                />
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  onDragOver={e => { e.preventDefault(); setDragActive(true); }}
+                  onDragEnter={e => { e.preventDefault(); setDragActive(true); }}
+                  onDragLeave={() => setDragActive(false)}
+                  onDrop={async e => { e.preventDefault(); setDragActive(false); await handleYamlFile(e.dataTransfer.files?.[0]); }}
+                  className="cursor-pointer rounded-xl flex flex-col items-center justify-center gap-4 py-12 px-6 text-center transition-all duration-200"
+                  style={{
+                    background: dragActive ? "var(--accent-subtle)" : "var(--bg)",
+                    border: `2px dashed ${dragActive ? "var(--accent)" : "var(--border-hover)"}`,
+                    boxShadow: dragActive ? "inset 0 0 0 1px var(--accent-border)" : "none",
+                  }}
+                >
+                  <div
+                    className="flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-200"
+                    style={{
+                      background: dragActive ? "var(--accent-muted)" : "var(--surface-raised)",
+                      border: `1px solid ${dragActive ? "var(--accent-border)" : "var(--border-hover)"}`,
+                      color: dragActive ? "var(--accent)" : "var(--text-muted)",
+                    }}
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                     </svg>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>{yamlConfig.organization?.name || "Custom Configuration"}</p>
-                    <p className="text-[12px] mt-0.5" style={{ color: "var(--text-muted)" }}>
-                      {yamlConfig.software_stack?.operating_systems?.length || 0} OS ·{" "}
-                      {yamlConfig.software_stack?.applications?.length || 0} apps ·{" "}
-                      {yamlConfig.software_stack?.cloud_platforms?.length || 0} cloud platforms
+                  <div>
+                    <p className="text-[14px] font-medium" style={{ color: "var(--text-secondary)" }}>
+                      Drop your YAML file here, or{" "}
+                      <span style={{ color: "var(--accent)" }}>browse to upload</span>
+                    </p>
+                    <p className="text-[12px] mt-1" style={{ color: "var(--text-muted)" }}>
+                      Accepts <code style={{ background: "var(--surface-raised)", padding: "1px 5px", borderRadius: "3px" }}>.yaml</code> and{" "}
+                      <code style={{ background: "var(--surface-raised)", padding: "1px 5px", borderRadius: "3px" }}>.yml</code> files
                     </p>
                   </div>
-                  <span className="badge-accent text-[11px]">Active</span>
                 </div>
-              </div>
-            ) : (
-              <EmptyState
-                icon={
-                  <svg className="w-6 h-6" fill="none" stroke="var(--text-muted)" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                  </svg>
-                }
-                title="No configuration loaded"
-                description="Upload a YAML file above or download the template to create your CMDB config."
-                onAdd={() => fileInputRef.current?.click()}
-                addLabel="Upload YAML"
-              />
-            )}
-          </CardContent></Card>
-        </div>
-      )}
+                {yamlMsg && (
+                  <div className="mt-4 text-[14px] rounded-md px-4 py-2.5" style={{
+                    color: yamlMsg.includes("Error") || yamlMsg.includes("Failed") ? "var(--danger)" : "var(--success)",
+                    background: yamlMsg.includes("Error") || yamlMsg.includes("Failed") ? "rgba(248,113,113,0.08)" : "var(--accent-subtle)",
+                    border: `1px solid ${yamlMsg.includes("Error") || yamlMsg.includes("Failed") ? "rgba(248,113,113,0.25)" : "var(--accent-border)"}`,
+                  }}>{yamlMsg}</div>
+                )}
+              </CardContent></Card>
 
-      {/* ── Validation warning ── */}
-      {showEmptyPrompt && (
-        <div className="p-5 rounded-lg text-[14px]" style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.25)" }}>
-          <p className="font-semibold mb-1" style={{ color: "#fbbf24" }}>No configuration entries found</p>
-          <p style={{ color: "var(--text-muted)" }}>
-            Add at least one OS, application, or source type in the Manual Builder — or upload a YAML config.
-          </p>
-        </div>
+              <Card><CardContent className="p-6">
+                <h3 className="text-[13px] font-semibold uppercase tracking-wider mb-4" style={{ color: "var(--text-muted)" }}>Loaded Configuration</h3>
+                {yamlConfig ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 px-4 py-3.5 rounded-lg" style={{ background: "var(--accent-subtle)", border: "1px solid var(--accent-border)" }}>
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg flex-shrink-0" style={{ background: "var(--accent-muted)", color: "var(--accent)" }}>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>{yamlConfig.organization?.name || "Custom Configuration"}</p>
+                        <p className="text-[12px] mt-0.5" style={{ color: "var(--text-muted)" }}>
+                          {yamlConfig.software_stack?.operating_systems?.length || 0} OS ·{" "}
+                          {yamlConfig.software_stack?.applications?.length || 0} apps ·{" "}
+                          {yamlConfig.software_stack?.cloud_platforms?.length || 0} cloud platforms
+                        </p>
+                      </div>
+                      <span className="badge-accent text-[11px]">Active</span>
+                    </div>
+                  </div>
+                ) : (
+                  <EmptyState
+                    icon={
+                      <svg className="w-6 h-6" fill="none" stroke="var(--text-muted)" strokeWidth={1.5} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                      </svg>
+                    }
+                    title="No configuration loaded"
+                    description="Upload a YAML file above or download the template to create your CMDB config."
+                    onAdd={() => fileInputRef.current?.click()}
+                    addLabel="Upload YAML"
+                  />
+                )}
+              </CardContent></Card>
+            </div>
+          )}
+
+          {/* Validation warning */}
+          {showEmptyPrompt && (
+            <div className="p-5 rounded-lg text-[14px]" style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.25)" }}>
+              <p className="font-semibold mb-1" style={{ color: "#fbbf24" }}>No configuration entries found</p>
+              <p style={{ color: "var(--text-muted)" }}>
+                Add at least one OS, application, or source type in the Manual Builder — or upload a YAML config.
+              </p>
+            </div>
+          )}
+        </>
       )}
 
       {/* ── Progress ── */}

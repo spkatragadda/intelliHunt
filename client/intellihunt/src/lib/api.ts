@@ -1,13 +1,7 @@
-const isServer = typeof window === "undefined";
-
-// Browser calls must hit localhost:8000; server code inside the container can use the service name.
-export const PUBLIC_API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
-export const INTERNAL_API_BASE =
-  process.env.API_BASE_INTERNAL ?? "http://django:8000";
-
-// Default base chosen depending on execution context
-export const API_BASE = isServer ? INTERNAL_API_BASE : PUBLIC_API_BASE;
+// All API calls use relative paths — Next.js rewrites proxy them to the Django backend.
+// This means no NEXT_PUBLIC_API_BASE env var is needed and the backend is never
+// exposed directly to browsers.
+export const API_BASE = "";
 
 // ── Authenticated fetch ────────────────────────────────────────────────────────
 
@@ -30,7 +24,7 @@ export async function authedFetch(url: string, init: RequestInit = {}): Promise<
     const refresh = getRefreshToken();
     if (refresh) {
       try {
-        const refreshRes = await fetch(`${PUBLIC_API_BASE}/api/auth/refresh/`, {
+        const refreshRes = await fetch(`/api/auth/refresh/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ refresh }),
@@ -69,7 +63,7 @@ export type GenerateReportPayload = {
 
 /** Get crew_report.md as text from Django */
 export async function fetchReportMarkdown(): Promise<string> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/markdown/`, { cache: "no-store" });
+  const res = await authedFetch(`/api/markdown/`, { cache: "no-store" });
   if (!res.ok) throw new Error(`Report fetch failed: ${res.status}`);
   return await res.text();
 }
@@ -78,7 +72,7 @@ export async function fetchReportMarkdown(): Promise<string> {
 export async function runReport(
   payload: GenerateReportPayload
 ): Promise<{ taskId?: string; message: string }> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/generate/`, {
+  const res = await authedFetch(`/api/generate/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -139,7 +133,7 @@ export async function checkTaskStatus(taskId: string): Promise<{
   logs?: string[];
   duration?: number;
 }> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/task/${taskId}/`);
+  const res = await authedFetch(`/api/task/${taskId}/`);
   
   if (!res.ok) {
     throw new Error(`Task status check failed: ${res.status}`);
@@ -150,7 +144,7 @@ export async function checkTaskStatus(taskId: string): Promise<{
 
 /** Hit an endpoint to automatically update all pages with the latest report markdown */
 export async function updateReport(): Promise<{ message: string }> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/update/`, {
+  const res = await authedFetch(`/api/update/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });
@@ -202,7 +196,7 @@ export function guessLastUpdated(md: string): string {
 
 /** Download YAML template file */
 export async function downloadYamlTemplate(): Promise<void> {
-  const response = await authedFetch(`${PUBLIC_API_BASE}/api/yaml/template/`);
+  const response = await authedFetch(`/api/yaml/template/`);
   if (!response.ok) {
     throw new Error(`Template download failed: ${response.status}`);
   }
@@ -223,7 +217,7 @@ export async function uploadYamlConfig(file: File): Promise<{ message: string; c
   const formData = new FormData();
   formData.append('yaml_file', file);
 
-  const response = await authedFetch(`${PUBLIC_API_BASE}/api/yaml/upload/`, {
+  const response = await authedFetch(`/api/yaml/upload/`, {
     method: 'POST',
     body: formData,
   });
@@ -238,7 +232,7 @@ export async function uploadYamlConfig(file: File): Promise<{ message: string; c
 
 /** Get current YAML configuration */
 export async function getCurrentYamlConfig(): Promise<{ config: any; raw_content: string }> {
-  const response = await authedFetch(`${PUBLIC_API_BASE}/api/yaml/config/`);
+  const response = await authedFetch(`/api/yaml/config/`);
   if (!response.ok) {
     throw new Error(`Config fetch failed: ${response.status}`);
   }
@@ -283,14 +277,14 @@ export type CmdbIntegration = {
 };
 
 export async function getCmdbIntegrations(): Promise<Record<string, CmdbIntegration>> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/`, { cache: "no-store" });
+  const res = await authedFetch(`/api/cmdb/integrations/`, { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to fetch integrations: ${res.status}`);
   const data = await res.json();
   return data.integrations ?? {};
 }
 
 export async function saveCmdbIntegration(id: string, config: CmdbIntegration): Promise<{ message: string }> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/`, {
+  const res = await authedFetch(`/api/cmdb/integrations/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id, config }),
@@ -300,7 +294,7 @@ export async function saveCmdbIntegration(id: string, config: CmdbIntegration): 
 }
 
 export async function deleteCmdbIntegration(id: string): Promise<{ message: string }> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/cmdb/integrations/${id}/`, { method: "DELETE" });
+  const res = await authedFetch(`/api/cmdb/integrations/${id}/`, { method: "DELETE" });
   if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
   return res.json();
 }
@@ -309,7 +303,7 @@ export async function testCmdbConnection(
   type: string,
   config: Record<string, string>
 ): Promise<{ status: "connected" | "error"; message: string }> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/cmdb/test/`, {
+  const res = await authedFetch(`/api/cmdb/test/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ type, config }),
@@ -321,7 +315,7 @@ export async function importCmdbData(
   id: string,
   type: string
 ): Promise<{ message?: string; error?: string; os_count?: number; app_count?: number }> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/cmdb/import/`, {
+  const res = await authedFetch(`/api/cmdb/import/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id, type }),
@@ -339,12 +333,12 @@ export async function scanRepo(
   if (repoFile) {
     const formData = new FormData();
     formData.append('repo_file', repoFile);
-    res = await authedFetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
+    res = await authedFetch(`/api/scan/repo/`, {
       method: "POST",
       body: formData,
     });
   } else if (repoUrl) {
-    res = await authedFetch(`${PUBLIC_API_BASE}/api/scan/repo/`, {
+    res = await authedFetch(`/api/scan/repo/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ repo_url: repoUrl }),
@@ -404,14 +398,14 @@ export type ServerScanRecord = {
 };
 
 export async function fetchScanHistory(): Promise<ServerScanRecord[]> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/scan/history/`);
+  const res = await authedFetch(`/api/scan/history/`);
   if (!res.ok) throw new Error(`${res.status}`);
   const data = await res.json();
   return data.scans ?? [];
 }
 
 export async function fetchScanReport(taskId: string): Promise<{ report_markdown: string; target: string }> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/scan/history/${taskId}/report/`);
+  const res = await authedFetch(`/api/scan/history/${taskId}/report/`);
   if (!res.ok) throw new Error(`${res.status}`);
   return res.json();
 }
@@ -437,10 +431,51 @@ export type AdminActivityRow = {
   duration_ms: number | null; created_at: string;
 };
 
+export type PendingUserRow = {
+  id: string; username: string; email: string;
+  org_id: string; org_name: string; joined_at: string;
+};
+
+export async function fetchPendingUsers(): Promise<PendingUserRow[]> {
+  const res = await authedFetch(`/api/admin/pending/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  const data = await res.json();
+  return data.pending ?? [];
+}
+
+export async function approveUser(userId: string): Promise<{ message: string }> {
+  const res = await authedFetch(`/api/admin/users/${userId}/approve/`, { method: "POST" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `Approve failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function rejectUser(userId: string): Promise<{ message: string }> {
+  const res = await authedFetch(`/api/admin/users/${userId}/reject/`, { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `Reject failed: ${res.status}`);
+  }
+  return res.json();
+}
+
 export async function fetchAdminSummary(): Promise<{ orgs: AdminOrgRow[]; users: AdminUserRow[] }> {
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/admin/summary/`);
+  const res = await authedFetch(`/api/admin/summary/`);
   if (res.status === 403) throw new Error("403");
   if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function deleteAdminUser(
+  userId: string
+): Promise<{ message: string; org_now_empty: boolean }> {
+  const res = await authedFetch(`/api/admin/users/${userId}/`, { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `Delete failed: ${res.status}`);
+  }
   return res.json();
 }
 
@@ -450,7 +485,7 @@ export async function fetchAdminActivity(
   const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
   if (orgId)  params.set("org_id", orgId);
   if (action) params.set("action", action);
-  const res = await authedFetch(`${PUBLIC_API_BASE}/api/admin/activity/?${params}`);
+  const res = await authedFetch(`/api/admin/activity/?${params}`);
   if (!res.ok) throw new Error(`${res.status}`);
   return res.json();
 }
