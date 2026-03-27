@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import {
-  fetchAdminSummary, fetchAdminActivity,
+  fetchAdminSummary, fetchAdminActivity, deleteAdminUser,
   type AdminOrgRow, type AdminUserRow, type AdminActivityRow,
 } from "@/lib/api";
 import { getUser, clearAuth } from "@/lib/auth";
@@ -288,6 +288,9 @@ export default function AdminConsole() {
   const [error, setError]     = useState("");
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [currentUser] = useState(() => typeof window !== "undefined" ? getUser() : null);
+  const [confirmUser, setConfirmUser] = useState<AdminUserRow | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   const loadSummary = useCallback(() => {
     setLoading(true);
@@ -317,6 +320,22 @@ export default function AdminConsole() {
   function handleLogout() {
     clearAuth();
     router.push("/login");
+  }
+
+  async function handleDeleteUser() {
+    if (!confirmUser) return;
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      await deleteAdminUser(confirmUser.id);
+      setUsers(prev => prev.filter(u => u.id !== confirmUser.id));
+      setConfirmUser(null);
+      loadSummary();
+    } catch (e: any) {
+      setDeleteError(e.message ?? "Delete failed.");
+    } finally {
+      setDeleting(false);
+    }
   }
 
   /* ── forbidden ── */
@@ -600,7 +619,7 @@ export default function AdminConsole() {
                   <table style={{ width: "100%", borderCollapse: "collapse" }}>
                     <thead>
                       <tr>
-                        {["USER", "EMAIL", "ORGANIZATION", "REPORT RUNS", "REPO SCANS", "TOTAL ACTIONS", "LAST ACTIVE"].map(h => (
+                        {["USER", "EMAIL", "ORGANIZATION", "REPORT RUNS", "REPO SCANS", "TOTAL ACTIONS", "LAST ACTIVE", ""].map(h => (
                           <th key={h} style={S.th}>{h}</th>
                         ))}
                       </tr>
@@ -629,9 +648,37 @@ export default function AdminConsole() {
                           <td style={S.tdMono}>{u.repo_scans}</td>
                           <td style={{ ...S.tdMono, color: "#94a3b8", fontWeight: 700 }}>{u.total_actions}</td>
                           <td style={S.tdMono}>{relTime(u.last_active)}</td>
+                          <td style={{ ...S.td, textAlign: "right" as const }}>
+                            {u.email.toLowerCase() !== "admin@admin.com" && (
+                              <button
+                                title={`Delete ${u.username}`}
+                                onClick={e => { e.stopPropagation(); setConfirmUser(u); setDeleteError(""); }}
+                                style={{
+                                  padding: "4px 8px", borderRadius: "5px",
+                                  background: "transparent",
+                                  border: "1px solid rgba(239,68,68,0.2)",
+                                  color: "#ef444488", fontSize: "10px",
+                                  cursor: "pointer", fontFamily: "monospace",
+                                  letterSpacing: "0.06em", transition: "all 0.15s",
+                                }}
+                                onMouseEnter={e => {
+                                  e.currentTarget.style.background = "rgba(239,68,68,0.1)";
+                                  e.currentTarget.style.borderColor = "rgba(239,68,68,0.5)";
+                                  e.currentTarget.style.color = "#ef4444";
+                                }}
+                                onMouseLeave={e => {
+                                  e.currentTarget.style.background = "transparent";
+                                  e.currentTarget.style.borderColor = "rgba(239,68,68,0.2)";
+                                  e.currentTarget.style.color = "#ef444488";
+                                }}
+                              >
+                                DELETE
+                              </button>
+                            )}
+                          </td>
                         </tr>
                       ))}
-                      {users.length === 0 && <tr><td colSpan={7} style={S.emptyRow}>No users yet</td></tr>}
+                      {users.length === 0 && <tr><td colSpan={8} style={S.emptyRow}>No users yet</td></tr>}
                     </tbody>
                   </table>
                 </div>
@@ -746,6 +793,123 @@ export default function AdminConsole() {
 
       {/* spin keyframe */}
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+
+      {/* ── Delete confirmation modal ── */}
+      {confirmUser && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 50,
+          background: "rgba(0,0,0,0.7)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }} onClick={() => { if (!deleting) { setConfirmUser(null); setDeleteError(""); } }}>
+          <div style={{
+            background: "#111318", border: "1px solid #2a3147",
+            borderTop: "2px solid #ef4444",
+            borderRadius: "10px", padding: "24px 28px",
+            width: "380px", boxShadow: "0 20px 60px rgba(0,0,0,0.6)",
+          }} onClick={e => e.stopPropagation()}>
+
+            {/* Icon + title */}
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
+              <div style={{
+                width: "36px", height: "36px", borderRadius: "8px", flexShrink: 0,
+                background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <svg width="16" height="16" fill="none" stroke="#ef4444" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+              </div>
+              <div>
+                <div style={{ fontFamily: "monospace", fontWeight: 700, fontSize: "13px", color: "#e2e8f0" }}>
+                  Delete Account
+                </div>
+                <div style={{ fontFamily: "monospace", fontSize: "10px", color: "#475569", marginTop: "2px" }}>
+                  THIS ACTION CANNOT BE UNDONE
+                </div>
+              </div>
+            </div>
+
+            {/* User info */}
+            <div style={{
+              background: "#0d0f14", border: "1px solid #1e2330",
+              borderRadius: "6px", padding: "10px 14px",
+              marginBottom: "16px",
+              display: "flex", alignItems: "center", gap: "10px",
+            }}>
+              <div style={{
+                width: "28px", height: "28px", borderRadius: "6px", flexShrink: 0,
+                background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: "monospace", fontSize: "11px", fontWeight: 700, color: "#ef4444",
+              }}>
+                {confirmUser.username.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <div style={{ fontFamily: "monospace", fontSize: "12px", fontWeight: 700, color: "#e2e8f0" }}>
+                  {confirmUser.username}
+                </div>
+                <div style={{ fontFamily: "monospace", fontSize: "10px", color: "#475569" }}>
+                  {confirmUser.email} · {confirmUser.org_name}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#64748b", marginBottom: "18px", lineHeight: 1.6 }}>
+              The user's account and profile will be permanently removed.
+              Their activity log entries and scan records will be retained for auditing.
+            </div>
+
+            {deleteError && (
+              <div style={{
+                padding: "8px 12px", borderRadius: "6px", marginBottom: "14px",
+                background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)",
+                fontFamily: "monospace", fontSize: "11px", color: "#ef4444",
+              }}>
+                {deleteError}
+              </div>
+            )}
+
+            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+              <button
+                disabled={deleting}
+                onClick={() => { setConfirmUser(null); setDeleteError(""); }}
+                style={{
+                  padding: "7px 16px", borderRadius: "6px",
+                  background: "transparent", border: "1px solid #1e2330",
+                  color: "#64748b", fontSize: "11px", fontWeight: 600,
+                  cursor: deleting ? "not-allowed" : "pointer",
+                  fontFamily: "monospace", letterSpacing: "0.06em",
+                }}
+              >
+                CANCEL
+              </button>
+              <button
+                disabled={deleting}
+                onClick={handleDeleteUser}
+                style={{
+                  padding: "7px 16px", borderRadius: "6px",
+                  background: deleting ? "rgba(239,68,68,0.08)" : "rgba(239,68,68,0.15)",
+                  border: "1px solid rgba(239,68,68,0.35)",
+                  color: "#ef4444", fontSize: "11px", fontWeight: 700,
+                  cursor: deleting ? "not-allowed" : "pointer",
+                  fontFamily: "monospace", letterSpacing: "0.06em",
+                  display: "flex", alignItems: "center", gap: "6px",
+                  opacity: deleting ? 0.6 : 1,
+                }}
+              >
+                {deleting && (
+                  <span style={{
+                    display: "inline-block", width: "10px", height: "10px",
+                    borderRadius: "50%", border: "2px solid rgba(239,68,68,0.3)",
+                    borderTopColor: "#ef4444", animation: "spin 0.7s linear infinite",
+                  }} />
+                )}
+                {deleting ? "DELETING…" : "DELETE USER"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

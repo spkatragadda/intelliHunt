@@ -93,6 +93,53 @@ def admin_summary(request):
 
 @csrf_exempt
 @require_admin
+def delete_user(request, user_id):
+    """
+    DELETE /api/admin/users/<user_id>/
+    Permanently removes a user account and their profile.
+    The org is preserved (historical data / other members may exist).
+    Guards: cannot delete the admin@admin.com account or any other staff user.
+    """
+    if request.method != "DELETE":
+        return JsonResponse({"error": "DELETE required"}, status=405)
+
+    try:
+        target = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User not found"}, status=404)
+
+    if target.email.lower() == ADMIN_EMAIL:
+        return JsonResponse({"error": "Cannot delete the admin account"}, status=403)
+
+    if target.is_staff:
+        return JsonResponse({"error": "Cannot delete a staff account"}, status=403)
+
+    username = target.username
+    email    = target.email
+
+    # Note whether this leaves the org empty (useful for the UI to show a hint)
+    org_now_empty = False
+    try:
+        org = target.profile.organization
+        org_now_empty = org.members.exclude(user=target).count() == 0
+    except UserProfile.DoesNotExist:
+        pass
+
+    target.delete()  # UserProfile cascades; ActivityLog/ScanResult FKs become NULL
+
+    logger.info(
+        "ADMIN_DELETE_USER by=%s target=%s email=%s",
+        getattr(request, "username", "?"), username, email,
+    )
+
+    return JsonResponse({
+        "message":       f"User '{username}' deleted.",
+        "org_now_empty": org_now_empty,
+    })
+
+
+@csrf_exempt
+@require_admin
 def admin_activity(request):
     """
     GET /api/admin/activity/?org_id=<uuid>&action=<action>&limit=50&offset=0

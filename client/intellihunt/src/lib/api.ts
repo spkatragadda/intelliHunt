@@ -438,6 +438,17 @@ export async function fetchAdminSummary(): Promise<{ orgs: AdminOrgRow[]; users:
   return res.json();
 }
 
+export async function deleteAdminUser(
+  userId: string
+): Promise<{ message: string; org_now_empty: boolean }> {
+  const res = await authedFetch(`/api/admin/users/${userId}/`, { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `Delete failed: ${res.status}`);
+  }
+  return res.json();
+}
+
 export async function fetchAdminActivity(
   orgId?: string, action?: string, limit = 50, offset = 0
 ): Promise<{ total: number; rows: AdminActivityRow[] }> {
