@@ -1126,15 +1126,27 @@ def check_task_status(request, task_id):
     # First check in-memory storage
     if task_id in task_status:
         return JsonResponse(task_status[task_id])
-    
+
     # If not in memory, try to load from file
     status_data = load_task_status(task_id)
     if status_data:
-        # Update in-memory storage
         task_status[task_id] = status_data
         return JsonResponse(status_data)
-    
-    # Task not found
+
+    # Fall back to DB — covers completed scans after the 5-minute temp-file cleanup
+    from .models import ScanResult
+    try:
+        r = ScanResult.objects.get(task_id=task_id, organization_id=request.org_id)
+        return JsonResponse({
+            'status':          r.status,
+            'progress':        100 if r.status == 'completed' else 0,
+            'message':         'Scan completed.' if r.status == 'completed' else f'Scan {r.status}.',
+            'report_markdown': r.report_markdown or None,
+            'repo_url':        r.target,
+        })
+    except ScanResult.DoesNotExist:
+        pass
+
     return JsonResponse({'status': 'error', 'message': 'Task not found'}, status=404)
 
 @require_http_methods(["POST"])

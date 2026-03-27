@@ -38,6 +38,27 @@ mkdir -p "$LOG_DIR" "$DJANGO_LOG_DIR"
 ACCESS_LOG="$LOG_DIR/${DAY}-access.log"
 GUNICORN_LOG="$LOG_DIR/${DAY}-gunicorn.log"
 
+# ── wait for PostgreSQL ───────────────────────────────────────────────────────
+POSTGRES_HOST="${POSTGRES_HOST:-postgres}"
+POSTGRES_PORT="${POSTGRES_PORT:-5432}"
+echo "[entrypoint] Waiting for PostgreSQL at ${POSTGRES_HOST}:${POSTGRES_PORT}..."
+until python - <<'EOF'
+import socket, os, sys
+host = os.environ.get("POSTGRES_HOST", "postgres")
+port = int(os.environ.get("POSTGRES_PORT", "5432"))
+try:
+    s = socket.create_connection((host, port), timeout=3)
+    s.close()
+    sys.exit(0)
+except Exception:
+    sys.exit(1)
+EOF
+do
+    echo "[entrypoint] PostgreSQL not ready — retrying in 2s..."
+    sleep 2
+done
+echo "[entrypoint] PostgreSQL is ready."
+
 # ── migrations ───────────────────────────────────────────────────────────────
 echo "[entrypoint] Running database migrations..."
 python manage.py migrate --noinput

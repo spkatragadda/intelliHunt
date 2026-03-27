@@ -266,10 +266,48 @@ export default function RepoScanner() {
   const [loadingReport, setLoadingReport]         = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // ── Load scan history on mount ──────────────────────────────────────────
   useEffect(() => {
     fetchScanHistory().then(setRecentScans).catch(() => {});
   }, []);
 
+  // ── Recover an active scan from localStorage after page navigation ────────
+  useEffect(() => {
+    const saved = localStorage.getItem("intellihunt_scan_active");
+    if (!saved) return;
+    let parsed: { taskId: string; target: string; startedAt: number };
+    try { parsed = JSON.parse(saved); } catch {
+      localStorage.removeItem("intellihunt_scan_active");
+      return;
+    }
+    checkTaskStatus(parsed.taskId)
+      .then(s => {
+        if (s.status === "running") {
+          setSubmitting(true);
+          setTaskId(parsed.taskId);
+          setProgress(s.progress ?? 0);
+          setProgressMessage(s.message ?? "Scan in progress…");
+          setServerMsg("Scan in progress…");
+        } else if (s.status === "completed") {
+          localStorage.removeItem("intellihunt_scan_active");
+          setScanResults(s.output ?? "");
+          setReportMarkdown(s.report_markdown ?? null);
+          setServerMsg("Scan completed!");
+          fetchScanHistory().then(setRecentScans).catch(() => {});
+        } else {
+          localStorage.removeItem("intellihunt_scan_active");
+          fetchScanHistory().then(setRecentScans).catch(() => {});
+        }
+      })
+      .catch(() => {
+        // Task not found (temp file expired and not in DB) — discard
+        localStorage.removeItem("intellihunt_scan_active");
+        fetchScanHistory().then(setRecentScans).catch(() => {});
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ── Poll for task status while a scan is running ─────────────────────────
   useEffect(() => {
     if (!taskId) return;
     const id = setInterval(async () => {
@@ -278,6 +316,7 @@ export default function RepoScanner() {
         setProgress(s.progress);
         setProgressMessage(s.message);
         if (s.status === "completed") {
+          localStorage.removeItem("intellihunt_scan_active");
           setSubmitting(false);
           setServerMsg("Scan completed!");
           setScanResults(s.output || "No output.");
@@ -288,6 +327,7 @@ export default function RepoScanner() {
           clearInterval(id);
           fetchScanHistory().then(setRecentScans).catch(() => {});
         } else if (s.status === "error") {
+          localStorage.removeItem("intellihunt_scan_active");
           setSubmitting(false);
           setServerMsg(`Error: ${s.message}`);
           setTaskId(null);
@@ -295,6 +335,7 @@ export default function RepoScanner() {
           fetchScanHistory().then(setRecentScans).catch(() => {});
         }
       } catch {
+        localStorage.removeItem("intellihunt_scan_active");
         setSubmitting(false);
         setServerMsg("Error checking status");
         setTaskId(null);
@@ -326,6 +367,11 @@ export default function RepoScanner() {
       if (res.taskId) {
         setTaskId(res.taskId);
         setServerMsg("Scan started...");
+        localStorage.setItem("intellihunt_scan_active", JSON.stringify({
+          taskId: res.taskId,
+          target: inputMode === "url" ? repoUrl.trim() : repoFile!.name,
+          startedAt: now,
+        }));
         setRecentScans(prev => prev.map(r => r.id === optimisticId ? { ...r, task_id: res.taskId! } : r));
       } else {
         setServerMsg(res.message || "Failed."); setSubmitting(false);

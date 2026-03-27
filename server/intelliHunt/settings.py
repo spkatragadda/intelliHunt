@@ -146,15 +146,39 @@ TEMPLATES = [
 WSGI_APPLICATION = "intelliHunt.wsgi.application"
 
 
-# Database
+# Database — PostgreSQL
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+#
+# Password security: Django's built-in PBKDF2PasswordHasher (SHA-256,
+# 600,000 iterations) hashes all user passwords before storage.  Raw
+# passwords are never written to the database.
+#
+# Connection persistence: CONN_MAX_AGE=600 keeps each Gunicorn worker's
+# connection alive for 10 minutes, eliminating TCP + TLS handshake overhead
+# on every request.  With 3 workers this means at most 3 long-lived
+# connections — well within PostgreSQL's default max_connections=100.
+#
+# Query safety: statement_timeout aborts any single query that runs longer
+# than 30 seconds, protecting against runaway scans or accidental full-table
+# operations.
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        # Stored in a dedicated subdirectory so a named Docker volume can
-        # cover exactly this path without hiding other server files.
-        "NAME": BASE_DIR / "db" / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME":     os.environ.get("POSTGRES_DB",       "intellihunt"),
+        "USER":     os.environ.get("POSTGRES_USER",     "intellihunt"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
+        "HOST":     os.environ.get("POSTGRES_HOST",     "localhost"),
+        "PORT":     os.environ.get("POSTGRES_PORT",     "5432"),
+        # Reuse DB connections across requests within the same worker process.
+        "CONN_MAX_AGE": 600,
+        "OPTIONS": {
+            # Abort queries that take longer than 30 seconds.
+            "options": "-c statement_timeout=30000",
+        },
+        "TEST": {
+            "NAME": "test_intellihunt",
+        },
     }
 }
 
