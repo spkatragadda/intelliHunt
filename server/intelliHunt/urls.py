@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 from .reportApp import views
 from .reportApp import auth_views
 from .reportApp import admin_views
+from .reportApp import reset_views
 from .views import ReactAppView
 from django.http import HttpResponse
 
@@ -34,10 +35,12 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 
     # ── Auth endpoints ────────────────────────────────────────────────────────
-    path("api/auth/register/", auth_views.register, name="auth_register"),
-    path("api/auth/login/",    auth_views.login_view, name="auth_login"),
-    path("api/auth/refresh/",  auth_views.refresh_view, name="auth_refresh"),
-    path("api/auth/me/",       auth_views.me, name="auth_me"),
+    path("api/auth/register/",        auth_views.register,              name="auth_register"),
+    path("api/auth/login/",           auth_views.login_view,            name="auth_login"),
+    path("api/auth/refresh/",         auth_views.refresh_view,          name="auth_refresh"),
+    path("api/auth/me/",              auth_views.me,                    name="auth_me"),
+    path("api/auth/forgot-password/", reset_views.forgot_password,      name="auth_forgot_password"),
+    path("api/auth/reset-password/",  reset_views.reset_password,       name="auth_reset_password"),
 
     # ── Application endpoints (all require JWT) ───────────────────────────────
     path('api/markdown/', views.get_markdown_content, name='markdown_content'),

@@ -234,6 +234,26 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# ── Email ─────────────────────────────────────────────────────────────────────
+# In development (DEBUG=True) emails are printed to the console so no SMTP
+# setup is required. Set EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+# (or leave unset in production) and supply SMTP credentials via env vars.
+_email_backend_default = (
+    "django.core.mail.backends.console.EmailBackend"
+    if DEBUG
+    else "django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_BACKEND       = os.environ.get("EMAIL_BACKEND", _email_backend_default)
+EMAIL_HOST          = os.environ.get("EMAIL_HOST",          "smtp.gmail.com")
+EMAIL_PORT          = int(os.environ.get("EMAIL_PORT",      "587"))
+EMAIL_USE_TLS       = os.environ.get("EMAIL_USE_TLS",       "true").lower() == "true"
+EMAIL_HOST_USER     = os.environ.get("EMAIL_HOST_USER",     "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL  = os.environ.get("DEFAULT_FROM_EMAIL",  "noreply@intellihunt.io")
+
+# Base URL of the Next.js frontend — used to build password-reset links in emails.
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
+
 # ── Logging ───────────────────────────────────────────────────────────────────
 # Root log directory.  Sub-directories are created automatically by
 # DailyDirectoryHandler using the pattern  logs/<YYYY>/<MM>/<YYYY-MM-DD>.log

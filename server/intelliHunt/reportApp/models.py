@@ -97,3 +97,22 @@ class ScanResult(models.Model):
 
     def __str__(self):
         return f"Scan {self.task_id} ({self.status})"
+
+
+class PasswordResetToken(models.Model):
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user       = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="reset_tokens",
+    )
+    token_hash = models.CharField(max_length=64, unique=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    used       = models.BooleanField(default=False)
+
+    class Meta:
+        app_label = "reportApp"
+
+    def __str__(self):
+        return f"PasswordResetToken for {self.user_id} (used={self.used})"

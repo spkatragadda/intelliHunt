@@ -182,6 +182,15 @@ function LoginForm() {
               />
             </div>
 
+            <div style={{ textAlign: "right" }}>
+              <a href="/forgot-password" style={{
+                fontSize: "12px", color: "var(--text-muted)",
+                textDecoration: "none", fontFamily: "var(--font-mono), monospace",
+              }}>
+                Forgot password?
+              </a>
+            </div>
+
             <button
               type="submit"
               disabled={loading}
