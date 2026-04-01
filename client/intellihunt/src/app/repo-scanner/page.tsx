@@ -411,7 +411,7 @@ export default function RepoScanner() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px", width: "100%", animation: "fade-up 0.3s ease both" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px", width: "100%", animation: "fade-up 0.3s ease both" }}>
 
       {/* ── Page Header ── */}
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -442,7 +442,7 @@ export default function RepoScanner() {
           RESULTS MODE: two-column layout
          ══════════════════════════════════════════ */}
       {hasReport ? (
-        <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "16px", alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "24px", alignItems: "start" }}>
 
           {/* Left: scan summary + controls */}
           <div style={{
@@ -556,7 +556,7 @@ export default function RepoScanner() {
         /* ══════════════════════════════════════════
             IDLE / SCANNING MODE: focused single column
            ══════════════════════════════════════════ */
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "740px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "740px" }}>
 
           {/* ── Input panel ── */}
           <div style={{

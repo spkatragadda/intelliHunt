@@ -634,7 +634,7 @@ function DashboardView({
   const sparkAll = [...sparkBySev("critical"), ...sparkBySev("high"), ...sparkBySev("medium"), ...sparkBySev("low")];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
 
       {/* ── Page header ── */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "16px" }}>
@@ -713,7 +713,7 @@ function DashboardView({
       </div>
 
       {/* ── Stat row ── */}
-      <div className="grid gap-3 stagger" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))" }}>
+      <div className="grid gap-4 stagger" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))" }}>
         <StatCard
           label="Total CVEs"
           value={data.total}
@@ -775,7 +775,7 @@ function DashboardView({
       </div>
 
       {/* ── Charts row ── */}
-      <div className="grid grid-cols-1 gap-5 animate-fade-up" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", animationDelay: "320ms" }}>
+      <div className="grid grid-cols-1 gap-7 animate-fade-up" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", animationDelay: "320ms" }}>
         {/* Severity Distribution */}
         <Card>
           <CardHeader>
@@ -1164,6 +1164,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
   const [dragActive, setDragActive] = useState(false);
   const [configLoading, setConfigLoading] = useState(true);
   const [welcomeDismissed, setWelcomeDismissed] = useState(false);
+  const [showIntegrationsPanel, setShowIntegrationsPanel] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logsEndRef = useRef<HTMLDivElement>(null);
 
@@ -1238,7 +1239,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
   }
 
   return (
-    <div className="space-y-6 w-full">
+    <div className="space-y-8 w-full">
 
       {/* ── Page Header ── */}
       <div>
@@ -1270,7 +1271,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
 
             {/* Card 1 — Manual Entry */}
             <button
-              onClick={() => { setOs([{ vendor: "", product: "" }]); setGenTab("builder"); setWelcomeDismissed(true); }}
+              onClick={() => { setOs([{ vendor: "", product: "" }]); setGenTab("builder"); setWelcomeDismissed(true); setShowIntegrationsPanel(false); }}
               style={{
                 textAlign: "left", padding: "22px 20px", borderRadius: "14px",
                 background: "var(--surface)", border: "1px solid var(--border)",
@@ -1306,7 +1307,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
 
             {/* Card 2 — YAML Upload */}
             <button
-              onClick={() => { setGenTab("yaml"); setWelcomeDismissed(true); }}
+              onClick={() => { setGenTab("yaml"); setWelcomeDismissed(true); setShowIntegrationsPanel(false); }}
               style={{
                 textAlign: "left", padding: "22px 20px", borderRadius: "14px",
                 background: "var(--surface)", border: "1px solid var(--border)",
@@ -1342,7 +1343,7 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
 
             {/* Card 3 — Integrations */}
             <button
-              onClick={() => router.push("/settings")}
+              onClick={() => setShowIntegrationsPanel(true)}
               style={{
                 textAlign: "left", padding: "22px 20px", borderRadius: "14px",
                 background: "var(--surface)", border: "1px solid var(--border)",
@@ -1377,6 +1378,65 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
             </button>
 
           </div>
+
+          {/* Integrations info panel — shown when integrations card is clicked */}
+          {showIntegrationsPanel && (
+            <div style={{
+              marginTop: "20px", padding: "24px 28px", borderRadius: "14px",
+              background: "var(--surface)", border: "1px solid var(--accent-border)",
+              display: "flex", flexDirection: "column", gap: "14px",
+            }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "14px" }}>
+                <div style={{
+                  width: "38px", height: "38px", borderRadius: "10px", flexShrink: 0,
+                  background: "var(--accent-muted)", border: "1px solid var(--accent-border)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "var(--accent)",
+                }}>
+                  <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                  </svg>
+                </div>
+                <div>
+                  <div style={{ fontSize: "14px", fontWeight: 650, color: "var(--text-primary)", fontFamily: "var(--font-display)", letterSpacing: "-0.01em", marginBottom: "5px" }}>
+                    Connect via Integrations
+                  </div>
+                  <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: "1.7", margin: 0, maxWidth: "480px" }}>
+                    Head to <span style={{ color: "var(--text-secondary)", fontWeight: 500 }}>Settings → Integrations</span> to connect your CMDB, cloud platform, or asset management tool. Once connected, return here and your stack will be configured automatically.
+                  </p>
+                </div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", paddingTop: "4px" }}>
+                <button
+                  onClick={() => router.push("/settings")}
+                  style={{
+                    padding: "8px 18px", borderRadius: "8px", cursor: "pointer",
+                    background: "var(--accent)", border: "none",
+                    color: "var(--accent-text)", fontSize: "13px", fontWeight: 600,
+                    transition: "background 0.15s",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "var(--accent-hover)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "var(--accent)"; }}
+                >
+                  Open Settings
+                </button>
+                <button
+                  onClick={() => setShowIntegrationsPanel(false)}
+                  style={{
+                    padding: "8px 14px", borderRadius: "8px", cursor: "pointer",
+                    background: "none", border: "1px solid var(--border)",
+                    color: "var(--text-muted)", fontSize: "12px", fontWeight: 500,
+                    fontFamily: "var(--font-mono), monospace", letterSpacing: "0.04em",
+                    transition: "color 0.15s, border-color 0.15s",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-hover)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.borderColor = "var(--border)"; }}
+                >
+                  ← change method
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
       ) : (
@@ -1416,7 +1476,17 @@ function GenerateView({ onReportGenerated }: { onReportGenerated: (reportHint?: 
                 </div>
               )}
               <button
-                onClick={() => setWelcomeDismissed(false)}
+                onClick={() => {
+                  setWelcomeDismissed(false);
+                  setOs([]);
+                  setApps([]);
+                  setSources([]);
+                  setYamlUploaded(false);
+                  setYamlConfig(null);
+                  setYamlMsg(null);
+                  setShowEmptyPrompt(false);
+                  setShowIntegrationsPanel(false);
+                }}
                 style={{
                   fontSize: "11px", color: "var(--text-muted)", background: "none",
                   border: "none", cursor: "pointer", padding: "4px 6px",
@@ -1795,7 +1865,7 @@ function VulnerabilitiesView() {
   }, [cves, query]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-8">
       <div>
         <h2 className="text-[22px] font-bold" style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)", letterSpacing: "-0.025em" }}>
           Vulnerability Index
@@ -1983,7 +2053,7 @@ export default function IntelPage() {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "36px" }}>
 
       {/* ── Custom Tab Bar ── */}
       <div style={{

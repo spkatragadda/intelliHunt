@@ -57,63 +57,70 @@ export default function Sidebar() {
 
       {/* Logo / Brand */}
       <div
-        className="flex items-center gap-2.5 h-14 flex-shrink-0 px-3"
-        style={{ borderBottom: "1px solid var(--border)" }}
+        className="flex items-center h-14 flex-shrink-0"
+        style={{
+          borderBottom: "1px solid var(--border)",
+          padding: open ? "0 12px" : "0",
+          justifyContent: open ? "flex-start" : "center",
+          gap: open ? "10px" : "0",
+        }}
       >
-        <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
-          {/* Shield icon — always visible */}
-          <div
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-all duration-200"
+        {open ? (
+          /* ── Expanded: shield link + wordmark + collapse button ── */
+          <>
+            <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
+              <div
+                className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
+                style={{
+                  background: "linear-gradient(135deg, var(--accent-muted), var(--accent-subtle))",
+                  border: "1px solid var(--accent-border)",
+                  color: "var(--accent)",
+                  boxShadow: "0 0 20px rgba(74,158,255,0.25), inset 0 1px 0 rgba(74,158,255,0.12)",
+                }}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+              </div>
+              <span
+                className="text-[15px] font-bold tracking-tight whitespace-nowrap overflow-hidden"
+                style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
+              >
+                IntelliHunt
+              </span>
+            </Link>
+            <button
+              onClick={toggle}
+              className="flex-shrink-0 flex items-center justify-center rounded-lg w-7 h-7 transition-all duration-150"
+              style={{ color: "var(--text-muted)", background: "transparent" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "var(--surface-hover)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
+              aria-label="Collapse sidebar"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+          </>
+        ) : (
+          /* ── Collapsed: shield icon is the expand toggle ── */
+          <button
+            onClick={toggle}
+            className="flex items-center justify-center rounded-xl transition-all duration-150"
             style={{
+              width: "36px", height: "36px",
               background: "linear-gradient(135deg, var(--accent-muted), var(--accent-subtle))",
               border: "1px solid var(--accent-border)",
               color: "var(--accent)",
               boxShadow: "0 0 20px rgba(74,158,255,0.25), inset 0 1px 0 rgba(74,158,255,0.12)",
             }}
+            aria-label="Expand sidebar"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
             </svg>
-          </div>
-          {/* Wordmark — hidden when collapsed */}
-          <span
-            className="text-[15px] font-bold tracking-tight whitespace-nowrap transition-all duration-200 overflow-hidden"
-            style={{
-              fontFamily: "var(--font-display)",
-              color: "var(--text-primary)",
-              maxWidth: open ? "120px" : "0px",
-              opacity: open ? 1 : 0,
-            }}
-          >
-            IntelliHunt
-          </span>
-        </Link>
-
-        {/* Toggle button */}
-        <button
-          onClick={toggle}
-          className="flex-shrink-0 flex items-center justify-center rounded-lg w-7 h-7 transition-all duration-150"
-          style={{ color: "var(--text-muted)", background: "transparent" }}
-          onMouseEnter={e => {
-            e.currentTarget.style.background = "var(--surface-hover)";
-            e.currentTarget.style.color = "var(--text-secondary)";
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "var(--text-muted)";
-          }}
-          aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
-        >
-          {open ? (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-            </svg>
-          ) : (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
-          )}
-        </button>
+          </button>
+        )}
       </div>
 
       {/* Navigation */}

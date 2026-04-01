@@ -1203,7 +1203,7 @@ export default function SettingsPage() {
   const configuredCount = Object.keys(integrations).length;
 
   return (
-    <div className="space-y-7 w-full">
+    <div className="space-y-9 w-full">
 
       {/* Page header */}
       <div style={{ position: "relative", paddingBottom: "20px", borderBottom: "1px solid var(--border)" }}>
@@ -1308,7 +1308,7 @@ export default function SettingsPage() {
         </div>
       ) : (
         /* ── Marketplace Grid ── */
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           <CrowdStrikeIntegration saved={integrations["crowdstrike"]} onSaved={reload} />
           <SentinelOneIntegration saved={integrations["sentinelone"]} onSaved={reload} />
           <DefenderIntegration    saved={integrations["defender"]}    onSaved={reload} />
