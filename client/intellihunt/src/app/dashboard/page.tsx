@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type JSX } from "react";
 import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import {
@@ -32,6 +32,7 @@ type CVEEntry = {
   score: number | null;
   severity: CVESeverity;
   context: string;
+  epss?: number | null;
 };
 
 type SoftwareEntry = {
@@ -116,7 +117,11 @@ function parseDashboardData(md: string): DashboardData {
       if (sev) severity = sev;
     }
 
-    entries.push({ id, score, severity, context });
+    let epss: number | null = null;
+    const epssMatch = context.match(/\bEPSS[:\s*]+(\d+(?:\.\d+)?)%/i);
+    if (epssMatch) epss = parseFloat(epssMatch[1]) / 100;
+
+    entries.push({ id, score, severity, context, epss });
   }
 
   /* Software extraction */
@@ -215,6 +220,130 @@ function splitSoftwareName(name: string): { short: string; detail: string } {
   return { short: clean, detail: "" };
 }
 
+/* ─── Render section body lines (shared between normal and detection sections) ─── */
+function SectionBody({ lines }: { lines: string[] }) {
+  // Group consecutive code-fence lines into blocks
+  type Block = { type: "code"; lang: string; code: string } | { type: "text"; line: string };
+  const blocks: Block[] = [];
+  let inCode = false;
+  let codeLang = "";
+  let codeLines: string[] = [];
+
+  for (const line of lines) {
+    if (!inCode && /^```(\w*)/.test(line)) {
+      inCode = true;
+      codeLang = line.replace(/^```/, "").trim();
+      codeLines = [];
+    } else if (inCode && line.trim() === "```") {
+      blocks.push({ type: "code", lang: codeLang, code: codeLines.join("\n") });
+      inCode = false;
+    } else if (inCode) {
+      codeLines.push(line);
+    } else {
+      blocks.push({ type: "text", line });
+    }
+  }
+
+  return (
+    <div className="px-4 py-3 space-y-1.5" style={{ background: "var(--bg)" }}>
+      {blocks.map((block, j) => {
+        if (block.type === "code") {
+          return (
+            <div key={j} className="rounded-lg overflow-hidden" style={{ border: "1px solid var(--border)" }}>
+              <div className="flex items-center justify-between px-3 py-1.5"
+                style={{ background: "var(--surface-raised)", borderBottom: "1px solid var(--border)" }}>
+                <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+                  {block.lang || "code"}
+                </span>
+                <CopyButton text={block.code} />
+              </div>
+              <pre className="overflow-x-auto p-3 text-[11.5px] leading-relaxed"
+                style={{ fontFamily: "var(--font-mono), monospace", color: "var(--text-secondary)", margin: 0 }}>
+                {block.code}
+              </pre>
+            </div>
+          );
+        }
+        const line = block.line;
+        if (!line.trim()) return null;
+        const isBullet = /^\s*[-*•]\s/.test(line);
+        const kvMatch = !isBullet && line.replace(/\*\*/g, "").match(/^([^:]{2,28}):\s*(.+)/);
+        if (isBullet) return (
+          <div key={j} className="flex items-start gap-2">
+            <span className="text-[11px] mt-[3px] flex-shrink-0" style={{ color: "var(--accent)" }}>▸</span>
+            <span className="text-[12px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              <HighlightCVEs text={line.replace(/^\s*[-*•]\s/, "")} />
+            </span>
+          </div>
+        );
+        if (kvMatch) return (
+          <div key={j} className="flex items-baseline gap-3 py-1.5 text-[12px]"
+            style={{ borderBottom: "1px solid var(--border)" }}>
+            <span className="font-semibold flex-shrink-0 uppercase tracking-wide text-[10px]"
+              style={{ width: "130px", color: "var(--text-muted)" }}>{kvMatch[1]}</span>
+            <span style={{ color: "var(--text-primary)" }}><HighlightCVEs text={kvMatch[2]} /></span>
+          </div>
+        );
+        return (
+          <p key={j} className="text-[12px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+            <HighlightCVEs text={line} />
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─── Copy button ─── */
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={() => { navigator.clipboard.writeText(text).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1800); }).catch(() => {}); }}
+      className="text-[10px] px-2 py-0.5 rounded transition-all"
+      style={{ color: copied ? "var(--success)" : "var(--text-muted)", background: "var(--surface-hover)", border: "1px solid var(--border)" }}
+    >
+      {copied ? "Copied" : "Copy"}
+    </button>
+  );
+}
+
+/* ─── Detection tab card (Splunk + Sigma) ─── */
+function DetectionTabCard({ splunk, sigma }: { splunk: string[]; sigma: string[] | null }) {
+  const defaultTab = splunk.length > 0 ? "splunk" : "sigma";
+  const [tab, setTab] = useState<"splunk" | "sigma">(defaultTab);
+  const tabs: Array<{ key: "splunk" | "sigma"; label: string }> = [];
+  if (splunk.length > 0) tabs.push({ key: "splunk", label: "Splunk" });
+  if (sigma) tabs.push({ key: "sigma", label: "Sigma" });
+  return (
+    <div className="rounded-lg overflow-hidden" style={{ border: "1px solid var(--border)" }}>
+      <div className="px-4 py-2.5 flex items-center gap-3"
+        style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)" }}>
+        <span style={{ fontSize: "12px", fontWeight: 500, color: "var(--text-primary)" }}>Detection</span>
+        <div className="flex items-center gap-1 ml-2">
+          {tabs.map(t => (
+            <button
+              key={t.key}
+              type="button"
+              onClick={() => setTab(t.key)}
+              className="text-[10px] px-2.5 py-0.5 rounded-full font-semibold tracking-wide transition-all"
+              style={{
+                background: tab === t.key ? "var(--accent-muted)" : "transparent",
+                color: tab === t.key ? "var(--accent)" : "var(--text-muted)",
+                border: tab === t.key ? "1px solid var(--accent-border)" : "1px solid transparent",
+              }}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <SectionBody lines={tab === "splunk" ? splunk : (sigma ?? [])} />
+    </div>
+  );
+}
+
 /* ─── Formatted Report ─── */
 function FormattedReport({ md }: { md: string }) {
   type Section = { heading: string; level: number; content: string[] };
@@ -232,53 +361,50 @@ function FormattedReport({ md }: { md: string }) {
   if (cur) sections.push(cur);
   const visible = sections.filter(s => s.heading || s.content.some(l => l.trim()));
   if (!visible.length) return <p className="text-[13px] p-6" style={{ color: "var(--text-muted)" }}>No structured sections found.</p>;
+
+  // Merge consecutive Detection (Splunk) + Detection (Sigma) pairs into a single tab card
+  const rendered: JSX.Element[] = [];
+  let idx = 0;
+  while (idx < visible.length) {
+    const s = visible[idx];
+    if (s.heading === "Detection (Splunk)") {
+      const next = visible[idx + 1];
+      const sigmaContent = next?.heading === "Detection (Sigma)" ? next.content : null;
+      rendered.push(
+        <DetectionTabCard key={idx} splunk={s.content} sigma={sigmaContent} />
+      );
+      idx += sigmaContent ? 2 : 1;
+      continue;
+    }
+    if (s.heading === "Detection (Sigma)") {
+      // Sigma without a preceding Splunk block — render standalone
+      rendered.push(
+        <DetectionTabCard key={idx} splunk={[]} sigma={s.content} />
+      );
+      idx++;
+      continue;
+    }
+    const body = s.content.filter(l => l.trim());
+    rendered.push(
+      <div key={idx} className="rounded-lg overflow-hidden" style={{ border: "1px solid var(--border)" }}>
+        <div className="px-4 py-2.5 flex items-center gap-2"
+          style={{ background: "var(--surface)", borderBottom: body.length ? "1px solid var(--border)" : "none" }}>
+          {s.level === 1 && <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "var(--accent)" }} />}
+          <span style={{
+            fontSize: s.level === 1 ? "14px" : s.level === 2 ? "13px" : "12px",
+            fontWeight: s.level <= 2 ? 600 : 500,
+            color: s.level === 1 ? "var(--accent)" : "var(--text-primary)",
+          }}>{s.heading}</span>
+        </div>
+        {body.length > 0 && <SectionBody lines={s.content} />}
+      </div>
+    );
+    idx++;
+  }
+
   return (
     <div className="space-y-3 px-6 py-5 overflow-y-auto" style={{ maxHeight: 640, background: "var(--bg)" }}>
-      {visible.map((s, i) => {
-        const body = s.content.filter(l => l.trim());
-        return (
-          <div key={i} className="rounded-lg overflow-hidden" style={{ border: "1px solid var(--border)" }}>
-            <div className="px-4 py-2.5 flex items-center gap-2"
-              style={{ background: "var(--surface)", borderBottom: body.length ? "1px solid var(--border)" : "none" }}>
-              {s.level === 1 && <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "var(--accent)" }} />}
-              <span style={{
-                fontSize: s.level === 1 ? "14px" : s.level === 2 ? "13px" : "12px",
-                fontWeight: s.level <= 2 ? 600 : 500,
-                color: s.level === 1 ? "var(--accent)" : "var(--text-primary)",
-              }}>{s.heading}</span>
-            </div>
-            {body.length > 0 && (
-              <div className="px-4 py-3 space-y-1.5" style={{ background: "var(--bg)" }}>
-                {body.map((line, j) => {
-                  const isBullet = /^\s*[-*•]\s/.test(line);
-                  const kvMatch = !isBullet && line.match(/^([^:]{2,28}):\s*(.+)/);
-                  if (isBullet) return (
-                    <div key={j} className="flex items-start gap-2">
-                      <span className="text-[11px] mt-[3px] flex-shrink-0" style={{ color: "var(--accent)" }}>▸</span>
-                      <span className="text-[12px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                        <HighlightCVEs text={line.replace(/^\s*[-*•]\s/, "")} />
-                      </span>
-                    </div>
-                  );
-                  if (kvMatch) return (
-                    <div key={j} className="flex items-baseline gap-3 py-1.5 text-[12px]"
-                      style={{ borderBottom: "1px solid var(--border)" }}>
-                      <span className="font-semibold flex-shrink-0 uppercase tracking-wide text-[10px]"
-                        style={{ width: "130px", color: "var(--text-muted)" }}>{kvMatch[1]}</span>
-                      <span style={{ color: "var(--text-primary)" }}><HighlightCVEs text={kvMatch[2]} /></span>
-                    </div>
-                  );
-                  return (
-                    <p key={j} className="text-[12px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                      <HighlightCVEs text={line} />
-                    </p>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        );
-      })}
+      {rendered}
     </div>
   );
 }
@@ -493,6 +619,21 @@ function ThreatBarChart({ threats, activeSeverity }: { threats: CVEEntry[]; acti
           >
             {t.score?.toFixed(1)}
           </span>
+          {t.epss != null && (
+            <span
+              className="text-[9.5px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 tabular-nums"
+              title={`EPSS: ${(t.epss * 100).toFixed(1)}% exploitation probability`}
+              style={
+                t.epss > 0.5
+                  ? { background: "rgba(240,128,32,0.18)", color: "#f08020", border: "1px solid rgba(240,128,32,0.35)" }
+                  : t.epss > 0.1
+                  ? { background: "rgba(234,179,8,0.14)", color: "#ca8a04", border: "1px solid rgba(234,179,8,0.3)" }
+                  : { background: "var(--surface-raised)", color: "var(--text-muted)", border: "1px solid var(--border)" }
+              }
+            >
+              {t.epss > 0.5 ? `⚠ ${(t.epss * 100).toFixed(0)}%` : `${(t.epss * 100).toFixed(0)}%`}
+            </span>
+          )}
         </div>
       ))}
     </div>

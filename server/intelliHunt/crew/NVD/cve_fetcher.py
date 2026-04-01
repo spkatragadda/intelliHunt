@@ -480,7 +480,21 @@ class CVEFetcher:
             x['cvss_score'] if x['cvss_score'] is not None else 0,
             x['published']
         ), reverse=True)
-        
+
+        # Enrich with EPSS scores (fail silently — enrichment only)
+        try:
+            from .epss_client import fetch_epss_scores
+            cve_ids = [cve['cve_id'] for cve in cve_details if cve.get('cve_id')]
+            epss_data = fetch_epss_scores(cve_ids)
+            for cve in cve_details:
+                epss_entry = epss_data.get(cve.get('cve_id', ''), {})
+                cve['epss_score'] = epss_entry.get('epss', None)
+                cve['epss_percentile'] = epss_entry.get('percentile', None)
+        except Exception:
+            for cve in cve_details:
+                cve['epss_score'] = None
+                cve['epss_percentile'] = None
+
         # Load organization context
         org_context = self.load_organization_context()
         

@@ -15,6 +15,9 @@ research_task:
     5. INDICATORS OF COMPROMISE: Derive behavioral IoCs from the vulnerability type described
     6. RISK ASSESSMENT: Base on CVSS score, severity, and exploitability metrics
     7. RECOMMENDED ACTIONS: Suggest remediation based on affected software and vulnerability type
+    8. EXPLOITATION PROBABILITY: Factor in EPSS score when available (epss_score field, range 0–1).
+       EPSS > 0.5 indicates high real-world exploitation probability in the next 30 days — this should
+       elevate the risk assessment regardless of CVSS score.
 
     Provided CVE Data:
     - cve_id: {cve_id}
@@ -27,6 +30,8 @@ research_task:
     - reference_urls: {reference_urls}
     - exploitability_metrics: {exploitability_metrics}
     - affected_versions: {affected_versions}
+    - epss_score: {epss_score}
+    - epss_percentile: {epss_percentile}
   expected_output: >
     A comprehensive threat intelligence report structured according to the EnhancedTrendingThreat model
     with all required fields populated using the provided NVD data. Do not include speculative information.
@@ -111,7 +116,32 @@ python_query_task:
     for detecting the threat. Available databases include wineventlog,
     corelight logs, crowdstrike logs, and tanium logs.
   expected_output: >
-    A valid python script. Do not return anything but the splunk spl query 
+    A valid python script. Do not return anything but the splunk spl query
     and a description of its function. The description should include which threat is being detected.
+  agent: cthAnalyst
+
+sigma_rule_task:
+  description: >
+    Using the threat intelligence report for {cve_id}, create a valid Sigma detection rule
+    in YAML format. Sigma is a platform-agnostic format that compiles to Splunk SPL,
+    Microsoft Sentinel KQL, Elastic EQL, and other SIEMs.
+
+    SIGMA RULE REQUIREMENTS:
+    1. LOGSOURCE: Determine the appropriate log source entirely from the threat's characteristics —
+       the affected software, attack vector, and CVE description. Do NOT reference or rely on any
+       Splunk sourcetypes unless the user has explicitly provided them.
+       Guidance for log source inference:
+       - Remote code execution / memory corruption in a network service → category: network_connection or webserver
+       - Privilege escalation / credential access on Windows → category: process_creation, product: windows
+       - Kernel / system exploitation on Linux → category: process_creation, product: linux
+       - Supply chain / package execution → category: process_creation (product based on affected OS)
+       - Authentication bypass in a web application → category: webserver
+    2. DETECTION: Build detection logic from the IoCs and behavioral indicators in the threat report
+       (file hashes, command patterns, network indicators, registry keys, etc.)
+    3. TAGS: Include relevant MITRE ATT&CK technique tags (attack.T<id>) and CVE tag (cve.<year>.<num>)
+    4. LEVEL: Set rule level (critical/high/medium/low) matching the CVE severity
+    5. VALIDITY: The output MUST be valid YAML. Use proper indentation (2 spaces). No tabs.
+  expected_output: >
+    A SigmaDetectionRule object with a complete, valid Sigma YAML rule string and all metadata fields populated.
   agent: cthAnalyst
 

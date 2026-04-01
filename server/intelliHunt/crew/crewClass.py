@@ -1,7 +1,7 @@
 from crewai import Agent, Crew, Task, Process, LLM
 from crewai.project import CrewBase, agent, output_pydantic, task, crew, before_kickoff, after_kickoff
 from crewai.agents.agent_builder.base_agent import BaseAgent
-from typing import List
+from typing import List, Optional
 from langchain_community.llms import Ollama
 from crewai.tools import tool
 from googlesearch import search
@@ -97,6 +97,8 @@ class EnhancedTrendingThreat(BaseModel):
     media_coverage: list[TrendingNews] = Field(description="A list of URLs related to the media coverage of the threat")
     risk_assessment: str = Field(description="Risk assessment for the organization")
     recommended_actions: list[str] = Field(description="Recommended immediate actions")
+    epss_score: Optional[float] = Field(default=None, description="EPSS exploitation probability score (0-1)")
+    epss_percentile: Optional[float] = Field(default=None, description="EPSS percentile rank among all CVEs (0-1)")
 
 class TrendingThreat(BaseModel):
     threat_name: str = Field(description="The name of the threat")
@@ -142,6 +144,14 @@ class DetectionMethod(BaseModel):
     detection_method: str = Field(description="The detection method for the threat")
     description: str = Field(description="A description of the detection method")
     urlList: list[str] = Field(description="A list of URLs related to the detection method")
+
+class SigmaDetectionRule(BaseModel):
+    sigma_yaml: str = Field(description="Complete valid Sigma rule in YAML format")
+    rule_title: str = Field(description="Sigma rule title")
+    logsource_category: str = Field(description="Sigma log source category (e.g. process_creation, webserver, network_connection)")
+    logsource_product: str = Field(description="Sigma log source product (windows/linux/network)")
+    detection_level: str = Field(description="Rule level: critical/high/medium/low")
+    mitre_tags: list[str] = Field(description="MITRE ATT&CK technique tags (e.g. attack.T1059)")
 
 
 
@@ -236,6 +246,14 @@ class cyberCrew:
             config=self.tasks_config["splunk_query_task"],  # type: ignore[index]
             context=[self.review_task()],  # Use the output of research_task as context
             output_pydantic=EnhancedDetectionMethod,
+        )
+
+    @task
+    def sigma_rule_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["sigma_rule_task"],  # type: ignore[index]
+            context=[self.review_task()],  # threat intel only — not tied to Splunk
+            output_pydantic=SigmaDetectionRule,
         )
 
     # @task
