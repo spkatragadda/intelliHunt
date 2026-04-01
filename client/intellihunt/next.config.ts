@@ -17,13 +17,16 @@ const nextConfig: NextConfig = {
     // rewrite intercepts /api/* before the router can 308-redirect /api/foo/
     // to /api/foo and turn a POST into a loop.
     return {
-      beforeFiles: [
+      beforeFiles: [],
+      // afterFiles runs AFTER Next.js file-system routing, so App Router route
+      // files (e.g. src/app/api/scan/repo/route.ts) are matched first and the
+      // rewrite only applies to paths that don't have a dedicated route file.
+      afterFiles: [
         {
           source: "/api/:path*",
           destination: `${backendBase}/api/:path*/`,
         },
       ],
-      afterFiles: [],
       fallback: [],
     };
   },
