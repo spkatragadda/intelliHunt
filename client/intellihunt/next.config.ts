@@ -3,6 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
 
+  experimental: {
+    // Allow ZIP repository uploads up to 100 MB through the /api/* rewrite proxy.
+    serverActions: {
+      bodySizeLimit: "100mb",
+    },
+  },
+
   async rewrites() {
     const backendBase =
       process.env.API_BASE_INTERNAL ?? "http://django:8000";
