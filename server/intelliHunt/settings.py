@@ -229,6 +229,10 @@ else:
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Allow ZIP repository uploads up to 100 MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600   # 100 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 104857600   # 100 MB
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

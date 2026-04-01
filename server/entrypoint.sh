@@ -81,7 +81,14 @@ echo "[entrypoint] Starting Gunicorn..."
 echo "  access log → $ACCESS_LOG"
 echo "  error log  → $GUNICORN_LOG"
 
-exec gunicorn \
+# CVE-2026-27208: drop root before starting the long-running server process.
+# Migrations, collectstatic, and admin creation above needed root (or at least
+# unrestricted filesystem access). From here, gunicorn runs as the unprivileged
+# 'intellihunt' user so that any code-execution vulnerability in the app cannot
+# be trivially escalated to root inside the container.
+chown -R intellihunt:intellihunt "$LOG_BASE" /app/server/intelliHunt/data 2>/dev/null || true
+
+exec gosu intellihunt gunicorn \
   --bind 0.0.0.0:8000 \
   --workers 3 \
   --timeout 120 \

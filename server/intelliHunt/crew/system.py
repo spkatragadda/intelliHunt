@@ -310,6 +310,12 @@ def _results_to_markdown(result_list) -> str:
             meta.append(f"**Severity:** {severity}")
         if score is not None:
             meta.append(f"**CVSS Score:** {score}")
+        epss = getattr(threat, 'epss_score', None)
+        epss_pct = getattr(threat, 'epss_percentile', None)
+        if epss is not None:
+            epss_display = f"{float(epss) * 100:.1f}%"
+            pct_display = f" (top {(1 - float(epss_pct)) * 100:.1f}%)" if epss_pct is not None else ""
+            meta.append(f"**EPSS:** {epss_display}{pct_display}")
         if meta:
             lines.append("  ".join(meta) + "  ")
             lines.append("")
@@ -507,6 +513,35 @@ def _results_to_markdown(result_list) -> str:
                 lines.append(maint)
                 lines.append("")
 
+        # ── Detection Method (Sigma) ───────────────────────────────────────
+        sigma = None
+        for task_out in tasks_output:
+            pyd = getattr(task_out, 'pydantic', None)
+            if pyd and hasattr(pyd, 'sigma_yaml') and pyd.sigma_yaml:
+                sigma = pyd
+                break
+
+        if sigma and sigma.sigma_yaml:
+            lines.append("### Detection (Sigma)")
+            lines.append("")
+            lines.append("```yaml")
+            lines.append(sigma.sigma_yaml.strip())
+            lines.append("```")
+            lines.append("")
+            meta3 = []
+            if getattr(sigma, 'logsource_category', None):
+                prod = getattr(sigma, 'logsource_product', '') or ''
+                cat = sigma.logsource_category
+                meta3.append(f"**Log Source:** {prod}/{cat}" if prod else f"**Log Source:** {cat}")
+            if getattr(sigma, 'detection_level', None):
+                meta3.append(f"**Level:** {sigma.detection_level}")
+            if meta3:
+                lines.append("  ".join(meta3) + "  ")
+            mitre = getattr(sigma, 'mitre_tags', None) or []
+            if mitre:
+                lines.append(f"**MITRE Tags:** {', '.join(mitre)}  ")
+            lines.append("")
+
         # ── Media Coverage ────────────────────────────────────────────────
         media = getattr(threat, 'media_coverage', None) or []
         if media:
@@ -620,9 +655,14 @@ def main(payload_file=None):
         print(f"Error filtering CVE details: {e}")
         inputs = []
 
-    # Cap to top 10 CVEs by CVSS score to limit LLM calls
-    inputs = sorted(inputs, key=lambda x: x.get('cvss_score') or 0, reverse=True)[:10]
-    print(f"Processing top {len(inputs)} CVEs by CVSS score")
+    # Cap to top 10 CVEs by combined CVSS + EPSS priority (60% CVSS / 40% EPSS)
+    def _priority(cve):
+        cvss = float(cve.get('cvss_score') or 0)
+        epss = float(cve.get('epss_score') or 0)
+        return (cvss / 10) * 0.6 + epss * 0.4
+
+    inputs = sorted(inputs, key=_priority, reverse=True)[:10]
+    print(f"Processing top {len(inputs)} CVEs by CVSS+EPSS priority")
 
     # Mark each CVE with data_sufficient flag so the crew knows whether to search
     for cve in inputs:

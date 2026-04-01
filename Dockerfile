@@ -56,7 +56,14 @@ ENV PYTHONPATH=/app/server
 # RUN apt-get update \
 #     && apt-get install -y --no-install-recommends git \
 #     && rm -rf /var/lib/apt/lists/*
-RUN apt-get update && apt-get install -y git libcurl4-gnutls-dev
+RUN apt-get update && apt-get install -y git libcurl4-gnutls-dev gosu && rm -rf /var/lib/apt/lists/*
+
+# CVE-2026-27208: create a non-root user for the runtime process.
+# Migrations and setup steps run as root; gunicorn is started as this user
+# via gosu in entrypoint.sh, ensuring no privilege escalation is possible.
+RUN groupadd -r intellihunt && \
+    useradd -r -g intellihunt -u 1000 -d /app -s /sbin/nologin intellihunt
+
 COPY ./server/requirements.txt /app/server/requirements.txt
 RUN pip install --no-cache-dir -r /app/server/requirements.txt
 COPY ./server /app/server

@@ -822,17 +822,22 @@ def generate_scan_report_markdown(raw_result) -> str:
     text = raw_result if isinstance(raw_result, str) else str(raw_result)
     detections = []
 
-    # Try direct parse first
+    # Only treat parsed JSON as detection objects if they have a detection_method key.
+    # This prevents OSV/Semgrep scan data embedded in the crew output from being
+    # mistakenly rendered as detection reports, which produced empty "## 1. " headings.
     try:
         parsed = json.loads(text)
         if isinstance(parsed, list):
-            detections = [d for d in parsed if isinstance(d, dict)]
-        elif isinstance(parsed, dict):
+            detections = [d for d in parsed if isinstance(d, dict) and 'detection_method' in d]
+        elif isinstance(parsed, dict) and 'detection_method' in parsed:
             detections = [parsed]
     except (json.JSONDecodeError, TypeError):
-        detections = _extract_json_objects(text)
+        detections = [d for d in _extract_json_objects(text) if 'detection_method' in d]
 
     if not detections:
+        text = text.strip()
+        if text.startswith('#'):
+            return text
         return f"# Scan Results\n\n{text}"
 
     return _detections_to_markdown(detections)
@@ -1174,11 +1179,17 @@ def update_report_api(request):
     except Exception as e:
         return JsonResponse({"message": f"Error broadcasting update signal: {str(e)}"}, status=500)
 
-def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None,
+def run_repo_scan_async(task_id, repo_url, scan_dir=None,
                         org_id=None, user_id=None, username=""):
-    """Run the repo vulnerability scan in a separate thread"""
+    """Run the repo vulnerability scan in a separate thread.
+
+    scan_dir is the master sandbox directory for this scan session — it is
+    ALWAYS deleted in the finally block regardless of success or failure,
+    ensuring no repository data persists on disk after the scan completes.
+    """
     start_time = time.time()
-    
+    scan_label = repo_url if isinstance(repo_url, str) and repo_url.startswith('http') else "uploaded_file"
+
     try:
         # Initialize task status
         status_data = {
@@ -1186,27 +1197,35 @@ def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None,
             'progress': 0,
             'message': 'Starting repository vulnerability scan...',
             'start_time': start_time,
-            'repo_url': repo_url
+            'repo_url': scan_label
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
-        
-        # Update progress
-        status_data['progress'] = 10
-        status_data['message'] = 'Initializing scan pipeline...'
-        task_status[task_id] = status_data
-        save_task_status(task_id, status_data)
-        
+
+        # For GitHub URL scans: clone the repository into the sandbox directory
+        # before invoking the pipeline so the LLM crew only ever sees a local path.
+        repo_path = repo_url
+        if isinstance(repo_url, str) and repo_url.startswith('http'):
+            status_data['progress'] = 10
+            status_data['message'] = 'Cloning repository into sandbox...'
+            task_status[task_id] = status_data
+            save_task_status(task_id, status_data)
+
+            from git import Repo as GitRepo
+            clone_target = os.path.join(scan_dir, 'repo')
+            GitRepo.clone_from(repo_url, clone_target)
+            repo_path = clone_target
+
         # Update progress
         status_data['progress'] = 30
         status_data['message'] = 'Running vulnerability analysis (this may take several minutes)...'
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
-        
-        # Run the pipeline
-        result = run_pipeline(repo_url)
 
-        # Generate unified markdown report from the JSON output(s)
+        # Run the pipeline with the local (sandboxed) path
+        result = run_pipeline(repo_path)
+
+        # Generate unified markdown report from the crew output
         report_markdown = generate_scan_report_markdown(result)
 
         # Update progress
@@ -1224,7 +1243,7 @@ def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None,
             'message': 'Repository vulnerability scan completed successfully!',
             'output': result,
             'report_markdown': report_markdown,
-            'repo_url': repo_url,
+            'repo_url': scan_label,
             'end_time': end_time,
             'duration': end_time - start_time
         }
@@ -1233,34 +1252,17 @@ def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None,
         if org_id:
             complete_scan_result(task_id, "completed", report_markdown, duration_ms)
             log_action(org_id, user_id, username, "repo_scan", "completed",
-                       detail=repo_url if isinstance(repo_url, str) else "uploaded_file",
-                       duration_ms=duration_ms)
-        
-        # Clean up temporary directory if it was created from a file upload
-        if temp_dir_to_cleanup and os.path.exists(temp_dir_to_cleanup):
-            try:
-                shutil.rmtree(temp_dir_to_cleanup)
-            except Exception as e:
-                print(f"Error cleaning up temp directory {temp_dir_to_cleanup}: {e}")
-        
-        # Schedule cleanup of task status file after 5 minutes
-        def delayed_cleanup():
-            time.sleep(300)  # 5 minutes
-            cleanup_task_status(task_id)
-        
-        cleanup_thread = threading.Thread(target=delayed_cleanup)
-        cleanup_thread.daemon = True
-        cleanup_thread.start()
-            
+                       detail=scan_label, duration_ms=duration_ms)
+
     except Exception as e:
         end_time = time.time()
         status_data = {
             'status': 'error',
             'progress': 0,
             'message': f'Scan failed: {str(e)}',
-            'repo_url': repo_url,
+            'repo_url': scan_label,
             'end_time': end_time,
-            'duration': end_time - start_time if 'start_time' in locals() else 0
+            'duration': end_time - start_time
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
@@ -1268,18 +1270,19 @@ def run_repo_scan_async(task_id, repo_url, temp_dir_to_cleanup=None,
             complete_scan_result(task_id, "error")
             log_action(org_id, user_id, username, "repo_scan", "error", detail=str(e)[:500])
 
-        # Clean up temporary directory if it was created from a file upload
-        if temp_dir_to_cleanup and os.path.exists(temp_dir_to_cleanup):
+    finally:
+        # Always destroy the sandbox — no repository data remains on disk
+        if scan_dir and os.path.exists(scan_dir):
             try:
-                shutil.rmtree(temp_dir_to_cleanup)
-            except Exception as e:
-                print(f"Error cleaning up temp directory {temp_dir_to_cleanup}: {e}")
-        
+                shutil.rmtree(scan_dir)
+            except Exception as cleanup_err:
+                logger.warning(f"Failed to clean up scan sandbox {scan_dir}: {cleanup_err}")
+
         # Schedule cleanup of task status file after 5 minutes
         def delayed_cleanup():
             time.sleep(300)  # 5 minutes
             cleanup_task_status(task_id)
-        
+
         cleanup_thread = threading.Thread(target=delayed_cleanup)
         cleanup_thread.daemon = True
         cleanup_thread.start()
@@ -1293,72 +1296,66 @@ def scan_repo(request):
     2. FormData with 'repo_file' (zip file upload)
     """
     if request.method == 'POST':
+        scan_dir = None
         try:
             repo_url = None
-            temp_dir_to_cleanup = None
-            
+
             # Check if this is a file upload (FormData)
             if 'repo_file' in request.FILES:
                 uploaded_file = request.FILES['repo_file']
-                
+
                 # Validate file type (should be zip)
                 if not uploaded_file.name.endswith('.zip'):
                     return JsonResponse({
                         'status': 'error',
                         'message': 'Invalid file type. Please upload a .zip file containing the repository.'
                     }, status=400)
-                
-                # Create a temporary directory to extract the zip file
-                temp_dir = tempfile.mkdtemp(prefix='repo_scan_')
-                temp_dir_to_cleanup = temp_dir
-                
+
+                # Create the sandbox directory for this scan session
+                scan_dir = tempfile.mkdtemp(prefix='repo_scan_')
+
                 try:
                     # Save uploaded file temporarily
-                    temp_zip_path = os.path.join(temp_dir, uploaded_file.name)
+                    temp_zip_path = os.path.join(scan_dir, uploaded_file.name)
                     with open(temp_zip_path, 'wb+') as destination:
                         for chunk in uploaded_file.chunks():
                             destination.write(chunk)
-                    
+
                     # Extract the zip file
-                    extract_dir = os.path.join(temp_dir, 'extracted')
+                    extract_dir = os.path.join(scan_dir, 'extracted')
                     os.makedirs(extract_dir, exist_ok=True)
-                    
+
                     with zipfile.ZipFile(temp_zip_path, 'r') as zip_ref:
                         zip_ref.extractall(extract_dir)
-                    
+
                     # Find the root of the repository (handle cases where zip contains a single folder)
                     extracted_contents = os.listdir(extract_dir)
                     if len(extracted_contents) == 1:
                         # If there's a single folder, use that as the repo root
                         repo_path = os.path.join(extract_dir, extracted_contents[0])
-                        if os.path.isdir(repo_path):
-                            repo_url = repo_path
-                        else:
-                            repo_url = extract_dir
+                        repo_url = repo_path if os.path.isdir(repo_path) else extract_dir
                     else:
                         # Multiple files/folders, use extract_dir as root
                         repo_url = extract_dir
-                    
-                    # Clean up the zip file
+
+                    # Remove the zip file — only the extracted source is needed
                     os.remove(temp_zip_path)
-                    
+
                 except zipfile.BadZipFile:
-                    # Clean up on error
-                    if os.path.exists(temp_dir):
-                        shutil.rmtree(temp_dir)
+                    if scan_dir and os.path.exists(scan_dir):
+                        shutil.rmtree(scan_dir)
                     return JsonResponse({
                         'status': 'error',
                         'message': 'Invalid zip file. Please ensure the file is a valid zip archive.'
                     }, status=400)
                 except Exception as e:
-                    # Clean up on error
-                    if os.path.exists(temp_dir):
-                        shutil.rmtree(temp_dir)
+                    if scan_dir and os.path.exists(scan_dir):
+                        shutil.rmtree(scan_dir)
                     return JsonResponse({
                         'status': 'error',
                         'message': f'Error processing uploaded file: {str(e)}'
                     }, status=500)
-            
+
             # If not a file upload, try to parse JSON payload
             elif request.content_type and 'application/json' in request.content_type:
                 try:
@@ -1369,14 +1366,18 @@ def scan_repo(request):
                         'status': 'error',
                         'message': f'Invalid JSON payload: {str(e)}'
                     }, status=400)
-            
+                # Create sandbox directory; the actual clone happens inside run_repo_scan_async
+                scan_dir = tempfile.mkdtemp(prefix='repo_scan_')
+
             # Validate that we have a repo_url or file
             if not repo_url:
+                if scan_dir and os.path.exists(scan_dir):
+                    shutil.rmtree(scan_dir)
                 return JsonResponse({
                     'status': 'error',
                     'message': 'Missing required parameter: either provide repo_url in JSON payload or upload a repo_file (zip)'
                 }, status=400)
-            
+
             # Generate a unique task ID
             task_id = str(uuid.uuid4())
             target_label = repo_url if isinstance(repo_url, str) and repo_url.startswith('http') else 'uploaded_file'
@@ -1388,10 +1389,10 @@ def scan_repo(request):
             log_action(request.org_id, request.user_id, request.username,
                        "repo_scan", "started", detail=target_label)
 
-            # Start the scan in a separate thread
+            # Start the scan in a separate thread; scan_dir ownership transfers to the thread
             thread = threading.Thread(
                 target=run_repo_scan_async,
-                args=(task_id, repo_url, temp_dir_to_cleanup,
+                args=(task_id, repo_url, scan_dir,
                       request.org_id, request.user_id, request.username),
             )
             thread.daemon = True
@@ -1404,13 +1405,13 @@ def scan_repo(request):
                 'task_id': task_id,
                 'repo_url': target_label,
             })
-            
+
         except Exception as e:
-            # Clean up temp directory if it was created
-            if temp_dir_to_cleanup and os.path.exists(temp_dir_to_cleanup):
+            # Clean up sandbox if the thread was never started
+            if scan_dir and os.path.exists(scan_dir):
                 try:
-                    shutil.rmtree(temp_dir_to_cleanup)
-                except:
+                    shutil.rmtree(scan_dir)
+                except Exception:
                     pass
             return JsonResponse({
                 'status': 'error',

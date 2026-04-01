@@ -3,6 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
 
+  experimental: {
+    // Allow ZIP repository uploads up to 100 MB through the /api/* rewrite proxy.
+    serverActions: {
+      bodySizeLimit: "100mb",
+    },
+  },
+
   async rewrites() {
     const backendBase =
       process.env.API_BASE_INTERNAL ?? "http://django:8000";
@@ -10,13 +17,16 @@ const nextConfig: NextConfig = {
     // rewrite intercepts /api/* before the router can 308-redirect /api/foo/
     // to /api/foo and turn a POST into a loop.
     return {
-      beforeFiles: [
+      beforeFiles: [],
+      // afterFiles runs AFTER Next.js file-system routing, so App Router route
+      // files (e.g. src/app/api/scan/repo/route.ts) are matched first and the
+      // rewrite only applies to paths that don't have a dedicated route file.
+      afterFiles: [
         {
           source: "/api/:path*",
           destination: `${backendBase}/api/:path*/`,
         },
       ],
-      afterFiles: [],
       fallback: [],
     };
   },
