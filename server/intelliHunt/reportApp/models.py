@@ -116,3 +116,56 @@ class PasswordResetToken(models.Model):
 
     def __str__(self):
         return f"PasswordResetToken for {self.user_id} (used={self.used})"
+
+
+class ScheduleConfig(models.Model):
+    FREQUENCY_CHOICES = [
+        ('daily',   'Daily'),
+        ('weekly',  'Weekly'),
+        ('monthly', 'Monthly'),
+    ]
+    organization  = models.OneToOneField(
+        Organization, on_delete=models.CASCADE, related_name='schedule',
+    )
+    enabled       = models.BooleanField(default=False)
+    frequency     = models.CharField(max_length=16, choices=FREQUENCY_CHOICES, default='weekly')
+    # day_of_week: 0=Mon … 6=Sun (weekly); day_of_month: 1-28 (monthly)
+    day_of_week   = models.IntegerField(default=0)
+    day_of_month  = models.IntegerField(default=1)
+    hour          = models.IntegerField(default=8)  # UTC hour
+    notify_email  = models.BooleanField(default=True)
+    created_at    = models.DateTimeField(auto_now_add=True)
+    updated_at    = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = "reportApp"
+
+    def __str__(self):
+        return f"Schedule for {self.organization.name} ({self.frequency}, enabled={self.enabled})"
+
+
+class Notification(models.Model):
+    TYPE_CHOICES = [
+        ('drift',        'New CVEs Detected'),
+        ('run_complete', 'Scheduled Run Complete'),
+        ('run_error',    'Scheduled Run Failed'),
+    ]
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name='notifications',
+    )
+    user         = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        null=True, blank=True, related_name='notifications',
+    )
+    type         = models.CharField(max_length=32, choices=TYPE_CHOICES)
+    title        = models.CharField(max_length=255)
+    body         = models.TextField()
+    read         = models.BooleanField(default=False)
+    created_at   = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = "reportApp"
+        ordering  = ['-created_at']
+
+    def __str__(self):
+        return f"[{self.type}] {self.title} (read={self.read})"

@@ -359,8 +359,8 @@ export default function AdminConsole() {
     }
   }
 
-  function handleLogout() {
-    clearAuth();
+  async function handleLogout() {
+    await clearAuth();
     router.push("/login");
   }
 

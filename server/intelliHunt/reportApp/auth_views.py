@@ -5,7 +5,9 @@ import json
 import logging
 
 import jwt
+from django.conf import settings
 from django.contrib.auth.models import User
+from django_ratelimit.decorators import ratelimit
 
 logger = logging.getLogger("intelliHunt")
 from django.http import JsonResponse
@@ -41,6 +43,7 @@ def _user_payload(user: User, org: Organization) -> dict:
     }
 
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 @csrf_exempt
 def register(request):
     if request.method != "POST":
@@ -83,10 +86,12 @@ def register(request):
 
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+    except Exception:
+        logger.exception("Unexpected error in register")
+        return JsonResponse({"error": "An unexpected error occurred."}, status=500)
 
 
+@ratelimit(key='ip', rate='10/m', method='POST', block=True)
 @csrf_exempt
 def login_view(request):
     if request.method != "POST":
@@ -129,14 +134,25 @@ def login_view(request):
         log_action(str(org.id), user.pk, user.username, "login", "completed")
         logger.info("LOGIN user=%s org=%s", user.username, org.name)
         payload = _user_payload(user, org)
-        payload["access"] = create_access_token(user.pk, org.id, user.username)
-        payload["refresh"] = create_refresh_token(user.pk, org.id)
-        return JsonResponse(payload)
+        access = create_access_token(user.pk, org.id, user.username)
+        refresh = create_refresh_token(user.pk, org.id)
+        response = JsonResponse(payload)
+        _is_secure = not settings.DEBUG
+        response.set_cookie(
+            "access_token", access, httponly=True, secure=_is_secure,
+            samesite="Strict", max_age=3600, path="/",
+        )
+        response.set_cookie(
+            "refresh_token", refresh, httponly=True, secure=_is_secure,
+            samesite="Strict", max_age=60 * 60 * 24 * 30, path="/api/auth/refresh/",
+        )
+        return response
 
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+    except Exception:
+        logger.exception("Unexpected error in login_view")
+        return JsonResponse({"error": "An unexpected error occurred."}, status=500)
 
 
 @csrf_exempt
@@ -144,17 +160,31 @@ def refresh_view(request):
     if request.method != "POST":
         return JsonResponse({"error": "POST required"}, status=405)
     try:
-        body = json.loads(request.body)
-        token = body.get("refresh", "")
+        # Read refresh token from HttpOnly cookie (preferred) or JSON body (fallback)
+        token = request.COOKIES.get("refresh_token")
+        if not token:
+            try:
+                body = json.loads(request.body)
+                token = body.get("refresh", "")
+            except (json.JSONDecodeError, ValueError):
+                pass
+        if not token:
+            return JsonResponse({"error": "Refresh token required"}, status=401)
+
         payload = decode_token(token)
         if payload.get("type") != "refresh":
             return JsonResponse({"error": "Invalid token type"}, status=401)
 
         user = User.objects.get(pk=payload["user_id"])
-        access_token = create_access_token(
+        new_access = create_access_token(
             user.pk, payload["org_id"], user.username
         )
-        return JsonResponse({"access": access_token})
+        response = JsonResponse({"status": "ok"})
+        response.set_cookie(
+            "access_token", new_access, httponly=True, secure=not settings.DEBUG,
+            samesite="Strict", max_age=3600, path="/",
+        )
+        return response
 
     except jwt.ExpiredSignatureError:
         return JsonResponse(
@@ -162,10 +192,9 @@ def refresh_view(request):
         )
     except jwt.InvalidTokenError:
         return JsonResponse({"error": "Invalid token"}, status=401)
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+    except Exception:
+        logger.exception("Unexpected error in refresh_view")
+        return JsonResponse({"error": "An unexpected error occurred."}, status=500)
 
 
 @require_auth
@@ -174,5 +203,17 @@ def me(request):
         user = User.objects.get(pk=request.user_id)
         org = user.profile.organization
         return JsonResponse(_user_payload(user, org))
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+    except Exception:
+        logger.exception("Unexpected error in me")
+        return JsonResponse({"error": "An unexpected error occurred."}, status=500)
+
+
+@csrf_exempt
+@require_auth
+def logout_view(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+    response = JsonResponse({"status": "ok"})
+    response.delete_cookie("access_token", path="/")
+    response.delete_cookie("refresh_token", path="/api/auth/refresh/")
+    return response

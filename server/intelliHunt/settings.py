@@ -27,7 +27,7 @@ _SECRET_KEY_DEFAULT = "django-insecure-lo$7$#(5@09(j(b0pfjzg+0)5d(-+5*l143d8$mv(
 SECRET_KEY = os.environ.get("SECRET_KEY", _SECRET_KEY_DEFAULT)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "true").lower() == "true"
+DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 
 if not DEBUG and SECRET_KEY == _SECRET_KEY_DEFAULT:
     raise RuntimeError(
@@ -35,7 +35,7 @@ if not DEBUG and SECRET_KEY == _SECRET_KEY_DEFAULT:
         "Generate one with: python -c \"import secrets; print(secrets.token_hex(50))\""
     )
 
-_allowed_hosts = [h.strip() for h in os.environ.get("ALLOWED_HOSTS", "*").split(",") if h.strip()]
+_allowed_hosts = [h.strip() for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h.strip()]
 # Always allow internal Docker service name and loopback so Next.js → Django
 # proxy requests and healthchecks are never rejected by the Host header check.
 ALLOWED_HOSTS = _allowed_hosts + ["django", "localhost", "127.0.0.1"]
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "intelliHunt.reportApp",
+    "django_apscheduler",
 ]
 
 MIDDLEWARE = [
@@ -161,6 +162,13 @@ WSGI_APPLICATION = "intelliHunt.wsgi.application"
 # Query safety: statement_timeout aborts any single query that runs longer
 # than 30 seconds, protecting against runaway scans or accidental full-table
 # operations.
+
+# Cache backend used by django-ratelimit for per-IP rate limiting.
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
 
 DATABASES = {
     "default": {
