@@ -62,7 +62,17 @@ RUN apt-get update && apt-get install -y git libcurl4-gnutls-dev gosu && rm -rf 
 # Migrations and setup steps run as root; gunicorn is started as this user
 # via gosu in entrypoint.sh, ensuring no privilege escalation is possible.
 RUN groupadd -r intellihunt && \
-    useradd -r -g intellihunt -u 1000 -d /app -s /sbin/nologin intellihunt
+    useradd -r -g intellihunt -u 1000 -d /home/intellihunt -s /sbin/nologin intellihunt && \
+    mkdir -p /home/intellihunt/.local/share /home/intellihunt/.cache && \
+    chown -R intellihunt:intellihunt /home/intellihunt
+
+# CrewAI calls db_storage_path() at import time and tries to create
+# $HOME/.local/share/crewai. Point XDG_DATA_HOME at the user's writable
+# home so the import doesn't fail with EACCES when Django loads views.py.
+ENV HOME=/home/intellihunt \
+    XDG_DATA_HOME=/home/intellihunt/.local/share \
+    XDG_CACHE_HOME=/home/intellihunt/.cache \
+    CREWAI_STORAGE_DIR=/home/intellihunt/.local/share/crewai
 
 COPY ./server/requirements.txt /app/server/requirements.txt
 RUN pip install --no-cache-dir -r /app/server/requirements.txt
