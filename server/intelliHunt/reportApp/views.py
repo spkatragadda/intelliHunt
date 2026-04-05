@@ -15,17 +15,50 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import subprocess
 from django.views.decorators.http import require_http_methods
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
 import logging
+import socket
+import ipaddress
+from urllib.parse import urlparse
 
 from .auth import require_auth, tenant_path
 from .logging_utils import log_action, create_scan_result, complete_scan_result
 
 logger = logging.getLogger("intelliHunt")
+
+
+# ── SSRF Protection ──────────────────────────────────────────────────────────
+
+def _validate_outbound_url(url: str) -> str:
+    """Validate that a URL does not target private/internal networks.
+
+    Raises ValueError if the URL scheme is not HTTPS or the hostname resolves
+    to a private, loopback, reserved, or link-local IP address.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme not in ("https",):
+        raise ValueError(f"Blocked: only HTTPS URLs are allowed (got {parsed.scheme}://)")
+
+    hostname = parsed.hostname
+    if not hostname:
+        raise ValueError("Blocked: URL has no hostname")
+
+    try:
+        infos = socket.getaddrinfo(hostname, parsed.port or 443, proto=socket.IPPROTO_TCP)
+    except socket.gaierror:
+        raise ValueError(f"Blocked: could not resolve hostname {hostname}")
+
+    for family, _type, _proto, _canonname, sockaddr in infos:
+        ip = ipaddress.ip_address(sockaddr[0])
+        if ip.is_private or ip.is_loopback or ip.is_reserved or ip.is_link_local:
+            raise ValueError(
+                f"Blocked: {hostname} resolves to private/reserved address {ip}"
+            )
+
+    return url
+
 
 # ── CMDB Integration Helpers ──────────────────────────────────────────────────
 _SENSITIVE = {'password', 'api_token', 'token', 'api_key', 'client_secret'}
@@ -205,6 +238,7 @@ def test_cmdb_connection(request):
             url = (f"https://{cfg.get('instance', '').strip()}.service-now.com"
                    f"/api/now/table/{cfg.get('table', 'cmdb_ci_computer')}"
                    f"?sysparm_limit=1&sysparm_fields=sys_id")
+            _validate_outbound_url(url)
             r = rq.get(url, auth=(cfg.get('username', ''), cfg.get('password', '')), timeout=15)
             if r.status_code == 200:
                 return JsonResponse({'status': 'connected', 'message': 'Connected to ServiceNow CMDB'})
@@ -214,10 +248,11 @@ def test_cmdb_connection(request):
 
         elif itype == 'bmc_helix':
             server = cfg.get('server', '').rstrip('/')
+            _validate_outbound_url(f"{server}/api/jwt/login")
             r = rq.post(
                 f"{server}/api/jwt/login",
                 json={'username': cfg.get('username', ''), 'password': cfg.get('password', '')},
-                timeout=15, verify=False,
+                timeout=15,
             )
             if r.status_code == 200:
                 return JsonResponse({'status': 'connected', 'message': 'Connected to BMC Helix CMDB'})
@@ -242,6 +277,7 @@ def test_cmdb_connection(request):
 
         elif itype == 'custom':
             endpoint = cfg.get('endpoint', '').strip()
+            _validate_outbound_url(endpoint)
             auth_type = cfg.get('auth_type', 'none')
             headers, auth = {}, None
             if auth_type == 'basic':
@@ -269,6 +305,7 @@ def test_cmdb_connection(request):
             base = cfg.get('base_url', '').rstrip('/')
             if not base:
                 return JsonResponse({'status': 'error', 'message': 'Base URL is required'})
+            _validate_outbound_url(f"{base}/web/api/v2.1/system/status")
             r = rq.get(
                 f"{base}/web/api/v2.1/system/status",
                 headers=_s1_headers(cfg),
@@ -340,10 +377,11 @@ def import_cmdb_data(request):
 
         elif itype == 'bmc_helix':
             server = cfg.get('server', '').rstrip('/')
+            _validate_outbound_url(f"{server}/api/jwt/login")
             tok_r = rq.post(
                 f"{server}/api/jwt/login",
                 json={'username': cfg.get('username', ''), 'password': cfg.get('password', '')},
-                timeout=15, verify=False,
+                timeout=15,
             )
             if tok_r.status_code != 200:
                 return JsonResponse({'error': f'Auth failed: HTTP {tok_r.status_code}'}, status=400)
@@ -352,7 +390,7 @@ def import_cmdb_data(request):
                 f"{server}/api/arsys/v1/entry/AST:ComputerSystem"
                 f"?fields=values(Name,OS,OSVersion,Manufacturer,Model)&limit=500",
                 headers={'Authorization': f'AR-JWT {token}'},
-                timeout=30, verify=False,
+                timeout=30,
             )
             if r.status_code != 200:
                 return JsonResponse({'error': f'Import failed: HTTP {r.status_code}'}, status=400)
@@ -387,6 +425,7 @@ def import_cmdb_data(request):
 
         elif itype == 'custom':
             endpoint = cfg.get('endpoint', '').strip()
+            _validate_outbound_url(endpoint)
             auth_type = cfg.get('auth_type', 'none')
             headers, auth = {}, None
             if auth_type == 'basic':
@@ -454,6 +493,7 @@ def import_cmdb_data(request):
             base = cfg.get('base_url', '').rstrip('/')
             if not base:
                 return JsonResponse({'error': 'Base URL is required'}, status=400)
+            _validate_outbound_url(f"{base}/web/api/v2.1/agents")
             hdrs = _s1_headers(cfg)
 
             # 1. Fetch agents with OS info (paginate up to 500 agents)
@@ -663,13 +703,15 @@ def upload_yaml_config(request):
                     'config': yaml_data
                 })
 
-            except yaml.YAMLError as e:
-                return JsonResponse({'error': f'Invalid YAML format: {str(e)}'}, status=400)
-            except Exception as e:
-                return JsonResponse({'error': f'Error processing YAML file: {str(e)}'}, status=500)
+            except yaml.YAMLError:
+                return JsonResponse({'error': 'Invalid YAML format.'}, status=400)
+            except Exception:
+                logger.exception("Error processing YAML upload")
+                return JsonResponse({'error': 'An error occurred while processing the file.'}, status=500)
 
-        except Exception as e:
-            return JsonResponse({'error': f'Upload failed: {str(e)}'}, status=500)
+        except Exception:
+            logger.exception("YAML upload failed")
+            return JsonResponse({'error': 'An error occurred while processing the file.'}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
@@ -689,8 +731,9 @@ def get_current_yaml_config(request):
         })
     except FileNotFoundError:
         return JsonResponse({'error': 'Configuration file not found'}, status=404)
-    except Exception as e:
-        return JsonResponse({'error': f'Error reading configuration: {str(e)}'}, status=500)
+    except Exception:
+        logger.exception("Error reading YAML configuration")
+        return JsonResponse({'error': 'An error occurred while reading the configuration.'}, status=500)
 
 def _extract_json_objects(text: str) -> list:
     """Extract all top-level JSON objects/arrays from arbitrary text."""
@@ -953,21 +996,6 @@ def run_report_async(task_id, payload_file_path, org_id, user_id=None, username=
         log_action(org_id, user_id, username, "report_run", "completed",
                    detail=f"task={task_id}", duration_ms=duration_ms)
 
-        # Broadcast update via WebSocket
-        try:
-            channel_layer = get_channel_layer()
-            if channel_layer:
-                async_to_sync(channel_layer.group_send)(
-                    "report_updates",
-                    {
-                        "type": "report_update_message",
-                        "message": "Report generation completed.",
-                        "action": "content_updated"
-                    }
-                )
-        except Exception as e:
-            print(f"WebSocket broadcast failed (non-critical): {e}")
-
         # Clean up the temporary file
         if os.path.exists(payload_file_path):
             os.unlink(payload_file_path)
@@ -1117,10 +1145,11 @@ def run_report(request):
                 'task_id': task_id
             })
             
-        except json.JSONDecodeError as e:
-            return JsonResponse({'status': 'error', 'message': f'Invalid JSON payload: {str(e)}'}, status=400)
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': f'An unexpected error occurred: {str(e)}'}, status=500)
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid request body.'}, status=400)
+        except Exception:
+            logger.exception("Unexpected error in run_report")
+            return JsonResponse({'status': 'error', 'message': 'An unexpected error occurred.'}, status=500)
     
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
 
@@ -1154,30 +1183,6 @@ def check_task_status(request, task_id):
 
     return JsonResponse({'status': 'error', 'message': 'Task not found'}, status=404)
 
-@require_http_methods(["POST"])
-def update_report_api(request):
-    try:
-        # 1. (Optional) Re-generate the report content
-        # If your 'runReport' view saves the content to a file/DB, you can skip this.
-        # If this view is solely for *broadcasting* an update after 'generate' is done,
-        # then you only need step 2.
-        # generate_latest_report() 
-        
-        # 2. Get the channel layer and send a message to the 'report_updates' group
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "report_updates", # The group name for all listening clients
-            {
-                "type": "report_update_message", # Custom type to be handled by the consumer
-                "message": "The report has been updated. Please refresh content.",
-                "action": "content_updated"
-            }
-        )
-        
-        return JsonResponse({"message": "Report update signal broadcasted successfully."}, status=200)
-    
-    except Exception as e:
-        return JsonResponse({"message": f"Error broadcasting update signal: {str(e)}"}, status=500)
 
 def run_repo_scan_async(task_id, repo_url, scan_dir=None,
                         org_id=None, user_id=None, username=""):
@@ -1210,6 +1215,8 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
             status_data['message'] = 'Cloning repository into sandbox...'
             task_status[task_id] = status_data
             save_task_status(task_id, status_data)
+
+            _validate_outbound_url(repo_url)
 
             from git import Repo as GitRepo
             clone_target = os.path.join(scan_dir, 'repo')
@@ -1287,6 +1294,42 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
         cleanup_thread.daemon = True
         cleanup_thread.start()
 
+_MAX_EXTRACT_SIZE = 500 * 1024 * 1024   # 500 MB total extracted size
+_MAX_SINGLE_FILE  = 200 * 1024 * 1024   # 200 MB per individual file
+
+
+def _safe_zip_extract(zip_path: str, extract_dir: str):
+    """Extract a ZIP file with path-traversal and zip-bomb protection."""
+    real_extract = os.path.realpath(extract_dir)
+    total_size = 0
+
+    with zipfile.ZipFile(zip_path, 'r') as zf:
+        for member in zf.infolist():
+            # Block symlinks (external_attr upper 16 bits contain Unix mode)
+            if (member.external_attr >> 16) & 0o170000 == 0o120000:
+                continue  # skip symlinks
+
+            # Validate that the extraction target stays inside extract_dir
+            target = os.path.realpath(os.path.join(extract_dir, member.filename))
+            if not (target == real_extract or target.startswith(real_extract + os.sep)):
+                raise ValueError(f"Zip path traversal blocked: {member.filename}")
+
+            # Enforce per-file and total size limits
+            if member.file_size > _MAX_SINGLE_FILE:
+                raise ValueError(
+                    f"File too large inside archive: {member.filename} "
+                    f"({member.file_size / 1024 / 1024:.0f} MB, limit {_MAX_SINGLE_FILE // 1024 // 1024} MB)"
+                )
+            total_size += member.file_size
+            if total_size > _MAX_EXTRACT_SIZE:
+                raise ValueError(
+                    f"Archive exceeds maximum extraction size "
+                    f"({_MAX_EXTRACT_SIZE // 1024 // 1024} MB)"
+                )
+
+            zf.extract(member, extract_dir)
+
+
 @csrf_exempt
 @require_auth
 def scan_repo(request):
@@ -1315,18 +1358,17 @@ def scan_repo(request):
                 scan_dir = tempfile.mkdtemp(prefix='repo_scan_')
 
                 try:
-                    # Save uploaded file temporarily
-                    temp_zip_path = os.path.join(scan_dir, uploaded_file.name)
+                    # Save uploaded file temporarily (basename prevents path traversal in filename)
+                    temp_zip_path = os.path.join(scan_dir, os.path.basename(uploaded_file.name))
                     with open(temp_zip_path, 'wb+') as destination:
                         for chunk in uploaded_file.chunks():
                             destination.write(chunk)
 
-                    # Extract the zip file
+                    # Extract the zip file with safety checks
                     extract_dir = os.path.join(scan_dir, 'extracted')
                     os.makedirs(extract_dir, exist_ok=True)
 
-                    with zipfile.ZipFile(temp_zip_path, 'r') as zip_ref:
-                        zip_ref.extractall(extract_dir)
+                    _safe_zip_extract(temp_zip_path, extract_dir)
 
                     # Find the root of the repository (handle cases where zip contains a single folder)
                     extracted_contents = os.listdir(extract_dir)
@@ -1348,12 +1390,13 @@ def scan_repo(request):
                         'status': 'error',
                         'message': 'Invalid zip file. Please ensure the file is a valid zip archive.'
                     }, status=400)
-                except Exception as e:
+                except Exception:
+                    logger.exception("Error processing uploaded ZIP file")
                     if scan_dir and os.path.exists(scan_dir):
                         shutil.rmtree(scan_dir)
                     return JsonResponse({
                         'status': 'error',
-                        'message': f'Error processing uploaded file: {str(e)}'
+                        'message': 'An error occurred while processing the uploaded file.'
                     }, status=500)
 
             # If not a file upload, try to parse JSON payload
@@ -1361,10 +1404,10 @@ def scan_repo(request):
                 try:
                     payload = json.loads(request.body)
                     repo_url = payload.get('repo_url') or payload.get('repo') or payload.get('url')
-                except json.JSONDecodeError as e:
+                except json.JSONDecodeError:
                     return JsonResponse({
                         'status': 'error',
-                        'message': f'Invalid JSON payload: {str(e)}'
+                        'message': 'Invalid request body.'
                     }, status=400)
                 # Create sandbox directory; the actual clone happens inside run_repo_scan_async
                 scan_dir = tempfile.mkdtemp(prefix='repo_scan_')
@@ -1406,7 +1449,8 @@ def scan_repo(request):
                 'repo_url': target_label,
             })
 
-        except Exception as e:
+        except Exception:
+            logger.exception("Unexpected error in scan_repo")
             # Clean up sandbox if the thread was never started
             if scan_dir and os.path.exists(scan_dir):
                 try:
@@ -1415,7 +1459,7 @@ def scan_repo(request):
                     pass
             return JsonResponse({
                 'status': 'error',
-                'message': f'An unexpected error occurred: {str(e)}'
+                'message': 'An unexpected error occurred.'
             }, status=500)
     
     return JsonResponse({
@@ -1457,3 +1501,118 @@ def get_scan_report(request, task_id):
     except ScanResult.DoesNotExist:
         return JsonResponse({'error': 'Not found'}, status=404)
     return JsonResponse({'report_markdown': r.report_markdown, 'target': r.target})
+
+
+# ── Schedule endpoints ────────────────────────────────────────────────────────
+
+@csrf_exempt
+@require_auth
+def schedule_config(request):
+    """
+    GET  /api/schedule/  — return current ScheduleConfig for the org (or defaults).
+    PUT  /api/schedule/  — create/update ScheduleConfig and sync the APScheduler job.
+    """
+    from .models import ScheduleConfig
+
+    if request.method == 'GET':
+        try:
+            cfg = ScheduleConfig.objects.get(organization_id=request.org_id)
+            return JsonResponse({
+                'enabled':      cfg.enabled,
+                'frequency':    cfg.frequency,
+                'day_of_week':  cfg.day_of_week,
+                'day_of_month': cfg.day_of_month,
+                'hour':         cfg.hour,
+                'notify_email': cfg.notify_email,
+            })
+        except ScheduleConfig.DoesNotExist:
+            return JsonResponse({
+                'enabled':      False,
+                'frequency':    'weekly',
+                'day_of_week':  0,
+                'day_of_month': 1,
+                'hour':         8,
+                'notify_email': True,
+            })
+
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+        except (json.JSONDecodeError, TypeError):
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+        cfg, _ = ScheduleConfig.objects.get_or_create(organization_id=request.org_id)
+        cfg.enabled      = bool(data.get('enabled', cfg.enabled))
+        cfg.frequency    = data.get('frequency', cfg.frequency)
+        cfg.day_of_week  = int(data.get('day_of_week', cfg.day_of_week))
+        cfg.day_of_month = int(data.get('day_of_month', cfg.day_of_month))
+        cfg.hour         = int(data.get('hour', cfg.hour))
+        cfg.notify_email = bool(data.get('notify_email', cfg.notify_email))
+        cfg.save()
+
+        # Sync to live scheduler process via a shared module-level reference if available
+        try:
+            from . import _scheduler_ref
+            if _scheduler_ref.scheduler is not None:
+                from .schedule_sync import upsert_job
+                upsert_job(_scheduler_ref.scheduler, cfg)
+        except Exception:
+            pass  # scheduler process is separate; job syncs at next restart
+
+        return JsonResponse({'status': 'saved'})
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+
+# ── Notification endpoints ────────────────────────────────────────────────────
+
+@require_auth
+def notifications_list(request):
+    """GET /api/notifications/  — unread (and recent) notifications for the current user's org."""
+    from .models import Notification
+
+    qs = Notification.objects.filter(
+        organization_id=request.org_id,
+        user_id=request.user_id,
+    ).order_by('-created_at')[:50]
+
+    rows = [{
+        'id':         n.id,
+        'type':       n.type,
+        'title':      n.title,
+        'body':       n.body,
+        'read':       n.read,
+        'created_at': n.created_at.isoformat(),
+    } for n in qs]
+
+    unread_count = sum(1 for r in rows if not r['read'])
+    return JsonResponse({'notifications': rows, 'unread_count': unread_count})
+
+
+@csrf_exempt
+@require_auth
+def notifications_mark_read(request):
+    """POST /api/notifications/read/  — mark notifications as read.
+    Body: {"all": true}  or  {"ids": [1, 2, 3]}
+    """
+    from .models import Notification
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, TypeError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    qs = Notification.objects.filter(
+        organization_id=request.org_id,
+        user_id=request.user_id,
+    )
+    if data.get('all'):
+        updated = qs.update(read=True)
+    else:
+        ids = data.get('ids', [])
+        updated = qs.filter(id__in=ids).update(read=True)
+
+    return JsonResponse({'updated': updated})

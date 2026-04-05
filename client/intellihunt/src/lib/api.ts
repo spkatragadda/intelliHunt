@@ -6,42 +6,32 @@ export const API_BASE = "";
 // ── Authenticated fetch ────────────────────────────────────────────────────────
 
 /**
- * fetch() wrapper that injects Authorization header and handles 401 by
+ * fetch() wrapper that sends HttpOnly cookies automatically and handles 401 by
  * attempting a token refresh then retrying once. On second 401, clears auth
  * and redirects to /login.
  */
 export async function authedFetch(url: string, init: RequestInit = {}): Promise<Response> {
-  const { getAccessToken, getRefreshToken, setTokens, clearAuth } = await import("./auth");
+  const { clearAuth, clearAuthLocal } = await import("./auth");
 
-  const token = getAccessToken();
-  const headers = new Headers(init.headers as HeadersInit | undefined);
-  if (token) headers.set("Authorization", `Bearer ${token}`);
-
-  let res = await fetch(url, { ...init, headers });
+  let res = await fetch(url, { ...init, credentials: "same-origin" });
 
   if (res.status === 401) {
-    // Attempt refresh
-    const refresh = getRefreshToken();
-    if (refresh) {
-      try {
-        const refreshRes = await fetch(`/api/auth/refresh/`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ refresh }),
-        });
-        if (refreshRes.ok) {
-          const refreshData = await refreshRes.json();
-          setTokens(refreshData.access, refresh);
-          headers.set("Authorization", `Bearer ${refreshData.access}`);
-          res = await fetch(url, { ...init, headers });
-          if (res.status !== 401) return res;
-        }
-      } catch {
-        // fall through to redirect
+    // Attempt refresh — refresh token cookie is sent automatically
+    try {
+      const refreshRes = await fetch(`/api/auth/refresh/`, {
+        method: "POST",
+        credentials: "same-origin",
+      });
+      if (refreshRes.ok) {
+        // New access token cookie was set by the server — retry original request
+        res = await fetch(url, { ...init, credentials: "same-origin" });
+        if (res.status !== 401) return res;
       }
+    } catch {
+      // fall through to redirect
     }
-    // Could not refresh — clear and redirect
-    clearAuth();
+    // Could not refresh — clear local state and redirect
+    clearAuthLocal();
     if (typeof window !== "undefined") {
       window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`;
     }
@@ -140,39 +130,6 @@ export async function checkTaskStatus(taskId: string): Promise<{
   }
   
   return await res.json();
-}
-
-/** Hit an endpoint to automatically update all pages with the latest report markdown */
-export async function updateReport(): Promise<{ message: string }> {
-  const res = await authedFetch(`/api/update/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  });
-
-  if (!res.ok) {
-    let msg = `Report update failed: ${res.status}`;
-    try {
-      const txt = await res.text();
-      const errorData = JSON.parse(txt);
-      if (errorData.message) {
-          msg = `Server Error: ${errorData.message}`;
-      } else if (txt) {
-          msg = txt;
-      }
-    } catch {
-      // Ignore if parsing fails
-    }
-    return { message: msg };
-  }
-
-  // Expect a successful JSON response with a message
-  try {
-    const data = await res.json();
-    return { message: data.message || "Report updated successfully." };
-  } catch {
-    // Handle cases where the response is OK but not valid JSON (e.g., just an empty 200)
-    return { message: "Report update request succeeded, but received an unexpected response." };
-  }
 }
 
 /** Extract CVE IDs from any text (CVE-YYYY-NNNN…) */

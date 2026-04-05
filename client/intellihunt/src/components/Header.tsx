@@ -2,8 +2,9 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "./ThemeContext";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getUser, clearAuth, type StoredUser } from "@/lib/auth";
+import { authedFetch } from "@/lib/api";
 
 /* ── Route metadata ── */
 const PAGE_META: Record<string, { section: string; title: string }> = {
@@ -61,6 +62,186 @@ function UtcClock() {
   );
 }
 
+interface AppNotification {
+  id: number;
+  type: string;
+  title: string;
+  body: string;
+  read: boolean;
+  created_at: string;
+}
+
+function useNotifications() {
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  async function fetchNotifications() {
+    try {
+      const res = await authedFetch("/api/notifications/");
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data.notifications ?? []);
+        setUnreadCount(data.unread_count ?? 0);
+      }
+    } catch {
+      // non-blocking
+    }
+  }
+
+  async function markAllRead() {
+    try {
+      await authedFetch("/api/notifications/read/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ all: true }),
+      });
+      setNotifications(n => n.map(x => ({ ...x, read: true })));
+      setUnreadCount(0);
+    } catch {
+      // non-blocking
+    }
+  }
+
+  useEffect(() => {
+    fetchNotifications();
+    const id = setInterval(fetchNotifications, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  return { notifications, unreadCount, markAllRead };
+}
+
+function NotificationBell({ theme }: { theme: string }) {
+  const { notifications, unreadCount, markAllRead } = useNotifications();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function close(e: MouseEvent) {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [open]);
+
+  function relativeTime(iso: string) {
+    const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+    if (diff < 60) return "just now";
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return `${Math.floor(diff / 86400)}d ago`;
+  }
+
+  const typeColor: Record<string, string> = {
+    drift: "#f59e0b",
+    run_complete: "#22c55e",
+    run_error: "#ef4444",
+  };
+
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        aria-label="Notifications"
+        style={{
+          width: "30px", height: "30px", borderRadius: "8px",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          background: open ? "var(--surface-hover)" : "transparent",
+          border: "none", color: "var(--text-muted)", cursor: "pointer",
+          position: "relative", transition: "all 0.15s",
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = "var(--surface-hover)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = open ? "var(--surface-hover)" : "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
+      >
+        <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+        </svg>
+        {unreadCount > 0 && (
+          <span style={{
+            position: "absolute", top: "3px", right: "3px",
+            width: "8px", height: "8px", borderRadius: "50%",
+            background: "#ef4444",
+            border: "1.5px solid var(--bg)",
+          }} />
+        )}
+      </button>
+
+      {open && (
+        <div style={{
+          position: "absolute", top: "calc(100% + 6px)", right: 0,
+          width: "320px", maxHeight: "400px",
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          borderRadius: "10px",
+          boxShadow: theme === "dark" ? "0 8px 32px rgba(0,0,0,0.5)" : "0 8px 32px rgba(0,0,0,0.12)",
+          zIndex: 50,
+          display: "flex", flexDirection: "column",
+          overflow: "hidden",
+        }}>
+          {/* Header */}
+          <div style={{
+            padding: "10px 12px 8px",
+            borderBottom: "1px solid var(--border)",
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            flexShrink: 0,
+          }}>
+            <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+              Notifications {unreadCount > 0 && <span style={{ color: "#ef4444" }}>({unreadCount})</span>}
+            </span>
+            {unreadCount > 0 && (
+              <button
+                onClick={markAllRead}
+                style={{
+                  fontSize: "10px", fontWeight: 600, color: "var(--accent)",
+                  background: "none", border: "none", cursor: "pointer",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                Mark all read
+              </button>
+            )}
+          </div>
+
+          {/* List */}
+          <div style={{ overflowY: "auto", flex: 1 }}>
+            {notifications.length === 0 ? (
+              <div style={{ padding: "24px", textAlign: "center", color: "var(--text-muted)", fontSize: "12px" }}>
+                No notifications
+              </div>
+            ) : (
+              notifications.slice(0, 10).map(n => (
+                <div key={n.id} style={{
+                  padding: "10px 12px",
+                  borderBottom: "1px solid var(--border)",
+                  background: n.read ? "transparent" : "var(--accent-subtle)",
+                  display: "flex", flexDirection: "column", gap: "3px",
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span style={{
+                      width: "6px", height: "6px", borderRadius: "50%", flexShrink: 0,
+                      background: typeColor[n.type] ?? "var(--text-muted)",
+                    }} />
+                    <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-primary)", flex: 1 }}>
+                      {n.title}
+                    </span>
+                    <span style={{ fontSize: "9px", color: "var(--text-muted)", flexShrink: 0 }}>
+                      {relativeTime(n.created_at)}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: "11px", color: "var(--text-secondary)", margin: "0 0 0 12px", lineHeight: 1.4 }}>
+                    {n.body}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
@@ -84,8 +265,8 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", close);
   }, [showUserMenu]);
 
-  function handleLogout() {
-    clearAuth();
+  async function handleLogout() {
+    await clearAuth();
     router.push("/login");
   }
 
@@ -187,6 +368,9 @@ export default function Header() {
             </svg>
           )}
         </button>
+
+        {/* Notification bell */}
+        <NotificationBell theme={theme} />
 
         {/* User menu */}
         {user && (

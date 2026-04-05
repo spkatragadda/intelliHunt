@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect, FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { setTokens, setUser, isAuthenticated } from "@/lib/auth";
+import { setUser, isAuthenticated } from "@/lib/auth";
 
 export default function LoginPage() {
   return (
@@ -36,6 +36,7 @@ function LoginForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "same-origin",
       });
       if (!res.ok) {
         let msg = "Login failed.";
@@ -44,7 +45,6 @@ function LoginForm() {
         return;
       }
       const data = await res.json();
-      setTokens(data.access, data.refresh);
       setUser({
         id: data.user.id,
         username: data.user.username,

@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import timedelta
 
 from django.conf import settings
+from django_ratelimit.decorators import ratelimit
 from .models import PasswordResetToken
 
 logger = logging.getLogger("intelliHunt")
@@ -23,6 +24,7 @@ def _sha256(raw: str) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
+@ratelimit(key='ip', rate='3/m', method='POST', block=True)
 @csrf_exempt
 def forgot_password(request):
     if request.method != "POST":
@@ -87,6 +89,7 @@ def forgot_password(request):
     return safe_response
 
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 @csrf_exempt
 def reset_password(request):
     if request.method != "POST":

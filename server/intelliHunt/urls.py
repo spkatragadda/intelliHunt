@@ -39,6 +39,7 @@ urlpatterns = [
     path("api/auth/login/",           auth_views.login_view,            name="auth_login"),
     path("api/auth/refresh/",         auth_views.refresh_view,          name="auth_refresh"),
     path("api/auth/me/",              auth_views.me,                    name="auth_me"),
+    path("api/auth/logout/",          auth_views.logout_view,           name="auth_logout"),
     path("api/auth/forgot-password/", reset_views.forgot_password,      name="auth_forgot_password"),
     path("api/auth/reset-password/",  reset_views.reset_password,       name="auth_reset_password"),
 
@@ -46,8 +47,7 @@ urlpatterns = [
     path('api/markdown/', views.get_markdown_content, name='markdown_content'),
     path('api/generate/', views.run_report, name='run_script'),
     path('api/task/<str:task_id>/', views.check_task_status, name='check_task_status'),
-    path('api/update/', views.update_report_api, name='update_report_signal'),
-    path('api/yaml/template/', views.get_yaml_template, name='yaml_template'),
+path('api/yaml/template/', views.get_yaml_template, name='yaml_template'),
     path('api/yaml/upload/', views.upload_yaml_config, name='upload_yaml_config'),
     path('api/yaml/config/', views.get_current_yaml_config, name='get_yaml_config'),
     path('api/scan/repo/', views.scan_repo, name='scan_repo'),
@@ -59,6 +59,10 @@ urlpatterns = [
     # Scan history (per-tenant)
     path('api/scan/history/', views.get_scan_history, name='scan_history'),
     path('api/scan/history/<str:task_id>/report/', views.get_scan_report, name='scan_report'),
+    # Schedule + notifications
+    path('api/schedule/', views.schedule_config, name='schedule_config'),
+    path('api/notifications/', views.notifications_list, name='notifications_list'),
+    path('api/notifications/read/', views.notifications_mark_read, name='notifications_mark_read'),
     # Admin endpoints
     path('api/admin/summary/',                        admin_views.admin_summary,    name='admin_summary'),
     path('api/admin/activity/',                       admin_views.admin_activity,   name='admin_activity'),

@@ -10,8 +10,9 @@ gunicorn==23.0.0
 whitenoise==6.9.0
 django-cors-headers==4.7.0
 openai==1.109.1
-channels
 GitPython
 semgrep
 langchain-openai
 PyJWT>=2.8.0
+django-apscheduler>=0.7
+django-ratelimit>=4.1

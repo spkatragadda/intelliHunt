@@ -8,6 +8,7 @@ import {
   testCmdbConnection,
   importCmdbData,
   type CmdbIntegration,
+  authedFetch,
 } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -1180,6 +1181,187 @@ function DefenderIntegration({ saved, onSaved }: { saved: CmdbIntegration | unde
 }
 
 /* ══════════════════════════════════════════
+   Scheduled Reports
+   ══════════════════════════════════════════ */
+interface ScheduleForm {
+  enabled: boolean;
+  frequency: "daily" | "weekly" | "monthly";
+  day_of_week: number;
+  day_of_month: number;
+  hour: number;
+  notify_email: boolean;
+}
+
+const DAYS_OF_WEEK = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+
+function ScheduledReports() {
+  const [form, setForm] = useState<ScheduleForm>({
+    enabled: false, frequency: "weekly", day_of_week: 0, day_of_month: 1, hour: 8, notify_email: true,
+  });
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [loadErr, setLoadErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    authedFetch("/api/schedule/")
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then((d: ScheduleForm) => setForm(d))
+      .catch(() => setLoadErr("Could not load schedule settings."));
+  }, []);
+
+  async function handleSave() {
+    setSaving(true); setSaved(false);
+    try {
+      const res = await authedFetch("/api/schedule/", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) setSaved(true);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const field = (label: string, child: React.ReactNode) => (
+    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+      <label style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-secondary)", letterSpacing: "0.04em" }}>
+        {label}
+      </label>
+      {child}
+    </div>
+  );
+
+  const selectStyle: React.CSSProperties = {
+    width: "100%", padding: "7px 10px", borderRadius: "7px", fontSize: "12px",
+    background: "var(--surface)", border: "1px solid var(--border)",
+    color: "var(--text-primary)", outline: "none",
+  };
+
+  return (
+    <div style={{
+      background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px",
+      padding: "20px 24px",
+    }}>
+      <div style={{ marginBottom: "16px" }}>
+        <h3 style={{ fontSize: "13px", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
+          Scheduled Reports
+        </h3>
+        <p style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "4px" }}>
+          Automatically run threat intelligence reports on a schedule and receive drift alerts when new CVEs are detected.
+        </p>
+      </div>
+
+      {loadErr && (
+        <div style={{ padding: "10px 12px", borderRadius: "7px", background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.25)", color: "var(--danger)", fontSize: "12px", marginBottom: "14px" }}>
+          {loadErr}
+        </div>
+      )}
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+        {/* Enable toggle */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-primary)" }}>Enable scheduled runs</span>
+          <button
+            onClick={() => setForm(f => ({ ...f, enabled: !f.enabled }))}
+            style={{
+              width: "40px", height: "22px", borderRadius: "11px",
+              background: form.enabled ? "var(--accent)" : "var(--border)",
+              border: "none", cursor: "pointer", position: "relative", transition: "background 0.2s",
+            }}
+          >
+            <span style={{
+              position: "absolute", top: "3px",
+              left: form.enabled ? "21px" : "3px",
+              width: "16px", height: "16px", borderRadius: "50%",
+              background: "#fff", transition: "left 0.2s",
+            }} />
+          </button>
+        </div>
+
+        {form.enabled && (
+          <>
+            {/* Frequency */}
+            {field("Frequency",
+              <select style={selectStyle} value={form.frequency}
+                onChange={e => setForm(f => ({ ...f, frequency: e.target.value as ScheduleForm["frequency"] }))}>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            )}
+
+            {/* Day of week (weekly only) */}
+            {form.frequency === "weekly" && field("Day of Week",
+              <select style={selectStyle} value={form.day_of_week}
+                onChange={e => setForm(f => ({ ...f, day_of_week: parseInt(e.target.value) }))}>
+                {DAYS_OF_WEEK.map((d, i) => <option key={i} value={i}>{d}</option>)}
+              </select>
+            )}
+
+            {/* Day of month (monthly only) */}
+            {form.frequency === "monthly" && field("Day of Month",
+              <select style={selectStyle} value={form.day_of_month}
+                onChange={e => setForm(f => ({ ...f, day_of_month: parseInt(e.target.value) }))}>
+                {Array.from({ length: 28 }, (_, i) => i + 1).map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+            )}
+
+            {/* Hour (UTC) */}
+            {field("Run Time (UTC Hour)",
+              <select style={selectStyle} value={form.hour}
+                onChange={e => setForm(f => ({ ...f, hour: parseInt(e.target.value) }))}>
+                {Array.from({ length: 24 }, (_, i) => (
+                  <option key={i} value={i}>{String(i).padStart(2, "0")}:00 UTC</option>
+                ))}
+              </select>
+            )}
+
+            {/* Email notifications toggle */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-primary)" }}>Email alerts on drift</span>
+              <button
+                onClick={() => setForm(f => ({ ...f, notify_email: !f.notify_email }))}
+                style={{
+                  width: "40px", height: "22px", borderRadius: "11px",
+                  background: form.notify_email ? "var(--accent)" : "var(--border)",
+                  border: "none", cursor: "pointer", position: "relative", transition: "background 0.2s",
+                }}
+              >
+                <span style={{
+                  position: "absolute", top: "3px",
+                  left: form.notify_email ? "21px" : "3px",
+                  width: "16px", height: "16px", borderRadius: "50%",
+                  background: "#fff", transition: "left 0.2s",
+                }} />
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* Save */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", paddingTop: "4px" }}>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            style={{
+              padding: "8px 18px", borderRadius: "8px", fontSize: "12px", fontWeight: 700,
+              background: "var(--accent)", border: "none", color: "#fff",
+              cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1,
+            }}
+          >
+            {saving ? "Saving…" : "Save Schedule"}
+          </button>
+          {saved && (
+            <span style={{ fontSize: "11px", color: "var(--success)" }}>Saved</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
    Settings Page
    ══════════════════════════════════════════ */
 export default function SettingsPage() {
@@ -1284,6 +1466,9 @@ export default function SettingsPage() {
           Click any card to configure credentials. Use <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Import Now</strong> to retrieve installed software and OS inventory from your EDR/CMDB platform — imported data is used automatically when generating vulnerability reports from the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Intel</strong> dashboard.
         </p>
       </div>
+
+      {/* Scheduled Reports */}
+      <ScheduledReports />
 
       {/* Section label */}
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>

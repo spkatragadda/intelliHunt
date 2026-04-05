@@ -50,13 +50,16 @@ def decode_token(token: str) -> dict:
 # ── Auth decorator ─────────────────────────────────────────────────────────────
 
 def require_auth(view_func):
-    """Validate JWT Bearer token; attach user_id, org_id, username to request."""
+    """Validate JWT access token from HttpOnly cookie (preferred) or Authorization header (fallback)."""
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
-        auth_header = request.headers.get("Authorization", "")
-        if not auth_header.startswith("Bearer "):
+        token = request.COOKIES.get("access_token")
+        if not token:
+            auth_header = request.headers.get("Authorization", "")
+            if auth_header.startswith("Bearer "):
+                token = auth_header[7:].strip()
+        if not token:
             return JsonResponse({"error": "Authentication required"}, status=401)
-        token = auth_header[7:].strip()
         try:
             payload = decode_token(token)
             if payload.get("type") != "access":

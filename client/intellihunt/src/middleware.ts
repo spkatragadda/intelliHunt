@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
     (p) => pathname === p || pathname.startsWith(p + "/")
   );
 
-  const token = request.cookies.get("auth_token")?.value;
+  const token = request.cookies.get("access_token")?.value;
 
   // No token → redirect to /login (unless already on a public path)
   if (!token && !isPublic) {
