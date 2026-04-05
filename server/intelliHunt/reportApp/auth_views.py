@@ -137,14 +137,14 @@ def login_view(request):
         access = create_access_token(user.pk, org.id, user.username)
         refresh = create_refresh_token(user.pk, org.id)
         response = JsonResponse(payload)
-        _is_secure = not settings.DEBUG
+        _is_secure = request.is_secure()
         response.set_cookie(
             "access_token", access, httponly=True, secure=_is_secure,
-            samesite="Strict", max_age=3600, path="/",
+            samesite="Lax", max_age=3600, path="/",
         )
         response.set_cookie(
             "refresh_token", refresh, httponly=True, secure=_is_secure,
-            samesite="Strict", max_age=60 * 60 * 24 * 30, path="/api/auth/refresh/",
+            samesite="Lax", max_age=60 * 60 * 24 * 30, path="/api/auth/refresh/",
         )
         return response
 
@@ -181,8 +181,8 @@ def refresh_view(request):
         )
         response = JsonResponse({"status": "ok"})
         response.set_cookie(
-            "access_token", new_access, httponly=True, secure=not settings.DEBUG,
-            samesite="Strict", max_age=3600, path="/",
+            "access_token", new_access, httponly=True, secure=request.is_secure(),
+            samesite="Lax", max_age=3600, path="/",
         )
         return response
 
