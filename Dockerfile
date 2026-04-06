@@ -56,22 +56,8 @@ ENV PYTHONPATH=/app/server
 # RUN apt-get update \
 #     && apt-get install -y --no-install-recommends git \
 #     && rm -rf /var/lib/apt/lists/*
-# Runtime deps + nsjail build deps in a single layer to keep the image small.
-# nsjail requires: protobuf, libnl-3, libcap, plus standard build tooling.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git libcurl4-gnutls-dev gosu \
-    # nsjail build dependencies
-    autoconf bison flex gcc g++ make pkg-config libtool \
-    protobuf-compiler libprotobuf-dev \
-    libnl-3-dev libnl-route-3-dev \
-    libcap-dev \
-    libz-dev \
-    && git clone --depth 1 https://github.com/google/nsjail.git /tmp/nsjail \
-    && cd /tmp/nsjail && make -j$(nproc) \
-    && cp /tmp/nsjail/nsjail /usr/local/bin/nsjail \
-    && chmod +x /usr/local/bin/nsjail \
-    && nsjail --help > /dev/null 2>&1 || true \
-    && rm -rf /tmp/nsjail \
+    git libcurl4-gnutls-dev gosu bubblewrap \
     && rm -rf /var/lib/apt/lists/*
 
 # CVE-2026-27208: create a non-root user for the runtime process.

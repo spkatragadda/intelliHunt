@@ -1,10 +1,12 @@
-"""nsjail wrapper for sandboxed file operations on scanned repositories.
+"""Bubblewrap (bwrap) sandbox for read-only file operations on scanned repos.
 
-Provides a ``run_in_nsjail`` function that attempts to run commands inside
-an nsjail sandbox.  If nsjail is unavailable or the container lacks the
-required kernel capabilities (SYS_ADMIN, SYS_PTRACE), the wrapper falls
-back to running the command directly — the Python-level path validation in
-the calling tools still prevents access outside the scan sandbox.
+Provides ``run_in_sandbox`` which executes commands with the repo mounted
+read-only at ``/repo`` inside an isolated namespace (no network, no host
+filesystem access beyond /repo and minimal system libs).
+
+If bwrap is unavailable the wrapper falls back to running commands directly —
+the Python-level path validation in the calling tools still prevents access
+outside the scan sandbox.
 """
 
 import os
@@ -14,57 +16,65 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-_CFG_PATH = os.path.join(os.path.dirname(__file__), "nsjail_reader.cfg")
-
-# Determined once at import time so we don't retry a broken nsjail on every call.
-_nsjail_available: bool | None = None
+# Determined once at first call so we don't re-probe on every invocation.
+_bwrap_available: bool | None = None
 
 
-def _check_nsjail() -> bool:
-    """Return True if nsjail is installed and can create namespaces."""
-    global _nsjail_available
-    if _nsjail_available is not None:
-        return _nsjail_available
+def _check_bwrap() -> bool:
+    """Return True if bwrap is installed and functional."""
+    global _bwrap_available
+    if _bwrap_available is not None:
+        return _bwrap_available
 
-    if not shutil.which("nsjail"):
-        logger.warning("nsjail binary not found on PATH — falling back to direct execution.")
-        _nsjail_available = False
+    if not shutil.which("bwrap"):
+        logger.warning("bwrap binary not found on PATH — falling back to direct execution.")
+        _bwrap_available = False
         return False
 
-    # Quick smoke-test: ask nsjail to run `true` in a minimal jail.
+    # Smoke-test: run /bin/true inside a minimal sandbox.
     try:
         probe = subprocess.run(
-            ["nsjail", "--config", _CFG_PATH, "--time_limit", "5",
-             "-R", "/tmp:/repo", "--", "/bin/true"],
+            [
+                "bwrap",
+                "--ro-bind", "/usr", "/usr",
+                "--ro-bind", "/bin", "/bin",
+                "--ro-bind", "/lib", "/lib",
+                "--symlink", "/usr/lib64", "/lib64",
+                "--proc", "/proc",
+                "--dev", "/dev",
+                "--unshare-net",
+                "--unshare-pid",
+                "--die-with-parent",
+                "--", "/bin/true",
+            ],
             capture_output=True, text=True, timeout=10,
         )
         if probe.returncode == 0:
-            logger.info("nsjail sandbox is available and functional.")
-            _nsjail_available = True
+            logger.info("bwrap sandbox is available and functional.")
+            _bwrap_available = True
         else:
             logger.warning(
-                "nsjail probe failed (code %d): %s — falling back to direct execution.",
+                "bwrap probe failed (code %d): %s — falling back to direct execution.",
                 probe.returncode, probe.stderr[:300],
             )
-            _nsjail_available = False
+            _bwrap_available = False
     except Exception as exc:
-        logger.warning("nsjail probe raised %s — falling back to direct execution.", exc)
-        _nsjail_available = False
+        logger.warning("bwrap probe raised %s — falling back to direct execution.", exc)
+        _bwrap_available = False
 
-    return _nsjail_available
+    return _bwrap_available
 
 
-def run_in_nsjail(command: list[str], repo_dir: str, timeout: int = 30) -> str:
+def run_in_sandbox(command: list[str], repo_dir: str, timeout: int = 30) -> str:
     """Execute a command with the repo directory accessible.
 
-    If nsjail is functional, the command runs inside a jail with the repo
+    If bwrap is functional the command runs inside a sandbox with the repo
     mounted read-only at ``/repo``.  Otherwise the command runs directly,
-    with ``/repo`` in the command replaced by *repo_dir* so the paths
-    still resolve.
+    with ``/repo`` in the command replaced by *repo_dir* so paths still
+    resolve.
 
     Args:
-        command: The command and arguments to run.  Paths inside the
-                 command should reference ``/repo``.
+        command: The command and arguments.  Paths should reference ``/repo``.
         repo_dir: Absolute host path to the repository directory.
         timeout: Maximum wall-clock seconds.
 
@@ -75,23 +85,33 @@ def run_in_nsjail(command: list[str], repo_dir: str, timeout: int = 30) -> str:
     if not os.path.isdir(repo_dir):
         raise ValueError(f"repo_dir does not exist: {repo_dir}")
 
-    if _check_nsjail():
-        return _run_jailed(command, repo_dir, timeout)
+    if _check_bwrap():
+        return _run_sandboxed(command, repo_dir, timeout)
     return _run_direct(command, repo_dir, timeout)
 
 
-def _run_jailed(command: list[str], repo_dir: str, timeout: int) -> str:
-    nsjail_cmd = [
-        "nsjail",
-        "--config", _CFG_PATH,
-        "--time_limit", str(timeout),
-        "-R", f"{repo_dir}:/repo",
+def _run_sandboxed(command: list[str], repo_dir: str, timeout: int) -> str:
+    bwrap_cmd = [
+        "bwrap",
+        # Minimal read-only system mounts for coreutils (find, head, wc, cat)
+        "--ro-bind", "/usr", "/usr",
+        "--ro-bind", "/bin", "/bin",
+        "--ro-bind", "/lib", "/lib",
+        "--symlink", "/usr/lib64", "/lib64",
+        "--proc", "/proc",
+        "--dev", "/dev",
+        # Scanned repo mounted read-only at /repo
+        "--ro-bind", repo_dir, "/repo",
+        # Isolation
+        "--unshare-net",       # no network
+        "--unshare-pid",       # isolated PID namespace
+        "--die-with-parent",   # kill sandbox if parent dies
         "--",
         *command,
     ]
 
     result = subprocess.run(
-        nsjail_cmd,
+        bwrap_cmd,
         capture_output=True,
         text=True,
         timeout=timeout + 5,
@@ -99,7 +119,7 @@ def _run_jailed(command: list[str], repo_dir: str, timeout: int) -> str:
 
     if result.returncode not in (0, 1):
         logger.warning(
-            "nsjail exited with code %d. stderr: %s",
+            "bwrap exited with code %d. stderr: %s",
             result.returncode, result.stderr[:500],
         )
 

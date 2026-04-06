@@ -5,7 +5,7 @@ import tempfile
 import subprocess
 from crewai.tools import tool
 from git import Repo
-from vulnScan.nsjail import run_in_nsjail
+from vulnScan.nsjail import run_in_sandbox
 
 # ── Sandbox base-dir guard ───────────────────────────────────────────────────
 # Set by run_pipeline() before the crew kicks off so that file-reading tools
@@ -104,7 +104,7 @@ def search_vulnerability_databases(keyword: str) -> str:
         return "Search failed."
 
 
-# ── File-reading tools (nsjail-sandboxed) ────────────────────────────────────
+# ── File-reading tools (bwrap-sandboxed) ─────────────────────────────────────
 
 _SKIP_DIRS = {
     ".git", "node_modules", "__pycache__", ".venv", "venv", "vendor",
@@ -123,7 +123,7 @@ _SOURCE_EXTENSIONS = {
 @tool("list_repo_files")
 def list_repo_files(directory: str, extensions: str = "") -> str:
     """Lists source-code files in a repository directory.
-    Runs inside an nsjail sandbox with the repo mounted read-only.
+    Runs inside a bwrap sandbox with the repo mounted read-only.
 
     Args:
         directory: Absolute path to the repo root on the host.
@@ -139,8 +139,8 @@ def list_repo_files(directory: str, extensions: str = "") -> str:
     if not real_dir.startswith(_allowed_base_dir):
         return json.dumps({"error": "Access denied: directory is outside the scan sandbox."})
 
-    # Run `find /repo -type f` inside nsjail
-    raw = run_in_nsjail(
+    # Run `find /repo -type f` inside sandbox
+    raw = run_in_sandbox(
         ["find", "/repo", "-type", "f"],
         repo_dir=real_dir,
         timeout=30,
@@ -192,7 +192,7 @@ def list_repo_files(directory: str, extensions: str = "") -> str:
 @tool("read_file_content")
 def read_file_content(file_path: str, max_lines: int = 300) -> str:
     """Reads the content of a source file inside the scanned repository.
-    Runs inside an nsjail sandbox with the repo mounted read-only.
+    Runs inside a bwrap sandbox with the repo mounted read-only.
     Returns file content with line numbers prepended for easy reference.
 
     Args:
@@ -232,8 +232,8 @@ def read_file_content(file_path: str, max_lines: int = 300) -> str:
     rel = os.path.relpath(real_path, _allowed_base_dir)
     jailed_path = f"/repo/{rel}"
 
-    # Use head inside nsjail to read the file
-    raw = run_in_nsjail(
+    # Use head inside sandbox to read the file
+    raw = run_in_sandbox(
         ["head", "-n", str(max_lines), jailed_path],
         repo_dir=_allowed_base_dir,
         timeout=15,
@@ -248,7 +248,7 @@ def read_file_content(file_path: str, max_lines: int = 300) -> str:
     result = "\n".join(numbered)
 
     # Check if file was truncated
-    total_lines_raw = run_in_nsjail(
+    total_lines_raw = run_in_sandbox(
         ["wc", "-l", jailed_path],
         repo_dir=_allowed_base_dir,
         timeout=10,
