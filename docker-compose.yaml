@@ -35,6 +35,14 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_DB=${POSTGRES_DB:-intellihunt}
       - POSTGRES_USER=${POSTGRES_USER:-intellihunt}
+    # nsjail needs user-namespace and mount-namespace capabilities to sandbox
+    # the repo file-reader.  apparmor must be unconfined so nsjail can pivot_root.
+    cap_add:
+      - SYS_ADMIN
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+      - seccomp:unconfined
     expose:
       - "8000"
     volumes:
