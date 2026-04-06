@@ -61,13 +61,10 @@ echo "[entrypoint] PostgreSQL is ready."
 
 # ── migrations ───────────────────────────────────────────────────────────────
 echo "[entrypoint] Running database migrations..."
-# 0008 was rewritten from AddField → CreateModel but the table already exists
-# in the DB from a prior deploy.  Fake it if it hasn't been recorded yet, then
-# run the rest normally.  This is idempotent: once 0008 is in django_migrations
-# the fake is a no-op.
-python manage.py migrate reportApp 0007 --noinput 2>/dev/null || true
-python manage.py migrate reportApp 0008 --fake --noinput 2>/dev/null || true
-python manage.py migrate --noinput
+# --fake-initial: if a CreateModel migration's table already exists in the DB
+# (from a prior deploy), Django marks it as applied without re-running the SQL.
+# This is idempotent and safe for both fresh and existing databases.
+python manage.py migrate --fake-initial --noinput
 
 # ── static files ─────────────────────────────────────────────────────────────
 echo "[entrypoint] Collecting static files..."
