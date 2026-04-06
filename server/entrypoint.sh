@@ -61,10 +61,25 @@ echo "[entrypoint] PostgreSQL is ready."
 
 # ── migrations ───────────────────────────────────────────────────────────────
 echo "[entrypoint] Running database migrations..."
-# --fake-initial: if a CreateModel migration's table already exists in the DB
-# (from a prior deploy), Django marks it as applied without re-running the SQL.
-# This is idempotent and safe for both fresh and existing databases.
-python manage.py migrate --fake-initial --noinput
+# If reportApp tables already exist (prior deploy) but migration records are
+# out of sync, fake all reportApp migrations first so Django's state matches
+# the DB schema. The check is: if the Organization table exists, assume all
+# reportApp tables are present. For fresh DBs the table won't exist and we
+# skip straight to a normal migrate.
+python -c "
+import django, os, sys
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'intelliHunt.settings')
+django.setup()
+from django.db import connection
+with connection.cursor() as cur:
+    cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_name='reportApp_organization'\")
+    if cur.fetchone():
+        print('[entrypoint] Existing reportApp tables detected — faking migrations to sync state.')
+        sys.exit(0)
+    else:
+        sys.exit(1)
+" && python manage.py migrate --fake reportApp --noinput 2>/dev/null || true
+python manage.py migrate --noinput
 
 # ── static files ─────────────────────────────────────────────────────────────
 echo "[entrypoint] Collecting static files..."
