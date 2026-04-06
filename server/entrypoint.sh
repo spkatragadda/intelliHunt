@@ -90,8 +90,10 @@ chown -R intellihunt:intellihunt "$LOG_BASE" /app/server/intelliHunt/data 2>/dev
 
 exec gosu intellihunt gunicorn \
   --bind 0.0.0.0:8000 \
-  --workers 3 \
-  --timeout 120 \
+  --worker-class gthread \
+  --workers 2 \
+  --threads 4 \
+  --timeout 300 \
   --capture-output \
   --access-logfile  "$ACCESS_LOG" \
   --error-logfile   "-" \
