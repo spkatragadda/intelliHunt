@@ -104,7 +104,14 @@ echo "  error log  → $GUNICORN_LOG"
 # unrestricted filesystem access). From here, gunicorn runs as the unprivileged
 # 'intellihunt' user so that any code-execution vulnerability in the app cannot
 # be trivially escalated to root inside the container.
-chown -R intellihunt:intellihunt "$LOG_BASE" /app/server/intelliHunt/data 2>/dev/null || true
+# Ensure writable directories exist before chown.
+mkdir -p /app/server/intelliHunt/data /home/intellihunt/.local/share/crewai
+chown -R intellihunt:intellihunt \
+  "$LOG_BASE" \
+  /app/server/intelliHunt/data \
+  /home/intellihunt/.local/share/crewai \
+  /home/intellihunt/.cache \
+  2>/dev/null || true
 
 exec gosu intellihunt gunicorn \
   --bind 0.0.0.0:8000 \
