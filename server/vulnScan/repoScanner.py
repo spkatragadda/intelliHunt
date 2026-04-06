@@ -1,7 +1,13 @@
 # Kickoff the process
-from vulnScan.repoScannerCrew import security_crew
+import os
+from vulnScan.repoScannerCrew import get_security_crew
+from vulnScan.repoScannerTools import set_allowed_base_dir
+
 
 def run_pipeline(input_repo: str):
-    result = security_crew.kickoff(inputs={'repo_url': input_repo})
-    return result.raw
+    # Configure the sandbox guard so file-reading tools only access this repo
+    set_allowed_base_dir(os.path.realpath(input_repo))
 
+    crew = get_security_crew()
+    result = crew.kickoff(inputs={'repo_url': input_repo})
+    return result.raw

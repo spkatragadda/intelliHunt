@@ -436,6 +436,149 @@ export async function deleteAdminUser(
   return res.json();
 }
 
+// ── Historical trending / report archive / CISO executive summary ────────
+
+export type ArtifactMetricSummary = {
+  total_cves: number;
+  unique_cves: number;
+  critical_count: number;
+  high_count: number;
+  medium_count: number;
+  low_count: number;
+  info_count: number;
+  cvss_max: number | null;
+  cvss_avg: number | null;
+  new_cves_count: number;
+  resolved_cves_count: number;
+  carried_over_count: number;
+};
+
+export type ArtifactListRow = {
+  id: string;
+  source: "manual_report" | "scheduled_report" | "repo_scan";
+  username: string;
+  task_id: string;
+  byte_size: number;
+  metrics_status: "ok" | "partial" | "failed";
+  created_at: string;
+  metrics: ArtifactMetricSummary | null;
+};
+
+export type ArtifactDetail = ArtifactListRow & {
+  markdown: string;
+  content_sha256: string;
+  metrics_error: string;
+  metrics:
+    | (ArtifactMetricSummary & {
+        cve_ids: string[];
+        top_products: { name: string; count: number }[];
+        severity_breakdown: Record<string, number>;
+        affected_products_count: number;
+        snapshot_at: string;
+      })
+    | null;
+};
+
+export type ReportHistoryPage = {
+  total: number;
+  limit: number;
+  offset: number;
+  items: ArtifactListRow[];
+};
+
+export type TrendPoint = { t: string | null; v: number | null; [k: string]: any };
+
+export type ExecutiveSummary = {
+  from: string;
+  to: string;
+  latest_snapshot_at: string | null;
+  kpis: Record<string, { value: number | null; delta?: number | null }>;
+  trends: {
+    t: string | null;
+    total_cves: number;
+    critical: number;
+    high: number;
+    medium: number;
+    low: number;
+    new_cves: number;
+    resolved_cves: number;
+    cvss_max: number | null;
+  }[];
+  sources: { source: string; count: number }[];
+  top_products: { name: string; count: number }[];
+  top_cves: string[];
+  mttr: number | null;
+};
+
+export async function fetchReportHistory(
+  params: { source?: string; from?: string; to?: string; limit?: number; offset?: number } = {}
+): Promise<ReportHistoryPage> {
+  const qs = new URLSearchParams();
+  if (params.source) qs.set("source", params.source);
+  if (params.from)   qs.set("from",   params.from);
+  if (params.to)     qs.set("to",     params.to);
+  if (params.limit  != null) qs.set("limit",  String(params.limit));
+  if (params.offset != null) qs.set("offset", String(params.offset));
+  const res = await authedFetch(`/api/reports/history/${qs.toString() ? `?${qs}` : ""}`);
+  if (!res.ok) throw new Error(`History fetch failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchArtifactDetail(artifactId: string): Promise<ArtifactDetail> {
+  const res = await authedFetch(`/api/reports/history/${encodeURIComponent(artifactId)}/`);
+  if (!res.ok) throw new Error(`Artifact fetch failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchTrends(
+  metric: string,
+  params: { from?: string; to?: string; bucket?: "day" | "week" | "month"; source?: string } = {}
+): Promise<{ metric: string; bucket: string; series: TrendPoint[] }> {
+  const qs = new URLSearchParams({ metric });
+  if (params.bucket) qs.set("bucket", params.bucket);
+  if (params.source) qs.set("source", params.source);
+  if (params.from)   qs.set("from",   params.from);
+  if (params.to)     qs.set("to",     params.to);
+  const res = await authedFetch(`/api/trends/?${qs}`);
+  if (!res.ok) throw new Error(`Trends fetch failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchExecutiveSummary(
+  from?: string,
+  to?: string
+): Promise<ExecutiveSummary> {
+  const qs = new URLSearchParams();
+  if (from) qs.set("from", from);
+  if (to)   qs.set("to",   to);
+  const res = await authedFetch(
+    `/api/trends/executive-summary/${qs.toString() ? `?${qs}` : ""}`
+  );
+  if (!res.ok) throw new Error(`Executive summary fetch failed: ${res.status}`);
+  return res.json();
+}
+
+export async function downloadCisoPdf(from?: string, to?: string): Promise<void> {
+  const res = await authedFetch(`/api/reports/export/ciso/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ from, to }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `PDF export failed: ${res.status}`);
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `ciso-report-${new Date().toISOString().slice(0, 10)}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export async function fetchAdminActivity(
   orgId?: string, action?: string, limit = 50, offset = 0
 ): Promise<{ total: number; rows: AdminActivityRow[] }> {

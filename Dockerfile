@@ -56,7 +56,17 @@ ENV PYTHONPATH=/app/server
 # RUN apt-get update \
 #     && apt-get install -y --no-install-recommends git \
 #     && rm -rf /var/lib/apt/lists/*
-RUN apt-get update && apt-get install -y git libcurl4-gnutls-dev gosu && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    git libcurl4-gnutls-dev gosu \
+    # nsjail build dependencies
+    autoconf bison flex gcc g++ libprotobuf-dev libnl-route-3-dev \
+    libtool make pkg-config protobuf-compiler \
+    && git clone --depth 1 https://github.com/google/nsjail.git /tmp/nsjail \
+    && cd /tmp/nsjail && make -j$(nproc) \
+    && cp /tmp/nsjail/nsjail /usr/local/bin/nsjail \
+    && chmod +x /usr/local/bin/nsjail \
+    && rm -rf /tmp/nsjail \
+    && rm -rf /var/lib/apt/lists/*
 
 # CVE-2026-27208: create a non-root user for the runtime process.
 # Migrations and setup steps run as root; gunicorn is started as this user

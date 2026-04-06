@@ -6,7 +6,7 @@ import logging
 
 from apscheduler.triggers.cron import CronTrigger
 
-from .scheduler_jobs import run_scheduled_report
+from .scheduler_jobs import run_scheduled_report, prune_old_artifacts_job
 
 logger = logging.getLogger("intelliHunt")
 
@@ -73,3 +73,16 @@ def sync_all_jobs(scheduler):
         upsert_job(scheduler, config)
         count += 1
     logger.info("[scheduler] synced %d job(s) from database", count)
+
+    # Register the daily artifact-pruning housekeeping job (02:00 UTC)
+    try:
+        scheduler.add_job(
+            prune_old_artifacts_job,
+            trigger=CronTrigger(hour=2, minute=0),
+            id="global_prune_old_artifacts",
+            replace_existing=True,
+            misfire_grace_time=3600,
+        )
+        logger.info("[scheduler] registered prune_old_artifacts_job (daily 02:00 UTC)")
+    except Exception:
+        logger.exception("[scheduler] failed to register prune_old_artifacts_job")

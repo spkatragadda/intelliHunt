@@ -24,6 +24,7 @@ from .reportApp import views
 from .reportApp import auth_views
 from .reportApp import admin_views
 from .reportApp import reset_views
+from .reportApp import trends_views
 from .views import ReactAppView
 from django.http import HttpResponse
 
@@ -63,6 +64,12 @@ path('api/yaml/template/', views.get_yaml_template, name='yaml_template'),
     path('api/schedule/', views.schedule_config, name='schedule_config'),
     path('api/notifications/', views.notifications_list, name='notifications_list'),
     path('api/notifications/read/', views.notifications_mark_read, name='notifications_mark_read'),
+    # Historical trending / report archive / CISO executive summary
+    path('api/reports/history/',                      trends_views.report_history,        name='report_history'),
+    path('api/reports/history/<str:artifact_id>/',    trends_views.report_history_detail, name='report_history_detail'),
+    path('api/trends/',                               trends_views.trends,                name='trends'),
+    path('api/trends/executive-summary/',             trends_views.executive_summary,     name='executive_summary'),
+    path('api/reports/export/ciso/',                  trends_views.export_ciso_pdf,       name='export_ciso_pdf'),
     # Admin endpoints
     path('api/admin/summary/',                        admin_views.admin_summary,    name='admin_summary'),
     path('api/admin/activity/',                       admin_views.admin_activity,   name='admin_activity'),

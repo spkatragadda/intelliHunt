@@ -84,6 +84,16 @@ def run_scheduled_report(org_id: str):
             with open(prev_report_path, encoding='utf-8') as f:
                 new_markdown = f.read()
 
+        # Archive this scheduled run as a ReportArtifact for historical trending
+        try:
+            from .reporting import persist_report_artifact
+            persist_report_artifact(
+                org_id=str(org_id), user_id=None, username="scheduler",
+                source="scheduled_report", markdown=new_markdown,
+            )
+        except Exception:
+            logger.exception("[scheduler] persist_report_artifact failed for org %s", org_id)
+
     except Exception as exc:
         logger.exception("[scheduler] run failed for org %s: %s", org_id, exc)
         _notify_all(org, 'run_error',
@@ -161,3 +171,22 @@ def _send_drift_email(org, added_cves: set):
         )
     except Exception:
         logger.exception("[scheduler] drift email failed for org %s", org.pk)
+
+
+def prune_old_artifacts_job():
+    """
+    Daily housekeeping job (02:00 UTC). For each org with a ScheduleConfig,
+    delete artifacts older than retention_days and trim to retention_max_artifacts.
+    Orgs without a ScheduleConfig use default retention (365 days, 200 max).
+    """
+    from .models import Organization, ScheduleConfig
+    from .reporting import prune_old_artifacts
+
+    for org in Organization.objects.all():
+        try:
+            cfg = ScheduleConfig.objects.filter(organization=org).first()
+            retention_days = cfg.retention_days if cfg else 365
+            max_artifacts  = cfg.retention_max_artifacts if cfg else 200
+            prune_old_artifacts(str(org.pk), retention_days, max_artifacts)
+        except Exception:
+            logger.exception("[scheduler] prune failed for org %s", org.pk)
