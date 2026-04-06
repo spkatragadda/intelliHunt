@@ -18,8 +18,8 @@ def _extract_and_backfill(apps, schema_editor):
 
     # Import the helpers at runtime so this migration does not depend on
     # module import order during initial migrate.
-    from reportApp.auth import tenant_dir, tenant_path
-    from reportApp.reporting import extract_metrics
+    from intelliHunt.reportApp.auth import tenant_dir, tenant_path
+    from intelliHunt.reportApp.reporting import extract_metrics
 
     for org in Organization.objects.all():
         # Skip orgs that already have a backfill artifact (idempotency).
@@ -100,7 +100,7 @@ def _extract_and_backfill(apps, schema_editor):
 def _remove_backfill(apps, schema_editor):
     ReportArtifact = apps.get_model('reportApp', 'ReportArtifact')
     # Clean up on-disk files too — re-resolve through tenant_path for safety.
-    from reportApp.auth import tenant_dir, tenant_path
+    from intelliHunt.reportApp.auth import tenant_dir, tenant_path
     for a in ReportArtifact.objects.filter(task_id='backfill'):
         if a.storage_kind == 'file' and a.storage_path:
             try:
