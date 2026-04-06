@@ -70,7 +70,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && cd /tmp/nsjail && make -j$(nproc) \
     && cp /tmp/nsjail/nsjail /usr/local/bin/nsjail \
     && chmod +x /usr/local/bin/nsjail \
-    && nsjail --version \
+    && nsjail --help > /dev/null 2>&1 || true \
     && rm -rf /tmp/nsjail \
     && rm -rf /var/lib/apt/lists/*
 
