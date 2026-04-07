@@ -283,13 +283,15 @@ export async function importCmdbData(
 /** Scan a repository for vulnerabilities */
 export async function scanRepo(
   repoUrl?: string,
-  repoFile?: File
+  repoFile?: File,
+  scanLevel: "speed" | "legend" = "speed"
 ): Promise<{ taskId?: string; message: string }> {
   let res: Response;
-  
+
   if (repoFile) {
     const formData = new FormData();
     formData.append('repo_file', repoFile);
+    formData.append('scan_level', scanLevel);
     res = await authedFetch(`/api/scan/repo/`, {
       method: "POST",
       body: formData,
@@ -298,7 +300,7 @@ export async function scanRepo(
     res = await authedFetch(`/api/scan/repo/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ repo_url: repoUrl }),
+      body: JSON.stringify({ repo_url: repoUrl, scan_level: scanLevel }),
     });
   } else {
     return { message: "Either repoUrl or repoFile must be provided." };
@@ -347,7 +349,8 @@ export type ServerScanRecord = {
   username: string;
   target: string;
   input_type: "url" | "file";
-  status: "running" | "completed" | "error";
+  scan_level: "speed" | "legend";
+  status: "running" | "completed" | "error" | "cancelled" | "cancelling";
   duration_ms: number | null;
   created_at: string;
   completed_at: string | null;
@@ -364,6 +367,26 @@ export async function fetchScanHistory(): Promise<ServerScanRecord[]> {
 export async function fetchScanReport(taskId: string): Promise<{ report_markdown: string; target: string }> {
   const res = await authedFetch(`/api/scan/history/${taskId}/report/`);
   if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+/** Delete a scan record and its artifacts */
+export async function deleteScan(taskId: string): Promise<{ message: string }> {
+  const res = await authedFetch(`/api/scan/history/${taskId}/`, { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as Record<string, string>).error || `Delete failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+/** Request cancellation of a running scan */
+export async function cancelScan(taskId: string): Promise<{ message: string }> {
+  const res = await authedFetch(`/api/scan/cancel/${taskId}/`, { method: "POST" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as Record<string, string>).error || `Cancel failed: ${res.status}`);
+  }
   return res.json();
 }
 

@@ -60,6 +60,8 @@ path('api/yaml/template/', views.get_yaml_template, name='yaml_template'),
     # Scan history (per-tenant)
     path('api/scan/history/', views.get_scan_history, name='scan_history'),
     path('api/scan/history/<str:task_id>/report/', views.get_scan_report, name='scan_report'),
+    path('api/scan/history/<str:task_id>/', views.delete_scan, name='delete_scan'),
+    path('api/scan/cancel/<str:task_id>/', views.cancel_scan, name='cancel_scan'),
     # Schedule + notifications
     path('api/schedule/', views.schedule_config, name='schedule_config'),
     path('api/notifications/', views.notifications_list, name='notifications_list'),

@@ -596,6 +596,15 @@ from repoScanner import run_pipeline
 # In-memory storage for task status (in production, use Redis or database)
 task_status = {}
 
+# Cancellation registry — maps task_id → threading.Event.
+# Setting the event signals the worker thread to abort at its next checkpoint.
+cancel_events: dict[str, threading.Event] = {}
+
+
+class _ScanCancelled(Exception):
+    """Raised inside *run_repo_scan_async* when cancellation is detected."""
+    pass
+
 def get_task_status_file_path(task_id):
     """Get the file path for storing task status"""
     import tempfile
@@ -1196,7 +1205,8 @@ def check_task_status(request, task_id):
 
 
 def run_repo_scan_async(task_id, repo_url, scan_dir=None,
-                        org_id=None, user_id=None, username=""):
+                        org_id=None, user_id=None, username="",
+                        scan_level="speed"):
     """Run the repo vulnerability scan in a separate thread.
 
     scan_dir is the master sandbox directory for this scan session — it is
@@ -1217,6 +1227,10 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
         }
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
+
+        # ── Cancellation checkpoint 1: before cloning ──────────────────
+        if cancel_events.get(task_id, threading.Event()).is_set():
+            raise _ScanCancelled()
 
         # For GitHub URL scans: clone the repository into the sandbox directory
         # before invoking the pipeline so the LLM crew only ever sees a local path.
@@ -1240,8 +1254,16 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
         task_status[task_id] = status_data
         save_task_status(task_id, status_data)
 
+        # ── Cancellation checkpoint 2: before pipeline ─────────────────
+        if cancel_events.get(task_id, threading.Event()).is_set():
+            raise _ScanCancelled()
+
         # Run the pipeline with the local (sandboxed) path
-        result = run_pipeline(repo_path)
+        result = run_pipeline(repo_path, tier=scan_level)
+
+        # ── Cancellation checkpoint 3: after pipeline ──────────────────
+        if cancel_events.get(task_id, threading.Event()).is_set():
+            raise _ScanCancelled()
 
         # Generate unified markdown report from the crew output
         report_markdown = generate_scan_report_markdown(result)
@@ -1285,6 +1307,23 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
                 except Exception:
                     logger.exception("persist_report_artifact (repo_scan) failed for task %s", task_id)
 
+    except _ScanCancelled:
+        end_time = time.time()
+        status_data = {
+            'status': 'cancelled',
+            'progress': 0,
+            'message': 'Scan was cancelled by user.',
+            'repo_url': scan_label,
+            'end_time': end_time,
+            'duration': end_time - start_time,
+        }
+        task_status[task_id] = status_data
+        save_task_status(task_id, status_data)
+        if org_id:
+            complete_scan_result(task_id, "cancelled")
+            log_action(org_id, user_id, username, "repo_scan", "error",
+                       detail="Cancelled by user")
+
     except Exception as e:
         end_time = time.time()
         status_data = {
@@ -1302,6 +1341,9 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
             log_action(org_id, user_id, username, "repo_scan", "error", detail=str(e)[:500])
 
     finally:
+        # Clean up cancellation event
+        cancel_events.pop(task_id, None)
+
         # Always destroy the sandbox — no repository data remains on disk
         if scan_dir and os.path.exists(scan_dir):
             try:
@@ -1366,6 +1408,7 @@ def scan_repo(request):
         scan_dir = None
         try:
             repo_url = None
+            scan_level = 'speed'  # default; overridden below from request data
 
             # Check if this is a file upload (FormData)
             if 'repo_file' in request.FILES:
@@ -1407,6 +1450,9 @@ def scan_repo(request):
                     # Remove the zip file — only the extracted source is needed
                     os.remove(temp_zip_path)
 
+                    # Read scan_level from FormData
+                    scan_level = request.POST.get('scan_level', 'speed')
+
                 except zipfile.BadZipFile:
                     if scan_dir and os.path.exists(scan_dir):
                         shutil.rmtree(scan_dir)
@@ -1428,6 +1474,7 @@ def scan_repo(request):
                 try:
                     payload = json.loads(request.body)
                     repo_url = payload.get('repo_url') or payload.get('repo') or payload.get('url')
+                    scan_level = payload.get('scan_level', 'speed')
                 except json.JSONDecodeError:
                     return JsonResponse({
                         'status': 'error',
@@ -1450,17 +1497,25 @@ def scan_repo(request):
             target_label = repo_url if isinstance(repo_url, str) and repo_url.startswith('http') else 'uploaded_file'
             input_type   = 'url' if isinstance(repo_url, str) and repo_url.startswith('http') else 'file'
 
+            # Validate scan_level
+            if scan_level not in ('speed', 'legend'):
+                scan_level = 'speed'
+
             # Persist scan record and log start
             create_scan_result(request.org_id, request.user_id, request.username,
-                               task_id, target_label, input_type)
+                               task_id, target_label, input_type, scan_level=scan_level)
             log_action(request.org_id, request.user_id, request.username,
                        "repo_scan", "started", detail=target_label)
+
+            # Register cancellation event before spawning thread
+            cancel_events[task_id] = threading.Event()
 
             # Start the scan in a separate thread; scan_dir ownership transfers to the thread
             thread = threading.Thread(
                 target=run_repo_scan_async,
                 args=(task_id, repo_url, scan_dir,
-                      request.org_id, request.user_id, request.username),
+                      request.org_id, request.user_id, request.username,
+                      scan_level),
             )
             thread.daemon = True
             thread.start()
@@ -1506,6 +1561,7 @@ def get_scan_history(request):
         'username':     r.username,
         'target':       r.target,
         'input_type':   r.input_type,
+        'scan_level':   r.scan_level,
         'status':       r.status,
         'duration_ms':  r.duration_ms,
         'created_at':   r.created_at.isoformat(),
@@ -1525,6 +1581,45 @@ def get_scan_report(request, task_id):
     except ScanResult.DoesNotExist:
         return JsonResponse({'error': 'Not found'}, status=404)
     return JsonResponse({'report_markdown': r.report_markdown, 'target': r.target})
+
+
+@csrf_exempt
+@require_auth
+def delete_scan(request, task_id):
+    """DELETE /api/scan/history/<task_id>/  — delete a scan and its artifacts."""
+    if request.method != 'DELETE':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    from .models import ScanResult, ReportArtifact
+    try:
+        r = ScanResult.objects.get(task_id=task_id, organization_id=request.org_id)
+    except ScanResult.DoesNotExist:
+        return JsonResponse({'error': 'Not found'}, status=404)
+    # Delete linked artifacts individually so per-instance .delete() runs file cleanup
+    for artifact in ReportArtifact.objects.filter(scan_result=r):
+        artifact.delete()
+    # Clean up in-memory and temp-file task status
+    task_status.pop(task_id, None)
+    cleanup_task_status(task_id)
+    r.delete()
+    return JsonResponse({'message': 'Scan deleted'})
+
+
+@csrf_exempt
+@require_auth
+def cancel_scan(request, task_id):
+    """POST /api/scan/cancel/<task_id>/  — request cancellation of a running scan."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    evt = cancel_events.get(task_id)
+    if not evt:
+        return JsonResponse({'error': 'Scan not found or already finished'}, status=404)
+    evt.set()
+    # Immediately update in-memory status so the next poll sees "cancelling"
+    if task_id in task_status:
+        task_status[task_id]['status'] = 'cancelling'
+        task_status[task_id]['message'] = 'Cancellation requested...'
+        save_task_status(task_id, task_status[task_id])
+    return JsonResponse({'message': 'Cancellation requested'})
 
 
 # ── Schedule endpoints ────────────────────────────────────────────────────────

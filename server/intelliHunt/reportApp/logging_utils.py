@@ -52,7 +52,7 @@ def log_action(
         _close()
 
 
-def create_scan_result(org_id, user_id, username, task_id, target, input_type):
+def create_scan_result(org_id, user_id, username, task_id, target, input_type, scan_level="speed"):
     """Insert a ScanResult row at scan start.  Safe to call from any thread."""
     try:
         from .models import ScanResult, Organization
@@ -67,6 +67,7 @@ def create_scan_result(org_id, user_id, username, task_id, target, input_type):
             task_id=task_id,
             target=target,
             input_type=input_type,
+            scan_level=scan_level,
             status="running",
         )
     except Exception as exc:

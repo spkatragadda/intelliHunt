@@ -21,17 +21,32 @@ for key, val in _env_map.items():
         os.environ[key] = val
 
 
-def get_security_crew() -> Crew:
+def get_security_crew(tier: str = "speed") -> Crew:
     """
     Build and return the security crew.  Called at request time so the LLM
     and agents are only initialised when all required env vars are present.
+
+    *tier* selects the model:
+      - "speed"  → SPEED_MODEL env (fast, cheaper model)
+      - "legend" → LEGEND_MODEL env (larger, more capable model)
+    Falls back to the generic MODEL env var when the tier-specific var is unset.
     """
-    model = os.environ.get("MODEL")
+    if tier == "legend":
+        model = os.environ.get("LEGEND_MODEL") or os.environ.get("MODEL")
+        max_tokens = os.environ.get("LEGEND_MAX_TOKENS") or os.environ.get("MAX_TOKENS")
+    else:
+        model = os.environ.get("SPEED_MODEL") or os.environ.get("MODEL")
+        max_tokens = os.environ.get("SPEED_MAX_TOKENS") or os.environ.get("MAX_TOKENS")
+
     if not model:
         raise RuntimeError(
             "MODEL env var is not set. "
             "Add MODEL=<provider>/<model-name> to your .env file."
         )
+
+    # Update MAX_TOKENS so CrewAI picks it up if it reads the env
+    if max_tokens:
+        os.environ["MAX_TOKENS"] = str(max_tokens)
 
     llm = LLM(model=model)
 

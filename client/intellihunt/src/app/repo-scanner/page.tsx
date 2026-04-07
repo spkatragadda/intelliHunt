@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { scanRepo, checkTaskStatus, fetchScanHistory, fetchScanReport, ServerScanRecord } from "@/lib/api";
+import { scanRepo, checkTaskStatus, fetchScanHistory, fetchScanReport, deleteScan, cancelScan, ServerScanRecord } from "@/lib/api";
 import ReactMarkdown from "react-markdown";
 
 /* ── Types ── */
@@ -195,10 +195,12 @@ function ModeToggle({ mode, onChange, disabled }: {
 /* ── Status Badge ── */
 function StatusPill({ status }: { status: ServerScanRecord["status"] | "scanning" }) {
   const cfg = {
-    completed: { label: "COMPLETE", color: "var(--success)",  bg: "rgba(74,222,128,0.08)",  border: "rgba(74,222,128,0.22)"  },
-    error:     { label: "FAILED",   color: "var(--danger)",   bg: "rgba(248,113,113,0.08)", border: "rgba(248,113,113,0.22)" },
-    running:   { label: "SCANNING", color: "#f59e0b",         bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.22)"  },
-    scanning:  { label: "SCANNING", color: "#f59e0b",         bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.22)"  },
+    completed:  { label: "COMPLETE",    color: "var(--success)",  bg: "rgba(74,222,128,0.08)",  border: "rgba(74,222,128,0.22)"  },
+    error:      { label: "FAILED",      color: "var(--danger)",   bg: "rgba(248,113,113,0.08)", border: "rgba(248,113,113,0.22)" },
+    running:    { label: "SCANNING",    color: "#f59e0b",         bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.22)"  },
+    scanning:   { label: "SCANNING",    color: "#f59e0b",         bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.22)"  },
+    cancelled:  { label: "CANCELLED",   color: "var(--text-muted)", bg: "rgba(150,150,150,0.08)", border: "rgba(150,150,150,0.22)" },
+    cancelling: { label: "CANCELLING",  color: "#f59e0b",         bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.22)"  },
   }[status];
   return (
     <span style={{
@@ -211,7 +213,7 @@ function StatusPill({ status }: { status: ServerScanRecord["status"] | "scanning
       <span style={{
         width: "5px", height: "5px", borderRadius: "50%",
         background: "currentColor", flexShrink: 0, display: "inline-block",
-        ...(status === "scanning" || status === "running" ? { animation: "dot-pulse 1s ease-in-out infinite" } : {}),
+        ...(status === "scanning" || status === "running" || status === "cancelling" ? { animation: "dot-pulse 1s ease-in-out infinite" } : {}),
       }} />
       {cfg.label}
     </span>
@@ -220,7 +222,7 @@ function StatusPill({ status }: { status: ServerScanRecord["status"] | "scanning
 
 /* ── Inline status message style ── */
 function statusStyle(msg: string) {
-  const isErr = msg.includes("Error") || msg.includes("Failed") || msg.includes("error");
+  const isErr = msg.includes("Error") || msg.includes("Failed") || msg.includes("error") || msg.includes("cancelled");
   const isOk  = msg.includes("completed") || msg.includes("Completed") || msg.includes("started");
   return {
     color:  isErr ? "var(--danger)"          : isOk ? "var(--success)"       : "var(--info)",
@@ -264,6 +266,8 @@ export default function RepoScanner() {
   const [selectedScan, setSelectedScan]           = useState<ServerScanRecord | null>(null);
   const [selectedScanMarkdown, setSelectedScanMarkdown] = useState<string | null>(null);
   const [loadingReport, setLoadingReport]         = useState(false);
+  const [scanLevel, setScanLevel]                 = useState<"speed" | "legend">("speed");
+  const [deletingTaskId, setDeletingTaskId]       = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // ── Load scan history on mount ──────────────────────────────────────────
@@ -333,6 +337,13 @@ export default function RepoScanner() {
           setTaskId(null);
           clearInterval(id);
           fetchScanHistory().then(setRecentScans).catch(() => {});
+        } else if (s.status === "cancelled") {
+          localStorage.removeItem("intellihunt_scan_active");
+          setSubmitting(false);
+          setServerMsg("Scan cancelled.");
+          setTaskId(null);
+          clearInterval(id);
+          fetchScanHistory().then(setRecentScans).catch(() => {});
         }
       } catch {
         localStorage.removeItem("intellihunt_scan_active");
@@ -357,13 +368,14 @@ export default function RepoScanner() {
       id: optimisticId, task_id: "", username: "",
       target: inputMode === "url" ? repoUrl.trim() : repoFile!.name,
       input_type: inputMode,
+      scan_level: scanLevel,
       status: "running", duration_ms: null,
       created_at: new Date(now).toISOString(), completed_at: null, has_report: false,
     };
     setCurrentScanId(optimisticId);
     setRecentScans(prev => [newRecord, ...prev]);
     try {
-      const res = inputMode === "file" ? await scanRepo(undefined, repoFile!) : await scanRepo(repoUrl.trim());
+      const res = inputMode === "file" ? await scanRepo(undefined, repoFile!, scanLevel) : await scanRepo(repoUrl.trim(), undefined, scanLevel);
       if (res.taskId) {
         setTaskId(res.taskId);
         setServerMsg("Scan started...");
@@ -593,6 +605,60 @@ export default function RepoScanner() {
 
             {/* Panel body */}
             <div style={{ padding: "20px" }}>
+
+              {/* ── Scan Level Toggle ── */}
+              <div style={{ marginBottom: "16px" }}>
+                <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.14em", color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace", textTransform: "uppercase" as const, marginBottom: "8px" }}>
+                  Scan Level
+                </div>
+                <div style={{ display: "inline-flex", background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "8px", padding: "3px", gap: "2px" }}>
+                  {([
+                    { key: "speed" as const, label: "Speed", desc: "Fast scan" },
+                    { key: "legend" as const, label: "Legend", desc: "Deep scan" },
+                  ]).map(tier => {
+                    const active = scanLevel === tier.key;
+                    return (
+                      <button
+                        key={tier.key}
+                        type="button"
+                        disabled={submitting}
+                        onClick={() => setScanLevel(tier.key)}
+                        style={{
+                          padding: "6px 16px", borderRadius: "6px",
+                          fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em",
+                          textTransform: "uppercase" as const,
+                          border: "none",
+                          cursor: submitting ? "not-allowed" : "pointer",
+                          background: active
+                            ? tier.key === "legend" ? "rgba(245,158,11,0.12)" : "var(--surface)"
+                            : "transparent",
+                          color: active
+                            ? tier.key === "legend" ? "#f59e0b" : "var(--accent)"
+                            : "var(--text-muted)",
+                          boxShadow: active
+                            ? tier.key === "legend"
+                              ? "0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,158,11,0.2)"
+                              : "0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(74,158,255,0.15)"
+                            : "none",
+                          transition: "all 0.15s ease",
+                          fontFamily: "var(--font-mono), ui-monospace, monospace",
+                          display: "flex", alignItems: "center", gap: "6px",
+                        }}
+                      >
+                        {tier.key === "speed"
+                          ? <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
+                          : <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
+                        }
+                        {tier.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "6px" }}>
+                  {scanLevel === "speed" ? "Quick analysis with a lightweight model" : "Comprehensive analysis with a more capable model"}
+                </div>
+              </div>
+
               {inputMode === "url" ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.14em", color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace", textTransform: "uppercase", marginBottom: "2px" }}>
@@ -728,8 +794,32 @@ export default function RepoScanner() {
 
           {/* ── Scanning animation ── */}
           {submitting && (
-            <div style={{ animation: "fade-up 0.25s ease both" }}>
+            <div style={{ animation: "fade-up 0.25s ease both", display: "flex", flexDirection: "column", gap: "12px" }}>
               <ScanTerminal progress={progress} message={progressMessage} />
+              {taskId && (
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <button
+                    onClick={async () => {
+                      if (!window.confirm("Stop the current scan?")) return;
+                      try { await cancelScan(taskId); setProgressMessage("Cancelling..."); }
+                      catch { setServerMsg("Failed to cancel scan."); }
+                    }}
+                    style={{
+                      padding: "7px 16px", borderRadius: "8px",
+                      background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.22)",
+                      color: "var(--danger)", fontSize: "11px", fontWeight: 700,
+                      cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
+                      fontFamily: "var(--font-mono), monospace", letterSpacing: "0.06em",
+                      textTransform: "uppercase" as const, transition: "all 0.15s ease",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(248,113,113,0.15)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(248,113,113,0.08)"; }}
+                  >
+                    <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" /></svg>
+                    Stop Scan
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -769,7 +859,7 @@ export default function RepoScanner() {
           <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", overflow: "hidden" }}>
             {/* Table header */}
             <div style={{
-              display: "grid", gridTemplateColumns: "1fr 72px 108px 96px 76px 54px",
+              display: "grid", gridTemplateColumns: "1fr 72px 108px 96px 76px 86px",
               padding: "8px 16px", background: "var(--surface-raised)", borderBottom: "1px solid var(--border)",
             }}>
               {["Target", "Type", "Status", "Started", "Duration", ""].map(h => (
@@ -797,7 +887,7 @@ export default function RepoScanner() {
                     finally { setLoadingReport(false); }
                   }}
                   style={{
-                    display: "grid", gridTemplateColumns: "1fr 72px 108px 96px 76px 54px",
+                    display: "grid", gridTemplateColumns: "1fr 72px 108px 96px 76px 86px",
                     padding: "10px 16px", borderBottom: "1px solid var(--border)",
                     cursor: isClickable ? "pointer" : "default",
                     background: isSelected ? "var(--accent-subtle)" : "transparent",
@@ -826,11 +916,42 @@ export default function RepoScanner() {
                   {/* Duration */}
                   <div style={{ textAlign: "right", fontSize: "11px", fontWeight: 600, color: "var(--text-muted)", fontFamily: "var(--font-mono), monospace" }}>{formatDuration(scan.duration_ms ?? undefined)}</div>
                   {/* Action */}
-                  <div style={{ textAlign: "right" }}>
+                  <div style={{ textAlign: "right", display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "6px" }}>
                     {isSelected && loadingReport
                       ? <span style={{ fontSize: "11px", color: "var(--accent)", fontFamily: "var(--font-mono), monospace" }}>…</span>
                       : isClickable && <span style={{ fontSize: "11px", fontWeight: 600, color: isSelected ? "var(--accent)" : "var(--text-muted)", fontFamily: "var(--font-mono), monospace" }}>{isSelected ? "●" : "View →"}</span>
                     }
+                    {scan.status !== "running" && scan.status !== "cancelling" && (
+                      <button
+                        title="Delete scan"
+                        disabled={deletingTaskId === scan.task_id}
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          if (!window.confirm("Delete this scan and its report? This cannot be undone.")) return;
+                          setDeletingTaskId(scan.task_id);
+                          try {
+                            await deleteScan(scan.task_id);
+                            if (selectedScan?.task_id === scan.task_id) {
+                              setSelectedScan(null); setSelectedScanMarkdown(null);
+                              setScanResults(null); setReportMarkdown(null);
+                            }
+                            fetchScanHistory().then(setRecentScans).catch(() => {});
+                          } catch { /* ignore */ }
+                          finally { setDeletingTaskId(null); }
+                        }}
+                        style={{
+                          background: "transparent", border: "none",
+                          color: deletingTaskId === scan.task_id ? "var(--border)" : "var(--text-muted)",
+                          cursor: deletingTaskId === scan.task_id ? "not-allowed" : "pointer",
+                          padding: "2px", borderRadius: "4px", display: "flex", alignItems: "center",
+                          transition: "color 0.15s ease", flexShrink: 0,
+                        }}
+                        onMouseEnter={e => { if (deletingTaskId !== scan.task_id) e.currentTarget.style.color = "var(--danger)"; }}
+                        onMouseLeave={e => { if (deletingTaskId !== scan.task_id) e.currentTarget.style.color = "var(--text-muted)"; }}
+                      >
+                        <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+                      </button>
+                    )}
                   </div>
                 </div>
               );
