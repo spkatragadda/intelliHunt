@@ -115,8 +115,8 @@ chown -R intellihunt:intellihunt \
 
 exec gosu intellihunt gunicorn \
   --bind 0.0.0.0:8000 \
-  --workers 3 \
-  --timeout 300 \
+  --workers 2 \
+  --timeout 900 \
   --capture-output \
   --access-logfile  "$ACCESS_LOG" \
   --error-logfile   "-" \
