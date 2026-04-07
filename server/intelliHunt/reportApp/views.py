@@ -978,6 +978,17 @@ def run_report_async(task_id, payload_file_path, org_id, user_id=None, username=
         except Exception as e:
             print(f"Warning: Could not read/copy report file: {e}")
 
+        # Archive this run as a ReportArtifact for historical trending
+        try:
+            from .reporting import persist_report_artifact
+            artifact = persist_report_artifact(
+                org_id=org_id, user_id=user_id, username=username,
+                source="manual_report", markdown=report_markdown, task_id=task_id,
+            )
+            status_data['artifact_id'] = str(artifact.id)
+        except Exception:
+            logger.exception("persist_report_artifact failed for task %s", task_id)
+
         # Mark as completed
         end_time = time.time()
         duration_ms = int((end_time - start_time) * 1000)
@@ -1260,6 +1271,19 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
             complete_scan_result(task_id, "completed", report_markdown, duration_ms)
             log_action(org_id, user_id, username, "repo_scan", "completed",
                        detail=scan_label, duration_ms=duration_ms)
+            # Archive this scan as a ReportArtifact for historical trending
+            if report_markdown:
+                try:
+                    from .reporting import persist_report_artifact
+                    from .models import ScanResult
+                    sr = ScanResult.objects.filter(task_id=task_id).first()
+                    persist_report_artifact(
+                        org_id=org_id, user_id=user_id, username=username,
+                        source="repo_scan", markdown=report_markdown,
+                        task_id=task_id, scan_result=sr,
+                    )
+                except Exception:
+                    logger.exception("persist_report_artifact (repo_scan) failed for task %s", task_id)
 
     except Exception as e:
         end_time = time.time()

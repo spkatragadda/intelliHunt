@@ -61,6 +61,24 @@ echo "[entrypoint] PostgreSQL is ready."
 
 # ── migrations ───────────────────────────────────────────────────────────────
 echo "[entrypoint] Running database migrations..."
+# If reportApp tables already exist (prior deploy) but migration records are
+# out of sync, fake all reportApp migrations first so Django's state matches
+# the DB schema. The check is: if the Organization table exists, assume all
+# reportApp tables are present. For fresh DBs the table won't exist and we
+# skip straight to a normal migrate.
+python -c "
+import django, os, sys
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'intelliHunt.settings')
+django.setup()
+from django.db import connection
+with connection.cursor() as cur:
+    cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_name='reportApp_organization'\")
+    if cur.fetchone():
+        print('[entrypoint] Existing reportApp tables detected — faking migrations to sync state.')
+        sys.exit(0)
+    else:
+        sys.exit(1)
+" && python manage.py migrate --fake reportApp --noinput 2>/dev/null || true
 python manage.py migrate --noinput
 
 # ── static files ─────────────────────────────────────────────────────────────
@@ -86,12 +104,19 @@ echo "  error log  → $GUNICORN_LOG"
 # unrestricted filesystem access). From here, gunicorn runs as the unprivileged
 # 'intellihunt' user so that any code-execution vulnerability in the app cannot
 # be trivially escalated to root inside the container.
-chown -R intellihunt:intellihunt "$LOG_BASE" /app/server/intelliHunt/data 2>/dev/null || true
+# Ensure writable directories exist before chown.
+mkdir -p /app/server/intelliHunt/data /home/intellihunt/.local/share/crewai
+chown -R intellihunt:intellihunt \
+  "$LOG_BASE" \
+  /app/server/intelliHunt/data \
+  /home/intellihunt/.local/share/crewai \
+  /home/intellihunt/.cache \
+  2>/dev/null || true
 
 exec gosu intellihunt gunicorn \
   --bind 0.0.0.0:8000 \
-  --workers 3 \
-  --timeout 120 \
+  --workers 2 \
+  --timeout 900 \
   --capture-output \
   --access-logfile  "$ACCESS_LOG" \
   --error-logfile   "-" \
