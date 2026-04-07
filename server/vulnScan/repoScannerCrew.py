@@ -41,7 +41,7 @@ def get_security_crew() -> Crew:
         backstory='Expert in NVD, CISA KEV, and GitHub Advisories. You know where the bugs hide.',
         tools=[search_vulnerability_databases],
         llm=llm,
-        verbose=True,
+        verbose=False,
     )
 
     analyst = Agent(
@@ -50,7 +50,7 @@ def get_security_crew() -> Crew:
         backstory='Specialist in Static Analysis (SAST) and Software Composition Analysis (SCA).',
         tools=[clone_github_repo, run_security_scans],
         llm=llm,
-        verbose=True,
+        verbose=False,
     )
 
     code_reviewer = Agent(
