@@ -655,7 +655,7 @@ export default function RepoScanner() {
                   })}
                 </div>
                 <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "6px" }}>
-                  {scanLevel === "speed" ? "Quick analysis with a lightweight model" : "Comprehensive analysis with a more capable model"}
+                  {scanLevel === "speed" ? "Quick analysis with a lightweight model \u2014 includes AI/LLM code audit" : "Comprehensive analysis \u2014 includes AI/LLM code audit + deep dependency web search"}
                 </div>
               </div>
 
