@@ -1,13 +1,11 @@
 import os
 import json
 import requests
-import tempfile
 import subprocess
 import logging
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from datetime import datetime
 from crewai.tools import tool
-from git import Repo
 from vulnScan.nsjail import run_in_sandbox
 
 logger = logging.getLogger(__name__)
@@ -22,26 +20,17 @@ def set_allowed_base_dir(directory: str):
     global _allowed_base_dir
     _allowed_base_dir = os.path.realpath(directory)
 
-@tool("clone_repo")
-def clone_github_repo(repo_url: str) -> str:
-    """Clones a GitHub repository to a temporary directory and returns the path.
-    If repo_url is a local filesystem path, validates and returns it directly."""
-    # Check if this is a local filesystem path
-    if os.path.exists(repo_url) and os.path.isdir(repo_url):
-        # It's a local directory path - return it directly
-        return os.path.abspath(repo_url)
+def run_static_scans(directory: str) -> str:
+    """Run OSV-Scanner and Semgrep deterministically (no LLM involved).
 
-    # It's a Git URL - clone it
-    temp_dir = tempfile.mkdtemp()
-    Repo.clone_from(repo_url, temp_dir)
-    return temp_dir
+    Called directly by run_pipeline() — NOT via a CrewAI agent — so the
+    static scan results are always produced regardless of LLM behaviour.
 
-@tool("run_security_scans")
-def run_security_scans(directory: str) -> str:
-    """Runs OSV-Scanner and Semgrep on a directory and returns a combined JSON summary."""
+    Returns:
+        JSON string: ``{"osv": {...}, "semgrep": {...}}``
+    """
     results = {"osv": None, "semgrep": None}
 
-    # Validate directory path
     if not os.path.exists(directory):
         error_msg = f"Directory does not exist: {directory}"
         return json.dumps({"osv": {"error": error_msg}, "semgrep": {"error": error_msg}})
@@ -50,16 +39,13 @@ def run_security_scans(directory: str) -> str:
         error_msg = f"Path is not a directory: {directory}"
         return json.dumps({"osv": {"error": error_msg}, "semgrep": {"error": error_msg}})
 
-    # Convert to absolute path for clarity
     directory = os.path.abspath(directory)
 
     # OSV Scan
     try:
         osv_cmd = ["osv-scanner", "-r", directory, "--json"]
-        # Don't use check=True because osv-scanner returns non-zero when vulnerabilities are found
         osv_res = subprocess.run(osv_cmd, capture_output=True, text=True, timeout=300)
 
-        # Try to parse stdout first, even if exit code is non-zero
         if osv_res.stdout and osv_res.stdout.strip():
             try:
                 results["osv"] = json.loads(osv_res.stdout)
@@ -77,10 +63,8 @@ def run_security_scans(directory: str) -> str:
     # Semgrep Scan
     try:
         sem_cmd = ["semgrep", "scan", "--config=auto", directory, "--json"]
-        # Don't use check=True because semgrep returns non-zero when findings are found
         sem_res = subprocess.run(sem_cmd, capture_output=True, text=True, timeout=300)
 
-        # Try to parse stdout first, even if exit code is non-zero
         if sem_res.stdout and sem_res.stdout.strip():
             try:
                 results["semgrep"] = json.loads(sem_res.stdout)

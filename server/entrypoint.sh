@@ -61,24 +61,52 @@ echo "[entrypoint] PostgreSQL is ready."
 
 # ── migrations ───────────────────────────────────────────────────────────────
 echo "[entrypoint] Running database migrations..."
-# If reportApp tables already exist (prior deploy) but migration records are
-# out of sync, fake all reportApp migrations first so Django's state matches
-# the DB schema. The check is: if the Organization table exists, assume all
-# reportApp tables are present. For fresh DBs the table won't exist and we
-# skip straight to a normal migrate.
+# Legacy fix: if reportApp tables exist but Django has no migration records
+# for the app, fake only the migrations whose schema changes already exist
+# (0001-0008).  New migrations (0009+) are left UN-faked so Django actually
+# runs them and creates the new columns.
+#
+# Previous approach faked ALL reportApp migrations, which silently skipped
+# newly added migrations like 0009 (scan_level column).
 python -c "
 import django, os, sys
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'intelliHunt.settings')
 django.setup()
 from django.db import connection
 with connection.cursor() as cur:
+    # Check if tables exist but migration tracking is missing
     cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_name='reportApp_organization'\")
-    if cur.fetchone():
-        print('[entrypoint] Existing reportApp tables detected — faking migrations to sync state.')
+    has_tables = cur.fetchone()
+    cur.execute(\"SELECT COUNT(*) FROM django_migrations WHERE app='reportApp'\")
+    migration_count = cur.fetchone()[0]
+    if has_tables and migration_count == 0:
+        print('[entrypoint] Existing reportApp tables with no migration records — faking 0001-0008.')
         sys.exit(0)
     else:
         sys.exit(1)
-" && python manage.py migrate --fake reportApp --noinput 2>/dev/null || true
+" && python manage.py migrate --fake reportApp 0008 --noinput 2>/dev/null || true
+
+# If a previous deploy wrongly faked migration 0009 (scan_level column),
+# un-fake it so it actually runs this time.
+python -c "
+import django, os, sys
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'intelliHunt.settings')
+django.setup()
+from django.db import connection
+with connection.cursor() as cur:
+    # Check if 0009 is recorded as applied but the column doesn't exist
+    cur.execute(\"SELECT 1 FROM django_migrations WHERE app='reportApp' AND name='0009_scanresult_scan_level'\")
+    is_recorded = cur.fetchone()
+    cur.execute(\"SELECT 1 FROM information_schema.columns WHERE table_name='reportApp_scanresult' AND column_name='scan_level'\")
+    col_exists = cur.fetchone()
+    if is_recorded and not col_exists:
+        print('[entrypoint] Migration 0009 was faked but column missing — removing fake record.')
+        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name='0009_scanresult_scan_level'\")
+        sys.exit(0)
+    else:
+        sys.exit(1)
+" 2>/dev/null || true
+
 python manage.py migrate --noinput
 
 # ── static files ─────────────────────────────────────────────────────────────

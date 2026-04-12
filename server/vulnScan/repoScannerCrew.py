@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from vulnScan.repoScannerTools import (
-    clone_github_repo, search_vulnerability_databases, run_security_scans,
+    search_vulnerability_databases,
     list_repo_files, read_file_content,
     find_ai_code_files, deep_dependency_web_search,
 )
@@ -53,15 +53,6 @@ def get_security_crew(tier: str = "speed") -> Crew:
 
     # ── Agents ───────────────────────────────────────────────────────────────
 
-    analyst = Agent(
-        role='Code Security Analyst',
-        goal='Analyze local source code and dependency trees for security flaws.',
-        backstory='Specialist in Static Analysis (SAST) and Software Composition Analysis (SCA).',
-        tools=[clone_github_repo, run_security_scans],
-        llm=llm,
-        verbose=False,
-    )
-
     code_reviewer = Agent(
         role='Runtime Vulnerability Analyst',
         goal='Read source code files and identify runtime vulnerabilities that static analysis tools miss.',
@@ -108,21 +99,21 @@ def get_security_crew(tier: str = "speed") -> Crew:
     )
 
     # ── Tasks ────────────────────────────────────────────────────────────────
-
-    task_scan = Task(
-        description='For {repo_url}: if it is a Git URL, clone it; if it is a local directory path, use it directly. Then run OSV and Semgrep scans, and extract a list of all CVE IDs found.',
-        expected_output='A JSON list of unique CVE IDs and a summary of code-level vulnerabilities.',
-        agent=analyst,
-    )
+    # NOTE: Static scans (OSV-Scanner + Semgrep) are run deterministically
+    # OUTSIDE the crew by run_pipeline().  Their JSON output is injected as
+    # the {static_scan_results} variable so every task can reference it.
 
     task_code_review = Task(
         description=(
             'Analyze the source code in {repo_url} for runtime vulnerabilities that static '
-            'analysis tools miss. Follow this strategy:\n'
+            'analysis tools miss. The static scan (OSV-Scanner + Semgrep) has already been '
+            'run and its results are provided below — use them to prioritize your review.\n\n'
+            '--- STATIC SCAN RESULTS ---\n{static_scan_results}\n--- END STATIC SCAN RESULTS ---\n\n'
+            'Follow this strategy:\n'
             '1. Use list_repo_files to get the repository file listing.\n'
             '2. Prioritize files that handle: HTTP routes/views, authentication, '
             'database queries, file I/O, deserialization, subprocess calls, and configuration.\n'
-            '3. Also review any files flagged by the static scan results from context.\n'
+            '3. Also review any files flagged by the static scan results above.\n'
             '4. Use read_file_content to read the most security-critical files (aim for 8-15 files).\n'
             '5. For each vulnerability found, report: file path, line number(s), vulnerability type '
             '(CWE if applicable), severity (Critical/High/Medium/Low), description, and remediation.\n'
@@ -138,7 +129,6 @@ def get_security_crew(tier: str = "speed") -> Crew:
             'remediation, and detection_method set to "llm_code_review".'
         ),
         agent=code_reviewer,
-        context=[task_scan],
     )
 
     task_ai_vuln = Task(
@@ -167,13 +157,12 @@ def get_security_crew(tier: str = "speed") -> Crew:
             'or a single line "*No AI/LLM code detected in this repository.*" if no AI code exists.'
         ),
         agent=ai_security_auditor,
-        context=[task_scan],
     )
 
     # ── Conditional legend-only task ─────────────────────────────────────────
 
-    agents_list = [analyst, code_reviewer, ai_security_auditor, researcher]
-    tasks_list = [task_scan, task_code_review, task_ai_vuln]
+    agents_list = [code_reviewer, ai_security_auditor, researcher]
+    tasks_list = [task_code_review, task_ai_vuln]
 
     if tier == "legend":
         supply_chain_researcher = Agent(
@@ -199,8 +188,9 @@ def get_security_crew(tier: str = "speed") -> Crew:
         task_deep_dep = Task(
             description=(
                 'Search the web for recently-disclosed vulnerabilities in the dependencies '
-                'identified by the static scan.\n'
-                '1. Parse the dependency/package list from the static scan context.\n'
+                'identified by the static scan. The static scan results are provided below:\n\n'
+                '--- STATIC SCAN RESULTS ---\n{static_scan_results}\n--- END STATIC SCAN RESULTS ---\n\n'
+                '1. Parse the dependency/package list from the static scan results above.\n'
                 '2. For the top 15 unique packages, call deep_dependency_web_search once per package.\n'
                 '3. Also cross-reference notable findings with search_vulnerability_databases.\n'
                 '4. Flag: recently-disclosed CVEs not yet in OSV, supply-chain / typosquatting\n'
@@ -215,22 +205,26 @@ def get_security_crew(tier: str = "speed") -> Crew:
                 'a summary line "*No additional vulnerabilities found beyond static scan results.*".'
             ),
             agent=supply_chain_researcher,
-            context=[task_scan],
         )
 
         agents_list.insert(3, supply_chain_researcher)  # before researcher
         tasks_list.append(task_deep_dep)
 
-    # task_enrich is always last — its context includes all preceding tasks
+    # task_enrich is always last — its context includes all preceding LLM tasks
+    # plus the deterministic static scan results injected as {static_scan_results}.
     task_enrich = Task(
         description=(
-            'Produce the FINAL prioritised vulnerability report by merging ALL preceding task outputs.\n'
-            '1. Take the CVE IDs and findings from the static scan and code review.\n'
-            '2. Check them against CISA KEV and NVD to highlight vulnerabilities known to be '
+            'Produce the FINAL prioritised vulnerability report by merging the static scan '
+            'results with ALL preceding LLM task outputs.\n\n'
+            '--- STATIC SCAN RESULTS (OSV-Scanner + Semgrep) ---\n{static_scan_results}\n'
+            '--- END STATIC SCAN RESULTS ---\n\n'
+            '1. Extract CVE IDs and findings from the static scan results above.\n'
+            '2. Merge them with the runtime code-review and AI/LLM audit findings from context.\n'
+            '3. Check CVEs against CISA KEV and NVD to highlight vulnerabilities known to be '
             'exploited in the wild.\n'
-            '3. PRESERVE the "## AI/LLM Vulnerability Findings" section verbatim from context.\n'
-            '4. If a "## Deep Dependency Web Search" section exists in context, preserve it verbatim.\n'
-            '5. Combine everything into a single coherent markdown report with clear section headings.'
+            '4. PRESERVE the "## AI/LLM Vulnerability Findings" section verbatim from context.\n'
+            '5. If a "## Deep Dependency Web Search" section exists in context, preserve it verbatim.\n'
+            '6. Combine everything into a single coherent markdown report with clear section headings.'
         ),
         expected_output=(
             'A prioritised markdown report of all vulnerabilities — static scan findings, '
@@ -238,7 +232,7 @@ def get_security_crew(tier: str = "speed") -> Crew:
             'dependency web-search findings — highlighting those known to be exploited in the wild.'
         ),
         agent=researcher,
-        context=[t for t in tasks_list],  # everything before enrich
+        context=[t for t in tasks_list],  # all preceding LLM tasks
     )
 
     tasks_list.append(task_enrich)
