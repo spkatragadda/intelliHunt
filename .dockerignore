@@ -1,18 +1,91 @@
-# Dependency directories
+# -----------------------------------------------------------------------------
+# Docker build context exclusions
+#
+# The primary goal here is to keep the context small so `docker build` doesn't
+# stream hundreds of MB (or GB) to the daemon on every build. Anything the
+# Dockerfile does not COPY belongs here.
+# -----------------------------------------------------------------------------
+
+# ── Dependency directories (huge, rebuilt inside the image) ──────────────────
 node_modules
 **/node_modules
+.venv
+**/.venv
+venv
+**/venv
+.pnp
+.pnp.js
 
-# Build output directories
+# ── Build output (regenerated inside the image) ──────────────────────────────
 .next
+**/.next
 out
+**/out
+dist
+**/dist
+build
+**/build
 
-# Next.js specific
-.env.local
-.env.*.local
+# ── Python bytecode / caches ─────────────────────────────────────────────────
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.egg-info
+**/*.egg-info
 
-# Git metadata
+# ── Local databases & mutable runtime state ─────────────────────────────────-
+db.sqlite3
+**/db.sqlite3
+db/
+logs/
+**/logs/
+logs.txt
+**/logs.txt
+
+# ── Environment / secrets ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+!env.example
+
+# ── Version control & IDE metadata ───────────────────────────────────────────
 .git
+.gitignore
+.gitattributes
+.idea
+.vscode
+.claude
 
-# Docker files
+# ── Developer-only content not needed at runtime ─────────────────────────────
+imageFolder/
+mockData/
+devTO.md
+README.md
+client/intellihunt/README.md
+server/README.md
+.github
+
+# ── Docker files themselves ──────────────────────────────────────────────────
 Dockerfile
 .dockerignore
+docker-compose*.yaml
+docker-compose*.yml
+
+# ── Platform / OS junk ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── CrewAI runtime caches (regenerated per container) ────────────────────────
+crewai-rag-tool.lock
+**/crewai-rag-tool.lock
+chroma.sqlite3
+**/chroma.sqlite3
+# Stale ChromaDB state under crew/db — contents are regenerated on use.
+server/intelliHunt/crew/db/
