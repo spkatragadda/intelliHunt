@@ -86,28 +86,32 @@ with connection.cursor() as cur:
         sys.exit(1)
 " && python manage.py migrate --fake reportApp 0008 --noinput 2>/dev/null || true
 
-# If a previous deploy wrongly faked migration 0009 (scan_level column),
-# un-fake it so it actually runs this time.
+# Repair migration state:
+# 1. If 0009 was faked but scan_level column is missing, remove its record.
+# 2. Remove DB records for reportApp migrations whose files no longer exist
+#    on disk (e.g. a previously-applied 0010 whose file was deleted). These
+#    orphan records cause InconsistentMigrationHistory errors.
 python -c "
-import django, os, sys
+import django, os, sys, pathlib
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'intelliHunt.settings')
 django.setup()
 from django.db import connection
+
+migrations_dir = pathlib.Path('/app/server/intelliHunt/reportApp/migrations')
+
 with connection.cursor() as cur:
-    # Check if 0009 is recorded as applied but the column doesn't exist
-    cur.execute(\"SELECT 1 FROM django_migrations WHERE app='reportApp' AND name='0009_scanresult_scan_level'\")
-    is_recorded = cur.fetchone()
+    # --- Fix 1: 0009 faked but column missing ---
     cur.execute(\"SELECT 1 FROM information_schema.columns WHERE table_name='reportApp_scanresult' AND column_name='scan_level'\")
-    col_exists = cur.fetchone()
-    if not col_exists:
-        print('[entrypoint] scan_level column missing — removing 0009+ migration records so they re-run.')
-        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name LIKE '0009%%'\")
-        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name LIKE '0010%%'\")
-        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name LIKE '0011%%'\")
-        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name LIKE '0012%%'\")
-        sys.exit(0)
-    else:
-        sys.exit(1)
+    if not cur.fetchone():
+        print('[entrypoint] scan_level column missing — removing 0009 record so it re-runs.')
+        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name='0009_scanresult_scan_level'\")
+
+    # --- Fix 2: remove orphan migration records (no .py file on disk) ---
+    cur.execute(\"SELECT id, name FROM django_migrations WHERE app='reportApp'\")
+    for row_id, name in cur.fetchall():
+        if not (migrations_dir / f'{name}.py').exists():
+            print(f'[entrypoint] Removing orphan migration record: reportApp.{name}')
+            cur.execute('DELETE FROM django_migrations WHERE id = %s', [row_id])
 " 2>/dev/null || true
 
 python manage.py migrate --noinput
