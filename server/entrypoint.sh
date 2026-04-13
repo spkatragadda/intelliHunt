@@ -99,9 +99,12 @@ with connection.cursor() as cur:
     is_recorded = cur.fetchone()
     cur.execute(\"SELECT 1 FROM information_schema.columns WHERE table_name='reportApp_scanresult' AND column_name='scan_level'\")
     col_exists = cur.fetchone()
-    if is_recorded and not col_exists:
-        print('[entrypoint] Migration 0009 was faked but column missing — removing fake record.')
-        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name='0009_scanresult_scan_level'\")
+    if not col_exists:
+        print('[entrypoint] scan_level column missing — removing 0009+ migration records so they re-run.')
+        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name LIKE '0009%%'\")
+        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name LIKE '0010%%'\")
+        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name LIKE '0011%%'\")
+        cur.execute(\"DELETE FROM django_migrations WHERE app='reportApp' AND name LIKE '0012%%'\")
         sys.exit(0)
     else:
         sys.exit(1)
