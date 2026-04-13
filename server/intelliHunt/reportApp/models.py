@@ -86,6 +86,7 @@ class ScanResult(models.Model):
     task_id         = models.CharField(max_length=36, unique=True, db_index=True)
     target          = models.TextField()
     input_type      = models.CharField(max_length=10, default="url")
+    scan_level      = models.CharField(max_length=10, default="speed")
     status          = models.CharField(max_length=20, default="running")
     report_markdown = models.TextField(blank=True, default="")
     duration_ms     = models.IntegerField(null=True, blank=True)

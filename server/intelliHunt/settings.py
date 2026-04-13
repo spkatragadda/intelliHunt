@@ -256,7 +256,7 @@ _email_backend_default = (
     else "django.core.mail.backends.smtp.EmailBackend"
 )
 EMAIL_BACKEND       = os.environ.get("EMAIL_BACKEND", _email_backend_default)
-EMAIL_HOST          = os.environ.get("EMAIL_HOST",          "smtp.gmail.com")
+EMAIL_HOST          = os.environ.get("EMAIL_HOST",          "smtp.zoho.com")
 EMAIL_PORT          = int(os.environ.get("EMAIL_PORT",      "587"))
 EMAIL_USE_TLS       = os.environ.get("EMAIL_USE_TLS",       "true").lower() == "true"
 EMAIL_HOST_USER     = os.environ.get("EMAIL_HOST_USER",     "")
