@@ -43,7 +43,7 @@ def run_static_scans(directory: str) -> str:
 
     # OSV Scan
     try:
-        osv_cmd = ["osv-scanner", "-r", directory, "--json"]
+        osv_cmd = ["osv-scanner", "scan", "-r", directory, "--format", "json"]
         osv_res = subprocess.run(osv_cmd, capture_output=True, text=True, timeout=300)
 
         if osv_res.stdout and osv_res.stdout.strip():

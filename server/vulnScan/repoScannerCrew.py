@@ -64,6 +64,7 @@ def get_security_crew(tier: str = "speed") -> Crew:
         ),
         tools=[list_repo_files, read_file_content],
         llm=llm,
+        allow_delegation=False,
         verbose=True,
         max_iter=20,
     )
@@ -85,6 +86,7 @@ def get_security_crew(tier: str = "speed") -> Crew:
         ),
         tools=[find_ai_code_files, read_file_content],
         llm=llm,
+        allow_delegation=False,
         verbose=True,
         max_iter=15,
     )
@@ -95,6 +97,7 @@ def get_security_crew(tier: str = "speed") -> Crew:
         backstory='Expert in NVD, CISA KEV, and GitHub Advisories. You know where the bugs hide.',
         tools=[search_vulnerability_databases],
         llm=llm,
+        allow_delegation=False,
         verbose=False,
     )
 
@@ -180,6 +183,7 @@ def get_security_crew(tier: str = "speed") -> Crew:
             ),
             tools=[deep_dependency_web_search, search_vulnerability_databases],
             llm=llm,
+            allow_delegation=False,
             verbose=False,
             max_iter=15,
         )
@@ -209,29 +213,33 @@ def get_security_crew(tier: str = "speed") -> Crew:
         agents_list.insert(3, supply_chain_researcher)  # before researcher
         tasks_list.append(task_deep_dep)
 
-    # task_enrich is always last — its context includes all preceding LLM tasks.
-    # NOTE: Static scan findings are prepended to the final report by
-    # run_pipeline() programmatically — this task only needs to compile and
-    # enrich the LLM-derived findings (code review, AI audit, deep dep).
+    # task_enrich is always last — merges static scan data + all LLM task
+    # outputs into a single comprehensive markdown report.
     task_enrich = Task(
         description=(
-            'Produce the FINAL vulnerability report by compiling ALL preceding task outputs.\n\n'
-            'A static scan summary is available for cross-referencing:\n'
+            'Produce the FINAL comprehensive vulnerability report by merging the static scan '
+            'data with ALL preceding LLM task outputs.\n\n'
+            '## Static Scan Data (OSV-Scanner + Semgrep)\n'
             '{static_scan_results}\n\n'
             'Instructions:\n'
-            '1. Compile the runtime code-review findings from context into a "## Runtime Code Review Findings" section.\n'
-            '2. PRESERVE the "## AI/LLM Vulnerability Findings" section verbatim from context.\n'
-            '3. If a "## Deep Dependency Web Search" section exists in context, preserve it verbatim.\n'
-            '4. For any CVE IDs mentioned, check them against CISA KEV and NVD to flag those '
-            'known to be exploited in the wild.\n'
-            '5. Add a "## CISA KEV / Actively Exploited" section listing any CVEs confirmed exploited.\n'
-            '6. Add a brief "## Summary" section at the top with total counts and top-priority items.\n'
-            '7. Do NOT reproduce the static scan findings — those are added separately.'
+            '1. Create a "## Static Analysis Findings" section that presents the OSV and Semgrep '
+            'findings above in a clear, readable format grouped by severity.\n'
+            '2. Create a "## Runtime Code Review Findings" section from the code-review task context.\n'
+            '3. PRESERVE the "## AI/LLM Vulnerability Findings" section verbatim from context.\n'
+            '4. If a "## Deep Dependency Web Search" section exists in context, preserve it verbatim.\n'
+            '5. For any CVE IDs mentioned anywhere, check them against CISA KEV and NVD to highlight '
+            'vulnerabilities known to be exploited in the wild.\n'
+            '6. Add a "## CISA KEV / Actively Exploited" section listing any confirmed exploited CVEs.\n'
+            '7. Add a "## Executive Summary" section at the top with total vulnerability counts by '
+            'severity and the top 5 most critical items to address first.\n'
+            '8. The report MUST include ALL sections — do not skip any even if a section has no findings '
+            '(mark it as "No issues found" instead).'
         ),
         expected_output=(
-            'A markdown report with sections: Summary, Runtime Code Review Findings, '
+            'A complete markdown vulnerability report with ALL of these sections: '
+            'Executive Summary, Static Analysis Findings, Runtime Code Review Findings, '
             'AI/LLM Vulnerability Findings, CISA KEV / Actively Exploited, and optionally '
-            'Deep Dependency Web Search. Do NOT include a static scan section.'
+            'Deep Dependency Web Search.'
         ),
         agent=researcher,
         context=[t for t in tasks_list],  # all preceding LLM tasks

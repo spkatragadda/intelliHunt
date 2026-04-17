@@ -50,13 +50,14 @@ function ScanTerminal({ progress, message }: { progress: number; message: string
     docs:    "var(--text-muted)",
   };
   const LOGS = [
-    { at: 0,  text: "$ initializing scan engine",   color: "var(--success)" },
-    { at: 10, text: "→ cloning repository",          color: "var(--text-secondary)" },
-    { at: 25, text: "→ indexing file tree",           color: "var(--text-secondary)" },
-    { at: 40, text: "→ scanning dependencies",        color: "var(--text-secondary)" },
-    { at: 55, text: "→ checking CVE database",        color: "#f59e0b" },
-    { at: 70, text: "→ analyzing secrets exposure",   color: "#f59e0b" },
-    { at: 85, text: "→ generating threat report",     color: "var(--text-secondary)" },
+    { at: 0,  text: "$ initializing scan engine",         color: "var(--success)" },
+    { at: 5,  text: "→ preparing sandbox environment",    color: "var(--text-secondary)" },
+    { at: 10, text: "→ fetching repository",              color: "var(--text-secondary)" },
+    { at: 20, text: "→ running static analysis (osv)",    color: "var(--text-secondary)" },
+    { at: 30, text: "→ running static analysis (semgrep)",color: "var(--text-secondary)" },
+    { at: 45, text: "→ ai code review in progress",      color: "#f59e0b" },
+    { at: 65, text: "→ scanning for ai/llm vulnerabilities", color: "#f59e0b" },
+    { at: 85, text: "→ compiling threat report",          color: "var(--text-secondary)" },
   ];
 
   return (
