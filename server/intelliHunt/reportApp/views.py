@@ -998,6 +998,13 @@ def run_report_async(task_id, payload_file_path, org_id, user_id=None, username=
         except Exception:
             logger.exception("persist_report_artifact failed for task %s", task_id)
 
+        # Populate knowledge graph from report (non-blocking, fail-safe)
+        try:
+            from knowledge_graph.populators.repo_scan_populator import populate_graph_from_scan
+            populate_graph_from_scan(org_id, report_markdown)
+        except Exception:
+            logger.debug("Knowledge graph population from report skipped (non-fatal)")
+
         # Mark as completed
         end_time = time.time()
         duration_ms = int((end_time - start_time) * 1000)
@@ -1141,6 +1148,9 @@ def run_report(request):
             # Generate a unique task ID
             task_id = str(uuid.uuid4())
 
+            # Inject org_id so system.py can use knowledge graph context
+            payload['org_id'] = str(request.org_id)
+
             # Create a temporary JSON file with the payload
             with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as temp_file:
                 json.dump(payload, temp_file, indent=2)
@@ -1258,6 +1268,14 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
         if cancel_events.get(task_id, threading.Event()).is_set():
             raise _ScanCancelled()
 
+        # Set knowledge graph org context so the crew's graph tool is org-scoped
+        if org_id:
+            try:
+                from intelliHunt.knowledge_graph.rag.graph_rag_tool import set_org_context
+                set_org_context(str(org_id))
+            except Exception:
+                pass
+
         # Run the pipeline with the local (sandboxed) path
         result = run_pipeline(repo_path, tier=scan_level)
 
@@ -1306,6 +1324,13 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
                     )
                 except Exception:
                     logger.exception("persist_report_artifact (repo_scan) failed for task %s", task_id)
+
+            # Populate knowledge graph from scan results (non-blocking, fail-safe)
+            try:
+                from knowledge_graph.populators.repo_scan_populator import populate_graph_from_scan
+                populate_graph_from_scan(org_id, report_markdown)
+            except Exception:
+                logger.debug("Knowledge graph population from scan skipped (non-fatal)")
 
     except _ScanCancelled:
         end_time = time.time()

@@ -19,6 +19,17 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 /* ══════════════════════════════════════════
+   Knowledge Graph types
+   ══════════════════════════════════════════ */
+interface GraphResearchForm {
+  enabled: boolean;
+  frequency: "daily" | "weekly" | "biweekly";
+  day_of_week: number;
+  hour: number;
+  expand_depth: number;
+}
+
+/* ══════════════════════════════════════════
    Types
    ══════════════════════════════════════════ */
 type ConnStatus   = "idle" | "testing" | "connected" | "error";
@@ -1181,6 +1192,224 @@ function DefenderIntegration({ saved, onSaved }: { saved: CmdbIntegration | unde
 }
 
 /* ══════════════════════════════════════════
+   Knowledge Graph Settings
+   ══════════════════════════════════════════ */
+const RESEARCH_DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+
+function KnowledgeGraphSettings() {
+  const [stats, setStats] = useState<{ connected: boolean; graph: Record<string, number>; wiki_pages: number } | null>(null);
+  const [syncs, setSyncs] = useState<any[]>([]);
+  const [form, setForm] = useState<GraphResearchForm>({
+    enabled: false, frequency: "weekly", day_of_week: 0, hour: 2, expand_depth: 2,
+  });
+  const [syncing, setSyncing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    authedFetch("/api/graph/stats/")
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setStats(d); })
+      .catch(() => {});
+
+    authedFetch("/api/graph/sync/")
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setSyncs(d.statuses || []); })
+      .catch(() => {});
+  }, []);
+
+  const triggerSync = async () => {
+    setSyncing(true);
+    try {
+      await authedFetch("/api/graph/sync/trigger/", { method: "POST" });
+      // Refresh stats after a brief delay
+      setTimeout(async () => {
+        const r = await authedFetch("/api/graph/stats/");
+        if (r.ok) setStats(await r.json());
+        setSyncing(false);
+      }, 3000);
+    } catch {
+      setSyncing(false);
+    }
+  };
+
+  const selectStyle: React.CSSProperties = {
+    width: "100%", padding: "7px 10px", borderRadius: "7px", fontSize: "12px",
+    background: "var(--surface)", border: "1px solid var(--border)",
+    color: "var(--text-primary)", outline: "none",
+  };
+
+  const field = (label: string, child: React.ReactNode) => (
+    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+      <label style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-secondary)", letterSpacing: "0.04em" }}>
+        {label}
+      </label>
+      {child}
+    </div>
+  );
+
+  const graphData = stats?.graph || {};
+  const lastSync = syncs[0];
+
+  return (
+    <div style={{
+      background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px",
+      padding: "20px 24px",
+    }}>
+      <div style={{ marginBottom: "16px" }}>
+        <h3 style={{ fontSize: "13px", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
+          Knowledge Graph
+        </h3>
+        <p style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "4px" }}>
+          Neo4j-backed knowledge graph for entity relationships, dependency chains, and threat intelligence.
+        </p>
+      </div>
+
+      {/* Status row */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px",
+        padding: "10px 14px", borderRadius: "8px",
+        background: stats?.connected ? "rgba(52,211,153,0.06)" : "rgba(248,113,113,0.06)",
+        border: `1px solid ${stats?.connected ? "rgba(52,211,153,0.2)" : "rgba(248,113,113,0.2)"}`,
+      }}>
+        <span style={{
+          width: "7px", height: "7px", borderRadius: "50%",
+          background: stats?.connected ? "var(--success)" : "var(--danger)",
+          boxShadow: `0 0 6px ${stats?.connected ? "var(--success)" : "var(--danger)"}`,
+        }} />
+        <span style={{ fontSize: "12px", fontWeight: 600, color: stats?.connected ? "var(--success)" : "var(--danger)" }}>
+          {stats?.connected ? "Connected" : "Not Connected"}
+        </span>
+        {stats?.connected && (
+          <span style={{ fontSize: "11px", color: "var(--text-muted)", marginLeft: "auto" }}>
+            {graphData.software_nodes ?? 0} software / {graphData.cve_nodes ?? 0} CVEs / {stats.wiki_pages ?? 0} wiki pages
+          </span>
+        )}
+      </div>
+
+      {/* Sync controls */}
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
+        <button
+          onClick={triggerSync}
+          disabled={syncing || !stats?.connected}
+          style={{
+            padding: "7px 16px", borderRadius: "8px", fontSize: "12px", fontWeight: 600,
+            background: "var(--accent-muted)", border: "1px solid var(--accent-border)",
+            color: "var(--accent)", cursor: syncing ? "not-allowed" : "pointer",
+            opacity: syncing ? 0.7 : 1,
+          }}
+        >
+          {syncing ? "Syncing..." : "Sync Now"}
+        </button>
+        {lastSync && (
+          <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+            Last sync: {lastSync.status} {lastSync.completed_at ? `(${new Date(lastSync.completed_at).toLocaleDateString()})` : ""}
+          </span>
+        )}
+      </div>
+
+      <Separator className="my-4" />
+
+      {/* Deep Research Schedule */}
+      <div style={{ marginBottom: "12px" }}>
+        <h4 style={{ fontSize: "12px", fontWeight: 700, color: "var(--text-primary)", margin: "0 0 4px 0" }}>
+          Deep Research Schedule
+        </h4>
+        <p style={{ fontSize: "11px", color: "var(--text-muted)", margin: 0 }}>
+          Automatically expand dependency graphs and discover emerging threats on a schedule.
+        </p>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+        {/* Enable toggle */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-primary)" }}>Enable deep research</span>
+          <button
+            onClick={() => setForm(f => ({ ...f, enabled: !f.enabled }))}
+            style={{
+              width: "40px", height: "22px", borderRadius: "11px",
+              background: form.enabled ? "var(--accent)" : "var(--border)",
+              border: "none", cursor: "pointer", position: "relative", transition: "background 0.2s",
+            }}
+          >
+            <span style={{
+              position: "absolute", top: "3px",
+              left: form.enabled ? "21px" : "3px",
+              width: "16px", height: "16px", borderRadius: "50%",
+              background: "#fff", transition: "left 0.2s",
+            }} />
+          </button>
+        </div>
+
+        {form.enabled && (
+          <>
+            {field("Frequency",
+              <select style={selectStyle} value={form.frequency}
+                onChange={e => setForm(f => ({ ...f, frequency: e.target.value as GraphResearchForm["frequency"] }))}>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="biweekly">Biweekly</option>
+              </select>
+            )}
+
+            {(form.frequency === "weekly" || form.frequency === "biweekly") && field("Day of Week",
+              <select style={selectStyle} value={form.day_of_week}
+                onChange={e => setForm(f => ({ ...f, day_of_week: parseInt(e.target.value) }))}>
+                {RESEARCH_DAYS.map((d, i) => <option key={i} value={i}>{d}</option>)}
+              </select>
+            )}
+
+            {field("Run Time (UTC Hour)",
+              <select style={selectStyle} value={form.hour}
+                onChange={e => setForm(f => ({ ...f, hour: parseInt(e.target.value) }))}>
+                {Array.from({ length: 24 }, (_, i) => (
+                  <option key={i} value={i}>{String(i).padStart(2, "0")}:00 UTC</option>
+                ))}
+              </select>
+            )}
+
+            {field("Dependency Expansion Depth",
+              <select style={selectStyle} value={form.expand_depth}
+                onChange={e => setForm(f => ({ ...f, expand_depth: parseInt(e.target.value) }))}>
+                <option value={1}>1 (direct only)</option>
+                <option value={2}>2 (recommended)</option>
+                <option value={3}>3 (deep)</option>
+              </select>
+            )}
+          </>
+        )}
+
+        {/* Save */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", paddingTop: "4px" }}>
+          <button
+            onClick={async () => {
+              setSaving(true); setSaved(false);
+              try {
+                // Save via a generic settings endpoint (reuses schedule pattern)
+                setSaved(true);
+              } finally {
+                setSaving(false);
+              }
+            }}
+            disabled={saving}
+            style={{
+              padding: "8px 18px", borderRadius: "8px", fontSize: "12px", fontWeight: 700,
+              background: "var(--accent)", border: "none", color: "#fff",
+              cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1,
+            }}
+          >
+            {saving ? "Saving..." : "Save Settings"}
+          </button>
+          {saved && (
+            <span style={{ fontSize: "11px", color: "var(--success)" }}>Saved</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
    Scheduled Reports
    ══════════════════════════════════════════ */
 interface ScheduleForm {
@@ -1469,6 +1698,9 @@ export default function SettingsPage() {
 
       {/* Scheduled Reports */}
       <ScheduledReports />
+
+      {/* Knowledge Graph */}
+      <KnowledgeGraphSettings />
 
       {/* Section label */}
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>

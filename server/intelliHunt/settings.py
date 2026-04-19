@@ -266,6 +266,11 @@ DEFAULT_FROM_EMAIL  = os.environ.get("DEFAULT_FROM_EMAIL",  "noreply@intellihunt
 # Base URL of the Next.js frontend — used to build password-reset links in emails.
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 
+# ── Neo4j Knowledge Graph ────────────────────────────────────────────────────
+NEO4J_BOLT_URL = os.environ.get("NEO4J_BOLT_URL", "bolt://localhost:7687")
+NEO4J_USER = os.environ.get("NEO4J_USER", "neo4j")
+NEO4J_PASSWORD = os.environ.get("NEO4J_PASSWORD", "")
+
 # ── Logging ───────────────────────────────────────────────────────────────────
 # Root log directory.  Sub-directories are created automatically by
 # DailyDirectoryHandler using the pattern  logs/<YYYY>/<MM>/<YYYY-MM-DD>.log

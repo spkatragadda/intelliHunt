@@ -173,6 +173,18 @@ def _send_drift_email(org, added_cves: set):
         logger.exception("[scheduler] drift email failed for org %s", org.pk)
 
 
+def run_deep_research(org_id: str):
+    """
+    APScheduler calls this for each org with GraphResearchConfig enabled.
+    Delegates to the knowledge_graph deep research pipeline.
+    """
+    try:
+        from intelliHunt.knowledge_graph.tasks.deep_research import run_deep_research as _run
+        _run(org_id)
+    except Exception:
+        logger.exception("[scheduler] deep research failed for org %s", org_id)
+
+
 def prune_old_artifacts_job():
     """
     Daily housekeeping job (02:00 UTC). For each org with a ScheduleConfig,

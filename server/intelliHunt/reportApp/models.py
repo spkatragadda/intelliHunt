@@ -273,9 +273,10 @@ class ReportMetric(models.Model):
 
 class Notification(models.Model):
     TYPE_CHOICES = [
-        ('drift',        'New CVEs Detected'),
-        ('run_complete', 'Scheduled Run Complete'),
-        ('run_error',    'Scheduled Run Failed'),
+        ('drift',         'New CVEs Detected'),
+        ('run_complete',  'Scheduled Run Complete'),
+        ('run_error',     'Scheduled Run Failed'),
+        ('graph_update',  'Knowledge Graph Updated'),
     ]
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name='notifications',
@@ -296,3 +297,129 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"[{self.type}] {self.title} (read={self.read})"
+
+
+# ── Knowledge Graph Models ───────────────────────────────────────────────────
+
+class WikiPage(models.Model):
+    """Karpathy-style wiki page — LLM-maintained, graph-backed markdown."""
+    ENTITY_TYPE_CHOICES = [
+        ("software",         "Software"),
+        ("cve",              "CVE"),
+        ("cwe",              "CWE"),
+        ("threat_actor",     "Threat Actor"),
+        ("attack_technique", "Attack Technique"),
+        ("dependency_chain", "Dependency Chain"),
+    ]
+
+    id                 = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    organization       = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="wiki_pages",
+    )
+    entity_type        = models.CharField(max_length=32, choices=ENTITY_TYPE_CHOICES)
+    entity_id          = models.CharField(max_length=255)
+    title              = models.CharField(max_length=512)
+    content_markdown   = models.TextField(blank=True, default="")
+    links_to           = models.JSONField(default=list)
+    graph_context_hash = models.CharField(max_length=64, blank=True, default="")
+    last_refreshed     = models.DateTimeField(auto_now=True)
+    created_at         = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label   = "reportApp"
+        unique_together = [("organization", "entity_type", "entity_id")]
+        ordering    = ["-last_refreshed"]
+        indexes     = [
+            models.Index(fields=["organization", "entity_type"]),
+        ]
+
+    def __str__(self):
+        return f"WikiPage: {self.title} ({self.entity_type}:{self.entity_id})"
+
+
+class WikiLog(models.Model):
+    """Append-only chronological log of wiki operations (Karpathy's log.md)."""
+    OPERATION_CHOICES = [
+        ("ingest", "Ingest"),
+        ("query",  "Query"),
+        ("lint",   "Lint"),
+        ("expand", "Expand"),
+    ]
+
+    id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    organization    = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="wiki_logs",
+    )
+    operation       = models.CharField(max_length=16, choices=OPERATION_CHOICES)
+    title           = models.CharField(max_length=512)
+    detail          = models.TextField(blank=True, default="")
+    pages_affected  = models.JSONField(default=list)
+    created_at      = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = "reportApp"
+        ordering  = ["-created_at"]
+
+    def __str__(self):
+        return f"WikiLog [{self.operation}] {self.title}"
+
+
+class GraphResearchConfig(models.Model):
+    """Separate schedule for deep graph research (independent of ScheduleConfig)."""
+    FREQUENCY_CHOICES = [
+        ("daily",    "Daily"),
+        ("weekly",   "Weekly"),
+        ("biweekly", "Biweekly"),
+    ]
+
+    organization    = models.OneToOneField(
+        Organization, on_delete=models.CASCADE, related_name="graph_research_config",
+    )
+    enabled         = models.BooleanField(default=False)
+    frequency       = models.CharField(max_length=16, choices=FREQUENCY_CHOICES, default="weekly")
+    day_of_week     = models.IntegerField(default=0)
+    hour            = models.IntegerField(default=2)
+    expand_depth    = models.IntegerField(default=2)
+    created_at      = models.DateTimeField(auto_now_add=True)
+    updated_at      = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = "reportApp"
+
+    def __str__(self):
+        return f"GraphResearch for {self.organization.name} ({self.frequency}, enabled={self.enabled})"
+
+
+class GraphSyncStatus(models.Model):
+    """Tracks graph population / sync jobs."""
+    SYNC_TYPE_CHOICES = [
+        ("initial",       "Initial"),
+        ("incremental",   "Incremental"),
+        ("deep_research", "Deep Research"),
+        ("lint",          "Lint"),
+    ]
+    STATUS_CHOICES = [
+        ("running",   "Running"),
+        ("completed", "Completed"),
+        ("error",     "Error"),
+    ]
+
+    id                     = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    organization           = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="graph_sync_statuses",
+    )
+    sync_type              = models.CharField(max_length=32, choices=SYNC_TYPE_CHOICES)
+    status                 = models.CharField(max_length=20, choices=STATUS_CHOICES, default="running")
+    started_at             = models.DateTimeField()
+    completed_at           = models.DateTimeField(null=True, blank=True)
+    nodes_created          = models.IntegerField(default=0)
+    relationships_created  = models.IntegerField(default=0)
+    pages_updated          = models.IntegerField(default=0)
+    errors                 = models.TextField(blank=True, default="")
+
+    class Meta:
+        app_label = "reportApp"
+        ordering  = ["-started_at"]
+
+    def __str__(self):
+        return f"GraphSync {self.sync_type} ({self.status}) for {self.organization_id}"

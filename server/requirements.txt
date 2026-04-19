@@ -16,3 +16,5 @@ PyJWT>=2.8.0
 django-apscheduler>=0.7
 django-ratelimit>=4.1
 reportlab>=4.0
+neo4j>=5.20
+langchain-neo4j>=0.1.0

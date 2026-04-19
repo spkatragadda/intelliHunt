@@ -33,6 +33,27 @@ const nav = [
     ),
   },
   {
+    href: "/wiki",
+    label: "Wiki",
+    icon: (
+      <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+      </svg>
+    ),
+  },
+  {
+    href: "/graph",
+    label: "Graph",
+    icon: (
+      <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+        <circle cx="12" cy="5" r="2.5" />
+        <circle cx="5" cy="19" r="2.5" />
+        <circle cx="19" cy="19" r="2.5" />
+        <path strokeLinecap="round" d="M12 7.5v4M7 17.5l3.5-6M17 17.5l-3.5-6" />
+      </svg>
+    ),
+  },
+  {
     href: "/reports/history",
     label: "Report Archive",
     icon: (
@@ -145,7 +166,7 @@ export default function Sidebar() {
       <nav className="flex-1 py-2.5 overflow-y-auto overflow-x-hidden">
         <div className="space-y-0.5 px-1.5">
           {nav.map((item) => {
-            const active = path === item.href;
+            const active = path === item.href || (item.href !== "/dashboard" && path.startsWith(item.href + "/"));
             return (
               <Link
                 key={item.href}

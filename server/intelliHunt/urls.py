@@ -25,6 +25,8 @@ from .reportApp import auth_views
 from .reportApp import admin_views
 from .reportApp import reset_views
 from .reportApp import trends_views
+from .knowledge_graph import views as graph_views
+from .knowledge_graph.wiki import views as wiki_views
 from .views import ReactAppView
 from django.http import HttpResponse
 
@@ -79,6 +81,22 @@ path('api/yaml/template/', views.get_yaml_template, name='yaml_template'),
     path('api/admin/users/<str:user_id>/',            admin_views.delete_user,      name='admin_delete_user'),
     path('api/admin/users/<str:user_id>/approve/',    admin_views.approve_user,     name='admin_approve_user'),
     path('api/admin/users/<str:user_id>/reject/',     admin_views.reject_user,      name='admin_reject_user'),
+    # ── Knowledge Wiki endpoints ────────────────────────────────────────────
+    path('api/wiki/',                                           wiki_views.wiki_index,          name='wiki_index'),
+    path('api/wiki/search/',                                    wiki_views.wiki_search,         name='wiki_search'),
+    path('api/wiki/log/',                                       wiki_views.wiki_log,            name='wiki_log'),
+    path('api/wiki/query/',                                     wiki_views.wiki_query_endpoint, name='wiki_query'),
+    path('api/wiki/<str:entity_type>/',                         wiki_views.wiki_list_by_type,   name='wiki_list_by_type'),
+    path('api/wiki/<str:entity_type>/<path:entity_id>/',        wiki_views.wiki_page_detail,    name='wiki_page_detail'),
+    path('api/wiki/refresh/<str:entity_type>/<path:entity_id>/',wiki_views.wiki_refresh_page,   name='wiki_refresh_page'),
+    # ── Knowledge Graph endpoints ────────────────────────────────────────────
+    path('api/graph/stats/',                                    graph_views.graph_stats,        name='graph_stats'),
+    path('api/graph/software/',                                 graph_views.graph_software,     name='graph_software'),
+    path('api/graph/threat-actors/',                            graph_views.graph_threat_actors, name='graph_threat_actors'),
+    path('api/graph/neighbors/<str:node_type>/<path:node_id>/', graph_views.node_neighbors,     name='node_neighbors'),
+    path('api/graph/sync/',                                     graph_views.sync_status,        name='graph_sync_status'),
+    path('api/graph/sync/trigger/',                             graph_views.trigger_sync,       name='trigger_graph_sync'),
+
     path('', health_check, name='health_check'),
     # The "catch-all" pattern that serves the React app
     #re_path(r'^.*', TemplateView.as_view(template_name='index.html')),

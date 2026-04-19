@@ -640,6 +640,59 @@ function ThreatBarChart({ threats, activeSeverity }: { threats: CVEEntry[]; acti
   );
 }
 
+/* ─── Knowledge Graph Banner ─── */
+function KnowledgeGraphBanner() {
+  const [stats, setStats] = useState<{ connected: boolean; graph: Record<string, number>; wiki_pages: number } | null>(null);
+
+  useEffect(() => {
+    import("@/lib/api").then(({ authedFetch }) => {
+      authedFetch("/api/graph/stats/")
+        .then(r => r.ok ? r.json() : null)
+        .then(d => { if (d) setStats(d); })
+        .catch(() => {});
+    });
+  }, []);
+
+  if (!stats?.connected) return null;
+
+  const g = stats.graph || {};
+  return (
+    <div
+      className="flex items-center gap-6 px-4 py-3 rounded-xl animate-fade-up"
+      style={{
+        background: "linear-gradient(135deg, rgba(74,158,255,0.06), var(--surface))",
+        border: "1px solid var(--accent-border)",
+        animationDelay: "200ms",
+      }}
+    >
+      <div className="flex items-center gap-2">
+        <svg className="w-4 h-4" fill="none" stroke="var(--accent)" strokeWidth={1.8} viewBox="0 0 24 24">
+          <circle cx="12" cy="5" r="2.5" />
+          <circle cx="5" cy="19" r="2.5" />
+          <circle cx="19" cy="19" r="2.5" />
+          <path strokeLinecap="round" d="M12 7.5v4M7 17.5l3.5-6M17 17.5l-3.5-6" />
+        </svg>
+        <span className="text-[11px] font-semibold uppercase tracking-[0.1em]" style={{ color: "var(--accent)", fontFamily: "var(--font-display)" }}>
+          Knowledge Graph
+        </span>
+      </div>
+      <div className="flex items-center gap-5 text-[11.5px]" style={{ color: "var(--text-muted)" }}>
+        <span><strong style={{ color: "var(--text-secondary)" }}>{g.software_nodes ?? 0}</strong> software</span>
+        <span><strong style={{ color: "var(--text-secondary)" }}>{g.cve_nodes ?? 0}</strong> CVEs</span>
+        <span><strong style={{ color: "var(--text-secondary)" }}>{g.total_relationships ?? 0}</strong> relationships</span>
+        <span><strong style={{ color: "var(--text-secondary)" }}>{stats.wiki_pages ?? 0}</strong> wiki pages</span>
+      </div>
+      <a
+        href="/graph"
+        className="ml-auto text-[11px] font-medium"
+        style={{ color: "var(--accent)" }}
+      >
+        Explore
+      </a>
+    </div>
+  );
+}
+
 /* ─── Stat Card ─── */
 function StatCard({
   label, value, color, sub, icon, active, onClick, sparkValues = [],
@@ -914,6 +967,9 @@ function DashboardView({
           }
         />
       </div>
+
+      {/* ── Knowledge Graph mini-stat ── */}
+      <KnowledgeGraphBanner />
 
       {/* ── Charts row ── */}
       <div className="grid grid-cols-1 gap-7 animate-fade-up" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", animationDelay: "320ms" }}>
