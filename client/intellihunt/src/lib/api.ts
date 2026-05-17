@@ -285,7 +285,7 @@ export async function scanRepo(
   repoUrl?: string,
   repoFile?: File,
   scanLevel: "speed" | "legend" = "speed"
-): Promise<{ taskId?: string; message: string }> {
+): Promise<{ taskId?: string; message: string; code?: string }> {
   let res: Response;
 
   if (repoFile) {
@@ -309,18 +309,20 @@ export async function scanRepo(
   // --- Error Handling (Handles 4xx/5xx status codes) ---
   if (!res.ok) {
     let msg = `Repository scan failed: ${res.status}`;
+    let code: string | undefined;
     try {
       const txt = await res.text();
       const errorData = JSON.parse(txt);
+      if (errorData.code) code = errorData.code;
       if (errorData.message) {
-        msg = `Server Error: ${errorData.message}`;
+        msg = errorData.message;
       } else if (txt) {
         msg = txt;
       }
     } catch {
       // Ignore if parsing fails
     }
-    return { message: msg };
+    return { message: msg, code };
   }
 
   // --- Success Handling (Handles 200 OK) ---

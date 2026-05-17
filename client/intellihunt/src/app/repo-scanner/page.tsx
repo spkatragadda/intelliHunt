@@ -257,6 +257,7 @@ export default function RepoScanner() {
   const [inputMode, setInputMode]                 = useState<InputMode>("url");
   const [submitting, setSubmitting]               = useState(false);
   const [serverMsg, setServerMsg]                 = useState<string | null>(null);
+  const [upgradeCta, setUpgradeCta]               = useState<{ title: string; message: string } | null>(null);
   const [taskId, setTaskId]                       = useState<string | null>(null);
   const [progress, setProgress]                   = useState(0);
   const [progressMessage, setProgressMessage]     = useState("");
@@ -362,7 +363,7 @@ export default function RepoScanner() {
   async function handleScan() {
     if (inputMode === "url" && !repoUrl.trim()) { setServerMsg("Enter a repository URL."); return; }
     if (inputMode === "file" && !repoFile) { setServerMsg("Select a .zip file."); return; }
-    setSubmitting(true); setServerMsg(null); setProgress(0);
+    setSubmitting(true); setServerMsg(null); setUpgradeCta(null); setProgress(0);
     setProgressMessage("Starting scan..."); setScanResults(null); setReportMarkdown(null);
     const now = Date.now();
     setScanStartTime(now);
@@ -389,7 +390,22 @@ export default function RepoScanner() {
         }));
         setRecentScans(prev => prev.map(r => r.id === optimisticId ? { ...r, task_id: res.taskId! } : r));
       } else {
-        setServerMsg(res.message || "Failed."); setSubmitting(false);
+        if (res.code === "tier_restricted") {
+          setUpgradeCta({
+            title: "Legend scan is a Pro feature",
+            message: "Upgrade to Pro to unlock deep-dependency scans with AI-driven web search across the full dependency tree.",
+          });
+          setServerMsg(null);
+        } else if (res.code === "scan_limit_reached") {
+          setUpgradeCta({
+            title: "Daily scan limit reached",
+            message: "Free plan is limited to 1 scan per day. Upgrade to Pro for unlimited scans, Legend depth, and report history.",
+          });
+          setServerMsg(null);
+        } else {
+          setServerMsg(res.message || "Failed.");
+        }
+        setSubmitting(false);
         setRecentScans(prev => prev.map(r => r.id === optimisticId ? { ...r, status: "error" as const } : r));
       }
     } catch (e: any) {
@@ -785,6 +801,45 @@ export default function RepoScanner() {
                       {submitting ? "Scanning..." : "Scan Archive"}
                     </button>
                   )}
+                </div>
+              )}
+
+              {/* Upgrade CTA (free-tier restrictions) */}
+              {upgradeCta && (
+                <div style={{
+                  marginTop: "12px",
+                  padding: "14px 16px",
+                  borderRadius: "10px",
+                  background: "rgba(245,158,11,0.08)",
+                  border: "1px solid rgba(245,158,11,0.3)",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "12px",
+                }}>
+                  <svg width="18" height="18" fill="none" stroke="#f59e0b" strokeWidth={2} viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: "1px" }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#f59e0b", marginBottom: "3px" }}>
+                      {upgradeCta.title}
+                    </div>
+                    <div style={{ fontSize: "12px", color: "var(--text-muted)", lineHeight: 1.5 }}>
+                      {upgradeCta.message}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setUpgradeCta(null)}
+                    title="Dismiss"
+                    style={{
+                      padding: "6px 14px", borderRadius: "6px",
+                      background: "#f59e0b", border: "none",
+                      color: "#1a1a1a", fontSize: "11px", fontWeight: 700,
+                      letterSpacing: "0.06em", textTransform: "uppercase" as const,
+                      cursor: "pointer", flexShrink: 0,
+                    }}
+                  >
+                    Upgrade
+                  </button>
                 </div>
               )}
 

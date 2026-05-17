@@ -201,8 +201,8 @@ class ReportArtifact(models.Model):
         app_label = "reportApp"
         ordering  = ["-created_at"]
         indexes   = [
-            models.Index(fields=["organization", "-created_at"]),
-            models.Index(fields=["organization", "source", "-created_at"]),
+            models.Index(fields=["organization", "-created_at"], name="reportApp_r_organiz_5a8e3c_idx"),
+            models.Index(fields=["organization", "source", "-created_at"], name="reportApp_r_organiz_3f1a2d_idx"),
         ]
 
     def __str__(self):
@@ -268,8 +268,8 @@ class ReportMetric(models.Model):
         app_label = "reportApp"
         ordering  = ["-snapshot_at"]
         indexes   = [
-            models.Index(fields=["organization", "snapshot_at"]),
-            models.Index(fields=["organization", "source", "snapshot_at"]),
+            models.Index(fields=["organization", "snapshot_at"], name="reportApp_r_organiz_7b2c4d_idx"),
+            models.Index(fields=["organization", "source", "snapshot_at"], name="reportApp_r_organiz_9c5e6f_idx"),
         ]
 
     def __str__(self):
