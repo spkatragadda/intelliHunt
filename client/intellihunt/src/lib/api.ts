@@ -400,6 +400,7 @@ export type AdminOrgRow = {
 
 export type AdminUserRow = {
   id: string; username: string; email: string;
+  tier: "free" | "pro";
   org_id: string; org_name: string;
   total_actions: number; report_runs: number; repo_scans: number;
   last_active: string | null;
@@ -455,6 +456,22 @@ export async function deleteAdminUser(
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw new Error((data as any).error || `Delete failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function updateUserTier(
+  userId: string,
+  tier: "free" | "pro",
+): Promise<{ message: string }> {
+  const res = await authedFetch(`/api/admin/users/${userId}/tier/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tier }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `Tier update failed: ${res.status}`);
   }
   return res.json();
 }

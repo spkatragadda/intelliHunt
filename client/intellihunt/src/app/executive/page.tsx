@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/components/UserContext";
 import {
   Bar,
   BarChart,
@@ -53,6 +55,10 @@ function deltaText(delta: number | null | undefined): string | undefined {
 }
 
 export default function ExecutivePage() {
+  const { isFree } = useUser();
+  const router = useRouter();
+  useEffect(() => { if (isFree) router.replace("/repo-scanner"); }, [isFree, router]);
+
   const [rangeDays, setRangeDays]     = useState<number>(90);
   const [summary, setSummary]         = useState<ExecutiveSummary | null>(null);
   const [loading, setLoading]         = useState<boolean>(true);

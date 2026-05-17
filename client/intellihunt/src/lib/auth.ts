@@ -10,6 +10,7 @@ export type StoredUser = {
   id: string;
   username: string;
   email: string;
+  tier: "free" | "pro";
   organization: { id: string; name: string };
 };
 

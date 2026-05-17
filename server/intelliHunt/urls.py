@@ -79,6 +79,7 @@ path('api/yaml/template/', views.get_yaml_template, name='yaml_template'),
     path('api/admin/users/<str:user_id>/',            admin_views.delete_user,      name='admin_delete_user'),
     path('api/admin/users/<str:user_id>/approve/',    admin_views.approve_user,     name='admin_approve_user'),
     path('api/admin/users/<str:user_id>/reject/',     admin_views.reject_user,      name='admin_reject_user'),
+    path('api/admin/users/<str:user_id>/tier/',       admin_views.update_user_tier, name='admin_update_tier'),
     path('', health_check, name='health_check'),
     # The "catch-all" pattern that serves the React app
     #re_path(r'^.*', TemplateView.as_view(template_name='index.html')),

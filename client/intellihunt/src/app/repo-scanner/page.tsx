@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { scanRepo, checkTaskStatus, fetchScanHistory, fetchScanReport, deleteScan, cancelScan, ServerScanRecord } from "@/lib/api";
+import { useUser } from "@/components/UserContext";
 import ReactMarkdown from "react-markdown";
 
 /* ── Types ── */
@@ -250,6 +251,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
    REPO SCANNER PAGE
    ══════════════════════════════════════════ */
 export default function RepoScanner() {
+  const { isFree } = useUser();
   const [repoUrl, setRepoUrl]                     = useState("");
   const [repoFile, setRepoFile]                   = useState<File | null>(null);
   const [inputMode, setInputMode]                 = useState<InputMode>("url");
@@ -618,18 +620,21 @@ export default function RepoScanner() {
                     { key: "legend" as const, label: "Legend", desc: "Deep scan" },
                   ]).map(tier => {
                     const active = scanLevel === tier.key;
+                    const tierLocked = isFree && tier.key === "legend";
                     return (
                       <button
                         key={tier.key}
                         type="button"
-                        disabled={submitting}
-                        onClick={() => setScanLevel(tier.key)}
+                        disabled={submitting || tierLocked}
+                        onClick={() => !tierLocked && setScanLevel(tier.key)}
+                        title={tierLocked ? "Legend scan requires a Pro plan" : undefined}
                         style={{
                           padding: "6px 16px", borderRadius: "6px",
                           fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em",
                           textTransform: "uppercase" as const,
                           border: "none",
-                          cursor: submitting ? "not-allowed" : "pointer",
+                          cursor: submitting || tierLocked ? "not-allowed" : "pointer",
+                          opacity: tierLocked ? 0.35 : 1,
                           background: active
                             ? tier.key === "legend" ? "rgba(245,158,11,0.12)" : "var(--surface)"
                             : "transparent",
@@ -650,7 +655,7 @@ export default function RepoScanner() {
                           ? <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
                           : <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
                         }
-                        {tier.label}
+                        {tier.label}{tierLocked ? " (Pro)" : ""}
                       </button>
                     );
                   })}
@@ -658,6 +663,11 @@ export default function RepoScanner() {
                 <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "6px" }}>
                   {scanLevel === "speed" ? "Quick analysis with a lightweight model \u2014 includes AI/LLM code audit" : "Comprehensive analysis \u2014 includes AI/LLM code audit + deep dependency web search"}
                 </div>
+                {isFree && (
+                  <div style={{ fontSize: "10px", color: "#f59e0b", marginTop: "4px" }}>
+                    Legend scan requires a Pro plan
+                  </div>
+                )}
               </div>
 
               {inputMode === "url" ? (

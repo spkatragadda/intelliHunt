@@ -49,9 +49,11 @@ function LoginForm() {
         id: data.user.id,
         username: data.user.username,
         email: data.user.email,
+        tier: data.user.tier ?? "free",
         organization: data.organization,
       });
-      const from = searchParams.get("from") ?? "/dashboard";
+      const defaultRoute = data.user.tier === "pro" ? "/dashboard" : "/repo-scanner";
+      const from = searchParams.get("from") ?? defaultRoute;
       router.replace(from);
     } catch (err) {
       setError(`Network error: ${err instanceof Error ? err.message : String(err)}`);

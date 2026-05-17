@@ -17,6 +17,10 @@ class Organization(models.Model):
 
 
 class UserProfile(models.Model):
+    TIER_CHOICES = [
+        ('free', 'Free'),
+        ('pro', 'Pro'),
+    ]
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -27,6 +31,7 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
         related_name="members",
     )
+    tier = models.CharField(max_length=10, choices=TIER_CHOICES, default='free')
 
     class Meta:
         app_label = "reportApp"

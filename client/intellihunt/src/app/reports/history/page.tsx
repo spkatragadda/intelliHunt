@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/components/UserContext";
 import Link from "next/link";
 import { ArtifactListRow, fetchReportHistory } from "@/lib/api";
 
@@ -21,6 +23,10 @@ const SOURCES = ["all", "manual_report", "scheduled_report", "repo_scan"] as con
 const PAGE_SIZE = 25;
 
 export default function ReportHistoryPage() {
+  const { isFree } = useUser();
+  const router = useRouter();
+  useEffect(() => { if (isFree) router.replace("/repo-scanner"); }, [isFree, router]);
+
   const [items, setItems]   = useState<ArtifactListRow[]>([]);
   const [total, setTotal]   = useState(0);
   const [offset, setOffset] = useState(0);

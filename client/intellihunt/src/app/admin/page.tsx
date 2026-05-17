@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import {
   fetchAdminSummary, fetchAdminActivity, deleteAdminUser,
-  fetchPendingUsers, approveUser, rejectUser,
+  fetchPendingUsers, approveUser, rejectUser, updateUserTier,
   type AdminOrgRow, type AdminUserRow, type AdminActivityRow, type PendingUserRow,
 } from "@/lib/api";
 import { getUser, clearAuth } from "@/lib/auth";
@@ -300,6 +300,7 @@ export default function AdminConsole() {
   const [pendingUsers, setPendingUsers] = useState<PendingUserRow[]>([]);
   const [pendingLoading, setPendingLoading] = useState(false);
   const [actioningUser, setActioningUser] = useState<string | null>(null);
+  const [tierUpdating, setTierUpdating] = useState<string | null>(null);
 
   const loadSummary = useCallback(() => {
     setLoading(true);
@@ -356,6 +357,19 @@ export default function AdminConsole() {
       setError(e.message ?? "Reject failed.");
     } finally {
       setActioningUser(null);
+    }
+  }
+
+  async function handleToggleTier(user: AdminUserRow) {
+    const nextTier: "free" | "pro" = user.tier === "pro" ? "free" : "pro";
+    setTierUpdating(user.id);
+    try {
+      await updateUserTier(user.id, nextTier);
+      setUsers(prev => prev.map(u => u.id === user.id ? { ...u, tier: nextTier } : u));
+    } catch (e: any) {
+      setError(e.message ?? "Tier update failed.");
+    } finally {
+      setTierUpdating(null);
     }
   }
 
@@ -664,7 +678,7 @@ export default function AdminConsole() {
                   <table style={{ width: "100%", borderCollapse: "collapse" }}>
                     <thead>
                       <tr>
-                        {["USER", "EMAIL", "ORGANIZATION", "REPORT RUNS", "REPO SCANS", "TOTAL ACTIONS", "LAST ACTIVE", ""].map(h => (
+                        {["USER", "EMAIL", "ORGANIZATION", "TIER", "REPORT RUNS", "REPO SCANS", "TOTAL ACTIONS", "LAST ACTIVE", ""].map(h => (
                           <th key={h} style={S.th}>{h}</th>
                         ))}
                       </tr>
@@ -688,6 +702,31 @@ export default function AdminConsole() {
                             <span style={{ padding: "2px 7px", borderRadius: "4px", background: "rgba(74,158,255,0.07)", border: "1px solid rgba(74,158,255,0.15)", color: "#4a9eff", fontFamily: "monospace", fontSize: "10px", fontWeight: 700 }}>
                               {u.org_name}
                             </span>
+                          </td>
+                          <td style={S.td}>
+                            {(() => {
+                              const isPro = u.tier === "pro";
+                              const busy = tierUpdating === u.id;
+                              return (
+                                <button
+                                  title={isPro ? "Click to downgrade to Free" : "Click to upgrade to Pro"}
+                                  disabled={busy}
+                                  onClick={e => { e.stopPropagation(); handleToggleTier(u); }}
+                                  style={{
+                                    padding: "2px 8px", borderRadius: "4px",
+                                    background: isPro ? "rgba(34,197,94,0.08)" : "rgba(245,158,11,0.08)",
+                                    border: `1px solid ${isPro ? "rgba(34,197,94,0.3)" : "rgba(245,158,11,0.3)"}`,
+                                    color: isPro ? "#22c55e" : "#f59e0b",
+                                    fontFamily: "monospace", fontSize: "10px", fontWeight: 700,
+                                    letterSpacing: "0.06em", textTransform: "uppercase",
+                                    cursor: busy ? "wait" : "pointer",
+                                    opacity: busy ? 0.5 : 1,
+                                  }}
+                                >
+                                  {busy ? "..." : (isPro ? "PRO" : "FREE")}
+                                </button>
+                              );
+                            })()}
                           </td>
                           <td style={S.tdMono}>{u.report_runs}</td>
                           <td style={S.tdMono}>{u.repo_scans}</td>
@@ -723,7 +762,7 @@ export default function AdminConsole() {
                           </td>
                         </tr>
                       ))}
-                      {users.length === 0 && <tr><td colSpan={8} style={S.emptyRow}>No users yet</td></tr>}
+                      {users.length === 0 && <tr><td colSpan={9} style={S.emptyRow}>No users yet</td></tr>}
                     </tbody>
                   </table>
                 </div>
