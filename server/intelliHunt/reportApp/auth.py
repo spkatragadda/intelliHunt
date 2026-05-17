@@ -77,6 +77,30 @@ def require_auth(view_func):
     return wrapper
 
 
+# ── Tier helpers ──────────────────────────────────────────────────────────────
+
+def get_user_tier(user_id) -> str:
+    """Return the user's subscription tier ('free' or 'pro')."""
+    from .models import UserProfile
+    try:
+        return UserProfile.objects.get(user_id=user_id).tier
+    except UserProfile.DoesNotExist:
+        return "free"
+
+
+def require_pro(view_func):
+    """Reject requests from free-tier users. Must be applied AFTER @require_auth."""
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if get_user_tier(request.user_id) == "free":
+            return JsonResponse(
+                {"error": "This feature requires a Pro plan.", "code": "tier_restricted"},
+                status=403,
+            )
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
 # ── Per-tenant data paths ──────────────────────────────────────────────────────
 
 def tenant_dir(org_id: str) -> str:

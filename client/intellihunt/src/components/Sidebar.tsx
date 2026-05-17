@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "./SidebarContext";
+import { useUser } from "./UserContext";
 
 const nav = [
   {
     href: "/dashboard",
     label: "Intel",
+    freeAllowed: false,
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
@@ -17,6 +19,7 @@ const nav = [
   {
     href: "/repo-scanner",
     label: "Repo Scanner",
+    freeAllowed: true,
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -26,6 +29,7 @@ const nav = [
   {
     href: "/executive",
     label: "Executive",
+    freeAllowed: false,
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
@@ -35,6 +39,7 @@ const nav = [
   {
     href: "/reports/history",
     label: "Report Archive",
+    freeAllowed: false,
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
@@ -44,6 +49,7 @@ const nav = [
   {
     href: "/settings",
     label: "Settings",
+    freeAllowed: false,
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
@@ -53,9 +59,16 @@ const nav = [
   },
 ];
 
+const lockIcon = (
+  <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+  </svg>
+);
+
 export default function Sidebar() {
   const path = usePathname();
   const { open, toggle } = useSidebar();
+  const { isFree } = useUser();
 
   return (
     <aside
@@ -84,7 +97,7 @@ export default function Sidebar() {
         }}
       >
         {open ? (
-          /* ── Expanded: shield link + wordmark + collapse button ── */
+          /* -- Expanded: shield link + wordmark + collapse button -- */
           <>
             <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
               <div
@@ -121,7 +134,7 @@ export default function Sidebar() {
             </button>
           </>
         ) : (
-          /* ── Collapsed: shield icon is the expand toggle ── */
+          /* -- Collapsed: shield icon is the expand toggle -- */
           <button
             onClick={toggle}
             className="flex items-center justify-center rounded-xl transition-all duration-150"
@@ -146,6 +159,43 @@ export default function Sidebar() {
         <div className="space-y-0.5 px-1.5">
           {nav.map((item) => {
             const active = path === item.href;
+            const locked = isFree && !item.freeAllowed;
+
+            if (locked) {
+              return (
+                <div
+                  key={item.href}
+                  title={!open ? `${item.label} (Pro)` : "Upgrade to Pro to unlock"}
+                  className="group flex items-center rounded-xl relative"
+                  style={{
+                    gap: open ? "10px" : "0",
+                    padding: open ? "9px 12px" : "9px",
+                    justifyContent: open ? "flex-start" : "center",
+                    color: "var(--text-muted)",
+                    opacity: 0.35,
+                    cursor: "not-allowed",
+                    border: "1px solid transparent",
+                  }}
+                >
+                  {/* Icon */}
+                  <span className="flex-shrink-0">
+                    {item.icon}
+                  </span>
+                  {/* Label + lock */}
+                  <span
+                    className="flex items-center gap-1.5 text-[13.5px] font-medium whitespace-nowrap transition-all duration-200 overflow-hidden"
+                    style={{
+                      maxWidth: open ? "160px" : "0px",
+                      opacity: open ? 1 : 0,
+                    }}
+                  >
+                    {item.label}
+                    {lockIcon}
+                  </span>
+                </div>
+              );
+            }
+
             return (
               <Link
                 key={item.href}
@@ -211,11 +261,31 @@ export default function Sidebar() {
         </div>
       </nav>
 
-      {/* Footer — status */}
+      {/* Footer — status + tier badge */}
       <div
-        className="flex items-center flex-shrink-0 px-2 py-3"
+        className="flex flex-col flex-shrink-0 px-2 py-3 gap-2"
         style={{ borderTop: "1px solid var(--border)" }}
       >
+        {/* Free plan badge */}
+        {isFree && open && (
+          <div
+            className="rounded-lg"
+            style={{
+              padding: "8px 10px",
+              background: "rgba(245,158,11,0.08)",
+              border: "1px solid rgba(245,158,11,0.2)",
+            }}
+          >
+            <div style={{ fontSize: "11px", fontWeight: 600, color: "#f59e0b", marginBottom: "2px" }}>
+              Free Plan
+            </div>
+            <div style={{ fontSize: "10px", color: "var(--text-muted)", lineHeight: 1.3 }}>
+              Upgrade to Pro to unlock all features
+            </div>
+          </div>
+        )}
+
+        {/* Connected status */}
         <div
           className="flex items-center rounded-xl w-full overflow-hidden transition-colors duration-150"
           style={{

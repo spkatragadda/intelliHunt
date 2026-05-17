@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { ArtifactDetail, fetchArtifactDetail } from "@/lib/api";
+import { useUser } from "@/components/UserContext";
 
 const SOURCE_LABELS: Record<string, string> = {
   manual_report:    "Manual Report",
@@ -12,8 +13,10 @@ const SOURCE_LABELS: Record<string, string> = {
 };
 
 export default function ArtifactDetailPage() {
+  const { isFree } = useUser();
   const params = useParams();
   const router = useRouter();
+  useEffect(() => { if (isFree) router.replace("/repo-scanner"); }, [isFree, router]);
   const id = params?.id as string;
 
   const [artifact, setArtifact] = useState<ArtifactDetail | null>(null);

@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { SidebarProvider, useSidebar } from "./SidebarContext";
 import { ThemeProvider } from "./ThemeContext";
+import { UserProvider } from "./UserContext";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 
@@ -35,7 +36,9 @@ export default function AppShell({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider>
       <SidebarProvider>
-        <ShellInner>{children}</ShellInner>
+        <UserProvider>
+          <ShellInner>{children}</ShellInner>
+        </UserProvider>
       </SidebarProvider>
     </ThemeProvider>
   );

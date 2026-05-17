@@ -27,14 +27,20 @@ from .logging_utils import log_action
 def _user_payload(user: User, org: Organization) -> dict:
     """
     Returns a flat structure:
-      { access, refresh, user: { id, username, email }, organization: { id, name } }
+      { user: { id, username, email, tier }, organization: { id, name } }
     Tokens are added by callers.
     """
+    tier = "free"
+    try:
+        tier = user.profile.tier
+    except UserProfile.DoesNotExist:
+        pass
     return {
         "user": {
             "id": str(user.pk),
             "username": user.username,
             "email": user.email,
+            "tier": tier,
         },
         "organization": {
             "id": str(org.id),

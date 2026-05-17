@@ -23,7 +23,7 @@ import socket
 import ipaddress
 from urllib.parse import urlparse
 
-from .auth import require_auth, tenant_path
+from .auth import require_auth, require_pro, get_user_tier, tenant_path
 from .logging_utils import log_action, create_scan_result, complete_scan_result
 
 logger = logging.getLogger("intelliHunt")
@@ -181,6 +181,7 @@ def _app_entries_from_software(records, vendor_field, product_field):
 
 @csrf_exempt
 @require_auth
+@require_pro
 def cmdb_integrations(request):
     """GET: list saved integrations (masked). POST: save/update one."""
     if request.method == 'GET':
@@ -210,6 +211,7 @@ def cmdb_integrations(request):
 
 @csrf_exempt
 @require_auth
+@require_pro
 def delete_cmdb_integration(request, integration_id):
     if request.method == 'DELETE':
         configs = _load_cmdb_integrations(request.org_id)
@@ -223,6 +225,7 @@ def delete_cmdb_integration(request, integration_id):
 
 @csrf_exempt
 @require_auth
+@require_pro
 def test_cmdb_connection(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'POST required'}, status=405)
@@ -343,6 +346,7 @@ def test_cmdb_connection(request):
 
 @csrf_exempt
 @require_auth
+@require_pro
 def import_cmdb_data(request):
     """Pull CI records from a CMDB and write to organization_cmdb.yaml."""
     if request.method != 'POST':
@@ -682,6 +686,7 @@ def get_yaml_template(request):
 
 @csrf_exempt
 @require_auth
+@require_pro
 def upload_yaml_config(request):
     """Handle YAML configuration file upload"""
     if request.method == 'POST':
@@ -725,6 +730,7 @@ def upload_yaml_config(request):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 @require_auth
+@require_pro
 def get_current_yaml_config(request):
     """Get the current YAML configuration"""
     config_path = tenant_path(request.org_id, 'organization_cmdb.yaml')
@@ -1105,6 +1111,7 @@ def run_report_async(task_id, payload_file_path, org_id, user_id=None, username=
 
 
 @require_auth
+@require_pro
 def get_markdown_content(request):
     """Serves the tenant's report Markdown file."""
     markdown_file_path = tenant_path(request.org_id, 'crew_report.md')
@@ -1118,6 +1125,7 @@ def get_markdown_content(request):
 
 @csrf_exempt
 @require_auth
+@require_pro
 def run_report(request):
     if request.method == 'POST':
         try:
@@ -1501,6 +1509,34 @@ def scan_repo(request):
             if scan_level not in ('speed', 'legend'):
                 scan_level = 'speed'
 
+            # Free-tier enforcement
+            user_tier = get_user_tier(request.user_id)
+            if user_tier == 'free':
+                if scan_level == 'legend':
+                    if scan_dir and os.path.exists(scan_dir):
+                        shutil.rmtree(scan_dir)
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Legend scan requires a Pro plan.',
+                        'code': 'tier_restricted',
+                    }, status=403)
+
+                from django.utils import timezone as tz
+                today_start = tz.now().replace(hour=0, minute=0, second=0, microsecond=0)
+                from .models import ScanResult
+                scans_today = ScanResult.objects.filter(
+                    user_id=request.user_id,
+                    created_at__gte=today_start,
+                ).count()
+                if scans_today >= 1:
+                    if scan_dir and os.path.exists(scan_dir):
+                        shutil.rmtree(scan_dir)
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Free plan is limited to 1 scan per day. Upgrade to Pro for unlimited scans.',
+                        'code': 'scan_limit_reached',
+                    }, status=429)
+
             # Persist scan record and log start
             create_scan_result(request.org_id, request.user_id, request.username,
                                task_id, target_label, input_type, scan_level=scan_level)
@@ -1626,6 +1662,7 @@ def cancel_scan(request, task_id):
 
 @csrf_exempt
 @require_auth
+@require_pro
 def schedule_config(request):
     """
     GET  /api/schedule/  — return current ScheduleConfig for the org (or defaults).
