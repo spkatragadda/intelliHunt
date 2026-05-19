@@ -10,7 +10,6 @@ Three core operations:
 import hashlib
 import json
 import logging
-from datetime import datetime, timezone
 
 from django.db import transaction
 
@@ -34,10 +33,20 @@ def _get_models():
     return WikiPage, WikiLog
 
 
-def _graph_context_hash(org_id: str, entity_type: str, entity_id: str) -> str:
-    """Compute a hash of the graph state for cache invalidation."""
-    key = f"{org_id}:{entity_type}:{entity_id}:{datetime.now(timezone.utc).date()}"
-    return hashlib.sha256(key.encode()).hexdigest()[:16]
+def _fingerprint(content: str, title: str, links: list[str]) -> str:
+    """Fingerprint the rendered page so the hash changes iff the page would.
+
+    The hash is derived from the exact output of ``generate_page`` —
+    rendered markdown, title, and the deduplicated/sorted links list.
+    Two ingests producing identical bytes get identical fingerprints,
+    regardless of wall-clock time. Used for cache-invalidation + lint.
+    """
+    payload = "\x1f".join([
+        content,
+        title,
+        "\n".join(sorted(set(links))),
+    ])
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 # ── Ingest ───────────────────────────────────────────────────────────────────
@@ -61,7 +70,7 @@ def ingest(org_id: str, entity_type: str, entity_ids: list[str],
     for entity_id in entity_ids:
         try:
             content, title, links = generate_page(org_id, entity_type, entity_id)
-            ctx_hash = _graph_context_hash(org_id, entity_type, entity_id)
+            ctx_hash = _fingerprint(content, title, links)
 
             with transaction.atomic():
                 page, created = WikiPage.objects.update_or_create(
@@ -153,9 +162,19 @@ def lint(org_id: str) -> dict:
     orphaned = []
     missing = []
 
-    # Find stale pages (context hash outdated)
+    # Find stale pages: re-render and compare fingerprint. A page is stale
+    # iff regenerating it now would produce different bytes than what's stored.
     for page in WikiPage.objects.filter(organization_id=org_id):
-        current_hash = _graph_context_hash(org_id, page.entity_type, page.entity_id)
+        try:
+            content, title, links = generate_page(
+                org_id, page.entity_type, page.entity_id,
+            )
+        except Exception as exc:
+            logger.debug("wiki.lint: regenerate failed for %s:%s — %s",
+                         page.entity_type, page.entity_id, exc)
+            continue
+
+        current_hash = _fingerprint(content, title, links)
         if page.graph_context_hash != current_hash:
             stale.append({
                 "entity_type": page.entity_type,

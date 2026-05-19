@@ -24,19 +24,19 @@ def run_wiki_maintenance(org_id: str) -> dict:
 
     # Run lint to find stale and missing pages
     try:
-        from ..wiki.engine import lint
+        from ..wiki.engine import lint, ingest
         lint_result = lint(org_id)
-        result["stale_found"] = len(lint_result.get("stale_pages", []))
-        result["missing_found"] = len(lint_result.get("missing_pages", []))
+        result["stale_found"] = len(lint_result.get("stale", []))
+        result["missing_found"] = len(lint_result.get("missing", []))
 
         # Refresh stale pages
-        from ..wiki.engine import ingest
-        for page_info in lint_result.get("stale_pages", [])[:20]:
+        for page_info in lint_result.get("stale", [])[:20]:
             try:
                 ingest(
                     org_id,
                     page_info["entity_type"],
-                    page_info["entity_id"],
+                    [page_info["entity_id"]],
+                    source="wiki_maintenance",
                 )
                 result["pages_updated"] += 1
             except Exception as exc:
@@ -44,12 +44,13 @@ def run_wiki_maintenance(org_id: str) -> dict:
                              page_info["entity_type"], page_info["entity_id"], exc)
 
         # Generate missing pages (limit to 30 per run to avoid overloading LLM)
-        for page_info in lint_result.get("missing_pages", [])[:30]:
+        for page_info in lint_result.get("missing", [])[:30]:
             try:
                 ingest(
                     org_id,
                     page_info["entity_type"],
-                    page_info["entity_id"],
+                    [page_info["entity_id"]],
+                    source="wiki_maintenance",
                 )
                 result["pages_created"] += 1
             except Exception as exc:

@@ -4,10 +4,8 @@ Knowledge Graph API endpoints (non-wiki).
 Graph statistics, neighborhood queries, and sync status.
 """
 
-import json
 import logging
 import threading
-from datetime import datetime, timezone
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -98,35 +96,23 @@ def sync_status(request):
 @require_http_methods(["POST"])
 def trigger_sync(request):
     """POST /api/graph/sync/trigger/ — Trigger a manual graph sync."""
-    org_id = request.org_id
+    org_id = str(request.org_id)
 
-    # Create sync status record
-    sync = GraphSyncStatus.objects.create(
-        organization_id=org_id,
-        sync_type="incremental",
-        status="running",
-        started_at=datetime.now(timezone.utc),
-    )
+    # Resolve the per-tenant YAML — populate_org_stack records its own
+    # GraphSyncStatus row, so we don't pre-create one here.
+    from intelliHunt.reportApp.auth import tenant_path
+    yaml_path = tenant_path(org_id, "organization_cmdb.yaml")
 
     def _run_sync():
         try:
-            from .populators.cpe_populator import populate_graph_from_yaml
-            counts = populate_graph_from_yaml(org_id)
-            sync.nodes_created = counts.get("software", 0)
-            sync.status = "completed"
-        except Exception as exc:
-            sync.status = "error"
-            sync.errors = str(exc)[:2000]
+            from .populators.org_stack import populate_org_stack
+            populate_org_stack(org_id, yaml_path, trigger_source="manual_trigger")
+        except Exception:
             logger.exception("Manual graph sync failed for org %s", org_id)
-        finally:
-            sync.completed_at = datetime.now(timezone.utc)
-            sync.save()
 
-    thread = threading.Thread(target=_run_sync, daemon=True)
-    thread.start()
+    threading.Thread(target=_run_sync, daemon=True).start()
 
     return JsonResponse({
-        "sync_id": str(sync.id),
         "status": "running",
         "message": "Graph sync started",
     })

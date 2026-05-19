@@ -29,6 +29,23 @@ from .logging_utils import log_action, create_scan_result, complete_scan_result
 logger = logging.getLogger("intelliHunt")
 
 
+def _sync_org_stack_async(org_id: str, yaml_path: str, trigger_source: str) -> None:
+    """Fire-and-forget: refresh the knowledge graph + wiki from the org's YAML.
+
+    Called whenever the per-tenant ``organization_cmdb.yaml`` is written —
+    CMDB import, security-tool sync, or user YAML upload. Runs in a daemon
+    thread so the originating HTTP response is not blocked on Neo4j.
+    """
+    def _runner():
+        try:
+            from intelliHunt.knowledge_graph.populators.org_stack import populate_org_stack
+            populate_org_stack(org_id, yaml_path, trigger_source=trigger_source)
+        except Exception:
+            logger.exception("[org_stack] sync thread crashed for org %s", org_id)
+
+    threading.Thread(target=_runner, daemon=True).start()
+
+
 # ── SSRF Protection ──────────────────────────────────────────────────────────
 
 def _validate_outbound_url(url: str) -> str:
@@ -569,6 +586,10 @@ def import_cmdb_data(request):
         configs[integration_id]['last_synced'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
         _save_cmdb_integrations(configs, request.org_id)
 
+        # Reflect the new stack into the knowledge graph + wiki. Done in a
+        # background thread so the import response isn't blocked on Neo4j.
+        _sync_org_stack_async(str(request.org_id), config_path, trigger_source="cmdb_import")
+
         os_count = sum(len(e.get('products', [])) for e in os_entries)
         app_count = sum(len(e.get('products', [])) for e in app_entries)
         parts = [f"{os_count} OS variant(s) across {len(os_entries)} vendor(s)"]
@@ -707,6 +728,10 @@ def upload_yaml_config(request):
 
                 log_action(request.org_id, request.user_id, request.username,
                            "yaml_upload", "completed", detail=yaml_file.name)
+
+                # Reflect the new stack into the knowledge graph + wiki.
+                _sync_org_stack_async(str(request.org_id), config_path, trigger_source="yaml_upload")
+
                 return JsonResponse({
                     'message': 'YAML configuration uploaded successfully',
                     'config': yaml_data
@@ -998,12 +1023,14 @@ def run_report_async(task_id, payload_file_path, org_id, user_id=None, username=
         except Exception:
             logger.exception("persist_report_artifact failed for task %s", task_id)
 
-        # Populate knowledge graph from report (non-blocking, fail-safe)
+        # Populate knowledge graph from report (non-blocking, fail-safe).
+        # Manual reports have no OSV/Semgrep JSON, so only CVE IDs in the
+        # markdown contribute — Software nodes/AFFECTS edges come from scans.
         try:
-            from knowledge_graph.populators.repo_scan_populator import populate_graph_from_scan
+            from intelliHunt.knowledge_graph.populators.repo_scan_populator import populate_graph_from_scan
             populate_graph_from_scan(org_id, report_markdown)
         except Exception:
-            logger.debug("Knowledge graph population from report skipped (non-fatal)")
+            logger.exception("Knowledge graph population from manual report failed for task %s", task_id)
 
         # Mark as completed
         end_time = time.time()
@@ -1277,7 +1304,7 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
                 pass
 
         # Run the pipeline with the local (sandboxed) path
-        result = run_pipeline(repo_path, tier=scan_level)
+        result, static_results_json = run_pipeline(repo_path, tier=scan_level)
 
         # ── Cancellation checkpoint 3: after pipeline ──────────────────
         if cancel_events.get(task_id, threading.Event()).is_set():
@@ -1325,12 +1352,14 @@ def run_repo_scan_async(task_id, repo_url, scan_dir=None,
                 except Exception:
                     logger.exception("persist_report_artifact (repo_scan) failed for task %s", task_id)
 
-            # Populate knowledge graph from scan results (non-blocking, fail-safe)
+            # Populate knowledge graph from scan results (non-blocking, fail-safe).
+            # Pass the raw OSV/Semgrep JSON so Software nodes and AFFECTS edges
+            # get created — markdown alone only yields CVE nodes.
             try:
-                from knowledge_graph.populators.repo_scan_populator import populate_graph_from_scan
-                populate_graph_from_scan(org_id, report_markdown)
+                from intelliHunt.knowledge_graph.populators.repo_scan_populator import populate_graph_from_scan
+                populate_graph_from_scan(org_id, report_markdown, static_results_json)
             except Exception:
-                logger.debug("Knowledge graph population from scan skipped (non-fatal)")
+                logger.exception("Knowledge graph population from repo scan failed for task %s", task_id)
 
     except _ScanCancelled:
         end_time = time.time()

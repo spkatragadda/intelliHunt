@@ -88,6 +88,10 @@ def run_pipeline(repo_path: str, tier: str = "speed"):
     Callers (views.run_repo_scan_async) are responsible for cloning remote
     repos before calling this function.  Accepting only a local path here
     eliminates duplicate cloning.
+
+    Returns:
+        (crew_raw_markdown, static_results_json) — the JSON is preserved so
+        callers can feed it into the knowledge-graph populator.
     """
     repo_path = os.path.realpath(repo_path)
     if not os.path.isdir(repo_path):
@@ -114,4 +118,4 @@ def run_pipeline(repo_path: str, tier: str = "speed"):
         'static_scan_results': static_summary,
     })
 
-    return crew_output.raw or ""
+    return (crew_output.raw or ""), static_results_json
