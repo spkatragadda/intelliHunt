@@ -96,6 +96,7 @@ path('api/yaml/template/', views.get_yaml_template, name='yaml_template'),
     path('api/graph/neighbors/<str:node_type>/<path:node_id>/', graph_views.node_neighbors,     name='node_neighbors'),
     path('api/graph/sync/',                                     graph_views.sync_status,        name='graph_sync_status'),
     path('api/graph/sync/trigger/',                             graph_views.trigger_sync,       name='trigger_graph_sync'),
+    path('api/graph/research-config/',                          graph_views.graph_research_config, name='graph_research_config'),
 
     path('', health_check, name='health_check'),
     # The "catch-all" pattern that serves the React app

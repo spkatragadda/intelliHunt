@@ -736,3 +736,32 @@ export async function triggerGraphSync(): Promise<{ sync_id: string; status: str
   if (!res.ok) throw new Error(`${res.status}`);
   return res.json();
 }
+
+export type GraphResearchConfigPayload = {
+  enabled: boolean;
+  frequency: "daily" | "weekly" | "biweekly";
+  day_of_week: number;   // 0=Mon … 6=Sun
+  hour: number;          // UTC, 0-23
+  expand_depth: number;  // 1-5
+};
+
+export async function fetchGraphResearchConfig(): Promise<GraphResearchConfigPayload> {
+  const res = await authedFetch(`/api/graph/research-config/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function saveGraphResearchConfig(
+  patch: Partial<GraphResearchConfigPayload>,
+): Promise<GraphResearchConfigPayload & { status: string }> {
+  const res = await authedFetch(`/api/graph/research-config/`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `Save failed: ${res.status}`);
+  }
+  return res.json();
+}

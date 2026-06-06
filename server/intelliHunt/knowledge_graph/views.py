@@ -4,14 +4,16 @@ Knowledge Graph API endpoints (non-wiki).
 Graph statistics, neighborhood queries, and sync status.
 """
 
+import json
 import logging
 import threading
 
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from intelliHunt.reportApp.auth import require_auth
-from intelliHunt.reportApp.models import GraphSyncStatus
+from intelliHunt.reportApp.models import GraphResearchConfig, GraphSyncStatus
 
 from .connection import verify_connectivity
 from .graph_writer import get_graph_stats
@@ -90,6 +92,88 @@ def sync_status(request):
             s["completed_at"] = s["completed_at"].isoformat()
 
     return JsonResponse({"statuses": statuses})
+
+
+_RESEARCH_DEFAULTS = {
+    "enabled": False,
+    "frequency": "weekly",
+    "day_of_week": 0,
+    "hour": 2,
+    "expand_depth": 2,
+}
+
+_VALID_FREQUENCIES = {"daily", "weekly", "biweekly"}
+
+
+@csrf_exempt
+@require_auth
+@require_http_methods(["GET", "PUT"])
+def graph_research_config(request):
+    """
+    GET  /api/graph/research-config/  — current config (or defaults if unset).
+    PUT  /api/graph/research-config/  — upsert + push to the live scheduler.
+
+    Body (PUT) — all optional, merged onto the existing row:
+      { enabled, frequency, day_of_week, hour, expand_depth }
+    """
+    org_id = request.org_id
+
+    if request.method == "GET":
+        try:
+            cfg = GraphResearchConfig.objects.get(organization_id=org_id)
+        except GraphResearchConfig.DoesNotExist:
+            return JsonResponse(_RESEARCH_DEFAULTS)
+        return JsonResponse({
+            "enabled":      cfg.enabled,
+            "frequency":    cfg.frequency,
+            "day_of_week":  cfg.day_of_week,
+            "hour":         cfg.hour,
+            "expand_depth": cfg.expand_depth,
+        })
+
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, TypeError):
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    if "frequency" in data and data["frequency"] not in _VALID_FREQUENCIES:
+        return JsonResponse(
+            {"error": f"frequency must be one of {sorted(_VALID_FREQUENCIES)}"},
+            status=400,
+        )
+    if "day_of_week" in data and not 0 <= int(data["day_of_week"]) <= 6:
+        return JsonResponse({"error": "day_of_week must be 0-6"}, status=400)
+    if "hour" in data and not 0 <= int(data["hour"]) <= 23:
+        return JsonResponse({"error": "hour must be 0-23"}, status=400)
+    if "expand_depth" in data and not 1 <= int(data["expand_depth"]) <= 5:
+        return JsonResponse({"error": "expand_depth must be 1-5"}, status=400)
+
+    cfg, _ = GraphResearchConfig.objects.get_or_create(organization_id=org_id)
+    if "enabled" in data:      cfg.enabled      = bool(data["enabled"])
+    if "frequency" in data:    cfg.frequency    = data["frequency"]
+    if "day_of_week" in data:  cfg.day_of_week  = int(data["day_of_week"])
+    if "hour" in data:         cfg.hour         = int(data["hour"])
+    if "expand_depth" in data: cfg.expand_depth = int(data["expand_depth"])
+    cfg.save()
+
+    # Push to the running APScheduler if this process has a reference
+    # (only the scheduler process; gunicorn workers no-op silently).
+    try:
+        from intelliHunt.reportApp import _scheduler_ref
+        if _scheduler_ref.scheduler is not None:
+            from intelliHunt.reportApp.schedule_sync import upsert_deep_research_job
+            upsert_deep_research_job(_scheduler_ref.scheduler, cfg)
+    except Exception:
+        logger.exception("[graph_research_config] live scheduler sync failed for org %s", org_id)
+
+    return JsonResponse({
+        "status":       "saved",
+        "enabled":      cfg.enabled,
+        "frequency":    cfg.frequency,
+        "day_of_week":  cfg.day_of_week,
+        "hour":         cfg.hour,
+        "expand_depth": cfg.expand_depth,
+    })
 
 
 @require_auth

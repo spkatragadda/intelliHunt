@@ -1205,6 +1205,7 @@ function KnowledgeGraphSettings() {
   const [syncing, setSyncing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveErr, setSaveErr] = useState<string | null>(null);
 
   useEffect(() => {
     authedFetch("/api/graph/stats/")
@@ -1215,6 +1216,11 @@ function KnowledgeGraphSettings() {
     authedFetch("/api/graph/sync/")
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d) setSyncs(d.statuses || []); })
+      .catch(() => {});
+
+    authedFetch("/api/graph/research-config/")
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setForm(d); })
       .catch(() => {});
   }, []);
 
@@ -1384,9 +1390,28 @@ function KnowledgeGraphSettings() {
           <button
             onClick={async () => {
               setSaving(true); setSaved(false);
+              setSaveErr(null);
               try {
-                // Save via a generic settings endpoint (reuses schedule pattern)
+                const res = await authedFetch("/api/graph/research-config/", {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(form),
+                });
+                if (!res.ok) {
+                  const data = await res.json().catch(() => ({}));
+                  throw new Error((data as any).error || `Save failed: ${res.status}`);
+                }
+                const saved = await res.json();
+                setForm({
+                  enabled: saved.enabled,
+                  frequency: saved.frequency,
+                  day_of_week: saved.day_of_week,
+                  hour: saved.hour,
+                  expand_depth: saved.expand_depth,
+                });
                 setSaved(true);
+              } catch (e: any) {
+                setSaveErr(e?.message || "Save failed");
               } finally {
                 setSaving(false);
               }
@@ -1402,6 +1427,9 @@ function KnowledgeGraphSettings() {
           </button>
           {saved && (
             <span style={{ fontSize: "11px", color: "var(--success)" }}>Saved</span>
+          )}
+          {saveErr && (
+            <span style={{ fontSize: "11px", color: "var(--danger)" }}>{saveErr}</span>
           )}
         </div>
       </div>
