@@ -20,7 +20,7 @@ from django.db.models.functions import TruncDay, TruncMonth, TruncWeek
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from .auth import require_auth, tenant_dir, tenant_path
+from .auth import require_auth, require_pro, tenant_dir, tenant_path
 from .admin_views import require_admin
 from .models import ReportArtifact, ReportMetric
 
@@ -110,6 +110,7 @@ def _read_artifact_markdown(artifact):
 
 @csrf_exempt
 @require_auth
+@require_pro
 def report_history(request):
     if request.method != "GET":
         return JsonResponse({"error": "GET required"}, status=405)
@@ -148,6 +149,7 @@ def report_history(request):
 
 @csrf_exempt
 @require_auth
+@require_pro
 def report_history_detail(request, artifact_id):
     if request.method != "GET":
         return JsonResponse({"error": "GET required"}, status=405)
@@ -212,6 +214,7 @@ _METRIC_FIELDS = {
 
 @csrf_exempt
 @require_auth
+@require_pro
 def trends(request):
     if request.method != "GET":
         return JsonResponse({"error": "GET required"}, status=405)
@@ -321,6 +324,7 @@ def _trends_severity(request, bucket, source):
 
 @csrf_exempt
 @require_auth
+@require_pro
 def executive_summary(request):
     if request.method != "GET":
         return JsonResponse({"error": "GET required"}, status=405)

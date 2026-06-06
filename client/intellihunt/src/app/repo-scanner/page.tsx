@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { scanRepo, checkTaskStatus, fetchScanHistory, fetchScanReport, deleteScan, cancelScan, ServerScanRecord } from "@/lib/api";
+import { useUser } from "@/components/UserContext";
 import ReactMarkdown from "react-markdown";
 
 /* ── Types ── */
@@ -250,11 +251,13 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
    REPO SCANNER PAGE
    ══════════════════════════════════════════ */
 export default function RepoScanner() {
+  const { isFree } = useUser();
   const [repoUrl, setRepoUrl]                     = useState("");
   const [repoFile, setRepoFile]                   = useState<File | null>(null);
   const [inputMode, setInputMode]                 = useState<InputMode>("url");
   const [submitting, setSubmitting]               = useState(false);
   const [serverMsg, setServerMsg]                 = useState<string | null>(null);
+  const [upgradeCta, setUpgradeCta]               = useState<{ title: string; message: string } | null>(null);
   const [taskId, setTaskId]                       = useState<string | null>(null);
   const [progress, setProgress]                   = useState(0);
   const [progressMessage, setProgressMessage]     = useState("");
@@ -360,7 +363,7 @@ export default function RepoScanner() {
   async function handleScan() {
     if (inputMode === "url" && !repoUrl.trim()) { setServerMsg("Enter a repository URL."); return; }
     if (inputMode === "file" && !repoFile) { setServerMsg("Select a .zip file."); return; }
-    setSubmitting(true); setServerMsg(null); setProgress(0);
+    setSubmitting(true); setServerMsg(null); setUpgradeCta(null); setProgress(0);
     setProgressMessage("Starting scan..."); setScanResults(null); setReportMarkdown(null);
     const now = Date.now();
     setScanStartTime(now);
@@ -387,7 +390,22 @@ export default function RepoScanner() {
         }));
         setRecentScans(prev => prev.map(r => r.id === optimisticId ? { ...r, task_id: res.taskId! } : r));
       } else {
-        setServerMsg(res.message || "Failed."); setSubmitting(false);
+        if (res.code === "tier_restricted") {
+          setUpgradeCta({
+            title: "Legend scan is a Pro feature",
+            message: "Upgrade to Pro to unlock deep-dependency scans with AI-driven web search across the full dependency tree.",
+          });
+          setServerMsg(null);
+        } else if (res.code === "scan_limit_reached") {
+          setUpgradeCta({
+            title: "Daily scan limit reached",
+            message: "Free plan is limited to 1 scan per day. Upgrade to Pro for unlimited scans, Legend depth, and report history.",
+          });
+          setServerMsg(null);
+        } else {
+          setServerMsg(res.message || "Failed.");
+        }
+        setSubmitting(false);
         setRecentScans(prev => prev.map(r => r.id === optimisticId ? { ...r, status: "error" as const } : r));
       }
     } catch (e: any) {
@@ -618,18 +636,21 @@ export default function RepoScanner() {
                     { key: "legend" as const, label: "Legend", desc: "Deep scan" },
                   ]).map(tier => {
                     const active = scanLevel === tier.key;
+                    const tierLocked = isFree && tier.key === "legend";
                     return (
                       <button
                         key={tier.key}
                         type="button"
-                        disabled={submitting}
-                        onClick={() => setScanLevel(tier.key)}
+                        disabled={submitting || tierLocked}
+                        onClick={() => !tierLocked && setScanLevel(tier.key)}
+                        title={tierLocked ? "Legend scan requires a Pro plan" : undefined}
                         style={{
                           padding: "6px 16px", borderRadius: "6px",
                           fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em",
                           textTransform: "uppercase" as const,
                           border: "none",
-                          cursor: submitting ? "not-allowed" : "pointer",
+                          cursor: submitting || tierLocked ? "not-allowed" : "pointer",
+                          opacity: tierLocked ? 0.35 : 1,
                           background: active
                             ? tier.key === "legend" ? "rgba(245,158,11,0.12)" : "var(--surface)"
                             : "transparent",
@@ -650,7 +671,7 @@ export default function RepoScanner() {
                           ? <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
                           : <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
                         }
-                        {tier.label}
+                        {tier.label}{tierLocked ? " (Pro)" : ""}
                       </button>
                     );
                   })}
@@ -658,6 +679,11 @@ export default function RepoScanner() {
                 <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "6px" }}>
                   {scanLevel === "speed" ? "Quick analysis with a lightweight model \u2014 includes AI/LLM code audit" : "Comprehensive analysis \u2014 includes AI/LLM code audit + deep dependency web search"}
                 </div>
+                {isFree && (
+                  <div style={{ fontSize: "10px", color: "#f59e0b", marginTop: "4px" }}>
+                    Legend scan requires a Pro plan
+                  </div>
+                )}
               </div>
 
               {inputMode === "url" ? (
@@ -775,6 +801,45 @@ export default function RepoScanner() {
                       {submitting ? "Scanning..." : "Scan Archive"}
                     </button>
                   )}
+                </div>
+              )}
+
+              {/* Upgrade CTA (free-tier restrictions) */}
+              {upgradeCta && (
+                <div style={{
+                  marginTop: "12px",
+                  padding: "14px 16px",
+                  borderRadius: "10px",
+                  background: "rgba(245,158,11,0.08)",
+                  border: "1px solid rgba(245,158,11,0.3)",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "12px",
+                }}>
+                  <svg width="18" height="18" fill="none" stroke="#f59e0b" strokeWidth={2} viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: "1px" }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#f59e0b", marginBottom: "3px" }}>
+                      {upgradeCta.title}
+                    </div>
+                    <div style={{ fontSize: "12px", color: "var(--text-muted)", lineHeight: 1.5 }}>
+                      {upgradeCta.message}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setUpgradeCta(null)}
+                    title="Dismiss"
+                    style={{
+                      padding: "6px 14px", borderRadius: "6px",
+                      background: "#f59e0b", border: "none",
+                      color: "#1a1a1a", fontSize: "11px", fontWeight: 700,
+                      letterSpacing: "0.06em", textTransform: "uppercase" as const,
+                      cursor: "pointer", flexShrink: 0,
+                    }}
+                  >
+                    Upgrade
+                  </button>
                 </div>
               )}
 

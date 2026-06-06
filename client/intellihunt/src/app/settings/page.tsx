@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/components/UserContext";
 import {
   getCmdbIntegrations,
   saveCmdbIntegration,
@@ -1622,6 +1624,10 @@ function ScheduledReports() {
    Settings Page
    ══════════════════════════════════════════ */
 export default function SettingsPage() {
+  const { isFree } = useUser();
+  const router = useRouter();
+  useEffect(() => { if (isFree) router.replace("/repo-scanner"); }, [isFree, router]);
+
   const [integrations, setIntegrations] = useState<Record<string, CmdbIntegration>>({});
   const [loading, setLoading] = useState(true);
   const [fetchErr, setFetchErr] = useState<string | null>(null);

@@ -82,6 +82,7 @@ def admin_summary(request):
             "id":            str(u.pk),
             "username":      u.username,
             "email":         u.email,
+            "tier":          profile.tier,
             "org_id":        str(profile.organization.id),
             "org_name":      profile.organization.name,
             "total_actions": logs.count(),
@@ -292,3 +293,35 @@ def admin_activity(request):
     } for r in records]
 
     return JsonResponse({"total": total, "rows": rows})
+
+
+@csrf_exempt
+@require_admin
+def update_user_tier(request, user_id):
+    """
+    POST /api/admin/users/<user_id>/tier/
+    Body: { "tier": "free" | "pro" }
+    """
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+    try:
+        body = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    new_tier = body.get("tier", "").strip().lower()
+    if new_tier not in ("free", "pro"):
+        return JsonResponse({"error": "Invalid tier. Must be 'free' or 'pro'."}, status=400)
+
+    try:
+        profile = UserProfile.objects.get(user_id=user_id)
+    except UserProfile.DoesNotExist:
+        return JsonResponse({"error": "User not found"}, status=404)
+
+    profile.tier = new_tier
+    profile.save(update_fields=["tier"])
+    logger.info(
+        "ADMIN_UPDATE_TIER by=%s target=%s new_tier=%s",
+        getattr(request, "username", "?"), user_id, new_tier,
+    )
+    return JsonResponse({"message": f"User tier updated to {new_tier}"})

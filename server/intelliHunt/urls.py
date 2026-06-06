@@ -81,6 +81,7 @@ path('api/yaml/template/', views.get_yaml_template, name='yaml_template'),
     path('api/admin/users/<str:user_id>/',            admin_views.delete_user,      name='admin_delete_user'),
     path('api/admin/users/<str:user_id>/approve/',    admin_views.approve_user,     name='admin_approve_user'),
     path('api/admin/users/<str:user_id>/reject/',     admin_views.reject_user,      name='admin_reject_user'),
+    path('api/admin/users/<str:user_id>/tier/',       admin_views.update_user_tier, name='admin_update_tier'),
     # ── Knowledge Wiki endpoints ────────────────────────────────────────────
     path('api/wiki/',                                           wiki_views.wiki_index,          name='wiki_index'),
     path('api/wiki/search/',                                    wiki_views.wiki_search,         name='wiki_search'),

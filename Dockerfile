@@ -130,13 +130,6 @@ RUN chmod +x /usr/local/bin/osv-scanner
 # Application source — copied last so edits only rebuild this layer.
 COPY ./server /app/server
 
-# Generate any missing migration files at build time so they are baked into
-# the image. migrate still runs at container startup (entrypoint.sh) to apply
-# them against the live database. DEBUG=true is set inline only for this
-# command so the production SECRET_KEY guard in settings.py does not fire
-# during the build — runtime DEBUG is still controlled by the env var.
-RUN cd /app/server && DEBUG=true python manage.py makemigrations --noinput
-
 COPY ./server/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 

@@ -264,7 +264,7 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL  = os.environ.get("DEFAULT_FROM_EMAIL",  "noreply@intellihunt.io")
 
 # Base URL of the Next.js frontend — used to build password-reset links in emails.
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "https://intellihunt.io")
 
 # ── Neo4j Knowledge Graph ────────────────────────────────────────────────────
 NEO4J_BOLT_URL = os.environ.get("NEO4J_BOLT_URL", "bolt://localhost:7687")

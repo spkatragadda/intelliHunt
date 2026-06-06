@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type JSX } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/components/UserContext";
 import ReactMarkdown from "react-markdown";
 import {
   fetchReportMarkdown,
@@ -2178,6 +2179,10 @@ function VulnerabilitiesView() {
    INTEL PAGE
    ═══════════════════════════════════ */
 export default function IntelPage() {
+  const { isFree } = useUser();
+  const router = useRouter();
+  useEffect(() => { if (isFree) router.replace("/repo-scanner"); }, [isFree, router]);
+
   const [tab, setTab] = useState<Tab>("dashboard");
   const [ready, setReady] = useState(false);
   const [reportMd, setReportMd] = useState("");

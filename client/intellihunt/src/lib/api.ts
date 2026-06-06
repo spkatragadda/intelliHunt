@@ -285,7 +285,7 @@ export async function scanRepo(
   repoUrl?: string,
   repoFile?: File,
   scanLevel: "speed" | "legend" = "speed"
-): Promise<{ taskId?: string; message: string }> {
+): Promise<{ taskId?: string; message: string; code?: string }> {
   let res: Response;
 
   if (repoFile) {
@@ -309,18 +309,20 @@ export async function scanRepo(
   // --- Error Handling (Handles 4xx/5xx status codes) ---
   if (!res.ok) {
     let msg = `Repository scan failed: ${res.status}`;
+    let code: string | undefined;
     try {
       const txt = await res.text();
       const errorData = JSON.parse(txt);
+      if (errorData.code) code = errorData.code;
       if (errorData.message) {
-        msg = `Server Error: ${errorData.message}`;
+        msg = errorData.message;
       } else if (txt) {
         msg = txt;
       }
     } catch {
       // Ignore if parsing fails
     }
-    return { message: msg };
+    return { message: msg, code };
   }
 
   // --- Success Handling (Handles 200 OK) ---
@@ -400,6 +402,7 @@ export type AdminOrgRow = {
 
 export type AdminUserRow = {
   id: string; username: string; email: string;
+  tier: "free" | "pro";
   org_id: string; org_name: string;
   total_actions: number; report_runs: number; repo_scans: number;
   last_active: string | null;
@@ -455,6 +458,22 @@ export async function deleteAdminUser(
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw new Error((data as any).error || `Delete failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function updateUserTier(
+  userId: string,
+  tier: "free" | "pro",
+): Promise<{ message: string }> {
+  const res = await authedFetch(`/api/admin/users/${userId}/tier/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tier }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `Tier update failed: ${res.status}`);
   }
   return res.json();
 }
