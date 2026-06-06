@@ -179,7 +179,6 @@ export default function Sidebar() {
       <nav className="flex-1 py-2.5 overflow-y-auto overflow-x-hidden">
         <div className="space-y-0.5 px-1.5">
           {nav.map((item) => {
-            const active = path === item.href;
             const locked = isFree && !item.freeAllowed;
 
             if (locked) {
