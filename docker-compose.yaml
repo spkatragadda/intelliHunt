@@ -18,6 +18,25 @@ services:
       retries: 10
       start_period: 20s
 
+  neo4j:
+    image: neo4j:5.26-community
+    container_name: intellihunt-neo4j
+    restart: unless-stopped
+    environment:
+      - NEO4J_AUTH=${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD}
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+    ports:
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u ${NEO4J_USER:-neo4j} -p ${NEO4J_PASSWORD} 'RETURN 1' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
   django:
     build:
       context: .
@@ -35,12 +54,15 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_DB=${POSTGRES_DB:-intellihunt}
       - POSTGRES_USER=${POSTGRES_USER:-intellihunt}
+      - NEO4J_BOLT_URL=bolt://neo4j:7687
     expose:
       - "8000"
     volumes:
       - ./logs:/app/server/logs
     depends_on:
       postgres:
+        condition: service_healthy
+      neo4j:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import socket; s=socket.socket(); s.settimeout(3); s.connect(('127.0.0.1',8000)); s.close()\""]
@@ -73,3 +95,4 @@ networks:
 
 volumes:
   postgres_data:
+  neo4j_data:

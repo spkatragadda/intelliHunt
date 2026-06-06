@@ -670,6 +670,26 @@ def main(payload_file=None):
         has_cvss = cve.get('cvss_score') is not None
         cve['data_sufficient'] = has_description or has_cvss
 
+    # Enrich CVE inputs with knowledge graph context (non-blocking, fail-safe)
+    org_id = (user_inputs or {}).get('org_id')
+    if org_id and inputs:
+        try:
+            from intelliHunt.knowledge_graph.rag.context_builder import build_batch_context
+            from intelliHunt.knowledge_graph.rag.graph_rag_tool import set_org_context
+            set_org_context(org_id)
+            cve_ids = [cve['cve_id'] for cve in inputs if cve.get('cve_id')]
+            contexts = build_batch_context(org_id, cve_ids)
+            for cve in inputs:
+                cve['graph_context'] = contexts.get(cve.get('cve_id'), '')
+            print(f"Injected graph context for {len(contexts)} CVEs")
+        except Exception as e:
+            print(f"Knowledge graph context injection skipped (non-fatal): {e}")
+            for cve in inputs:
+                cve.setdefault('graph_context', '')
+    else:
+        for cve in inputs:
+            cve['graph_context'] = ''
+
     # If no vulnerabilities were found, write a placeholder report and exit early
     if not inputs:
         print("No vulnerabilities found. Skipping report generation.")

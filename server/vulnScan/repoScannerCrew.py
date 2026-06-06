@@ -91,11 +91,18 @@ def get_security_crew(tier: str = "speed") -> Crew:
         max_iter=15,
     )
 
+    researcher_tools = [search_vulnerability_databases]
+    try:
+        from intelliHunt.knowledge_graph.rag.graph_rag_tool import query_knowledge_graph
+        researcher_tools.append(query_knowledge_graph)
+    except Exception:
+        pass  # Knowledge graph not available
+
     researcher = Agent(
         role='Security Researcher',
         goal='Identify external vulnerabilities and exploit intelligence for specific packages.',
         backstory='Expert in NVD, CISA KEV, and GitHub Advisories. You know where the bugs hide.',
-        tools=[search_vulnerability_databases],
+        tools=researcher_tools,
         llm=llm,
         allow_delegation=False,
         verbose=False,

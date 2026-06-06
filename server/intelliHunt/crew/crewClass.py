@@ -210,10 +210,16 @@ class cyberCrew:
 
     @agent
     def ctiAnalyst(self) -> Agent:
+        tools = [self.google_search]
+        try:
+            from intelliHunt.knowledge_graph.rag.graph_rag_tool import query_knowledge_graph
+            tools.append(query_knowledge_graph)
+        except Exception:
+            pass  # Knowledge graph not available
         return Agent(
             config=self.agents_config["ctiAnalyst"],  # type: ignore[index]
             llm=llm,
-            tools=[self.google_search],
+            tools=tools,
             verbose=True,
             max_iter=1
         )

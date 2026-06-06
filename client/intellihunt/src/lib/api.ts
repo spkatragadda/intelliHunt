@@ -631,3 +631,156 @@ export async function fetchAdminActivity(
   if (!res.ok) throw new Error(`${res.status}`);
   return res.json();
 }
+
+/* ══════════════════════════════════════════
+   Knowledge Wiki + Graph API
+   ══════════════════════════════════════════ */
+
+export type WikiPageSummary = {
+  id: string;
+  entity_type: string;
+  entity_id: string;
+  title: string;
+  last_refreshed: string;
+};
+
+export type WikiPageDetail = WikiPageSummary & {
+  content_markdown: string;
+  links_to: string[];
+};
+
+export type WikiLogEntry = {
+  operation: string;
+  title: string;
+  detail: string;
+  pages_affected: string[];
+  created_at: string;
+};
+
+export type GraphStats = {
+  graph: Record<string, number>;
+  wiki_pages: number;
+  wiki_by_type: Record<string, number>;
+  connected: boolean;
+};
+
+export type GraphSoftware = {
+  vendor: string;
+  product: string;
+  version: string;
+};
+
+export type GraphSyncStatusEntry = {
+  id: string;
+  sync_type: string;
+  status: string;
+  started_at: string;
+  completed_at: string | null;
+  nodes_created: number;
+  relationships_created: number;
+  pages_updated: number;
+  errors: string;
+};
+
+export async function fetchWikiIndex(entityType?: string): Promise<{ pages: WikiPageSummary[] }> {
+  const url = entityType ? `/api/wiki/${entityType}/` : `/api/wiki/`;
+  const res = await authedFetch(url);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function fetchWikiPage(entityType: string, entityId: string): Promise<WikiPageDetail> {
+  const res = await authedFetch(`/api/wiki/${entityType}/${entityId}/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  const data = await res.json();
+  return data.page;
+}
+
+export async function searchWiki(query: string): Promise<{ results: WikiPageSummary[] }> {
+  const res = await authedFetch(`/api/wiki/search/?q=${encodeURIComponent(query)}`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function fetchWikiLog(): Promise<{ entries: WikiLogEntry[] }> {
+  const res = await authedFetch(`/api/wiki/log/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function refreshWikiPage(entityType: string, entityId: string): Promise<{ message: string }> {
+  const res = await authedFetch(`/api/wiki/refresh/${entityType}/${entityId}/`, { method: "POST" });
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function queryWiki(question: string): Promise<{ answer: string; sources: WikiPageSummary[] }> {
+  const res = await authedFetch(`/api/wiki/query/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question }),
+  });
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function fetchGraphStats(): Promise<GraphStats> {
+  const res = await authedFetch(`/api/graph/stats/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function fetchGraphSoftware(): Promise<{ software: GraphSoftware[] }> {
+  const res = await authedFetch(`/api/graph/software/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function fetchGraphNeighbors(
+  nodeType: string, nodeId: string, depth = 1
+): Promise<{ nodes: any[]; edges: any[] }> {
+  const res = await authedFetch(`/api/graph/neighbors/${nodeType}/${nodeId}/?depth=${depth}`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function fetchGraphSyncStatus(): Promise<{ statuses: GraphSyncStatusEntry[] }> {
+  const res = await authedFetch(`/api/graph/sync/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function triggerGraphSync(): Promise<{ sync_id: string; status: string; message: string }> {
+  const res = await authedFetch(`/api/graph/sync/trigger/`, { method: "POST" });
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export type GraphResearchConfigPayload = {
+  enabled: boolean;
+  frequency: "daily" | "weekly" | "biweekly";
+  day_of_week: number;   // 0=Mon … 6=Sun
+  hour: number;          // UTC, 0-23
+  expand_depth: number;  // 1-5
+};
+
+export async function fetchGraphResearchConfig(): Promise<GraphResearchConfigPayload> {
+  const res = await authedFetch(`/api/graph/research-config/`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+export async function saveGraphResearchConfig(
+  patch: Partial<GraphResearchConfigPayload>,
+): Promise<GraphResearchConfigPayload & { status: string }> {
+  const res = await authedFetch(`/api/graph/research-config/`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error((data as any).error || `Save failed: ${res.status}`);
+  }
+  return res.json();
+}

@@ -19,6 +19,11 @@ research_task:
        EPSS > 0.5 indicates high real-world exploitation probability in the next 30 days — this should
        elevate the risk assessment regardless of CVSS score.
 
+    KNOWLEDGE GRAPH CONTEXT (if available):
+    {graph_context}
+    Use this context to understand how this CVE relates to the organization's software stack,
+    its dependency chains, and any known threat actors. If empty, proceed without it.
+
     Provided CVE Data:
     - cve_id: {cve_id}
     - description: {description}
